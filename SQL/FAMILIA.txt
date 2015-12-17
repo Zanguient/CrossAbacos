@@ -1,0 +1,12 @@
+CREATE TABLE familia
+(
+  codigo serial NOT NULL,
+  descricao character varying(100) NOT NULL,
+  codigomargem integer,
+  CONSTRAINT pk_familia PRIMARY KEY (codigo),
+  CONSTRAINT fk_codigomargem FOREIGN KEY (codigomargem)
+      REFERENCES margem (codigo) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT
+);
+
+alter table familia add codigoabacos integer;

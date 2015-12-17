@@ -1,0 +1,28 @@
+create table produtoabacos (
+  codigo bigint not null,
+  codigoproduto character varying(50),
+  codigobarras character varying(50),
+  codigofabricante character varying(50),
+  tipoproduto smallint,
+  nomeproduto character varying(50),
+  peso double precision default 0,
+  comprimento double precision default 0,
+  largura double precision default 0,
+  espessura double precision default 0,
+  quantidadeporembalagem integer,
+  quantidademinima integer,
+  quantidademaxima integer,
+  unidademedida character varying(50),
+  unidademedidaabrev character varying(3),
+  codigocategoriafiscal integer,
+  classificacaofiscal integer,
+  diasgarantia integer,
+  CONSTRAINT pk_produtoabacos PRIMARY KEY (codigo)
+);
+
+alter table produtoabacos 
+  add custo double precision,
+  add precotabela1 double precision,
+  add precotabela2 double precision,
+  add codigofamilia integer,
+  add codigogrupo integer;

@@ -1,0 +1,6 @@
+CREATE TABLE grupo
+(
+  codigo serial NOT NULL,
+  descricao character varying(100) NOT NULL,
+  CONSTRAINT pk_grupo PRIMARY KEY (codigo)
+);

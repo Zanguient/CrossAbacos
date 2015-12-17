@@ -1,0 +1,8 @@
+create table fornecedor (
+  codigo serial not null,
+  codigofornecedorabacos character varying(50),
+  nome character varying(100),
+  cpfcnpj character varying(14),
+  ierg character varying(14),
+  CONSTRAINT pk_fornecedor PRIMARY KEY (codigo)
+);

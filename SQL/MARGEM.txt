@@ -1,0 +1,13 @@
+CREATE TABLE margem
+(
+  codigo serial NOT NULL,
+  margemcrossminima numeric(18,2) NOT NULL,
+  margemcrossmaxima numeric(18,2) NOT NULL,
+  margemfisicominima numeric(18,2) NOT NULL,
+  margemfisicomaxima numeric(18,2) NOT NULL,
+  margempersonalizadaminima numeric(18,2) NOT NULL,
+  margempersonalizadamaxima numeric(18,2) NOT NULL,
+  CONSTRAINT pk_margem PRIMARY KEY (codigo)
+);
+
+alter table margem add descricao character varying(100) NOT NULL DEFAULT ''::character varying

@@ -1,0 +1,22 @@
+object frmFormPadrao: TfrmFormPadrao
+  Left = 0
+  Top = 0
+  ParentCustomHint = False
+  BiDiMode = bdLeftToRight
+  BorderStyle = bsNone
+  Caption = 'frmFormPadrao'
+  ClientHeight = 438
+  ClientWidth = 780
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  ParentBiDiMode = False
+  OnClose = FormClose
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+end

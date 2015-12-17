@@ -1,0 +1,9 @@
+CREATE TABLE usuario
+(
+  codigo serial NOT NULL,
+  nome character varying(100) NOT NULL,
+  email character varying(100) NOT NULL,
+  senha character varying(100),
+  permitircadusuario boolean NOT NULL,
+  CONSTRAINT pk_usuario PRIMARY KEY (codigo)
+);

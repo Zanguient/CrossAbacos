@@ -1,0 +1,6 @@
+CREATE TABLE marca
+(
+  codigo serial NOT NULL,
+  descricao character varying(100) NOT NULL,
+  CONSTRAINT pk_marca PRIMARY KEY (codigo)
+);
