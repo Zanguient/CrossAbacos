@@ -136,11 +136,20 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanFamilia.pas"/>
+<<<<<<< HEAD
         <DCCReference Include="uMatch.pas">
             <Form>frmMatch</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanLoteImportacao.pas"/>
+=======
+        <DCCReference Include="uImportacao.pas">
+            <Form>frmImportacao</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Beans\uBeanAlmoxarifado.pas"/>
+        <DCCReference Include="Beans\uBeanProdutoFornecedor.pas"/>
+>>>>>>> origin/master
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -217,16 +226,14 @@
                 </VersionInfoKeys>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="Win32\Debug\CrossAbacos.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>CrossAbacos.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="C:\CrossAbacos\CrossAbacos.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CrossAbacos.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\CrossAbacos.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>CrossAbacos.exe</RemoteName>
                     </Platform>
                 </DeployFile>
                 <DeployClass Required="true" Name="DependencyPackage">

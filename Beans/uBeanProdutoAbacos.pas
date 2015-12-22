@@ -3,211 +3,250 @@ unit uBeanProdutoAbacos;
 interface
 uses uFWPersistence, uDomains;
 
-type TPRODUTOABACOS = Class(TFWPersistence)
+type TPRODUTO = Class(TFWPersistence)
   private
-    FUNIDADEMEDIDAABREV: TFieldString;
-    FCODIGOFABRICANTE: TFieldString;
+    FCODIGO_BARRAS: TFieldInteger;
+    FPRECO_VENDA: TFieldFloat;
+    FORIGEM_MERCADORIA: TFieldString;
     FPESO: TFieldFloat;
-    FQUANTIDADEMAXIMA: TFieldInteger;
-    FCODIGOPRODUTO: TFieldString;
-    FCODIGO: TFieldInteger;
-    FCODIGOBARRAS: TFieldString;
-    FUNIDADEMEDIDA: TFieldString;
-    FLARGURA: TFieldFloat;
-    FQUANTIDADEMINIMA: TFieldInteger;
-    FDIASGARANTIA: TFieldInteger;
-    FCODIGOCATEGORIAFISCAL: TFieldInteger;
-    FCLASSIFICACAOFISCAL: TFieldInteger;
-    FNOMEPRODUTO: TFieldString;
-    FESPESSURA: TFieldFloat;
-    FCOMPRIMENTO: TFieldFloat;
-    FTIPOPRODUTO: TFieldInteger;
-    FQUANTIDADEPOREMBALAGEM: TFieldInteger;
-    FPRECOTABELA2: TFieldFloat;
-    FPRECOTABELA1: TFieldFloat;
-    FCUSTO: TFieldFloat;
-    FCODIGOGRUPO: TFieldInteger;
-    FCODIGOFAMILIA: TFieldInteger;
-    procedure SetCLASSIFICACAOFISCAL(const Value: TFieldInteger);
-    procedure SetCODIGO(const Value: TFieldInteger);
-    procedure SetCODIGOBARRAS(const Value: TFieldString);
-    procedure SetCODIGOCATEGORIAFISCAL(const Value: TFieldInteger);
-    procedure SetCODIGOFABRICANTE(const Value: TFieldString);
-    procedure SetCODIGOPRODUTO(const Value: TFieldString);
-    procedure SetCOMPRIMENTO(const Value: TFieldFloat);
-    procedure SetDIASGARANTIA(const Value: TFieldInteger);
-    procedure SetESPESSURA(const Value: TFieldFloat);
-    procedure SetLARGURA(const Value: TFieldFloat);
-    procedure SetNOMEPRODUTO(const Value: TFieldString);
+    FUNIDADE_MEDIDA: TFieldString;
+    FL: TFieldFloat;
+    FPROMOCAO_IPI: TFieldFloat;
+    FDIAS_GARANTIA: TFieldInteger;
+    FC: TFieldFloat;
+    FICMS: TFieldFloat;
+    FPRAZO_ENTREGA: TFieldInteger;
+    FE: TFieldFloat;
+    FESTOQUE_MAXIMO: TFieldInteger;
+    FFAMILIA: TFieldString;
+    FSUB_GRUPO: TFieldString;
+    FID: TFieldInteger;
+    FNCM: TFieldString;
+    FCF: TFieldString;
+    FCLASSE: TFieldString;
+    FSKU: TFieldString;
+    FDISPONIVEL: TFieldFloat;
+    FSALDO: TFieldFloat;
+    FMARCA: TFieldString;
+    FPRODUTO_PAI: TFieldString;
+    FNOME: TFieldString;
+    FQUANTIDADE_EMBALAGEM: TFieldInteger;
+    FGRUPO: TFieldString;
+    procedure SetC(const Value: TFieldFloat);
+    procedure SetCF(const Value: TFieldString);
+    procedure SetCLASSE(const Value: TFieldString);
+    procedure SetCODIGO_BARRAS(const Value: TFieldInteger);
+    procedure SetDIAS_GARANTIA(const Value: TFieldInteger);
+    procedure SetDISPONIVEL(const Value: TFieldFloat);
+    procedure SetE(const Value: TFieldFloat);
+    procedure SetESTOQUE_MAXIMO(const Value: TFieldInteger);
+    procedure SetFAMILIA(const Value: TFieldString);
+    procedure SetGRUPO(const Value: TFieldString);
+    procedure SetICMS(const Value: TFieldFloat);
+    procedure SetID(const Value: TFieldInteger);
+    procedure SetL(const Value: TFieldFloat);
+    procedure SetMARCA(const Value: TFieldString);
+    procedure SetNCM(const Value: TFieldString);
+    procedure SetNOME(const Value: TFieldString);
+    procedure SetORIGEM_MERCADORIA(const Value: TFieldString);
     procedure SetPESO(const Value: TFieldFloat);
-    procedure SetQUANTIDADEMAXIMA(const Value: TFieldInteger);
-    procedure SetQUANTIDADEMINIMA(const Value: TFieldInteger);
-    procedure SetQUANTIDADEPOREMBALAGEM(const Value: TFieldInteger);
-    procedure SetTIPOPRODUTO(const Value: TFieldInteger);
-    procedure SetUNIDADEMEDIDA(const Value: TFieldString);
-    procedure SetUNIDADEMEDIDAABREV(const Value: TFieldString);
-    procedure SetCUSTO(const Value: TFieldFloat);
-    procedure SetPRECOTABELA1(const Value: TFieldFloat);
-    procedure SetPRECOTABELA2(const Value: TFieldFloat);
-    procedure SetCODIGOFAMILIA(const Value: TFieldInteger);
-    procedure SetCODIGOGRUPO(const Value: TFieldInteger);
+    procedure SetPRAZO_ENTREGA(const Value: TFieldInteger);
+    procedure SetPRECO_VENDA(const Value: TFieldFloat);
+    procedure SetPRODUTO_PAI(const Value: TFieldString);
+    procedure SetPROMOCAO_IPI(const Value: TFieldFloat);
+    procedure SetQUANTIDADE_EMBALAGEM(const Value: TFieldInteger);
+    procedure SetSALDO(const Value: TFieldFloat);
+    procedure SetSKU(const Value: TFieldString);
+    procedure SetSUB_GRUPO(const Value: TFieldString);
+    procedure SetUNIDADE_MEDIDA(const Value: TFieldString);
   protected
     procedure InitInstance; override;
   published
-    property CODIGO                  : TFieldInteger read FCODIGO write SetCODIGO;
-    property CODIGOPRODUTO           : TFieldString read FCODIGOPRODUTO write SetCODIGOPRODUTO;
-    property CODIGOBARRAS            : TFieldString read FCODIGOBARRAS write SetCODIGOBARRAS;
-    property CODIGOFABRICANTE        : TFieldString read FCODIGOFABRICANTE write SetCODIGOFABRICANTE;
-    property TIPOPRODUTO             : TFieldInteger read FTIPOPRODUTO write SetTIPOPRODUTO;
-    property NOMEPRODUTO             : TFieldString read FNOMEPRODUTO write SetNOMEPRODUTO;
-    property PESO                    : TFieldFloat read FPESO write SetPESO;
-    property COMPRIMENTO             : TFieldFloat read FCOMPRIMENTO write SetCOMPRIMENTO;
-    property LARGURA                 : TFieldFloat read FLARGURA write SetLARGURA;
-    property ESPESSURA               : TFieldFloat read FESPESSURA write SetESPESSURA;
-    property QUANTIDADEPOREMBALAGEM  : TFieldInteger read FQUANTIDADEPOREMBALAGEM write SetQUANTIDADEPOREMBALAGEM;
-    property QUANTIDADEMINIMA        : TFieldInteger read FQUANTIDADEMINIMA write SetQUANTIDADEMINIMA;
-    property QUANTIDADEMAXIMA        : TFieldInteger read FQUANTIDADEMAXIMA write SetQUANTIDADEMAXIMA;
-    property UNIDADEMEDIDA           : TFieldString read FUNIDADEMEDIDA write SetUNIDADEMEDIDA;
-    property UNIDADEMEDIDAABREV      : TFieldString read FUNIDADEMEDIDAABREV write SetUNIDADEMEDIDAABREV;
-    property CODIGOCATEGORIAFISCAL   : TFieldInteger read FCODIGOCATEGORIAFISCAL write SetCODIGOCATEGORIAFISCAL;
-    property CLASSIFICACAOFISCAL     : TFieldInteger read FCLASSIFICACAOFISCAL write SetCLASSIFICACAOFISCAL;
-    property DIASGARANTIA            : TFieldInteger read FDIASGARANTIA write SetDIASGARANTIA;
-    property CUSTO                   : TFieldFloat read FCUSTO write SetCUSTO;
-    property PRECOTABELA1            : TFieldFloat read FPRECOTABELA1 write SetPRECOTABELA1;
-    property PRECOTABELA2            : TFieldFloat read FPRECOTABELA2 write SetPRECOTABELA2;
-    property CODIGOFAMILIA           : TFieldInteger read FCODIGOFAMILIA write SetCODIGOFAMILIA;
-    property CODIGOGRUPO             : TFieldInteger read FCODIGOGRUPO write SetCODIGOGRUPO;
+    property ID : TFieldInteger read FID write SetID;
+    property SKU : TFieldString read FSKU write SetSKU;
+    property CODIGO_BARRAS : TFieldInteger read FCODIGO_BARRAS write SetCODIGO_BARRAS;
+    property NOME : TFieldString read FNOME write SetNOME;
+    property SALDO : TFieldFloat read FSALDO write SetSALDO;
+    property DISPONIVEL : TFieldFloat read FDISPONIVEL write SetDISPONIVEL;
+    property ICMS : TFieldFloat read FICMS write SetICMS;
+    property CF : TFieldString read FCF write SetCF;
+    property PRODUTO_PAI : TFieldString read FPRODUTO_PAI write SetPRODUTO_PAI;
+    property MARCA : TFieldString read FMARCA write SetMARCA;
+    property FAMILIA : TFieldString read FFAMILIA write SetFAMILIA;
+    property CLASSE : TFieldString read FCLASSE write SetCLASSE;
+    property UNIDADE_MEDIDA : TFieldString read FUNIDADE_MEDIDA write SetUNIDADE_MEDIDA;
+    property GRUPO : TFieldString read FGRUPO write SetGRUPO;
+    property SUB_GRUPO : TFieldString read FSUB_GRUPO write SetSUB_GRUPO;
+    property PRECO_VENDA : TFieldFloat read FPRECO_VENDA write SetPRECO_VENDA;
+    property PROMOCAO_IPI : TFieldFloat read FPROMOCAO_IPI write SetPROMOCAO_IPI;
+    property PESO : TFieldFloat read FPESO write SetPESO;
+    property NCM : TFieldString read FNCM write SetNCM;
+    property ESTOQUE_MAXIMO : TFieldInteger read FESTOQUE_MAXIMO write SetESTOQUE_MAXIMO;
+    property PRAZO_ENTREGA : TFieldInteger read FPRAZO_ENTREGA write SetPRAZO_ENTREGA;
+    property QUANTIDADE_EMBALAGEM : TFieldInteger read FQUANTIDADE_EMBALAGEM write SetQUANTIDADE_EMBALAGEM;
+    property C : TFieldFloat read FC write SetC;
+    property L : TFieldFloat read FL write SetL;
+    property E : TFieldFloat read FE write SetE;
+    property DIAS_GARANTIA : TFieldInteger read FDIAS_GARANTIA write SetDIAS_GARANTIA;
+    property ORIGEM_MERCADORIA : TFieldString read FORIGEM_MERCADORIA write SetORIGEM_MERCADORIA;
+
 End;
 implementation
 
 { TPRODUTOABACOS }
 
-procedure TPRODUTOABACOS.InitInstance;
+procedure TPRODUTO.InitInstance;
 begin
   inherited;
-  CODIGO.isPK              := True;
 
-  CODIGOPRODUTO.Size       := 50;
-  CODIGOBARRAS.Size        := 50;
-  CODIGOFABRICANTE.Size    := 50;
-  NOMEPRODUTO.Size         := 50;
-  UNIDADEMEDIDA.Size       := 50;
-  UNIDADEMEDIDAABREV.Size  := 3;
+  ID.isPK                  := True;
+
+  SKU.Size               := 100;
+  NOME.Size              := 255;
+  CF.Size                := 100;
+  PRODUTO_PAI.Size       := 100;
+  MARCA.Size             := 100;
+  FAMILIA.Size           := 100;
+  CLASSE.Size            := 100;
+  UNIDADE_MEDIDA.Size    := 100;
+  GRUPO.Size             := 100;
+  SUB_GRUPO.Size         := 100;
+  NCM.Size               := 10;
+  ORIGEM_MERCADORIA.Size := 255;
 end;
-
-procedure TPRODUTOABACOS.SetCLASSIFICACAOFISCAL(const Value: TFieldInteger);
+procedure TPRODUTO.SetC(const Value: TFieldFloat);
 begin
-  FCLASSIFICACAOFISCAL := Value;
+  FC := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGO(const Value: TFieldInteger);
+procedure TPRODUTO.SetCF(const Value: TFieldString);
 begin
-  FCODIGO := Value;
+  FCF := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOBARRAS(const Value: TFieldString);
+procedure TPRODUTO.SetCLASSE(const Value: TFieldString);
 begin
-  FCODIGOBARRAS := Value;
+  FCLASSE := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOCATEGORIAFISCAL(const Value: TFieldInteger);
+procedure TPRODUTO.SetCODIGO_BARRAS(const Value: TFieldInteger);
 begin
-  FCODIGOCATEGORIAFISCAL := Value;
+  FCODIGO_BARRAS := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOFABRICANTE(const Value: TFieldString);
+procedure TPRODUTO.SetDIAS_GARANTIA(const Value: TFieldInteger);
 begin
-  FCODIGOFABRICANTE := Value;
+  FDIAS_GARANTIA := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOFAMILIA(const Value: TFieldInteger);
+procedure TPRODUTO.SetDISPONIVEL(const Value: TFieldFloat);
 begin
-  FCODIGOFAMILIA := Value;
+  FDISPONIVEL := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOGRUPO(const Value: TFieldInteger);
+procedure TPRODUTO.SetE(const Value: TFieldFloat);
 begin
-  FCODIGOGRUPO := Value;
+  FE := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCODIGOPRODUTO(const Value: TFieldString);
+procedure TPRODUTO.SetESTOQUE_MAXIMO(const Value: TFieldInteger);
 begin
-  FCODIGOPRODUTO := Value;
+  FESTOQUE_MAXIMO := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCOMPRIMENTO(const Value: TFieldFloat);
+procedure TPRODUTO.SetFAMILIA(const Value: TFieldString);
 begin
-  FCOMPRIMENTO := Value;
+  FFAMILIA := Value;
 end;
 
-procedure TPRODUTOABACOS.SetCUSTO(const Value: TFieldFloat);
+procedure TPRODUTO.SetGRUPO(const Value: TFieldString);
 begin
-  FCUSTO := Value;
+  FGRUPO := Value;
 end;
 
-procedure TPRODUTOABACOS.SetDIASGARANTIA(const Value: TFieldInteger);
+procedure TPRODUTO.SetICMS(const Value: TFieldFloat);
 begin
-  FDIASGARANTIA := Value;
+  FICMS := Value;
 end;
 
-procedure TPRODUTOABACOS.SetESPESSURA(const Value: TFieldFloat);
+procedure TPRODUTO.SetID(const Value: TFieldInteger);
 begin
-  FESPESSURA := Value;
+  FID := Value;
 end;
 
-procedure TPRODUTOABACOS.SetLARGURA(const Value: TFieldFloat);
+procedure TPRODUTO.SetL(const Value: TFieldFloat);
 begin
-  FLARGURA := Value;
+  FL := Value;
 end;
 
-procedure TPRODUTOABACOS.SetNOMEPRODUTO(const Value: TFieldString);
+procedure TPRODUTO.SetMARCA(const Value: TFieldString);
 begin
-  FNOMEPRODUTO := Value;
+  FMARCA := Value;
 end;
 
-procedure TPRODUTOABACOS.SetPESO(const Value: TFieldFloat);
+procedure TPRODUTO.SetNCM(const Value: TFieldString);
+begin
+  FNCM := Value;
+end;
+
+procedure TPRODUTO.SetNOME(const Value: TFieldString);
+begin
+  FNOME := Value;
+end;
+
+procedure TPRODUTO.SetORIGEM_MERCADORIA(const Value: TFieldString);
+begin
+  FORIGEM_MERCADORIA := Value;
+end;
+
+procedure TPRODUTO.SetPESO(const Value: TFieldFloat);
 begin
   FPESO := Value;
 end;
 
-procedure TPRODUTOABACOS.SetPRECOTABELA1(const Value: TFieldFloat);
+procedure TPRODUTO.SetPRAZO_ENTREGA(const Value: TFieldInteger);
 begin
-  FPRECOTABELA1 := Value;
+  FPRAZO_ENTREGA := Value;
 end;
 
-procedure TPRODUTOABACOS.SetPRECOTABELA2(const Value: TFieldFloat);
+procedure TPRODUTO.SetPRECO_VENDA(const Value: TFieldFloat);
 begin
-  FPRECOTABELA2 := Value;
+  FPRECO_VENDA := Value;
 end;
 
-procedure TPRODUTOABACOS.SetQUANTIDADEMAXIMA(const Value: TFieldInteger);
+procedure TPRODUTO.SetPRODUTO_PAI(const Value: TFieldString);
 begin
-  FQUANTIDADEMAXIMA := Value;
+  FPRODUTO_PAI := Value;
 end;
 
-procedure TPRODUTOABACOS.SetQUANTIDADEMINIMA(const Value: TFieldInteger);
+procedure TPRODUTO.SetPROMOCAO_IPI(const Value: TFieldFloat);
 begin
-  FQUANTIDADEMINIMA := Value;
+  FPROMOCAO_IPI := Value;
 end;
 
-procedure TPRODUTOABACOS.SetQUANTIDADEPOREMBALAGEM(const Value: TFieldInteger);
+procedure TPRODUTO.SetQUANTIDADE_EMBALAGEM(const Value: TFieldInteger);
 begin
-  FQUANTIDADEPOREMBALAGEM := Value;
+  FQUANTIDADE_EMBALAGEM := Value;
 end;
 
-procedure TPRODUTOABACOS.SetTIPOPRODUTO(const Value: TFieldInteger);
+procedure TPRODUTO.SetSALDO(const Value: TFieldFloat);
 begin
-  FTIPOPRODUTO := Value;
+  FSALDO := Value;
 end;
 
-procedure TPRODUTOABACOS.SetUNIDADEMEDIDA(const Value: TFieldString);
+procedure TPRODUTO.SetSKU(const Value: TFieldString);
 begin
-  FUNIDADEMEDIDA := Value;
+  FSKU := Value;
 end;
 
-procedure TPRODUTOABACOS.SetUNIDADEMEDIDAABREV(const Value: TFieldString);
+procedure TPRODUTO.SetSUB_GRUPO(const Value: TFieldString);
 begin
-  FUNIDADEMEDIDAABREV := Value;
+  FSUB_GRUPO := Value;
+end;
+
+procedure TPRODUTO.SetUNIDADE_MEDIDA(const Value: TFieldString);
+begin
+  FUNIDADE_MEDIDA := Value;
 end;
 
 end.

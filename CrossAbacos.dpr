@@ -27,8 +27,14 @@ uses
   uImportacaoEstoqueVirtual in 'uImportacaoEstoqueVirtual.pas' {frmImportacaodeEstoqueVirtual},
   uCadastroFamilia in 'Cadastros\uCadastroFamilia.pas' {FrmCadastroFamilia},
   uBeanFamilia in 'Beans\uBeanFamilia.pas',
+<<<<<<< HEAD
   uMatch in 'uMatch.pas' {frmMatch},
   uBeanLoteImportacao in 'Beans\uBeanLoteImportacao.pas';
+=======
+  uImportacao in 'uImportacao.pas' {frmImportacao},
+  uBeanAlmoxarifado in 'Beans\uBeanAlmoxarifado.pas',
+  uBeanProdutoFornecedor in 'Beans\uBeanProdutoFornecedor.pas';
+>>>>>>> origin/master
 
 {$R *.res}
 
