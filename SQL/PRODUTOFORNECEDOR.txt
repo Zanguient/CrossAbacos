@@ -1,0 +1,16 @@
+create table if not exists produtofornecedor (
+  id serial,
+  cod_prod_fornecedor varchar(100) not null,
+  id_produto int not null,
+  id_fornecedor int not null,
+  primary key (id),
+  constraint fk_produtofornecedor_produto1
+    foreign key (id_produto)
+    references produto (id)
+    on delete no action
+    on update no action,
+  constraint fk_produtofornecedor_fornecedor1
+    foreign key (id_fornecedor)
+    references fornecedor (id)
+    on delete no action
+    on update no action);

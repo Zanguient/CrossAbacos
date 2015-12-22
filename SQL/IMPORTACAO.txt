@@ -1,0 +1,9 @@
+create table importacao (
+  id serial not null,
+  descricao character varying(100),
+  datahora timestamp with time zone,
+  caminhoarquivo character verying(100),
+  formatoarquivo character varying(100),
+  codigofornecedorabacos character varying(100),
+  CONSTRAINT pk_importacao primary key (id)  
+);

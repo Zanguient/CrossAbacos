@@ -1,8 +1,11 @@
-create table fornecedor (
-  codigo serial not null,
-  codigofornecedorabacos character varying(50),
-  nome character varying(100),
-  cpfcnpj character varying(14),
-  ierg character varying(14),
-  CONSTRAINT pk_fornecedor PRIMARY KEY (codigo)
-);
+create table if not exists fornecedor (
+  id serial,
+  nome varchar(100) not null,
+  cnpj varchar(14) not null,
+  id_almoxarifado int not null,
+  primary key (id),
+  constraint fk_fornecedor_almoxarifado 
+  foreign key (id_almoxarifado)
+  references almoxarifado (id)
+  on delete restrict
+  on update cascade);

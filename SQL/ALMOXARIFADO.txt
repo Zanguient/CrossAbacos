@@ -1,0 +1,5 @@
+create table if not exists almoxarifado (
+  id serial,
+  nome character varying(100) not null,
+  codigo_e10 int not null,
+  primary key (id));
