@@ -12,11 +12,20 @@ type
   //Campos disponíveis para busca
   //Label dos campos de busca
     }
-
+ TImportDadosExcel = class
+  private
+    FexcelIndice: integer;
+    FexcelTitulo: string;
+    procedure SetexcelIndice(const Value: integer);
+    procedure SetexcelTitulo(const Value: string);
+  published
+   property excelTitulo : string read FexcelTitulo write SetexcelTitulo;
+   property excelIndice : integer read FexcelIndice write SetexcelIndice;
+ end;
   //////////////////////////////
   //Interface de domínio padrão
   //////////////////////////////
-  TFieldTypeDomain = class
+  TFieldTypeDomain = class(TImportDadosExcel)
   private
     function getIsPK : Boolean; virtual; abstract;
     function getIsNotNull : Boolean; virtual; abstract;
@@ -1076,6 +1085,18 @@ procedure TFieldBlob.setValue(const Value: AnsiString);
 begin
   Self.FValue := Value;
   Self.setIsNull(False);
+end;
+
+{ TImportDadosExcel }
+
+procedure TImportDadosExcel.SetexcelIndice(const Value: integer);
+begin
+  FexcelIndice := Value;
+end;
+
+procedure TImportDadosExcel.SetexcelTitulo(const Value: string);
+begin
+  FexcelTitulo := Value;
 end;
 
 end.

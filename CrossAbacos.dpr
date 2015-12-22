@@ -26,7 +26,10 @@ uses
   uBeanGrupo in 'Beans\uBeanGrupo.pas',
   uImportacaoEstoqueVirtual in 'uImportacaoEstoqueVirtual.pas' {frmImportacaodeEstoqueVirtual},
   uCadastroFamilia in 'Cadastros\uCadastroFamilia.pas' {FrmCadastroFamilia},
-  uBeanFamilia in 'Beans\uBeanFamilia.pas';
+  uBeanFamilia in 'Beans\uBeanFamilia.pas',
+  uImportacao in 'uImportacao.pas' {frmImportacao},
+  uBeanAlmoxarifado in 'Beans\uBeanAlmoxarifado.pas',
+  uBeanProdutoFornecedor in 'Beans\uBeanProdutoFornecedor.pas';
 
 {$R *.res}
 

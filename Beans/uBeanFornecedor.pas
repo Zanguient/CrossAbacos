@@ -9,24 +9,21 @@ uses
 type
   TFORNECEDOR = Class(TFWPersistence)
   private
-    FCODIGO: TFieldInteger;
-    FCPFCNPJ: TFieldString;
+    FCNPJ: TFieldString;
+    FID: TFieldInteger;
+    FID_ALMOXARIFADO: TFieldInteger;
     FNOME: TFieldString;
-    FCODIGOFORNECEDORABACOS: TFieldInteger;
-    FIERG: TFieldString;
-    procedure SetCODIGO(const Value: TFieldInteger);
-    procedure SetCPFCNPJ(const Value: TFieldString);
+    procedure SetCNPJ(const Value: TFieldString);
+    procedure SetID(const Value: TFieldInteger);
+    procedure SetID_ALMOXARIFADO(const Value: TFieldInteger);
     procedure SetNOME(const Value: TFieldString);
-    procedure SetCODIGOFORNECEDORABACOS(const Value: TFieldInteger);
-    procedure SetIERG(const Value: TFieldString);
   protected
     procedure InitInstance; override;
   published
-    property CODIGO                 : TFieldInteger read FCODIGO  write SetCODIGO;
-    property CODIGOFORNECEDORABACOS : TFieldInteger read FCODIGOFORNECEDORABACOS write SetCODIGOFORNECEDORABACOS;
-    property NOME                   : TFieldString  read FNOME    write SetNOME;
-    property CPFCNPJ                : TFieldString  read FCPFCNPJ write SetCPFCNPJ;
-    property IERG                   : TFieldString read FIERG write SetIERG;
+    property ID : TFieldInteger read FID write SetID;
+    property NOME : TFieldString read FNOME write SetNOME;
+    property CNPJ : TFieldString read FCNPJ write SetCNPJ;
+    property ID_ALMOXARIFADO : TFieldInteger read FID_ALMOXARIFADO write SetID_ALMOXARIFADO;
 End;
 
 implementation
@@ -37,34 +34,24 @@ procedure TFORNECEDOR.InitInstance;
 begin
   inherited;
 
-  CODIGO.isPK       := True;
+  ID.isPK       := True;
 
-  NOME.isNotNull    := True;
-  CPFCNPJ.isNotNull := True;
-
-  NOME.Size         := 100;
-  CPFCNPJ.Size      := 14;
-  IERG.Size         := 14;
+  NOME.Size     := 100;
+  CNPJ.Size     := 14;
+end;
+procedure TFORNECEDOR.SetCNPJ(const Value: TFieldString);
+begin
+  FCNPJ := Value;
 end;
 
-procedure TFORNECEDOR.SetCODIGO(const Value: TFieldInteger);
+procedure TFORNECEDOR.SetID(const Value: TFieldInteger);
 begin
-  FCODIGO := Value;
+  FID := Value;
 end;
 
-procedure TFORNECEDOR.SetCODIGOFORNECEDORABACOS(const Value: TFieldInteger);
+procedure TFORNECEDOR.SetID_ALMOXARIFADO(const Value: TFieldInteger);
 begin
-  FCODIGOFORNECEDORABACOS := Value;
-end;
-
-procedure TFORNECEDOR.SetCPFCNPJ(const Value: TFieldString);
-begin
-  FCPFCNPJ := Value;
-end;
-
-procedure TFORNECEDOR.SetIERG(const Value: TFieldString);
-begin
-  FIERG := Value;
+  FID_ALMOXARIFADO := Value;
 end;
 
 procedure TFORNECEDOR.SetNOME(const Value: TFieldString);

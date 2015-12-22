@@ -27,6 +27,7 @@ type
     IMFundo: TImage;
     RedefinirSenha: TMenuItem;
     Familia1: TMenuItem;
+    Importaes2: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -34,6 +35,7 @@ type
     procedure Margem1Click(Sender: TObject);
     procedure Estoques1Click(Sender: TObject);
     procedure Familia1Click(Sender: TObject);
+    procedure Importaes2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -55,7 +57,8 @@ uses
   uRedefinirSenha,
   uCadastroMargem,
   uImportacaoEstoqueVirtual,
-  uCadastroFamilia;
+  uCadastroFamilia,
+  uImportacao;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -96,6 +99,17 @@ begin
   CriarComandoSequenciaMenu(MainMenu1);
 
   Caption := 'Sistema CrossAbacos - Usuário: ' + IntToStr(USUARIO.CODIGO) + ' - ' + USUARIO.NOME;
+end;
+
+procedure TFrmPrincipal.Importaes2Click(Sender: TObject);
+begin
+  if frmImportacao = nil then
+    frmImportacao   := TfrmImportacao.Create(nil);
+  try
+    frmImportacao.ShowModal;
+  finally
+    FreeAndNil(frmImportacao);
+  end;
 end;
 
 procedure TFrmPrincipal.Margem1Click(Sender: TObject);

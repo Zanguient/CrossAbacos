@@ -30,7 +30,7 @@ type
     Label3: TLabel;
     cbCamposBancodeDados: TComboBox;
     Label4: TLabel;
-    DBGrid1: TDBGrid;
+    gdCamposRelacionados: TDBGrid;
     csCamposRelacionados: TClientDataSet;
     dsCamposRelacionados: TDataSource;
     csCamposRelacionadosEXCEL: TStringField;
@@ -38,12 +38,25 @@ type
     csCamposRelacionadosINDICEEXCEL: TIntegerField;
     sbAdicionarRelacaoCampos: TSpeedButton;
     sbRemoverRelacaoCampos: TSpeedButton;
+    csDadosCarregados: TClientDataSet;
+    csDadosCarregadosSKU: TStringField;
+    csDadosCarregadosCODIGOABACOS: TStringField;
+    csDadosCarregadosCODIGOFORNECEDORABACOS: TStringField;
+    csDadosCarregadosSALDO: TFloatField;
+    csDadosCarregadosCUSTO: TFloatField;
+    dsDadosCarregados: TDataSource;
+    gbMostraDados: TGroupBox;
+    pnCarregaDados: TPanel;
+    SpeedButton1: TSpeedButton;
+    gdDadosCarregados: TDBGrid;
+    sbEnviaAbacos: TSpeedButton;
+    btCancelar: TSpeedButton;
     procedure sbBuscaArquivoClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure btFecharClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure sbAdicionarRelacaoCamposClick(Sender: TObject);
     procedure sbRemoverRelacaoCamposClick(Sender: TObject);
+    procedure btCancelarClick(Sender: TObject);
   private
     CamposExcel : array of TCamposExcel;
     { Private declarations }
@@ -56,12 +69,12 @@ var
   frmImportacaodeEstoqueVirtual: TfrmImportacaodeEstoqueVirtual;
 
 implementation
-uses uMensagem, uBeanProdutoAbacos, uDomains, uFWConnection;
+uses uMensagem, uBeanProdutoAbacos, uDomains, uFWConnection, uFuncoes;
 {$R *.dfm}
 
 { TfrmImportacaodeEstoqueVirtual }
 
-procedure TfrmImportacaodeEstoqueVirtual.btFecharClick(Sender: TObject);
+procedure TfrmImportacaodeEstoqueVirtual.btCancelarClick(Sender: TObject);
 begin
   Close;
 end;
@@ -118,14 +131,14 @@ end;
 
 procedure TfrmImportacaodeEstoqueVirtual.FormShow(Sender: TObject);
 var
-  PRODUTO : TPRODUTOABACOS;
+  PRODUTO : TPRODUTO;
   List    : TPropList;
   I,
   Count   : Integer;
   FWC     : TFWConnection;
 begin
   FWC          := TFWConnection.Create;
-  PRODUTO      := TPRODUTOABACOS.Create(FWC);
+  PRODUTO      := TPRODUTO.Create(FWC);
   try
     Count := GetPropList(PRODUTO.ClassInfo, tkProperties, @List, False);
     for I := 0 to Pred(Count) do begin
@@ -138,6 +151,8 @@ begin
     FreeAndNil(PRODUTO);
     FreeAndNil(FWC);
   end;
+  AutoSizeDBGrid(gdDadosCarregados);
+  AutoSizeDBGrid(gdCamposRelacionados);
 end;
 
 procedure TfrmImportacaodeEstoqueVirtual.sbAdicionarRelacaoCamposClick(

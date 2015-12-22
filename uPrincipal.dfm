@@ -71,6 +71,10 @@ object FrmPrincipal: TFrmPrincipal
       object ProdutosERP1: TMenuItem
         Caption = 'Produtos ERP'
       end
+      object Importaes2: TMenuItem
+        Caption = 'Importa'#231#245'es'
+        OnClick = Importaes2Click
+      end
     end
     object Relatrios1: TMenuItem
       Caption = 'Relat'#243'rios'

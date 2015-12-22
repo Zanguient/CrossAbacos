@@ -14,7 +14,9 @@ uses
   FireDAC.DApt,
   FireDAC.UI,
   FireDAC.Stan.Intf,
-  FireDAC.Phys.Intf, FireDAC.Stan.Error;
+  FireDAC.Phys.Intf,
+  FireDAC.Stan.Error,
+  comObj;
 
 type
   TFWPersistence = class(TInterfacedPersistent)
@@ -60,6 +62,7 @@ type
     procedure Rollback;
     procedure Commit;
 
+    procedure buscaIndicesExcel(Arquivo : String; Excel : OLEVariant); virtual;
   end;
 
 implementation
@@ -470,6 +473,30 @@ end;
 function TFWPersistence.GetCount: Integer;
 begin
   Result := FItens.Count;
+end;
+
+procedure TFWPersistence.buscaIndicesExcel(Arquivo: String; Excel: OLEVariant);
+var
+  I,
+  Column,
+  TotalColumns,
+  Count: Integer;
+  List: TPropList;
+begin
+  try
+    TotalColumns                     := Excel.ActiveCell.Column;
+    Count := GetPropList(Self.ClassInfo, tkProperties, @List, False);
+    for Column := 1 to TotalColumns do begin
+      for I := 0 to Count - 1 do begin
+        if AnsiUpperCase(TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).excelTitulo) = AnsiUpperCase(Excel.Workbooks[ExtractFileName(Arquivo)].WorkSheets[1].Cells.Item[1, Column].Value) then begin
+          TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).excelIndice := Column;
+          Break;
+        end;
+      end;
+    end;
+  except
+  end;
+
 end;
 
 procedure TFWPersistence.Close;
