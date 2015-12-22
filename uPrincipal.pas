@@ -32,7 +32,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure RedefinirSenhaClick(Sender: TObject);
     procedure Margem1Click(Sender: TObject);
-    procedure Estoques1Click(Sender: TObject);
     procedure Familia1Click(Sender: TObject);
   private
     { Private declarations }
@@ -62,17 +61,6 @@ procedure TFrmPrincipal.DefinirPermissoes;
 begin
   Usuario1.Visible        := USUARIO.PERMITIRCADUSUARIO;
   RedefinirSenha.Visible  := USUARIO.CODIGO > 0; //Usuário 0 é Administrador e não tem Cadastro
-end;
-
-procedure TFrmPrincipal.Estoques1Click(Sender: TObject);
-begin
-  if frmImportacaodeEstoqueVirtual = nil then
-    frmImportacaodeEstoqueVirtual   := TfrmImportacaodeEstoqueVirtual.Create(nil);
-  try
-    frmImportacaodeEstoqueVirtual.ShowModal;
-  finally
-    FreeAndNil(frmImportacaodeEstoqueVirtual);
-  end;
 end;
 
 procedure TFrmPrincipal.Familia1Click(Sender: TObject);

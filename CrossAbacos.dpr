@@ -26,7 +26,9 @@ uses
   uBeanGrupo in 'Beans\uBeanGrupo.pas',
   uImportacaoEstoqueVirtual in 'uImportacaoEstoqueVirtual.pas' {frmImportacaodeEstoqueVirtual},
   uCadastroFamilia in 'Cadastros\uCadastroFamilia.pas' {FrmCadastroFamilia},
-  uBeanFamilia in 'Beans\uBeanFamilia.pas';
+  uBeanFamilia in 'Beans\uBeanFamilia.pas',
+  uMatch in 'uMatch.pas' {frmMatch},
+  uBeanLoteImportacao in 'Beans\uBeanLoteImportacao.pas';
 
 {$R *.res}
 
@@ -37,6 +39,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TfrmMatch, frmMatch);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

@@ -66,7 +66,6 @@ object FrmPrincipal: TFrmPrincipal
       Caption = 'Importa'#231#245'es'
       object Estoques1: TMenuItem
         Caption = 'Estoques'
-        OnClick = Estoques1Click
       end
       object ProdutosERP1: TMenuItem
         Caption = 'Produtos ERP'
