@@ -4,6 +4,7 @@ interface
 
 uses
   System.SysUtils,
+  System.UITypes,
   IdHashMessageDigest,
   Vcl.Dialogs,
   Grids,
@@ -15,6 +16,8 @@ uses
   procedure CarregarConfigLocal;
   procedure CarregarConexaoBD;
   procedure AutoSizeDBGrid(const DBGrid: TDBGrid);
+  procedure GerarLoteImportacao;
+  procedure AjustaForm(Form : TForm);
   function ValidaUsuario(Email, Senha : String) : Boolean;
   function MD5(Texto : String): String;
   Function Criptografa(Texto : String; Tipo : String) : String;
@@ -27,7 +30,8 @@ Uses
   uFWConnection,
   uBeanUsuario,
   uDomains,
-  uMensagem;
+  uMensagem,
+  uBeanLoteImportacao;
 
 procedure CarregarConfigLocal;
 Var
@@ -113,6 +117,56 @@ begin
     for i := 0 to ColumnCount-1 do
       DBGrid.Columns[i].Width := DBGrid.Columns[i].Width - Filler;
   end;
+end;
+
+procedure GerarLoteImportacao;
+Var
+  FWC : TFWConnection;
+  LI  : TLOTEIMPORTACAO;
+begin
+
+  FWC := TFWConnection.Create;
+  LI  := TLOTEIMPORTACAO.Create(FWC);
+
+  try
+    try
+      LI.SelectList('CAST(DATA_HORA AS DATE) = CURRENT_DATE');
+      if LI.Count > 0 then begin
+        DisplayMsg(MSG_CONF, 'Já existe lote de Importação para o Dia.: ' +
+                              FormatDateTime('dd/mm/yyyy', TLOTEIMPORTACAO(LI.Itens[0]).DATA_HORA.Value) + sLineBreak +
+                              'Deseja realmente cadastrar um Novo Lote?');
+        if ResultMsgModal <> mrYes then
+          Exit;
+      end;
+
+      LI.ID.isNull        := True;
+      LI.DATA_HORA.Value  := Now;
+      LI.Insert;
+
+      FWC.Commit;
+
+      DisplayMsg(MSG_INF, 'Novo Lote Gerado com Sucesso!');
+
+    except
+      on E : Exception do Begin
+        FWC.Rollback;
+        DisplayMsg(MSG_ERR, 'Erro ao Gerar lote de Importação', 'ClassName ' + E.ClassName + ' ' + E.Message);
+      End;
+    end;
+  finally
+    FreeAndNil(LI);
+    FreeAndNil(FWC);
+  end;
+end;
+
+procedure AjustaForm(Form : TForm);
+begin
+  Form.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
+  Form.ClientWidth  := Application.MainForm.ClientWidth;
+  Form.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
+  Form.Width        := Application.MainForm.ClientWidth;
+  Form.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
+  Form.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
 end;
 
 function ValidaUsuario(Email, Senha : String) : Boolean;
