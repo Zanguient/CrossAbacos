@@ -302,12 +302,7 @@ end;
 
 procedure TFrmCadastroUsuario.FormCreate(Sender: TObject);
 begin
-  Self.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.ClientWidth  := Application.MainForm.ClientWidth;
-  Self.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.Width        := Application.MainForm.ClientWidth;
-  Self.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
-  Self.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+  AjustaForm(Self);
 end;
 
 procedure TFrmCadastroUsuario.FormKeyDown(Sender: TObject; var Key: Word;
