@@ -34,6 +34,9 @@ type
     cds_MatchSTATUS: TStringField;
     cds_MatchULTIMOLOTE: TDateTimeField;
     SaveDialog1: TSaveDialog;
+    btRelatorio: TSpeedButton;
+    edFiltroSKU: TLabeledEdit;
+    LabeledEdit1: TLabeledEdit;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -94,7 +97,7 @@ begin
 
       if LI.Count > 0 then begin
         for I := 0 to LI.Count - 1 do begin
-          cbLoteImportacao.Items.Add(IntToStr(TLOTEIMPORTACAO(LI.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy hh:mm:ss', TLOTEIMPORTACAO(LI.Itens[I]).DATA_HORA.Value));
+          cbLoteImportacao.Items.Add(IntToStr(TLOTEIMPORTACAO(LI.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTEIMPORTACAO(LI.Itens[I]).DATA_HORA.Value));
           if cbLoteImportacao.Items.Count >= 5 then
             Break;
         end;
