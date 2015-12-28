@@ -503,8 +503,8 @@ object frmMatch: TfrmMatch
     TabOrder = 2
     object btConsultar: TSpeedButton
       AlignWithMargins = True
-      Left = 389
-      Top = 3
+      Left = 287
+      Top = 9
       Width = 100
       Height = 62
       Caption = '&Consultar'
@@ -1028,8 +1028,8 @@ object frmMatch: TfrmMatch
     end
     object cbLoteImportacao: TComboBox
       Left = 4
-      Top = 3
-      Width = 379
+      Top = 20
+      Width = 277
       Height = 33
       Style = csDropDownList
       Font.Charset = DEFAULT_CHARSET
@@ -1041,8 +1041,8 @@ object frmMatch: TfrmMatch
       TabOrder = 0
     end
     object edFiltroSKU: TLabeledEdit
-      Left = 4
-      Top = 61
+      Left = 428
+      Top = 25
       Width = 141
       Height = 27
       EditLabel.Width = 19
@@ -1056,9 +1056,9 @@ object frmMatch: TfrmMatch
       ParentFont = False
       TabOrder = 1
     end
-    object LabeledEdit1: TLabeledEdit
-      Left = 151
-      Top = 59
+    object edFiltroMarca: TLabeledEdit
+      Left = 575
+      Top = 25
       Width = 141
       Height = 27
       EditLabel.Width = 19
@@ -1156,6 +1156,12 @@ object frmMatch: TfrmMatch
       end
       item
         Expanded = False
+        FieldName = 'LOTE'
+        Title.Caption = 'Lote'
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'ULTIMOLOTE'
         Title.Caption = #218'ltimo Lote'
         Width = 250
@@ -1210,8 +1216,11 @@ object frmMatch: TfrmMatch
       FieldName = 'STATUS'
       Size = 100
     end
-    object cds_MatchULTIMOLOTE: TDateTimeField
-      FieldName = 'ULTIMOLOTE'
+    object cds_MatchLOTE: TIntegerField
+      FieldName = 'LOTE'
+    end
+    object cds_MatchDATAULTIMOLOTE: TDateField
+      FieldName = 'DATAULTIMOLOTE'
     end
   end
   object SaveDialog1: TSaveDialog

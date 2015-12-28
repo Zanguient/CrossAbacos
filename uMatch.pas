@@ -32,11 +32,12 @@ type
     cds_MatchFORNCECEDORANTERIOR: TStringField;
     cds_MatchFORNECEDORATUAL: TStringField;
     cds_MatchSTATUS: TStringField;
-    cds_MatchULTIMOLOTE: TDateTimeField;
     SaveDialog1: TSaveDialog;
     btRelatorio: TSpeedButton;
     edFiltroSKU: TLabeledEdit;
-    LabeledEdit1: TLabeledEdit;
+    edFiltroMarca: TLabeledEdit;
+    cds_MatchLOTE: TIntegerField;
+    cds_MatchDATAULTIMOLOTE: TDateField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -161,7 +162,7 @@ begin
     SQL.SQL.Add('	CAST(''Fornec. Anterior'' AS VARCHAR(100)) AS FORNANTERIOR,');
     SQL.SQL.Add('	CAST(''Fornec. Atual'' AS VARCHAR(100)) AS FORNATUAL,');
     SQL.SQL.Add('	CAST(''NÃO ATUALIZADO'' AS VARCHAR(100)) AS STATUS,');
-    SQL.SQL.Add('	(SELECT max(LI.DATA_HORA) FROM LOTEIMPORTACAO LI) AS ULTIMOLOTE');
+    SQL.SQL.Add('	(SELECT max(LI.DATA_HORA) FROM LOTEIMPORTACAO LI) AS DATAULTIMOLOTE');
     SQL.SQL.Add('FROM PRODUTO P');
 
     SQL.Connection  := FWC.FDConnection;
@@ -181,7 +182,7 @@ begin
         cds_MatchFORNCECEDORANTERIOR.Value  := SQL.Fields[4].Value;
         cds_MatchFORNECEDORATUAL.Value      := SQL.Fields[5].Value;
         cds_MatchSTATUS.Value               := SQL.Fields[6].Value;
-        cds_MatchULTIMOLOTE.Value           := SQL.Fields[7].Value;
+        cds_MatchDATAULTIMOLOTE.Value       := SQL.Fields[7].Value;
 
         cds_Match.Post;
         SQL.Next
