@@ -38,6 +38,15 @@ begin
 
   NOME.Size     := 100;
   CNPJ.Size     := 14;
+
+  NOME.isSearchField := True;
+  CNPJ.isSearchField := True;
+
+  NOME.displayLabel  := 'Nome';
+  CNPJ.displayLabel  := 'Cnpj';
+
+  NOME.displayWidth  := 100;
+  CNPJ.displayWidth  := 50;
 end;
 procedure TFORNECEDOR.SetCNPJ(const Value: TFieldString);
 begin

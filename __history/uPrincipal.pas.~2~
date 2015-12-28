@@ -24,7 +24,6 @@ type
     Movimentaes1: TMenuItem;
     Match1: TMenuItem;
     GerarLote1: TMenuItem;
-    ImportaodeArquivosdeFornecedores1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -34,7 +33,6 @@ type
     procedure Importacoes2Click(Sender: TObject);
     procedure GerarLote1Click(Sender: TObject);
     procedure Match1Click(Sender: TObject);
-    procedure ImportaodeArquivosdeFornecedores1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -106,13 +104,6 @@ begin
   finally
     FreeAndNil(frmImportacao);
   end;
-end;
-
-procedure TFrmPrincipal.ImportaodeArquivosdeFornecedores1Click(Sender: TObject);
-begin
-  if frmImportacaoArquivoFornecedor = nil then
-    frmImportacaoArquivoFornecedor   := TfrmImportacaoArquivoFornecedor.Create(nil);
-  frmImportacaoArquivoFornecedor.ShowModal;
 end;
 
 procedure TFrmPrincipal.Margem1Click(Sender: TObject);

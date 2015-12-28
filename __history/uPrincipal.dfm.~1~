@@ -57,10 +57,6 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Importa'#231#245'es'
         OnClick = Importacoes2Click
       end
-      object ImportaodeArquivosdeFornecedores1: TMenuItem
-        Caption = 'Importa'#231#227'o de Arquivos de Fornecedores'
-        OnClick = ImportaodeArquivosdeFornecedores1Click
-      end
     end
     object Movimentaes1: TMenuItem
       Caption = 'Movimenta'#231#245'es'

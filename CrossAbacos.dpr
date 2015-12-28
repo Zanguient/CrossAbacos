@@ -29,7 +29,9 @@ uses
   uBeanLoteImportacao in 'Beans\uBeanLoteImportacao.pas',
   uImportacao in 'uImportacao.pas' {frmImportacao},
   uBeanAlmoxarifado in 'Beans\uBeanAlmoxarifado.pas',
-  uBeanProdutoFornecedor in 'Beans\uBeanProdutoFornecedor.pas';
+  uBeanProdutoFornecedor in 'Beans\uBeanProdutoFornecedor.pas',
+  uImportacaoArquivoFornecedor in 'uImportacaoArquivoFornecedor.pas' {frmImportacaoArquivoFornecedor},
+  uSeleciona in 'uSeleciona.pas' {frmSeleciona};
 
 {$R *.res}
 
@@ -40,7 +42,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(TfrmMatch, frmMatch);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);
