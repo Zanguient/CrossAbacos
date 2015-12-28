@@ -227,7 +227,7 @@ begin
           SQLDS.ParamByName(List[I]^.Name).DataType := ftString;
       end else if (TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)) is TFieldDateTime) then begin
         if SQLDS.FindParam(List[I]^.Name) <> nil then
-          SQLDS.ParamByName(List[I]^.Name).DataType := ftDate;
+          SQLDS.ParamByName(List[I]^.Name).DataType := ftDateTime;
       end else if (TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)) is TFieldBoolean) then begin
         if SQLDS.FindParam(List[I]^.Name) <> nil then
           SQLDS.ParamByName(List[I]^.Name).DataType := ftBoolean;
