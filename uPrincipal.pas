@@ -10,31 +10,29 @@ type
   TFrmPrincipal = class(TForm)
     MainMenu1: TMainMenu;
     Cadastros1: TMenuItem;
-    Lanamentos1: TMenuItem;
     Importaes1: TMenuItem;
     Relatrios1: TMenuItem;
     Configuraes1: TMenuItem;
     Usuario1: TMenuItem;
     Margem1: TMenuItem;
-    Precificao1: TMenuItem;
-    CrossEstoque1: TMenuItem;
-    CrossFornec1: TMenuItem;
-    CrossMatch1: TMenuItem;
-    Estoques1: TMenuItem;
-    ProdutosERP1: TMenuItem;
     ConfigGerais1: TMenuItem;
     miSair: TMenuItem;
     IMFundo: TImage;
     RedefinirSenha: TMenuItem;
     Familia1: TMenuItem;
-    Importaes2: TMenuItem;
+    Importacoes2: TMenuItem;
+    Movimentaes1: TMenuItem;
+    Match1: TMenuItem;
+    GerarLote1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure RedefinirSenhaClick(Sender: TObject);
     procedure Margem1Click(Sender: TObject);
     procedure Familia1Click(Sender: TObject);
-    procedure Importaes2Click(Sender: TObject);
+    procedure Importacoes2Click(Sender: TObject);
+    procedure GerarLote1Click(Sender: TObject);
+    procedure Match1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -50,6 +48,7 @@ implementation
 
 uses
   uConstantes,
+  uFuncoes,
   uMensagem,
   uCadastroUsuario,
   uBeanUsuario,
@@ -57,7 +56,8 @@ uses
   uCadastroMargem,
   uImportacaoEstoqueVirtual,
   uCadastroFamilia,
-  uImportacao;
+  uImportacao,
+  uMatch;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -89,7 +89,12 @@ begin
   Caption := 'Sistema CrossAbacos - Usuário: ' + IntToStr(USUARIO.CODIGO) + ' - ' + USUARIO.NOME;
 end;
 
-procedure TFrmPrincipal.Importaes2Click(Sender: TObject);
+procedure TFrmPrincipal.GerarLote1Click(Sender: TObject);
+begin
+  GerarLoteImportacao;
+end;
+
+procedure TFrmPrincipal.Importacoes2Click(Sender: TObject);
 begin
   if frmImportacao = nil then
     frmImportacao   := TfrmImportacao.Create(nil);
@@ -108,6 +113,17 @@ begin
     FrmCadastroMargem.ShowModal;
   finally
     FreeAndNil(FrmCadastroMargem);
+  end;
+end;
+
+procedure TFrmPrincipal.Match1Click(Sender: TObject);
+begin
+  try
+    if frmMatch = nil then
+      frmMatch := TfrmMatch.Create(Self);
+    frmMatch.ShowModal;
+  finally
+    FreeAndNil(frmMatch);
   end;
 end;
 

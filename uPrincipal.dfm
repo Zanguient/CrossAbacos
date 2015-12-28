@@ -47,32 +47,22 @@ object FrmPrincipal: TFrmPrincipal
         OnClick = Familia1Click
       end
     end
-    object Lanamentos1: TMenuItem
-      Caption = 'Lan'#231'amentos'
-      object Precificao1: TMenuItem
-        Caption = 'Precifica'#231#227'o'
-      end
-      object CrossEstoque1: TMenuItem
-        Caption = 'Cross - Estoque'
-      end
-      object CrossFornec1: TMenuItem
-        Caption = 'Cross - Fornec.'
-      end
-      object CrossMatch1: TMenuItem
-        Caption = 'Cross - Match'
-      end
-    end
     object Importaes1: TMenuItem
       Caption = 'Importa'#231#245'es'
-      object Estoques1: TMenuItem
-        Caption = 'Estoques'
+      object GerarLote1: TMenuItem
+        Caption = 'Gerar Lote'
+        OnClick = GerarLote1Click
       end
-      object ProdutosERP1: TMenuItem
-        Caption = 'Produtos ERP'
-      end
-      object Importaes2: TMenuItem
+      object Importacoes2: TMenuItem
         Caption = 'Importa'#231#245'es'
-        OnClick = Importaes2Click
+        OnClick = Importacoes2Click
+      end
+    end
+    object Movimentaes1: TMenuItem
+      Caption = 'Movimenta'#231#245'es'
+      object Match1: TMenuItem
+        Caption = 'Match'
+        OnClick = Match1Click
       end
     end
     object Relatrios1: TMenuItem
