@@ -9,8 +9,8 @@ type TIMPORTACAO = Class(TFWPersistence)
     FID_LOTE: TFieldInteger;
     FID_FORNECEDOR: TFieldInteger;
     FID_USUARIO: TFieldInteger;
-    FDATA: TFieldDateTime;
-    procedure SetDATA(const Value: TFieldDateTime);
+    FDATA_HORA: TFieldDateTime;
+    procedure SetDATA_HORA(const Value: TFieldDateTime);
     procedure SetID(const Value: TFieldInteger);
     procedure SetID_FORNECEDOR(const Value: TFieldInteger);
     procedure SetID_LOTE(const Value: TFieldInteger);
@@ -18,11 +18,11 @@ type TIMPORTACAO = Class(TFWPersistence)
   protected
     procedure InitInstance; override;
   published
-    property ID            : TFieldInteger read FID write SetID;
-    property DATA          : TFieldDateTime read FDATA write SetDATA;
-    property ID_USUARIO    : TFieldInteger read FID_USUARIO write SetID_USUARIO;
-    property ID_FORNECEDOR : TFieldInteger read FID_FORNECEDOR write SetID_FORNECEDOR;
-    property ID_LOTE       : TFieldInteger read FID_LOTE write SetID_LOTE;
+    property ID            : TFieldInteger  read FID            write SetID;
+    property DATA_HORA     : TFieldDateTime read FDATA_HORA     write SetDATA_HORA;
+    property ID_USUARIO    : TFieldInteger  read FID_USUARIO    write SetID_USUARIO;
+    property ID_FORNECEDOR : TFieldInteger  read FID_FORNECEDOR write SetID_FORNECEDOR;
+    property ID_LOTE       : TFieldInteger  read FID_LOTE       write SetID_LOTE;
 End;
 implementation
 
@@ -34,9 +34,9 @@ begin
   ID.isPK        := True;
 end;
 
-procedure TIMPORTACAO.SetDATA(const Value: TFieldDateTime);
+procedure TIMPORTACAO.SetDATA_HORA(const Value: TFieldDateTime);
 begin
-  FDATA := Value;
+  FDATA_HORA := Value;
 end;
 
 procedure TIMPORTACAO.SetID(const Value: TFieldInteger);
