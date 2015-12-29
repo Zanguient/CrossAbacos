@@ -1,9 +1,22 @@
-create table importacao (
-  id serial not null,
-  descricao character varying(100),
-  datahora timestamp with time zone,
-  caminhoarquivo character verying(100),
-  formatoarquivo character varying(100),
-  codigofornecedorabacos character varying(100),
-  CONSTRAINT pk_importacao primary key (id)  
-);
+create table if not exists importacao (
+  id serial,
+  data timestamp,
+  id_usuario int not null,
+  id_fornecedor int not null,
+  id_lote int not null,
+  primary key (id),
+  constraint fk_importacao_usuario1
+    foreign key (id_usuario)
+    references usuario (codigo)
+    on delete no action
+    on update no action,
+  constraint fk_importacao_fornecedor1
+    foreign key (id_fornecedor)
+    references fornecedor (id)
+    on delete no action
+    on update no action,
+  constraint fk_importacao_lote1
+    foreign key (id_lote)
+    references loteimportacao (id)
+    on delete no action
+    on update no action);
