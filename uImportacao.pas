@@ -59,7 +59,7 @@ var
   frmImportacao: TfrmImportacao;
 
 implementation
-uses uBeanProdutoAbacos, uFWConnection, uMensagem, uBeanAlmoxarifado,
+uses uBeanProduto, uFWConnection, uMensagem, uBeanAlmoxarifado,
      uBeanProdutoFornecedor, uBeanFornecedor;
 
 {$R *.dfm}

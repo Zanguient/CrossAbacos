@@ -116,7 +116,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanFornecedor.pas"/>
-        <DCCReference Include="Beans\uBeanProdutoAbacos.pas"/>
+        <DCCReference Include="Beans\uBeanProduto.pas"/>
         <DCCReference Include="uRedefinirSenha.pas">
             <Form>FrmRedefinirSenha</Form>
             <FormType>dfm</FormType>
@@ -127,10 +127,6 @@
         </DCCReference>
         <DCCReference Include="Beans\uBeanMargem.pas"/>
         <DCCReference Include="Beans\uBeanGrupo.pas"/>
-        <DCCReference Include="uImportacaoEstoqueVirtual.pas">
-            <Form>frmImportacaodeEstoqueVirtual</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Cadastros\uCadastroFamilia.pas">
             <Form>FrmCadastroFamilia</Form>
             <FormType>dfm</FormType>
@@ -236,11 +232,13 @@
                 <DeployFile LocalName="Win32\Debug\CrossAbacos.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CrossAbacos.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="C:\CrossAbacos\CrossAbacos.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CrossAbacos.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployClass Required="true" Name="DependencyPackage">

@@ -1,4 +1,4 @@
-unit uBeanProdutoAbacos;
+unit uBeanProduto;
 
 interface
 uses uFWPersistence, uDomains;
