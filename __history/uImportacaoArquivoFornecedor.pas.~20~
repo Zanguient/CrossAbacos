@@ -244,10 +244,10 @@ begin
         csProdutos.Next;
       end;
       CON.Commit;
+      DisplayMsg(MSG_OK, 'Sucesso!');
       edFornecedor.Enabled                          := True;
       edArquivo.Enabled                             := True;
       csProdutos.EmptyDataSet;
-      DisplayMsg(MSG_OK, 'Sucesso!');
     except
       on E : Exception do begin
         CON.Rollback;

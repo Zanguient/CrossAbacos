@@ -31,7 +31,9 @@ uses
   uBeanAlmoxarifado in 'Beans\uBeanAlmoxarifado.pas',
   uBeanProdutoFornecedor in 'Beans\uBeanProdutoFornecedor.pas',
   uImportacaoArquivoFornecedor in 'uImportacaoArquivoFornecedor.pas' {frmImportacaoArquivoFornecedor},
-  uSeleciona in 'uSeleciona.pas' {frmSeleciona};
+  uSeleciona in 'uSeleciona.pas' {frmSeleciona},
+  uBeanImportacao in 'Beans\uBeanImportacao.pas',
+  uBeanImportacao_Itens in 'Beans\uBeanImportacao_Itens.pas';
 
 {$R *.res}
 

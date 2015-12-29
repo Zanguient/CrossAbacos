@@ -1,5 +1,5 @@
 create table if not exists importacao_itens (
-  id int not null,
+  id serial,
   custo decimal(18,2) not null,
   quantidade int not null,
   id_importacao int not null,
@@ -10,8 +10,8 @@ create table if not exists importacao_itens (
   constraint fk_importacao_itens_importacao1
     foreign key (id_importacao)
     references importacao (id)
-    on delete no action
-    on update no action,
+    on delete cascade
+    on update cascade,
   constraint fk_importacao_itens_produto1
     foreign key (id_produto)
     references produto (id)
