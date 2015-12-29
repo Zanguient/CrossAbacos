@@ -199,10 +199,10 @@ begin
 
       if USU.Count > 0 then begin
         if (Criptografa(TUSUARIO(USU.Itens[0]).SENHA.Value, 'D') = Senha) then begin
-          USUARIO.CODIGO              := TUSUARIO(USU.Itens[0]).CODIGO.Value;
+          USUARIO.CODIGO              := TUSUARIO(USU.Itens[0]).ID.Value;
           USUARIO.NOME                := TUSUARIO(USU.Itens[0]).NOME.Value;
           USUARIO.EMAIL               := TUSUARIO(USU.Itens[0]).EMAIL.Value;
-          USUARIO.PERMITIRCADUSUARIO  := TUSUARIO(USU.Itens[0]).PERMITIRCADUSUARIO.Value;
+          USUARIO.PERMITIRCADUSUARIO  := TUSUARIO(USU.Itens[0]).PERMITIR_CAD_USUARIO.Value;
           Result          := True;
         end;
       end;

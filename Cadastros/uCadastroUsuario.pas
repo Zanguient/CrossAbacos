@@ -135,7 +135,7 @@ begin
         USU := TUSUARIO.Create(FWC);
         try
 
-          USU.CODIGO.Value := csPesquisaCODIGO.Value;
+          USU.ID.Value := csPesquisaCODIGO.Value;
           USU.Delete;
 
           FWC.Commit;
@@ -193,12 +193,12 @@ begin
         Exit;
       end;
 
-      USU.NOME.Value              := edNome.Text;
-      USU.EMAIL.Value             := edEmail.Text;
-      USU.PERMITIRCADUSUARIO.Value:= cbAcessoCadUsuario.Checked;
+      USU.NOME.Value                  := edNome.Text;
+      USU.EMAIL.Value                 := edEmail.Text;
+      USU.PERMITIR_CAD_USUARIO.Value  := cbAcessoCadUsuario.Checked;
 
       if (Sender as TSpeedButton).Tag > 0 then begin
-        USU.CODIGO.Value  := (Sender as TSpeedButton).Tag;
+        USU.ID.Value      := (Sender as TSpeedButton).Tag;
         USU.SENHA.Value   := Criptografa(edSenha.Text, 'E');
         USU.Update;
       end else begin
@@ -257,11 +257,11 @@ begin
       if USU.Count > 0 then begin
         for I := 0 to USU.Count -1 do begin
           csPesquisa.Append;
-          csPesquisaCODIGO.Value              := TUSUARIO(USU.Itens[I]).CODIGO.Value;
+          csPesquisaCODIGO.Value              := TUSUARIO(USU.Itens[I]).ID.Value;
           csPesquisaNOME.Value                := TUSUARIO(USU.Itens[I]).NOME.Value;
           csPesquisaEMAIL.Value               := TUSUARIO(USU.Itens[I]).EMAIL.Value;
           csPesquisaSENHA.Value               := TUSUARIO(USU.Itens[I]).SENHA.Value;
-          csPesquisaPERMITIRCADUSUARIO.Value  := TUSUARIO(USU.Itens[I]).PERMITIRCADUSUARIO.Value;
+          csPesquisaPERMITIRCADUSUARIO.Value  := TUSUARIO(USU.Itens[I]).PERMITIR_CAD_USUARIO.Value;
           csPesquisa.Post;
         end;
       end;

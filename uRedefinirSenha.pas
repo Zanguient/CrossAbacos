@@ -78,7 +78,7 @@ begin
             Exit;
           end;
 
-          USU.CODIGO.Value  := USUARIO.CODIGO;
+          USU.ID.Value      := USUARIO.CODIGO;
           USU.SENHA.Value   := Criptografa(edNovaSenha.Text, 'E');
           USU.Update;
 
