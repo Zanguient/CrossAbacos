@@ -3,6 +3,7 @@ create table if not exists produto (
   sku character varying(100) not null,
   codigo_barras int null,
   nome character varying(255) null,
+  custo numeric(18,2) null,
   saldo numeric(18,2) null,
   disponivel numeric(18,2) null,
   icms numeric(18,2) null,

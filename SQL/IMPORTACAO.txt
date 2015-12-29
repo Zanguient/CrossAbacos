@@ -1,6 +1,6 @@
 create table if not exists importacao (
   id serial,
-  data timestamp,
+  data_hora timestamp,
   id_usuario int not null,
   id_fornecedor int not null,
   id_lote int not null,

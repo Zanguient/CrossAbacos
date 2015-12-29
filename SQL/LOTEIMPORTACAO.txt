@@ -1,5 +1,0 @@
-CREATE TABLE loteimportacao
-(
-  id serial NOT NULL,
-  data_hora timestamp,
-  CONSTRAINT pk_loteimportacao PRIMARY KEY (id))
