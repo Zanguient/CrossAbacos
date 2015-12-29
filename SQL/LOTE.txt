@@ -1,0 +1,5 @@
+CREATE TABLE lote
+(
+  id serial NOT NULL,
+  data_hora timestamp,
+  CONSTRAINT pk_lote PRIMARY KEY (id))
