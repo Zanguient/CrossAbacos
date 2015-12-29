@@ -1,0 +1,19 @@
+create table if not exists loteimportacaoitens (
+ id serial,
+ custo decimal(18,2) not null,
+ quantidade int not null,
+ id_importacao int not null,
+ id_produto int not null,
+ status smallint not null,
+ custo_dia_e10 decimal(18,2) not null,
+ primary key (id),
+ constraint fk_importacao_itens_importacao1
+   foreign key (id_importacao)
+   references loteimportacao (id)
+   on delete no action
+   on update no action,
+ constraint fk_importacao_itens_produto1
+   foreign key (id_produto)
+   references produto (id)
+   on delete no action
+   on update no action)
