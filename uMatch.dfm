@@ -488,7 +488,6 @@ object frmMatch: TfrmMatch
         FFFFFFFFFFFFFFFFFFF4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4
         F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F2F2F2D6D6D6FF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-      OnClick = ExportClick
       ExplicitLeft = 448
       ExplicitHeight = 53
     end
@@ -1162,8 +1161,8 @@ object frmMatch: TfrmMatch
       end
       item
         Expanded = False
-        FieldName = 'ULTIMOLOTE'
-        Title.Caption = #218'ltimo Lote'
+        FieldName = 'DATAULTIMOLOTE'
+        Title.Caption = 'Data '#218'ltimo Lote'
         Width = 250
         Visible = True
       end>

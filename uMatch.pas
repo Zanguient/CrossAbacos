@@ -64,7 +64,8 @@ uses
   uFuncoes,
   uBeanLOTEIMPORTACAO,
   uFWConnection,
-  uMensagem;
+  uMensagem,
+  uDMUtil;
 
 {$R *.dfm}
 
@@ -83,22 +84,22 @@ end;
 procedure TfrmMatch.CarregaLoteImportacao;
 Var
   FWC : TFWConnection;
-  LI  : TLOTE;
+  L  : TLOTE;
   I   : Integer;
 begin
 
   FWC := TFWConnection.Create;
-  LI  := TLOTE.Create(FWC);
+  L   := TLOTE.Create(FWC);
 
   try
     try
 
-      LI.SelectList('','DATA_HORA DESC');
+      L.SelectList('','DATA_HORA DESC');
       cbLoteImportacao.Items.Clear;
 
-      if LI.Count > 0 then begin
-        for I := 0 to LI.Count - 1 do begin
-          cbLoteImportacao.Items.Add(IntToStr(TLOTE(LI.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(LI.Itens[I]).DATA_HORA.Value));
+      if L.Count > 0 then begin
+        for I := 0 to L.Count - 1 do begin
+          cbLoteImportacao.Items.Add(IntToStr(TLOTE(L.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(L.Itens[I]).DATA_HORA.Value));
           if cbLoteImportacao.Items.Count >= 5 then
             Break;
         end;
@@ -114,7 +115,7 @@ begin
       End;
     end;
   finally
-    FreeAndNil(LI);
+    FreeAndNil(L);
     FreeAndNil(FWC);
   end;
 
@@ -141,48 +142,65 @@ end;
 
 procedure TfrmMatch.ConsultaMatch;
 Var
-  FWC : TFWConnection;
-  SQL : TFDQuery;
-  I   : Integer;
+  FWC     : TFWConnection;
+  SQL     : TFDQuery;
+  SQLLOTE : TFDQuery;
 begin
 
-  FWC := TFWConnection.Create;
-  SQL := TFDQuery.Create(nil);
+  FWC     := TFWConnection.Create;
+  SQL     := TFDQuery.Create(nil);
+  SQLLOTE := TFDQuery.Create(nil);
 
   cds_Match.DisableControls;
   cds_Match.EmptyDataSet;
   try
+
+    SQLLOTE.Close;
+    SQLLOTE.SQL.Clear;
+    SQLLOTE.SQL.Add('SELECT L.ID, CAST(L.DATA_HORA AS DATE) FROM LOTE L WHERE L.ID = (');
+    SQLLOTE.SQL.Add('SELECT COALESCE(MAX(IMP.ID_LOTE),0) FROM IMPORTACAO IMP');
+    SQLLOTE.SQL.Add('	INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
+    SQLLOTE.SQL.Add('WHERE');
+    SQLLOTE.SQL.Add('	IMPI.ID_PRODUTO = :ID_PRODUTO)');
+    SQLLOTE.Params[0].DataType := ftInteger;
+    SQLLOTE.Connection  := FWC.FDConnection;
+
     SQL.Close;
     SQL.SQL.Clear;
     SQL.SQL.Add('SELECT');
+    SQL.SQL.Add('	P.ID,');
     SQL.SQL.Add('	P.SKU,');
     SQL.SQL.Add('	P.MARCA,');
-    SQL.SQL.Add('	5.33 AS CUSTOANTERIOR,');
-    SQL.SQL.Add('	7.23 AS CUSTOATUAL,');
-    SQL.SQL.Add('	CAST(''Fornec. Anterior'' AS VARCHAR(100)) AS FORNANTERIOR,');
+    SQL.SQL.Add('	P.CUSTO AS CUSTOANTERIOR,');
+    SQL.SQL.Add('	10 AS CUSTOATUAL,');
+    SQL.SQL.Add('	CAST(P.SUB_GRUPO AS VARCHAR(100)) AS FORNANTERIOR,');
     SQL.SQL.Add('	CAST(''Fornec. Atual'' AS VARCHAR(100)) AS FORNATUAL,');
-    SQL.SQL.Add('	CAST(''NÃO ATUALIZADO'' AS VARCHAR(100)) AS STATUS,');
-    SQL.SQL.Add('	(SELECT max(LI.DATA_HORA) FROM LOTEIMPORTACAO LI) AS DATAULTIMOLOTE');
+    SQL.SQL.Add('	CAST(''ATUALIZADO'' AS VARCHAR(100)) AS STATUS');
     SQL.SQL.Add('FROM PRODUTO P');
-
     SQL.Connection  := FWC.FDConnection;
-    SQL.Transaction := FWC.FDTransaction;
     SQL.Open;
 
     if not SQL.IsEmpty then begin
       SQL.First;
       while not SQL.Eof do begin
         cds_Match.Append;
+        cds_MatchSKU.Value                  := SQL.Fields[1].Value;
+        cds_MatchMARCA.Value                := SQL.Fields[2].Value;
+        cds_MatchCUSTOANTERIOR.Value        := SQL.Fields[3].Value;
+        cds_MatchCUSTOATUAL.Value           := SQL.Fields[4].Value;
+        cds_MatchFORNCECEDORANTERIOR.Value  := SQL.Fields[5].Value;
+        cds_MatchFORNECEDORATUAL.Value      := SQL.Fields[6].Value;
+        cds_MatchSTATUS.Value               := SQL.Fields[7].Value;
 
-        cds_MatchSKU.Value                  := SQL.Fields[0].Value;
-        cds_MatchMARCA.Value                := SQL.Fields[1].Value;
-        cds_MatchCUSTOANTERIOR.Value        := SQL.Fields[2].Value;
-        cds_MatchCUSTOATUAL.Value           := SQL.Fields[3].Value;
-        //cds_MatchPERCENTUALDIFERENCA.Value  := SQL.Fields[0].Value;//Percentual Diferença Calculado
-        cds_MatchFORNCECEDORANTERIOR.Value  := SQL.Fields[4].Value;
-        cds_MatchFORNECEDORATUAL.Value      := SQL.Fields[5].Value;
-        cds_MatchSTATUS.Value               := SQL.Fields[6].Value;
-        cds_MatchDATAULTIMOLOTE.Value       := SQL.Fields[7].Value;
+        //Carrega o último Lote
+        SQLLOTE.Close;
+        SQLLOTE.Prepare;
+        SQLLOTE.Params[0].Value := SQL.Fields[0].Value; //Passa o ID
+        SQLLOTE.Open;
+        if not SQLLOTE.IsEmpty then begin
+          cds_MatchLOTE.Value                 := SQLLOTE.Fields[0].Value;
+          cds_MatchDATAULTIMOLOTE.Value       := SQLLOTE.Fields[1].Value;
+        end;
 
         cds_Match.Post;
         SQL.Next
@@ -192,6 +210,7 @@ begin
 
   finally
     cds_Match.EnableControls;
+    FreeAndNil(SQLLOTE);
     FreeAndNil(SQL);
     FreeAndNil(FWC);
   end;
