@@ -122,18 +122,18 @@ end;
 procedure GerarLoteImportacao;
 Var
   FWC : TFWConnection;
-  LI  : TLOTEIMPORTACAO;
+  LI  : TLOTE;
 begin
 
   FWC := TFWConnection.Create;
-  LI  := TLOTEIMPORTACAO.Create(FWC);
+  LI  := TLOTE.Create(FWC);
 
   try
     try
       LI.SelectList('CAST(DATA_HORA AS DATE) = CURRENT_DATE');
       if LI.Count > 0 then begin
         DisplayMsg(MSG_CONF, 'Já existe lote de Importação para o Dia.: ' +
-                              FormatDateTime('dd/mm/yyyy', TLOTEIMPORTACAO(LI.Itens[0]).DATA_HORA.Value) + sLineBreak +
+                              FormatDateTime('dd/mm/yyyy', TLOTE(LI.Itens[0]).DATA_HORA.Value) + sLineBreak +
                               'Deseja realmente cadastrar um Novo Lote?');
         if ResultMsgModal <> mrYes then
           Exit;

@@ -7,7 +7,7 @@ uses
   uFWPersistence;
 
 type
-  TLOTEIMPORTACAO = class(TFWPersistence)
+  TLOTE = class(TFWPersistence)
   private
     FID: TFieldInteger;
     FDATA_HORA: TFieldDateTime;
@@ -24,19 +24,19 @@ implementation
 
 { TLOTEIMPORTACAO }
 
-procedure TLOTEIMPORTACAO.InitInstance;
+procedure TLOTE.InitInstance;
 begin
   inherited;
   ID.isPK             := True;
   DATA_HORA.isNotNull := True;
 end;
 
-procedure TLOTEIMPORTACAO.SetDATA_HORA(const Value: TFieldDateTime);
+procedure TLOTE.SetDATA_HORA(const Value: TFieldDateTime);
 begin
   FDATA_HORA := Value;
 end;
 
-procedure TLOTEIMPORTACAO.SetID(const Value: TFieldInteger);
+procedure TLOTE.SetID(const Value: TFieldInteger);
 begin
   FID := Value;
 end;

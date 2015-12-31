@@ -195,6 +195,7 @@ begin
       CON.StartTransaction;
       try
         for J := 2 to vrow do begin
+          FORN.CNPJ.Value := '';
           for I := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).excelIndice > 0) then begin
               Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).excelIndice].Value);
@@ -202,9 +203,11 @@ begin
               TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).asVariant := Valor;
             end;
           end;
-          if FORN.CNPJ.Value = '' then
-            mnImportaFornecedor.Lines.Add('Linha vazia!')
-          else begin
+          if FORN.CNPJ.Value = '' then begin
+            mnImportaFornecedor.Lines.Add('Linha vazia!');
+            pbImportaFornecedor.Position   := pbImportaFornecedor.Max;
+            Break;
+          end else begin
             ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
             if ALM.Count > 0 then begin
               FORN.ID_ALMOXARIFADO.Value := TALMOXARIFADO(ALM.Itens[0]).ID.Value;

@@ -293,8 +293,6 @@ object frmImportacao: TfrmImportacao
         Color = clWhite
         ParentBackground = False
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 9
         DesignSize = (
           362
           72)
@@ -335,9 +333,6 @@ object frmImportacao: TfrmImportacao
         Height = 131
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 2
-        ExplicitTop = 74
-        ExplicitHeight = 163
       end
       object pbImportaProdutoFornecedor: TProgressBar
         Left = 1
@@ -348,8 +343,6 @@ object frmImportacao: TfrmImportacao
         ParentShowHint = False
         ShowHint = False
         TabOrder = 2
-        ExplicitLeft = 2
-        ExplicitTop = 205
       end
     end
   end
@@ -361,7 +354,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

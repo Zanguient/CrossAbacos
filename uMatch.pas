@@ -83,12 +83,12 @@ end;
 procedure TfrmMatch.CarregaLoteImportacao;
 Var
   FWC : TFWConnection;
-  LI  : TLOTEIMPORTACAO;
+  LI  : TLOTE;
   I   : Integer;
 begin
 
   FWC := TFWConnection.Create;
-  LI  := TLOTEIMPORTACAO.Create(FWC);
+  LI  := TLOTE.Create(FWC);
 
   try
     try
@@ -98,7 +98,7 @@ begin
 
       if LI.Count > 0 then begin
         for I := 0 to LI.Count - 1 do begin
-          cbLoteImportacao.Items.Add(IntToStr(TLOTEIMPORTACAO(LI.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTEIMPORTACAO(LI.Itens[I]).DATA_HORA.Value));
+          cbLoteImportacao.Items.Add(IntToStr(TLOTE(LI.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(LI.Itens[I]).DATA_HORA.Value));
           if cbLoteImportacao.Items.Count >= 5 then
             Break;
         end;

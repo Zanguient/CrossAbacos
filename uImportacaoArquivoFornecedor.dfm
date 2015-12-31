@@ -515,6 +515,14 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Anchors = [akTop, akRight]
         Caption = 'Registro Atual:'
       end
+      object Label3: TLabel
+        Left = 352
+        Top = 16
+        Width = 80
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = 'Op'#231#245'es de filtro:'
+      end
       object btImportar: TBitBtn
         Left = 2
         Top = 15
@@ -606,6 +614,22 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Enabled = False
         TabOrder = 2
       end
+      object cbFiltro: TComboBox
+        Left = 352
+        Top = 32
+        Width = 186
+        Height = 21
+        Style = csDropDownList
+        Anchors = [akTop, akRight]
+        ItemIndex = 0
+        TabOrder = 3
+        Text = 'Todos'
+        OnChange = cbFiltroChange
+        Items.Strings = (
+          'Todos'
+          'Produtos n'#227'o importados'
+          'Produtos sem SKU')
+      end
     end
     object dgProdutos: TDBGrid
       Left = 0
@@ -628,6 +652,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       TitleFont.Height = -20
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnDrawColumnCell = dgProdutosDrawColumnCell
       Columns = <
         item
           Expanded = False
@@ -668,7 +693,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -815,6 +840,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Aggregates = <>
     Params = <>
     AfterPost = csProdutosAfterPost
+    OnFilterRecord = csProdutosFilterRecord
     Left = 248
     Top = 296
     object csProdutosSKU: TStringField
@@ -841,6 +867,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     object csProdutosCUSTO: TCurrencyField
       DisplayLabel = 'Custo'
       FieldName = 'CUSTO'
+    end
+    object csProdutosSTATUS: TIntegerField
+      FieldName = 'STATUS'
     end
   end
   object dsProdutos: TDataSource

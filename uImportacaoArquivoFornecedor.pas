@@ -45,6 +45,9 @@ type
     Label2: TLabel;
     csProdutosDISPONIVEL: TFloatField;
     pgProdutos: TProgressBar;
+    csProdutosSTATUS: TIntegerField;
+    cbFiltro: TComboBox;
+    Label3: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btNovoLoteClick(Sender: TObject);
@@ -61,11 +64,19 @@ type
     procedure edArquivoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btSalvarClick(Sender: TObject);
+    procedure dgProdutosDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cbFiltroChange(Sender: TObject);
+    procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
   private
     { Private declarations }
   public
     { Public declarations }
     procedure carregaLotes;
+    procedure limpaCampos;
+    procedure atualizaTotal;
+    procedure bloqueioSalvar(Bloquear : Boolean);
+    procedure buscaProdutosFornecedor(CodFornecedor : Integer);
   end;
 
 var
@@ -73,9 +84,22 @@ var
 
 implementation
 uses uDMUtil, uBeanLoteImportacao, uFWConnection, uMensagem, uBeanFornecedor,
-     uBeanProdutoAbacos, uBeanProdutoFornecedor, uBeanImportacao, uBeanImportacao_Itens,
-     uConstantes;
+     uBeanProduto, uBeanProdutoFornecedor, uBeanImportacao, uBeanImportacao_Itens,
+     uConstantes, uFuncoes;
 {$R *.dfm}
+
+procedure TfrmImportacaoArquivoFornecedor.atualizaTotal;
+begin
+  edTotalRegistros.Text     := IntToStr(csProdutos.RecordCount);
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.bloqueioSalvar(Bloquear: Boolean);
+begin
+  edFornecedor.Enabled := Bloquear;
+  edArquivo.Enabled    := Bloquear;
+  btImportar.Enabled   := Bloquear;
+  btSalvar.Enabled     :=  not Bloquear;
+end;
 
 procedure TfrmImportacaoArquivoFornecedor.btImportarClick(Sender: TObject);
 const
@@ -87,22 +111,46 @@ var
   vcol,
   i,
   j,
+  k,
   Count         : Integer;
-  CON           : TFWConnection;
-  PRODFOR       : TPRODUTOFORNECEDOR;
-  PROD          : TPRODUTO;
-  FORN          : TFORNECEDOR;
   ExcelColluns  : array of TExcelColluns;
+  Valor         : Variant;
+  FORN          : TFORNECEDOR;
+  CON           : TFWConnection;
 begin
   csProdutos.EmptyDataSet;
-  XLSAplicacao := CreateOleObject('Excel.Application');
-  csProdutos.DisableControls;
-  pgProdutos.Position                               := 0;
-  try
+  if StrToIntDef(edFornecedor.Text, 0) <> 0 then begin
     CON                                             := TFWConnection.Create;
-    PROD                                            := TPRODUTO.Create(CON);
     FORN                                            := TFORNECEDOR.Create(CON);
-    PRODFOR                                         := TPRODUTOFORNECEDOR.Create(CON);
+    try
+      FORN.SelectList('id = ' + edFornecedor.Text);
+      if FORN.Count = 0 then begin
+        DisplayMsg(MSG_WAR, 'Fornecedor não encontrado!');
+        if edFornecedor.CanFocus then edFornecedor.SetFocus;
+        Exit;
+      end;
+    finally
+      FreeAndNil(FORN);
+      FreeAndNil(CON);
+    end;
+  end else begin
+    DisplayMsg(MSG_WAR, 'Fornecedor não encontrado!');
+    if edFornecedor.CanFocus then edFornecedor.SetFocus;
+    Exit;
+  end;
+
+  if not FileExists(edArquivo.Text) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo não encontrado!');
+    if edArquivo.CanFocus then edArquivo.SetFocus;
+    Exit;
+  end;
+
+  bloqueioSalvar(False);
+  try
+    buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
+    XLSAplicacao := CreateOleObject('Excel.Application');
+    csProdutos.DisableControls;
+    pgProdutos.Position                             := 0;
     try
       XLSAplicacao.Visible                          := False;
       // Abre o Workbook
@@ -116,7 +164,6 @@ begin
       vcol                                          := XLSAplicacao.ActiveCell.Column;
 
       pgProdutos.Max                                := vRow;
-
       SetLength(ExcelColluns, 0);
       for I := 1 to vcol do begin
         if AbaXLS.Cells.Item[1, I].Value = 'Cód. do Fornecedor' then begin
@@ -134,67 +181,68 @@ begin
         end;
       end;
       for I := 2 to vrow do begin
-        csProdutos.Append;
-        for J := 0 to High(ExcelColluns) do
-          csProdutos.FieldByName(ExcelColluns[J].nome).Value   := AbaXLS.Cells.Item[I, ExcelColluns[J].index].Value;
-        if not (csProdutosCODIGO.IsNull) then begin
-          PRODFOR.SelectList('cod_prod_fornecedor = ' + QuotedStr(csProdutosCODIGO.AsString) + ' and id_fornecedor = ' + edFornecedor.Text);
-          if PRODFOR.Count > 0 then begin
-            PROD.SelectList('id = ' + TPRODUTOFORNECEDOR(PRODFOR.Itens[0]).ID_PRODUTO.asSQL);
-            if PROD.Count > 0 then begin
-              csProdutosSKU.Value                   := TPRODUTO(PROD.Itens[0]).SKU.Value;
-              csProdutosNOME.Value                  := TPRODUTO(PROD.Itens[0]).NOME.Value;
+        for J := 0 to High(ExcelColluns) do begin
+          if csProdutos.FieldByName(ExcelColluns[J].nome).FieldName = csProdutosCODIGO.FieldName then begin
+            Valor                                   := Trim(AbaXLS.Cells.Item[I, ExcelColluns[J].index].Value);
+            if Valor <> '' then begin
+              if csProdutos.Locate(csProdutosCODIGO.FieldName, Valor, []) then
+                csProdutos.Edit
+              else
+                csProdutos.Append;
+              for k := 0 to High(ExcelColluns) do begin
+                Valor                               := Trim(AbaXLS.Cells.Item[I, ExcelColluns[k].index].Value);
+                if Valor <> '' then
+                  csProdutos.FieldByName(ExcelColluns[k].nome).Value := Valor;
+              end;
+              csProdutosSTATUS.Value                := 1;
+              if ((csProdutosCODIGO.IsNull) or (csProdutosCODIGO.Value = '')) then
+                csProdutos.Cancel
+              else begin
+                if csProdutosSKU.Value = '' then
+                  bloqueioSalvar(True);
+                csProdutos.Post;
+              end;
+              Break;
             end;
           end;
         end;
         pgProdutos.Position                         := I;
-        csProdutos.Post;
       end;
-      edFornecedor.Enabled                          := False;
-      edArquivo.Enabled                             := False;
-    finally
-      FreeAndNil(PROD);
-      FreeAndNil(FORN);
-      FreeAndNil(PRODFOR);
-      FreeAndNil(CON);
+    except
+      on E : Exception do begin
+        DisplayMsg(MSG_WAR, 'houve algum erro ao importar os produtos!', '', E.Message);
+        bloqueioSalvar(True);
+        Exit;
+      end;
+    end;
+    if not btSalvar.Enabled then begin
+      DisplayMsg(MSG_WAR, 'Existem produtos não cadastrados no arquivo!');
+      cbFiltro.ItemIndex                          := 2;
+      cbFiltroChange(nil);
+
     end;
   finally
      // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
       XLSAplicacao.Quit;
-      XLSAplicacao := Unassigned;
+      XLSAplicacao                                := Unassigned;
     end;
     csProdutos.EnableControls;
   end;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btNovoLoteClick(Sender: TObject);
-var
-  CON  : TFWConnection;
-  LOTE : TLOTEIMPORTACAO;
 begin
-  CON                     := TFWConnection.Create;
-  LOTE                    := TLOTEIMPORTACAO.Create(CON);
   try
-    try
-      DisplayMsg(MSG_WAIT, 'Gravando lote...');
-      CON.StartTransaction;
-      LOTE.DATA_HORA.Value := Now;
-      LOTE.Insert;
-      CON.Commit;
-      DisplayMsg(MSG_OK, 'Lote Incluído com sucesso!');
-      carregaLotes;
-    except
-      on E : Exception do begin
-        CON.Rollback;
-        DisplayMsg(MSG_WAR, 'Erro ao incluir lote!', '', E.Message);
-        Exit;
-      end;
+    DisplayMsg(MSG_WAIT, 'Gravando lote...');
+    GerarLoteImportacao;
+    carregaLotes;
+    DisplayMsgFinaliza;
+  except
+    on E : Exception do begin
+      DisplayMsg(MSG_WAR, 'Erro ao incluir lote!', '', E.Message);
+      Exit;
     end;
-
-  finally
-    FreeAndNil(LOTE);
-    FreeAndNil(CON);
   end;
 end;
 
@@ -217,10 +265,11 @@ begin
   ITENS                              := TIMPORTACAO_ITENS.Create(CON);
   PROD                               := TPRODUTO.Create(CON);
   PRODFOR                            := TPRODUTOFORNECEDOR.Create(CON);
+  csProdutos.DisableControls;
   try
     CON.StartTransaction;
     try
-      IMPORTACAO.DATA.Value            := Now;
+      IMPORTACAO.DATA_HORA.Value       := Now;
       IMPORTACAO.ID_FORNECEDOR.Value   := StrToInt(edFornecedor.Text);
       IMPORTACAO.ID_LOTE.Value         := StrToInt(Copy(cbLote.Text, 1, Pos('-', cbLote.Text) - 1));
       IMPORTACAO.ID_USUARIO.Value      := USUARIO.CODIGO;
@@ -244,9 +293,8 @@ begin
         csProdutos.Next;
       end;
       CON.Commit;
-      edFornecedor.Enabled                          := True;
-      edArquivo.Enabled                             := True;
-      csProdutos.EmptyDataSet;
+      bloqueioSalvar(True);
+      limpaCampos;
       DisplayMsg(MSG_OK, 'Sucesso!');
     except
       on E : Exception do begin
@@ -256,6 +304,7 @@ begin
       end;
     end;
   finally
+    csProdutos.EnableControls;
     FreeAndNil(IMPORTACAO);
     FreeAndNil(ITENS);
     FreeAndNil(PROD);
@@ -264,15 +313,55 @@ begin
   end;
 end;
 
+procedure TfrmImportacaoArquivoFornecedor.buscaProdutosFornecedor(
+  CodFornecedor: Integer);
+var
+  CON           : TFWConnection;
+  PRODFOR       : TPRODUTOFORNECEDOR;
+  PROD          : TPRODUTO;
+  I             : Integer;
+begin
+  CON                                               := TFWConnection.Create;
+  PRODFOR                                           := TPRODUTOFORNECEDOR.Create(CON);
+  PROD                                              := TPRODUTO.Create(CON);
+  try
+    PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text);
+    pgProdutos.Max                                  := PRODFOR.Count;
+    pgProdutos.Position                             := 0;
+    for I := 0 to Pred(PRODFOR.Count) do begin
+      csProdutos.Append;
+      csProdutosCODIGO.Value                        := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).COD_PROD_FORNECEDOR.Value;
+      PROD.SelectList('id = ' + TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID_PRODUTO.asSQL);
+      if PROD.Count > 0 then begin
+        csProdutosSKU.Value                         := TPRODUTO(PROD.Itens[0]).SKU.Value;
+        csProdutosNOME.Value                        := TPRODUTO(PROD.Itens[0]).NOME.Value;
+      end;
+      csProdutosSTATUS.Value                        := 0;
+      csProdutosCUSTO.Value                         := 0;
+      csProdutosDISPONIVEL.Value                    := 0;
+      csProdutos.Post;
+      pgProdutos.Position                           := I;
+    end;
+
+    pgProdutos.Position                             := 0;
+
+  finally
+    FreeAndNil(PRODFOR);
+    FreeAndNil(PROD);
+    FreeAndNil(CON);
+  end;
+
+end;
+
 procedure TfrmImportacaoArquivoFornecedor.carregaLotes;
 var
   CON  : TFWConnection;
-  LOTE : TLOTEIMPORTACAO;
+  LOTE : TLOTE;
   Total,
   I    : Integer;
 begin
   CON                 := TFWConnection.Create;
-  LOTE                := TLOTEIMPORTACAO.Create(CON);
+  LOTE                := TLOTE.Create(CON);
   try
     LOTE.SelectList('','id desc');
     Total             := 5;
@@ -280,7 +369,7 @@ begin
       Total           := LOTE.Count;
     cbLote.Clear;
     for I := 0 to Pred(Total) do
-      cbLote.Items.Add(TLOTEIMPORTACAO(LOTE.Itens[I]).ID.asString +'-'+ FormatDateTime('dd/mm/yyyy hh:MM:ss', TLOTEIMPORTACAO(LOTE.Itens[I]).DATA_HORA.Value));
+      cbLote.Items.Add(TLOTE(LOTE.Itens[I]).ID.asString +'-'+ FormatDateTime('dd/mm/yyyy hh:MM:ss', TLOTE(LOTE.Itens[I]).DATA_HORA.Value));
     cbLote.ItemIndex  := 0;
   finally
     FreeAndNil(LOTE);
@@ -288,10 +377,38 @@ begin
   end;
 end;
 
+procedure TfrmImportacaoArquivoFornecedor.cbFiltroChange(Sender: TObject);
+begin
+  csProdutos.Filtered        := False;
+  if cbFiltro.ItemIndex <> 0 then
+    csProdutos.Filtered      := True;
+  atualizaTotal;
+end;
+
 procedure TfrmImportacaoArquivoFornecedor.csProdutosAfterPost(
   DataSet: TDataSet);
 begin
-  edTotalRegistros.Text     := IntToStr(csProdutos.RecordCount);
+  atualizaTotal;
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.csProdutosFilterRecord(
+  DataSet: TDataSet; var Accept: Boolean);
+begin
+  if cbFiltro.ItemIndex = 1 then
+    Accept   := csProdutosSTATUS.Value = 0
+  else
+    Accept   := csProdutosSKU.Value = '';
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.dgProdutosDrawColumnCell(
+  Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  if csProdutosSTATUS.Value = 1 then
+    dgProdutos.Canvas.Font.Color := clDefault
+  else
+    dgProdutos.Canvas.Font.Color := clRed;
+  dgProdutos.DefaultDrawDataCell(Rect, dgProdutos.Columns[DataCol].Field, State);
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.dsProdutosDataChange(Sender: TObject;
@@ -373,6 +490,18 @@ begin
   carregaLotes;
   csProdutos.CreateDataSet;
   csProdutos.Open;
+  bloqueioSalvar(True);
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.limpaCampos;
+begin
+  edFornecedor.Enabled                          := True;
+  edArquivo.Enabled                             := True;
+  csProdutos.EmptyDataSet;
+  pgProdutos.Position                           := 0;
+  edFornecedor.Text                             := '';
+  edNomeFornecedor.Text                         := '';
+  edArquivo.Text                                := '';
 end;
 
 end.
