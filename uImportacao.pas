@@ -308,9 +308,8 @@ begin
                   if PROD.Count > 0 then
                     FORPROD.ID_PRODUTO.Value := TPRODUTO(PROD.Itens[0]).ID.Value
                   else begin
-                    CON.Rollback;
-                    mnImportaAlmoxarifado.Lines.Add('Produto não encontrado! ' + Valor);
-                    Exit;
+                    mnImportaProdutoFornecedor.Lines.Add('Produto não encontrado! ' + Valor);
+                    Break;
                   end;
 
                 end else if List[I]^.Name = 'ID_FORNECEDOR' then begin

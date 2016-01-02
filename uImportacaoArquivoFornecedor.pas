@@ -75,7 +75,7 @@ type
     procedure carregaLotes;
     procedure limpaCampos;
     procedure atualizaTotal;
-    procedure bloqueioSalvar(Bloquear : Boolean);
+    procedure bloqueioSalvar(Status : Integer = 0);//0 - Bloqueio Botao Salvar 1 - Bloqueio Tudo 2 - Bloqueio Importar
     procedure buscaProdutosFornecedor(CodFornecedor : Integer);
   end;
 
@@ -93,12 +93,13 @@ begin
   edTotalRegistros.Text     := IntToStr(csProdutos.RecordCount);
 end;
 
-procedure TfrmImportacaoArquivoFornecedor.bloqueioSalvar(Bloquear: Boolean);
+procedure TfrmImportacaoArquivoFornecedor.bloqueioSalvar(Status : Integer = 0);
+//0 - Bloqueio Botao Salvar 1 - Bloqueio Tudo 2 - Bloqueio Importar
 begin
-  edFornecedor.Enabled := Bloquear;
-  edArquivo.Enabled    := Bloquear;
-  btImportar.Enabled   := Bloquear;
-  btSalvar.Enabled     :=  not Bloquear;
+  edFornecedor.Enabled := Status in [0];
+  edArquivo.Enabled    := Status in [0];
+  btImportar.Enabled   := Status in [0];
+  btSalvar.Enabled     := Status in [2];;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btImportarClick(Sender: TObject);
@@ -145,7 +146,7 @@ begin
     Exit;
   end;
 
-  bloqueioSalvar(False);
+  bloqueioSalvar(1);
   try
     buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
     XLSAplicacao := CreateOleObject('Excel.Application');
@@ -199,7 +200,7 @@ begin
                 csProdutos.Cancel
               else begin
                 if csProdutosSKU.Value = '' then
-                  bloqueioSalvar(True);
+                  bloqueioSalvar(0);
                 csProdutos.Post;
               end;
               Break;
@@ -208,10 +209,11 @@ begin
         end;
         pgProdutos.Position                         := I;
       end;
+      bloqueioSalvar(2);
     except
       on E : Exception do begin
         DisplayMsg(MSG_WAR, 'houve algum erro ao importar os produtos!', '', E.Message);
-        bloqueioSalvar(True);
+        bloqueioSalvar(0);
         Exit;
       end;
     end;
@@ -219,7 +221,6 @@ begin
       DisplayMsg(MSG_WAR, 'Existem produtos não cadastrados no arquivo!');
       cbFiltro.ItemIndex                          := 2;
       cbFiltroChange(nil);
-
     end;
   finally
      // Fecha o Microsoft Excel
@@ -266,6 +267,7 @@ begin
   PROD                               := TPRODUTO.Create(CON);
   PRODFOR                            := TPRODUTOFORNECEDOR.Create(CON);
   csProdutos.DisableControls;
+  DisplayMsg(MSG_WAIT, 'Gravando dados no banco de dados!');
   try
     CON.StartTransaction;
     try
@@ -285,7 +287,9 @@ begin
             ITENS.CUSTO.Value          := csProdutosCUSTO.Value;
             ITENS.QUANTIDADE.Value     := csProdutosDISPONIVEL.Value;
             ITENS.CUSTO_DIA_E10.Value  := 0;
-            ITENS.STATUS.Value         := 0;
+            if not (TPRODUTO(PROD.Itens[0]).CUSTO.isNull) then
+              ITENS.CUSTO_DIA_E10.Value:= TPRODUTO(PROD.Itens[0]).CUSTO.Value;
+            ITENS.STATUS.Value         := csProdutosSTATUS.Value;
 
             ITENS.Insert;
           end;
@@ -293,7 +297,7 @@ begin
         csProdutos.Next;
       end;
       CON.Commit;
-      bloqueioSalvar(True);
+      bloqueioSalvar(0);
       limpaCampos;
       DisplayMsg(MSG_OK, 'Sucesso!');
     except
@@ -490,7 +494,7 @@ begin
   carregaLotes;
   csProdutos.CreateDataSet;
   csProdutos.Open;
-  bloqueioSalvar(True);
+  bloqueioSalvar(0);
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.limpaCampos;
