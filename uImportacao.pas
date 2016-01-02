@@ -82,8 +82,13 @@ var
   Valor,
   arrData       : Variant;
 begin
+  if not FileExists(edBuscaArquivoAlmoxarifado.Text) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+    Exit;
+  end;
   // Cria Excel- OLE Object
   XLSAplicacao                                        := CreateOleObject('Excel.Application');
+  edBuscaArquivoAlmoxarifado.Enabled                  := False;
   try
     mnImportaAlmoxarifado.Clear;
     // Esconde Excel
@@ -155,6 +160,7 @@ begin
     end;
 
   finally
+    edBuscaArquivoAlmoxarifado.Enabled                                         := True;
     // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
       XLSAplicacao.Quit;
@@ -183,8 +189,13 @@ var
   Valor,
   arrData        : Variant;
 begin
+  if not FileExists(edBuscaArquivoFornecedor.Text) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+    Exit;
+  end;
   // Cria Excel- OLE Object
   XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
+  btImportarFornecedor.Enabled                                                 := False;
   try
     mnImportaFornecedor.Clear;
     // Esconde Excel
@@ -268,6 +279,7 @@ begin
     end;
 
   finally
+    btImportarFornecedor.Enabled                                               := True;
     // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
       XLSAplicacao.Quit;
@@ -297,8 +309,13 @@ var
   Valor,
   arrData       : Variant;
 begin
+  if not FileExists(edBuscaArquivoProdutoFornecedor.Text) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+    Exit;
+  end;
   // Cria Excel- OLE Object
   XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
+  btImportarProdutoFornecedor.Enabled                                          := False;
   try
     mnImportaProdutoFornecedor.Clear;
     // Esconde Excel
@@ -391,6 +408,7 @@ begin
       FreeAndNil(CON);
     end;
   finally
+    btImportarProdutoFornecedor.Enabled                                        := True;
     // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
       XLSAplicacao.Quit;
@@ -412,78 +430,83 @@ var
   Valor,
   arrData : Variant;
 begin
+  if not FileExists(edBuscaArquivoProdutos.Text) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+    Exit;
+  end;
    // Cria Excel- OLE Object
-   XLSAplicacao := CreateOleObject('Excel.Application');
+   XLSAplicacao                                                                := CreateOleObject('Excel.Application');
+   btImportarProdutos.Enabled                                                  := False;
    try
      mnImportaProdutos.Clear;
      // Esconde Excel
-     XLSAplicacao.Visible := False;
+     XLSAplicacao.Visible                                                      := False;
      // Abre o Workbook
      XLSAplicacao.Workbooks.Open(edBuscaArquivoProdutos.Text);
 
-     AbaXLS := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutos.Text)].WorkSheets[1];
+     AbaXLS                                                                    := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutos.Text)].WorkSheets[1];
      AbaXLS.select;
 
      XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
      //ROW
-     vrow                     := XLSAplicacao.ActiveCell.Row;
-     vcol                     := XLSAplicacao.ActiveCell.Column;
-     arrData                  := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-     Range                    := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
-     arrData                  := Range.value;
-     pbImportaProdutos.Max    := vrow;
+     vrow                                                                      := XLSAplicacao.ActiveCell.Row;
+     vcol                                                                      := XLSAplicacao.ActiveCell.Column;
+     arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+     Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+     arrData                                                                   := Range.value;
+     pbImportaProdutos.Max                                                     := vrow;
      //COLLUM
-     CON   := TFWConnection.Create;
-     PROD  := TPRODUTO.Create(CON);
+     CON                                                                       := TFWConnection.Create;
+     PROD                                                                      := TPRODUTO.Create(CON);
      try
-       PROD.SKU.excelTitulo                    := 'SKU';
-       PROD.CODIGO_BARRAS.excelTitulo          := 'CODIGO DE BARRAS';
-       PROD.NOME.excelTitulo                   := 'NOME';
-       PROD.SALDO.excelTitulo                  := 'SALDO';
-       PROD.DISPONIVEL.excelTitulo             := 'DISP';
-       PROD.ICMS.excelTitulo                   := 'ICMS';
-       PROD.CF.excelTitulo                     := 'CF';
-       PROD.PRODUTO_PAI.excelTitulo            := 'PRODUTO PAI';
-       PROD.MARCA.excelTitulo                  := 'MARCA';
-       PROD.FAMILIA.excelTitulo                := 'Família';
-       PROD.CLASSE.excelTitulo                 := 'Classe';
-       PROD.UNIDADE_MEDIDA.excelTitulo         := 'Unidade de medida';
-       PROD.GRUPO.excelTitulo                  := 'Grupo';
-       PROD.SUB_GRUPO.excelTitulo              := 'Sub-grupo';
-       PROD.PRECO_VENDA.excelTitulo            := 'Preço de venda';
-       PROD.PROMOCAO_IPI.excelTitulo           := 'Promoção + IPI';
-       PROD.PESO.excelTitulo                   := 'Peso';
-       PROD.NCM.excelTitulo                    := 'Clas Fisc';
-       PROD.ESTOQUE_MAXIMO.excelTitulo         := 'Estoque máximo';
-       PROD.PRAZO_ENTREGA.excelTitulo          := 'Prazo de entrega';
-       PROD.QUANTIDADE_EMBALAGEM.excelTitulo   := 'Qtde. por embalagem';
-       PROD.C.excelTitulo                      := 'C';
-       PROD.L.excelTitulo                      := 'L';
-       PROD.E.excelTitulo                      := 'E';
-       PROD.DIAS_GARANTIA.excelTitulo          := 'Dias de garantia';
-       PROD.ORIGEM_MERCADORIA.excelTitulo      := 'Origem da mercadoria';
+       PROD.SKU.excelTitulo                                                    := 'SKU';
+       PROD.CODIGO_BARRAS.excelTitulo                                          := 'CODIGO DE BARRAS';
+       PROD.NOME.excelTitulo                                                   := 'NOME';
+       PROD.SALDO.excelTitulo                                                  := 'SALDO';
+       PROD.DISPONIVEL.excelTitulo                                             := 'DISP';
+       PROD.ICMS.excelTitulo                                                   := 'ICMS';
+       PROD.CF.excelTitulo                                                     := 'CF';
+       PROD.PRODUTO_PAI.excelTitulo                                            := 'PRODUTO PAI';
+       PROD.MARCA.excelTitulo                                                  := 'MARCA';
+       PROD.FAMILIA.excelTitulo                                                := 'Família';
+       PROD.CLASSE.excelTitulo                                                 := 'Classe';
+       PROD.UNIDADE_MEDIDA.excelTitulo                                         := 'Unidade de medida';
+       PROD.GRUPO.excelTitulo                                                  := 'Grupo';
+       PROD.SUB_GRUPO.excelTitulo                                              := 'Sub-grupo';
+       PROD.PRECO_VENDA.excelTitulo                                            := 'Preço de venda';
+       PROD.PROMOCAO_IPI.excelTitulo                                           := 'Promoção + IPI';
+       PROD.PESO.excelTitulo                                                   := 'Peso';
+       PROD.NCM.excelTitulo                                                    := 'Clas Fisc';
+       PROD.ESTOQUE_MAXIMO.excelTitulo                                         := 'Estoque máximo';
+       PROD.PRAZO_ENTREGA.excelTitulo                                          := 'Prazo de entrega';
+       PROD.QUANTIDADE_EMBALAGEM.excelTitulo                                   := 'Qtde. por embalagem';
+       PROD.C.excelTitulo                                                      := 'C';
+       PROD.L.excelTitulo                                                      := 'L';
+       PROD.E.excelTitulo                                                      := 'E';
+       PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
+       PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
 
        PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
-       PROD.ID.excelIndice                     := -1;
+       PROD.ID.excelIndice                                                     := -1;
 
-       Count := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
+       Count                                                                   := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
 
        CON.StartTransaction;
        try
          for I := 2 to vrow do begin
-           PROD.SKU.Value               := '';
+           PROD.SKU.Value                                                      := '';
            for J := 0 to Pred(Count) do begin
              if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
                Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
                if Valor <> '' then
-                 TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant := Valor;
+                 TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant:= Valor;
              end;
            end;
            if PROD.SKU.Value <> '' then begin
              PROD.SelectList('sku = ' + PROD.SKU.asSQL);
              PROD.CUSTO.Value                                                  := 0;
              if PROD.Count > 0 then begin
-               PROD.ID.Value := TPRODUTO(PROD.Itens[0]).ID.Value;
+               PROD.ID.Value                                                   := TPRODUTO(PROD.Itens[0]).ID.Value;
                PROD.Update;
                mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
              end else begin
@@ -491,37 +514,15 @@ begin
                mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
              end;
            end;
-           pbImportaProdutos.Position := I;
+           pbImportaProdutos.Position                                          := I;
            Application.ProcessMessages;
          end;
          CON.Commit;
          mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(I));
-//
-//         for J := 2 to vrow do begin
-//           for I := 0 to Pred(Count) do begin
-//             if (TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice > 0) then begin
-//               Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice].Value);
-//               if Valor <> '' then
-//               TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).asVariant := Valor;
-//             end;
-//           end;
-//           PROD.SelectList('sku = ' + PROD.SKU.asSQL);
-//           if PROD.Count > 0 then begin
-//             PROD.ID.Value := TPRODUTO(PROD.Itens[0]).ID.Value;
-//             PROD.Update;
-//             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
-//           end else begin
-//             PROD.Insert;
-//             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
-//           end;
-//
-//           pbImportaProdutos.Position := J;
-//         end;
-//         CON.Commit;
-//         mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(J));
        except
          on E : Exception do begin
            CON.Rollback;
+           btImportarProdutos.Enabled                                          := True;
            DisplayMsg(MSG_WAR, 'Erro ao importar os produtos!', '', E.Message);
            Exit;
          end;
