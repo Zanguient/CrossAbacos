@@ -68,66 +68,80 @@ procedure TfrmImportacao.btImportaAlmoxarifadoClick(Sender: TObject);
 const
   xlCellTypeLastCell = $0000000B;
 var
-  XLSAplicacao, AbaXLS: OLEVariant;
-  vrow, vcol, i, j, Count: Integer;
-  CON  : TFWConnection;
-  ALM  : TALMOXARIFADO;
-  List: TPropList;
-  Valor : Variant;
+  XLSAplicacao,
+  AbaXLS,
+  Range         : OLEVariant;
+  vrow,
+  vcol,
+  i,
+  j,
+  Count         : Integer;
+  CON           : TFWConnection;
+  ALM           : TALMOXARIFADO;
+  List          : TPropList;
+  Valor,
+  arrData       : Variant;
 begin
   // Cria Excel- OLE Object
-  XLSAplicacao := CreateOleObject('Excel.Application');
+  XLSAplicacao                                        := CreateOleObject('Excel.Application');
   try
     mnImportaAlmoxarifado.Clear;
     // Esconde Excel
-    XLSAplicacao.Visible := False;
+    XLSAplicacao.Visible                              := False;
     // Abre o Workbook
     XLSAplicacao.Workbooks.Open(edBuscaArquivoAlmoxarifado.Text);
 
-    AbaXLS := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoAlmoxarifado.Text)].WorkSheets[1];
+    AbaXLS                                            := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoAlmoxarifado.Text)].WorkSheets[1];
     AbaXLS.select;
 
     XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
     //ROW
-    vrow                      := XLSAplicacao.ActiveCell.Row;
-    vcol                      := XLSAplicacao.ActiveCell.Column;
-    pbImportaAlmoxarifado.Max := vrow;
+    vrow                                              := XLSAplicacao.ActiveCell.Row;
+    vcol                                              := XLSAplicacao.ActiveCell.Column;
+    arrData                                           := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+    Range                                             := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    arrData                                           := Range.value;
+    pbImportaAlmoxarifado.Max                         := vrow;
     //COLLUM
-    CON   := TFWConnection.Create;
-    ALM   := TALMOXARIFADO.Create(CON);
+    CON                                               := TFWConnection.Create;
+    ALM                                               := TALMOXARIFADO.Create(CON);
     try
-      ALM.CODIGO_E10.excelTitulo := 'ID';
-      ALM.NOME.excelTitulo       := 'Nome';
+      ALM.CODIGO_E10.excelTitulo                      := 'ID';
+      ALM.NOME.excelTitulo                            := 'Nome';
 
       ALM.buscaIndicesExcel(edBuscaArquivoAlmoxarifado.Text, XLSAplicacao);
 
-      Count := GetPropList(ALM.ClassInfo, tkProperties, @List, False);
+      Count                                           := GetPropList(ALM.ClassInfo, tkProperties, @List, False);
 
       CON.StartTransaction;
       try
-        for J := 2 to vrow do begin
-          for I := 0 to Pred(Count) do begin
-            if (TFieldTypeDomain(GetObjectProp(ALM, List[I]^.Name)).excelIndice > 0) then begin
-              Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(ALM, List[I]^.Name)).excelIndice].Value);
+        for I := 2 to vrow do begin
+          ALM.CODIGO_E10.Value    := 0;
+          for J := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelIndice > 0) then begin
+              Valor                                   := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelIndice]);
               if Valor <> '' then
-              TFieldTypeDomain(GetObjectProp(ALM, List[I]^.Name)).asVariant := Valor;
+                TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).asVariant := Valor;
             end;
           end;
 
-          ALM.SelectList('codigo_e10 = ' + ALM.CODIGO_E10.asSQL);
-          if ALM.Count > 0 then begin
-            ALM.ID.Value   := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
-            ALM.Update;
-            mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - alterado com sucesso!');
-          end else begin
-            ALM.Insert;
-            mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - inserido com sucesso!');
+          if ALM.CODIGO_E10.Value > 0 then begin
+            ALM.SelectList('codigo_e10 = ' + ALM.CODIGO_E10.asSQL);
+            if ALM.Count > 0 then begin
+              ALM.ID.Value                            := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
+              ALM.Update;
+              mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - alterado com sucesso!');
+            end else begin
+              ALM.Insert;
+              mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - inserido com sucesso!');
+            end;
           end;
 
-          pbImportaAlmoxarifado.Position := J;
+          pbImportaAlmoxarifado.Position              := I;
+          Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaAlmoxarifado.Lines.Add('Total de almoxarifados importados: ' + IntToStr(J));
+        mnImportaAlmoxarifado.Lines.Add('Total de almoxarifados importados: ' + IntToStr(I));
       except
         on E : Exception do begin
           CON.Rollback;
@@ -154,67 +168,77 @@ procedure TfrmImportacao.btImportarFornecedorClick(Sender: TObject);
 const
   xlCellTypeLastCell = $0000000B;
 var
-  XLSAplicacao, AbaXLS: OLEVariant;
-  vrow, vcol, i, j, Count: Integer;
-  CON  : TFWConnection;
-  FORN  : TFORNECEDOR;
-  ALM   : TALMOXARIFADO;
-  List: TPropList;
-  Valor : Variant;
+  XLSAplicacao,
+  AbaXLS,
+  Range          : OLEVariant;
+  vrow,
+  vcol,
+  i,
+  j,
+  Count          : Integer;
+  CON            : TFWConnection;
+  FORN           : TFORNECEDOR;
+  ALM            : TALMOXARIFADO;
+  List           : TPropList;
+  Valor,
+  arrData        : Variant;
 begin
   // Cria Excel- OLE Object
-  XLSAplicacao := CreateOleObject('Excel.Application');
+  XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
   try
     mnImportaFornecedor.Clear;
     // Esconde Excel
-    XLSAplicacao.Visible := False;
+    XLSAplicacao.Visible                                                       := False;
     // Abre o Workbook
     XLSAplicacao.Workbooks.Open(edBuscaArquivoFornecedor.Text);
 
-    AbaXLS := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoFornecedor.Text)].WorkSheets[1];
+    AbaXLS                                                                     := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoFornecedor.Text)].WorkSheets[1];
     AbaXLS.select;
 
     XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
     //ROW
-    vrow                      := XLSAplicacao.ActiveCell.Row;
-    vcol                      := XLSAplicacao.ActiveCell.Column;
-    pbImportaFornecedor.Max   := vrow;
+    vrow                                                                       := XLSAplicacao.ActiveCell.Row;
+    vcol                                                                       := XLSAplicacao.ActiveCell.Column;
+    arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+    Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    arrData                                                                    := Range.value;
+    pbImportaFornecedor.Max                                                    := vrow;
     //COLLUM
-    CON   := TFWConnection.Create;
-    FORN  := TFORNECEDOR.Create(CON);
-    ALM   := TALMOXARIFADO.Create(CON);
+    CON                                                                        := TFWConnection.Create;
+    FORN                                                                       := TFORNECEDOR.Create(CON);
+    ALM                                                                        := TALMOXARIFADO.Create(CON);
     try
-      FORN.CNPJ.excelTitulo            := 'ID_Forn';
-      FORN.NOME.excelTitulo            := 'Nome';
-      FORN.ID_ALMOXARIFADO.excelTitulo := 'ID_Almoxerifado';
+      FORN.CNPJ.excelTitulo                                                    := 'ID_Forn';
+      FORN.NOME.excelTitulo                                                    := 'Nome';
+      FORN.ID_ALMOXARIFADO.excelTitulo                                         := 'ID_Almoxerifado';
 
       FORN.buscaIndicesExcel(edBuscaArquivoFornecedor.Text, XLSAplicacao);
 
-      Count := GetPropList(FORN.ClassInfo, tkProperties, @List, False);
+      Count                                                                    := GetPropList(FORN.ClassInfo, tkProperties, @List, False);
 
       CON.StartTransaction;
       try
-        for J := 2 to vrow do begin
-          FORN.CNPJ.Value := '';
-          for I := 0 to Pred(Count) do begin
-            if (TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).excelIndice > 0) then begin
-              Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).excelIndice].Value);
+        for I := 2 to vrow do begin
+          FORN.CNPJ.Value                                                      := '';
+          for J := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice > 0) then begin
+              Valor                                                            := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice]);
               if Valor <> '' then
-              TFieldTypeDomain(GetObjectProp(FORN, List[I]^.Name)).asVariant := Valor;
+                TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).asVariant := Valor;
             end;
           end;
           if FORN.CNPJ.Value = '' then begin
             mnImportaFornecedor.Lines.Add('Linha vazia!');
-            pbImportaFornecedor.Position   := pbImportaFornecedor.Max;
+            pbImportaFornecedor.Position                                       := pbImportaFornecedor.Max;
             Break;
           end else begin
             ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
             if ALM.Count > 0 then begin
-              FORN.ID_ALMOXARIFADO.Value := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
+              FORN.ID_ALMOXARIFADO.Value                                       := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
 
               FORN.SelectList('cnpj = ' + FORN.CNPJ.asSQL);
               if FORN.Count > 0 then begin
-                FORN.ID.Value   := TFORNECEDOR(FORN.Itens[0]).ID.Value;
+                FORN.ID.Value                                                  := TFORNECEDOR(FORN.Itens[0]).ID.Value;
                 FORN.Update;
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
               end else begin
@@ -224,11 +248,12 @@ begin
             end else begin
               mnImportaFornecedor.Lines.Add('Almoxarifado não encontrado! ' + FORN.ID_ALMOXARIFADO.asString);
             end;
-            pbImportaFornecedor.Position := J;
           end;
+          pbImportaFornecedor.Position                                         := I;
+          Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaFornecedor.Lines.Add('Total de Fornecedores importados: ' + IntToStr(J));
+        mnImportaFornecedor.Lines.Add('Total de Fornecedores importados: ' + IntToStr(I));
       except
         on E : Exception do begin
           CON.Rollback;
@@ -256,80 +281,90 @@ procedure TfrmImportacao.btImportarProdutoFornecedorClick(Sender: TObject);
 const
   xlCellTypeLastCell = $0000000B;
 var
-  XLSAplicacao, AbaXLS: OLEVariant;
-  vrow, vcol, i, j, Count: Integer;
-  CON  : TFWConnection;
-  FORN : TFORNECEDOR;
-  PROD : TPRODUTO;
-  FORPROD : TPRODUTOFORNECEDOR;
-  List: TPropList;
-  Valor : Variant;
+  XLSAplicacao,
+  AbaXLS,
+  Range         : OLEVariant;
+  vrow,
+  vcol,
+  i,
+  j,
+  Count         : Integer;
+  CON           : TFWConnection;
+  FORN          : TFORNECEDOR;
+  PROD          : TPRODUTO;
+  FORPROD       : TPRODUTOFORNECEDOR;
+  List          : TPropList;
+  Valor,
+  arrData       : Variant;
 begin
   // Cria Excel- OLE Object
-  XLSAplicacao := CreateOleObject('Excel.Application');
+  XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
   try
     mnImportaProdutoFornecedor.Clear;
     // Esconde Excel
-    XLSAplicacao.Visible                          := False;
+    XLSAplicacao.Visible                                                       := False;
     // Abre o Workbook
     XLSAplicacao.Workbooks.Open(edBuscaArquivoProdutoFornecedor.Text);
 
-    AbaXLS                                        := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutoFornecedor.Text)].WorkSheets[1];
+    AbaXLS                                                                     := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutoFornecedor.Text)].WorkSheets[1];
     AbaXLS.select;
 
     XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
     //ROW
-    vrow                                          := XLSAplicacao.ActiveCell.Row;
-    vcol                                          := XLSAplicacao.ActiveCell.Column;
-    pbImportaProdutoFornecedor.Max                := vrow;
+    vrow                                                                       := XLSAplicacao.ActiveCell.Row;
+    vcol                                                                       := XLSAplicacao.ActiveCell.Column;
+    arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+    Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    arrData                                                                    := Range.value;
+    pbImportaProdutoFornecedor.Max                                             := vrow;
     //COLLUM
-    CON                                           := TFWConnection.Create;
-    PROD                                          := TPRODUTO.Create(CON);
-    FORN                                          := TFORNECEDOR.Create(CON);
-    FORPROD                                       := TPRODUTOFORNECEDOR.Create(CON);
+    CON                                                                        := TFWConnection.Create;
+    PROD                                                                       := TPRODUTO.Create(CON);
+    FORN                                                                       := TFORNECEDOR.Create(CON);
+    FORPROD                                                                    := TPRODUTOFORNECEDOR.Create(CON);
     try
-      FORPROD.ID_PRODUTO.excelTitulo              := 'SKU';
-      FORPROD.ID_FORNECEDOR.excelTitulo           := 'CNPJ Fornecedor';
-      FORPROD.COD_PROD_FORNECEDOR.excelTitulo     := 'Cod.Forn';
+      FORPROD.ID_PRODUTO.excelTitulo                                           := 'SKU';
+      FORPROD.ID_FORNECEDOR.excelTitulo                                        := 'CNPJ Fornecedor';
+      FORPROD.COD_PROD_FORNECEDOR.excelTitulo                                  := 'Cod.Forn';
 
       FORPROD.buscaIndicesExcel(edBuscaArquivoProdutoFornecedor.Text, XLSAplicacao);
 
-      Count := GetPropList(FORPROD.ClassInfo, tkProperties, @List, False);
+      Count                                                                    := GetPropList(FORPROD.ClassInfo, tkProperties, @List, False);
 
       CON.StartTransaction;
       try
-        for J := 2 to vrow do begin
-          for I := 0 to Pred(Count) do begin
-            if (TFieldTypeDomain(GetObjectProp(FORPROD, List[I]^.Name)).excelIndice > 0) then begin
-              Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(FORPROD, List[I]^.Name)).excelIndice].Value);
+        for I := 2 to vrow do begin
+          for J := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice > 0) then begin
+              Valor                                                            := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice]);
               if Valor <> '' then begin
-                if List[I]^.Name = 'ID_PRODUTO' then begin
+                if List[J]^.Name = 'ID_PRODUTO' then begin
                   PROD.SelectList('sku = ' + QuotedStr(Valor));
                   if PROD.Count > 0 then
-                    FORPROD.ID_PRODUTO.Value := TPRODUTO(PROD.Itens[0]).ID.Value
+                    FORPROD.ID_PRODUTO.Value                                   := TPRODUTO(PROD.Itens[0]).ID.Value
                   else begin
                     mnImportaProdutoFornecedor.Lines.Add('Produto não encontrado! ' + Valor);
                     Break;
                   end;
 
-                end else if List[I]^.Name = 'ID_FORNECEDOR' then begin
+                end else if List[J]^.Name = 'ID_FORNECEDOR' then begin
                   FORN.SelectList('cnpj = ' + QuotedStr(Valor));
                   if FORN.Count > 0 then
-                    FORPROD.ID_FORNECEDOR.Value  := TFORNECEDOR(FORN.Itens[0]).ID.Value
+                    FORPROD.ID_FORNECEDOR.Value                                := TFORNECEDOR(FORN.Itens[0]).ID.Value
                   else begin
                     CON.Rollback;
                     mnImportaAlmoxarifado.Lines.Add('Fornecedor não encontrado! ' + Valor);
                     Exit;
                   end;
                 end else
-                  TFieldTypeDomain(GetObjectProp(FORPROD, List[I]^.Name)).asVariant := Valor;
+                  TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).asVariant := Valor;
               end;
             end;
           end;
 
           FORPROD.SelectList('id_produto = ' + FORPROD.ID_PRODUTO.asSQL + ' and id_fornecedor = ' + FORPROD.ID_FORNECEDOR.asSQL);
           if FORPROD.Count > 0 then begin
-            FORPROD.ID.Value   := TPRODUTOFORNECEDOR(FORPROD.Itens[0]).ID.Value;
+            FORPROD.ID.Value                                                   := TPRODUTOFORNECEDOR(FORPROD.Itens[0]).ID.Value;
             FORPROD.Update;
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - alterado com sucesso!');
           end else begin
@@ -337,14 +372,15 @@ begin
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - inserido com sucesso!');
           end;
 
-          pbImportaProdutoFornecedor.Position := J;
+          pbImportaProdutoFornecedor.Position                                  := I;
+          Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaProdutoFornecedor.Lines.Add('Total de códigos de produtos por fornecedor importados: ' + IntToStr(J));
+        mnImportaProdutoFornecedor.Lines.Add('Total de códigos de produtos por fornecedor importados: ' + IntToStr(I));
       except
         on E : Exception do begin
           CON.Rollback;
-          DisplayMsg(MSG_WAR, 'Erro ao importar os almoxarifados!', '', E.Message);
+          DisplayMsg(MSG_WAR, 'Erro ao importar os Produtos de fornecedores!', '', E.Message);
           Exit;
         end;
       end;
@@ -368,12 +404,13 @@ procedure TfrmImportacao.btImportarProdutosClick(Sender: TObject);
 const
   xlCellTypeLastCell = $0000000B;
 var
-  XLSAplicacao, AbaXLS: OLEVariant;
+  XLSAplicacao, AbaXLS, Range: OLEVariant;
   vrow, vcol, i, j, Count: Integer;
   CON  : TFWConnection;
   PROD : TPRODUTO;
   List: TPropList;
-  Valor : Variant;
+  Valor,
+  arrData : Variant;
 begin
    // Cria Excel- OLE Object
    XLSAplicacao := CreateOleObject('Excel.Application');
@@ -391,6 +428,9 @@ begin
      //ROW
      vrow                     := XLSAplicacao.ActiveCell.Row;
      vcol                     := XLSAplicacao.ActiveCell.Column;
+     arrData                  := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+     Range                    := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+     arrData                  := Range.value;
      pbImportaProdutos.Max    := vrow;
      //COLLUM
      CON   := TFWConnection.Create;
@@ -430,28 +470,55 @@ begin
 
        CON.StartTransaction;
        try
-         for J := 2 to vrow do begin
-           for I := 0 to Pred(Count) do begin
-             if (TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice > 0) then begin
-               Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice].Value);
+         for I := 2 to vrow do begin
+           PROD.SKU.Value               := '';
+           for J := 0 to Pred(Count) do begin
+             if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
+               Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
                if Valor <> '' then
-               TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).asVariant := Valor;
+                 TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant := Valor;
              end;
            end;
-           PROD.SelectList('sku = ' + PROD.SKU.asSQL);
-           if PROD.Count > 0 then begin
-             PROD.ID.Value := TPRODUTO(PROD.Itens[0]).ID.Value;
-             PROD.Update;
-             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
-           end else begin
-             PROD.Insert;
-             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
+           if PROD.SKU.Value <> '' then begin
+             PROD.SelectList('sku = ' + PROD.SKU.asSQL);
+             PROD.CUSTO.Value                                                  := 0;
+             if PROD.Count > 0 then begin
+               PROD.ID.Value := TPRODUTO(PROD.Itens[0]).ID.Value;
+               PROD.Update;
+               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
+             end else begin
+               PROD.Insert;
+               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
+             end;
            end;
-
-           pbImportaProdutos.Position := J;
+           pbImportaProdutos.Position := I;
+           Application.ProcessMessages;
          end;
          CON.Commit;
-         mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(J));
+         mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(I));
+//
+//         for J := 2 to vrow do begin
+//           for I := 0 to Pred(Count) do begin
+//             if (TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice > 0) then begin
+//               Valor := Trim(AbaXLS.Cells.Item[J, TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).excelIndice].Value);
+//               if Valor <> '' then
+//               TFieldTypeDomain(GetObjectProp(PROD, List[I]^.Name)).asVariant := Valor;
+//             end;
+//           end;
+//           PROD.SelectList('sku = ' + PROD.SKU.asSQL);
+//           if PROD.Count > 0 then begin
+//             PROD.ID.Value := TPRODUTO(PROD.Itens[0]).ID.Value;
+//             PROD.Update;
+//             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
+//           end else begin
+//             PROD.Insert;
+//             mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
+//           end;
+//
+//           pbImportaProdutos.Position := J;
+//         end;
+//         CON.Commit;
+//         mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(J));
        except
          on E : Exception do begin
            CON.Rollback;
