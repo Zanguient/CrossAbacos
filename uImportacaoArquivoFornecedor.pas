@@ -147,6 +147,7 @@ begin
   end;
 
   bloqueioSalvar(1);
+  btImportar.Tag                       := 0;
   try
     buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
     XLSAplicacao := CreateOleObject('Excel.Application');
@@ -200,7 +201,7 @@ begin
                 csProdutos.Cancel
               else begin
                 if csProdutosSKU.Value = '' then
-                  bloqueioSalvar(0);
+                  btImportar.Tag                    := 1;;
                 csProdutos.Post;
               end;
               Break;
@@ -217,8 +218,9 @@ begin
         Exit;
       end;
     end;
-    if not btSalvar.Enabled then begin
+    if btImportar.Tag <> 0 then begin
       DisplayMsg(MSG_WAR, 'Existem produtos não cadastrados no arquivo!');
+      bloqueioSalvar(0);
       cbFiltro.ItemIndex                          := 2;
       cbFiltroChange(nil);
     end;

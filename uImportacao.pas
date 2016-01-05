@@ -534,6 +534,7 @@ begin
 
    finally
      // Fecha o Microsoft Excel
+     btImportarProdutos.Enabled     := True;
      if not VarIsEmpty(XLSAplicacao) then begin
        XLSAplicacao.Quit;
        XLSAplicacao := Unassigned;
