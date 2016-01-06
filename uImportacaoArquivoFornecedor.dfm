@@ -29,7 +29,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Color = clWhite
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
+    Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentBackground = False
@@ -39,21 +39,27 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Left = 0
       Top = 0
       Width = 733
-      Height = 57
+      Height = 60
       Align = alTop
       Caption = '  Selecione o Lote de importa'#231#227'o  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 0
       object cbLote: TComboBox
         Left = 8
-        Top = 24
+        Top = 26
         Width = 227
-        Height = 21
+        Height = 27
         Style = csDropDownList
         TabOrder = 0
       end
       object btNovoLote: TBitBtn
         Left = 244
-        Top = 15
+        Top = 17
         Width = 99
         Height = 39
         Caption = 'Novo Lote'
@@ -418,26 +424,33 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     end
     object gbSelecionaFornecedor: TGroupBox
       Left = 0
-      Top = 57
+      Top = 60
       Width = 733
-      Height = 48
+      Height = 52
       Align = alTop
       Caption = '  Selecione o Fornecedor  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 2
+      ExplicitTop = 57
       DesignSize = (
         733
-        48)
+        52)
       object lbFornecedor: TLabel
         Left = 167
         Top = 20
-        Width = 3
-        Height = 13
+        Width = 5
+        Height = 19
       end
       object edFornecedor: TButtonedEdit
         Left = 8
-        Top = 17
+        Top = 21
         Width = 153
-        Height = 21
+        Height = 27
         Images = ImageList1
         RightButton.ImageIndex = 1
         RightButton.Visible = True
@@ -448,34 +461,46 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       end
       object edNomeFornecedor: TEdit
         Left = 167
-        Top = 17
+        Top = 21
         Width = 554
-        Height = 21
+        Height = 27
         Anchors = [akLeft, akTop, akRight]
         Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
       end
     end
     object gbSelecionaArquivo: TGroupBox
       Left = 0
-      Top = 105
+      Top = 112
       Width = 733
-      Height = 48
+      Height = 51
       Align = alTop
       Caption = '  Selecione o Arquivo a Importar  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 3
       DesignSize = (
         733
-        48)
+        51)
       object edArquivo: TButtonedEdit
         Left = 8
-        Top = 17
+        Top = 20
         Width = 713
-        Height = 21
+        Height = 27
         Anchors = [akLeft, akTop, akRight]
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
         Images = ImageList1
@@ -490,49 +515,55 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     end
     object gbImportar: TGroupBox
       Left = 0
-      Top = 153
+      Top = 163
       Width = 733
-      Height = 56
+      Height = 62
       Align = alTop
       Caption = '  Importar  '
       TabOrder = 4
       DesignSize = (
         733
-        56)
+        62)
       object Label1: TLabel
-        Left = 544
-        Top = 16
-        Width = 72
-        Height = 13
+        Left = 513
+        Top = 11
+        Width = 106
+        Height = 19
         Anchors = [akTop, akRight]
         Caption = 'Registro Atual:'
       end
       object Label2: TLabel
-        Left = 640
-        Top = 16
-        Width = 72
-        Height = 13
+        Left = 626
+        Top = 11
+        Width = 106
+        Height = 19
         Anchors = [akTop, akRight]
         Caption = 'Registro Atual:'
       end
       object Label3: TLabel
-        Left = 352
-        Top = 16
-        Width = 80
-        Height = 13
+        Left = 321
+        Top = 11
+        Width = 118
+        Height = 19
         Anchors = [akTop, akRight]
         Caption = 'Op'#231#245'es de filtro:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
       end
       object btImportar: TBitBtn
         Left = 2
-        Top = 15
+        Top = 21
         Width = 103
         Height = 39
         Align = alLeft
         Caption = 'Importar'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
+        Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
         Glyph.Data = {
@@ -595,33 +626,52 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         ParentFont = False
         TabOrder = 0
         OnClick = btImportarClick
+        ExplicitTop = 15
       end
       object edTotalRegistros: TEdit
-        Left = 640
+        Left = 626
         Top = 32
-        Width = 90
-        Height = 21
+        Width = 104
+        Height = 27
         Anchors = [akTop, akRight]
         Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
       end
       object edRegistroAtual: TEdit
-        Left = 544
+        Left = 513
         Top = 32
-        Width = 90
-        Height = 21
+        Width = 107
+        Height = 27
         Anchors = [akTop, akRight]
         Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
       end
       object cbFiltro: TComboBox
-        Left = 352
+        Left = 321
         Top = 32
         Width = 186
-        Height = 21
+        Height = 27
         Style = csDropDownList
         Anchors = [akTop, akRight]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ItemIndex = 0
+        ParentFont = False
         TabOrder = 3
         Text = 'Todos'
         OnChange = cbFiltroChange
@@ -633,9 +683,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     end
     object dgProdutos: TDBGrid
       Left = 0
-      Top = 209
+      Top = 225
       Width = 733
-      Height = 245
+      Height = 229
       Align = alClient
       DataSource = dsProdutos
       DrawingStyle = gdsGradient
@@ -693,7 +743,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800640010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

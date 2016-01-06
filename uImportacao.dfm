@@ -52,7 +52,13 @@ object frmImportacao: TfrmImportacao
         Control = pnImportaProdutoFornecedor
         Row = 1
       end>
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
     ParentBackground = False
+    ParentFont = False
     RowCollection = <
       item
         Value = 50.000000000000000000
@@ -82,48 +88,76 @@ object frmImportacao: TfrmImportacao
       end
       object mnImportaProdutos: TMemo
         Left = 1
-        Top = 73
+        Top = 50
         Width = 361
-        Height = 131
+        Height = 154
         Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
+        ExplicitLeft = 5
+        ExplicitTop = 67
+        ExplicitHeight = 131
       end
       object pnCabProdutos: TPanel
         Left = 1
         Top = 1
         Width = 361
-        Height = 72
+        Height = 49
         Align = alTop
         BevelOuter = bvNone
         Color = clWhite
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
         ParentBackground = False
+        ParentFont = False
         TabOrder = 0
         DesignSize = (
           361
-          72)
+          49)
         object Label1: TLabel
-          Left = 8
+          Left = 5
           Top = 0
-          Width = 116
-          Height = 13
+          Width = 171
+          Height = 19
           Caption = 'Importa'#231#227'o de Produtos'
         end
         object btImportarProdutos: TButton
-          Left = 8
-          Top = 44
+          Left = 284
+          Top = 20
           Width = 75
-          Height = 25
+          Height = 27
+          Anchors = [akTop, akRight]
           Caption = 'Importar'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           OnClick = btImportarProdutosClick
         end
         object edBuscaArquivoProdutos: TButtonedEdit
-          Left = 8
-          Top = 17
-          Width = 341
-          Height = 21
+          Left = 5
+          Top = 20
+          Width = 276
+          Height = 27
           Anchors = [akLeft, akTop, akRight]
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Images = ImageList1
+          ParentFont = False
           RightButton.ImageIndex = 1
           RightButton.Visible = True
           TabOrder = 0
@@ -145,7 +179,7 @@ object frmImportacao: TfrmImportacao
         Left = 1
         Top = 1
         Width = 362
-        Height = 72
+        Height = 49
         Align = alTop
         BevelOuter = bvNone
         Color = clWhite
@@ -153,30 +187,37 @@ object frmImportacao: TfrmImportacao
         TabOrder = 0
         DesignSize = (
           362
-          72)
+          49)
         object Label2: TLabel
-          Left = 8
+          Left = 4
           Top = 0
-          Width = 141
-          Height = 13
+          Width = 210
+          Height = 19
           Caption = 'Importa'#231#227'o de Almoxarifados'
         end
         object btImportaAlmoxarifado: TButton
-          Left = 8
-          Top = 44
+          Left = 284
+          Top = 20
           Width = 75
-          Height = 25
+          Height = 27
+          Anchors = [akTop, akRight]
           Caption = 'Importar'
           TabOrder = 1
           OnClick = btImportaAlmoxarifadoClick
         end
         object edBuscaArquivoAlmoxarifado: TButtonedEdit
-          Left = 8
-          Top = 17
-          Width = 341
-          Height = 21
+          Left = 4
+          Top = 20
+          Width = 278
+          Height = 27
           Anchors = [akLeft, akTop, akRight]
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Images = ImageList1
+          ParentFont = False
           RightButton.ImageIndex = 1
           RightButton.Visible = True
           TabOrder = 0
@@ -186,11 +227,13 @@ object frmImportacao: TfrmImportacao
       end
       object mnImportaAlmoxarifado: TMemo
         Left = 1
-        Top = 73
+        Top = 50
         Width = 362
-        Height = 131
+        Height = 154
         Align = alClient
         TabOrder = 1
+        ExplicitTop = 73
+        ExplicitHeight = 131
       end
       object pbImportaAlmoxarifado: TProgressBar
         Left = 1
@@ -214,11 +257,13 @@ object frmImportacao: TfrmImportacao
       TabOrder = 2
       object mnImportaFornecedor: TMemo
         Left = 1
-        Top = 73
+        Top = 49
         Width = 361
-        Height = 131
+        Height = 155
         Align = alClient
         TabOrder = 1
+        ExplicitTop = 73
+        ExplicitHeight = 131
       end
       object pbImportaFornecedor: TProgressBar
         Left = 1
@@ -234,7 +279,7 @@ object frmImportacao: TfrmImportacao
         Left = 1
         Top = 1
         Width = 361
-        Height = 72
+        Height = 48
         Align = alTop
         BevelOuter = bvNone
         Color = clWhite
@@ -242,30 +287,37 @@ object frmImportacao: TfrmImportacao
         TabOrder = 0
         DesignSize = (
           361
-          72)
+          48)
         object Label3: TLabel
-          Left = 8
+          Left = 5
           Top = 0
-          Width = 139
-          Height = 13
+          Width = 202
+          Height = 19
           Caption = 'Importa'#231#227'o de Fornecedores'
         end
         object btImportarFornecedor: TButton
-          Left = 8
-          Top = 44
+          Left = 284
+          Top = 19
           Width = 75
-          Height = 25
+          Height = 27
+          Anchors = [akTop, akRight]
           Caption = 'Importar'
           TabOrder = 1
           OnClick = btImportarFornecedorClick
         end
         object edBuscaArquivoFornecedor: TButtonedEdit
-          Left = 8
-          Top = 17
-          Width = 341
-          Height = 21
+          Left = 5
+          Top = 19
+          Width = 276
+          Height = 27
           Anchors = [akLeft, akTop, akRight]
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Images = ImageList1
+          ParentFont = False
           RightButton.ImageIndex = 1
           RightButton.Visible = True
           TabOrder = 0
@@ -297,28 +349,35 @@ object frmImportacao: TfrmImportacao
           362
           72)
         object Label4: TLabel
-          Left = 8
+          Left = 4
           Top = 0
-          Width = 261
-          Height = 13
+          Width = 385
+          Height = 19
           Caption = 'Importa'#231#227'o de C'#243'digo dos Produtos dos Fornecedores'
         end
         object btImportarProdutoFornecedor: TButton
-          Left = 8
-          Top = 44
+          Left = 284
+          Top = 19
           Width = 75
-          Height = 25
+          Height = 27
+          Anchors = [akTop, akRight]
           Caption = 'Importar'
           TabOrder = 1
           OnClick = btImportarProdutoFornecedorClick
         end
         object edBuscaArquivoProdutoFornecedor: TButtonedEdit
-          Left = 8
-          Top = 17
-          Width = 341
-          Height = 21
+          Left = 4
+          Top = 19
+          Width = 278
+          Height = 27
           Anchors = [akLeft, akTop, akRight]
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
           Images = ImageList1
+          ParentFont = False
           RightButton.ImageIndex = 1
           RightButton.Visible = True
           TabOrder = 0
@@ -354,7 +413,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C0101020008003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
