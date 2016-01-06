@@ -502,10 +502,10 @@ object frmMatch: TfrmMatch
     TabOrder = 2
     object btConsultar: TSpeedButton
       AlignWithMargins = True
-      Left = 287
-      Top = 9
-      Width = 100
-      Height = 62
+      Left = 4
+      Top = 42
+      Width = 185
+      Height = 47
       Caption = '&Consultar'
       Glyph.Data = {
         36400000424D3640000000000000360000002800000080000000200000000100
@@ -1027,8 +1027,8 @@ object frmMatch: TfrmMatch
     end
     object cbLoteImportacao: TComboBox
       Left = 4
-      Top = 20
-      Width = 277
+      Top = 4
+      Width = 185
       Height = 33
       Style = csDropDownList
       Font.Charset = DEFAULT_CHARSET
@@ -1040,8 +1040,8 @@ object frmMatch: TfrmMatch
       TabOrder = 0
     end
     object edFiltroSKU: TLabeledEdit
-      Left = 428
-      Top = 25
+      Left = 228
+      Top = 18
       Width = 141
       Height = 27
       EditLabel.Width = 19
@@ -1056,13 +1056,13 @@ object frmMatch: TfrmMatch
       TabOrder = 1
     end
     object edFiltroMarca: TLabeledEdit
-      Left = 575
-      Top = 25
+      Left = 228
+      Top = 62
       Width = 141
       Height = 27
-      EditLabel.Width = 19
+      EditLabel.Width = 29
       EditLabel.Height = 13
-      EditLabel.Caption = 'SKU'
+      EditLabel.Caption = 'Marca'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -1070,6 +1070,47 @@ object frmMatch: TfrmMatch
       Font.Style = []
       ParentFont = False
       TabOrder = 2
+    end
+    object LabeledEdit1: TLabeledEdit
+      Left = 388
+      Top = 18
+      Width = 141
+      Height = 27
+      EditLabel.Width = 55
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Fornecedor'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+    end
+    object LabeledEdit2: TLabeledEdit
+      Left = 388
+      Top = 62
+      Width = 141
+      Height = 27
+      EditLabel.Width = 29
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Marca'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+    end
+    object Button1: TButton
+      Left = 592
+      Top = 32
+      Width = 75
+      Height = 25
+      Caption = 'Button1'
+      TabOrder = 5
+      OnClick = Button1Click
     end
   end
   object gdMatch: TDBGrid
@@ -1176,6 +1217,7 @@ object frmMatch: TfrmMatch
     Aggregates = <>
     Params = <>
     OnCalcFields = cds_MatchCalcFields
+    OnFilterRecord = cds_MatchFilterRecord
     Left = 504
     Top = 208
     object cds_MatchSKU: TStringField
