@@ -18,10 +18,8 @@ type
     btSair: TSpeedButton;
     btExport1: TSpeedButton;
     btExport2: TSpeedButton;
-    pnFiltro: TPanel;
-    btConsultar: TSpeedButton;
+    pnCabecalho: TPanel;
     gdMatch: TDBGrid;
-    cbLoteImportacao: TComboBox;
     ds_Match: TDataSource;
     cds_Match: TClientDataSet;
     cds_MatchSKU: TStringField;
@@ -31,16 +29,23 @@ type
     cds_MatchPERCENTUALDIFERENCA: TCurrencyField;
     cds_MatchFORNCECEDORANTERIOR: TStringField;
     cds_MatchFORNECEDORATUAL: TStringField;
-    cds_MatchSTATUS: TStringField;
     SaveDialog1: TSaveDialog;
     btRelatorio: TSpeedButton;
-    edFiltroSKU: TLabeledEdit;
-    edFiltroMarca: TLabeledEdit;
     cds_MatchLOTE: TIntegerField;
     cds_MatchDATAULTIMOLOTE: TDateField;
-    LabeledEdit1: TLabeledEdit;
-    LabeledEdit2: TLabeledEdit;
-    Button1: TButton;
+    pnFiltro: TPanel;
+    edFiltro: TEdit;
+    btFiltrar: TSpeedButton;
+    edTotalizador: TEdit;
+    Label1: TLabel;
+    edRegistroAtual: TEdit;
+    Label2: TLabel;
+    GroupBox1: TGroupBox;
+    cbLoteImportacao: TComboBox;
+    rgFiltroStatus: TRadioGroup;
+    btConsultar: TSpeedButton;
+    rgFiltroAtualizacao: TRadioGroup;
+    cds_MatchMATCH: TBooleanField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -50,10 +55,14 @@ type
     procedure cds_MatchCalcFields(DataSet: TDataSet);
     procedure ExportClick(Sender: TObject);
     procedure cds_MatchFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure Button1Click(Sender: TObject);
+    procedure btFiltrarClick(Sender: TObject);
+    procedure ds_MatchDataChange(Sender: TObject; Field: TField);
+    procedure gdMatchDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
-    Procedure CarregaLoteImportacao;
+    Procedure CarregaLote;
     Procedure ConsultaMatch;
+    procedure Filtrar;
     { Private declarations }
   public
     { Public declarations }
@@ -79,6 +88,12 @@ uses
 procedure TfrmMatch.btConsultarClick(Sender: TObject);
 begin
   ConsultaMatch;
+  edTotalizador.Text := IntToStr(cds_Match.RecordCount);
+end;
+
+procedure TfrmMatch.btFiltrarClick(Sender: TObject);
+begin
+  Filtrar;
 end;
 
 procedure TfrmMatch.btSairClick(Sender: TObject);
@@ -86,13 +101,7 @@ begin
   Close;
 end;
 
-procedure TfrmMatch.Button1Click(Sender: TObject);
-begin
-  cds_Match.Filtered := False;
-  cds_Match.Filtered := Length(edFiltroSKU.Text) > 0;
-end;
-
-procedure TfrmMatch.CarregaLoteImportacao;
+procedure TfrmMatch.CarregaLote;
 Var
   FWC : TFWConnection;
   L  : TLOTE;
@@ -105,15 +114,13 @@ begin
   try
     try
 
-      L.SelectList('','DATA_HORA DESC');
+      L.SelectList('','ID DESC LIMIT 5');
+
       cbLoteImportacao.Items.Clear;
 
       if L.Count > 0 then begin
-        for I := 0 to L.Count - 1 do begin
+        for I := 0 to L.Count - 1 do
           cbLoteImportacao.Items.Add(IntToStr(TLOTE(L.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(L.Itens[I]).DATA_HORA.Value));
-          if cbLoteImportacao.Items.Count >= 5 then
-            Break;
-        end;
       end;
 
       if cbLoteImportacao.Items.Count > 0 then
@@ -159,15 +166,12 @@ begin
   Accept := False;
   for I := 0 to DataSet.Fields.Count - 1 do begin
     if not DataSet.Fields[I].IsNull then begin
-      if Length(Trim(edFiltroSKU.Text)) > 0 then begin
-        if Pos(AnsiLowerCase(edFiltroSKU.Text),AnsiLowerCase(DataSet.Fields[I].AsVariant)) > 0 then begin
-          Accept := True;
-          Break;
-        end;
+      if Pos(AnsiLowerCase(edFiltro.Text),AnsiLowerCase(DataSet.Fields[I].AsVariant)) > 0 then begin
+        Accept := True;
+        Break;
       end;
     end;
   end;
-
 end;
 
 procedure TfrmMatch.ConsultaMatch;
@@ -177,6 +181,7 @@ Var
   SQLLOTE       : TFDQuery;
   SQLFORNECEDOR : TFDQuery;
   idLote        : Integer;
+  AlteraForn    : Boolean;
 begin
 
   FWC           := TFWConnection.Create;
@@ -202,7 +207,7 @@ begin
     SQLLOTE.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATA');
     SQLLOTE.SQL.Add('FROM LOTE L INNER JOIN IMPORTACAO IMP ON (IMP.ID_LOTE = L.ID)');
     SQLLOTE.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
-    SQLLOTE.SQL.Add('WHERE IMPI.ID_PRODUTO = :IDPRODUTO AND L.ID <> :IDLOTE');
+    SQLLOTE.SQL.Add('WHERE IMPI.ID_PRODUTO = :IDPRODUTO AND L.ID <> :IDLOTE AND IMPI.STATUS = 1');
     SQLLOTE.SQL.Add('ORDER BY ID_LOTE DESC');
     SQLLOTE.SQL.Add('LIMIT 1');
     SQLLOTE.Params[0].DataType := ftInteger;
@@ -213,16 +218,16 @@ begin
     SQLFORNECEDOR.SQL.Clear;
     SQLFORNECEDOR.SQL.Add('SELECT');
     SQLFORNECEDOR.SQL.Add('	F.NOME,');
-    SQLFORNECEDOR.SQL.Add('	IMPI.CUSTO');
+    SQLFORNECEDOR.SQL.Add('	IMPI.CUSTO AS CUSTOATUAL');
     SQLFORNECEDOR.SQL.Add('FROM LOTE L INNER JOIN IMPORTACAO IMP ON (IMP.ID_LOTE = L.ID)');
     SQLFORNECEDOR.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
     SQLFORNECEDOR.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
     SQLFORNECEDOR.SQL.Add('WHERE L.ID = :IDLOTE AND IMPI.ID_PRODUTO = :IDPRODUTO AND IMPI.CUSTO > 0');
-    SQLFORNECEDOR.SQL.Add('AND IMPI.QUANTIDADE > 0 AND IMPI.STATUS = 1');
+    SQLFORNECEDOR.SQL.Add('AND IMPI.QUANTIDADE > 0 AND IMPI.STATUS = :STATUS');
     SQLFORNECEDOR.SQL.Add('ORDER BY IMPI.CUSTO ASC');
-    SQLFORNECEDOR.SQL.Add('LIMIT 1');
     SQLFORNECEDOR.Params[0].DataType := ftInteger;
     SQLFORNECEDOR.Params[1].DataType := ftInteger;
+    SQLFORNECEDOR.Params[2].DataType := ftInteger;
     SQLFORNECEDOR.Connection  := FWC.FDConnection;
 
     SQL.Close;
@@ -231,18 +236,18 @@ begin
     SQL.SQL.Add('	P.ID,');
     SQL.SQL.Add('	P.SKU,');
     SQL.SQL.Add('	P.MARCA,');
-    SQL.SQL.Add('	IMPI.CUSTO_DIA_E10 AS CUSTOANTERIOR,');
-    SQL.SQL.Add('	P.CUSTO AS CUSTOATUAL,');
-    SQL.SQL.Add('	CAST(P.SUB_GRUPO AS VARCHAR(100)) AS FORNANTERIOR,');
-    SQL.SQL.Add('	CAST(P.SUB_GRUPO AS VARCHAR(100)) AS FORNATUAL');
-    SQL.SQL.Add('FROM LOTE L INNER JOIN IMPORTACAO IMP ON (IMP.ID_LOTE = L.ID)');
-    SQL.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
-    SQL.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = IMPI.ID_PRODUTO)');
-    SQL.SQL.Add('WHERE L.ID = :IDLOTE');
-    SQL.Params[0].DataType := ftInteger;
-    SQL.Connection  := FWC.FDConnection;
+    SQL.SQL.Add('	P.CUSTO AS CUSTOANTERIOR,');
+    SQL.SQL.Add('	CAST(P.SUB_GRUPO AS VARCHAR(100)) AS FORNANTERIOR');
+    if rgFiltroStatus.ItemIndex = 1 then
+      SQL.SQL.Add('FROM PRODUTO P WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)')
+    else begin
+      SQL.SQL.Add('FROM PRODUTO P WHERE P.ID NOT IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)');
+      SQL.SQL.Add('AND P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE)');
+    end;
+    SQL.Params[0].DataType   := ftInteger;
+    SQL.Connection           := FWC.FDConnection;
     SQL.Prepare;
-    SQL.Params[0].Value := idLote; //Passa o ID do Lote
+    SQL.Params[0].Value      := idLote; //Passa o ID do Lote
     SQL.Open;
 
     if not SQL.IsEmpty then begin
@@ -252,10 +257,10 @@ begin
         cds_MatchSKU.Value                  := SQL.Fields[1].Value;
         cds_MatchMARCA.Value                := SQL.Fields[2].Value;
         cds_MatchCUSTOANTERIOR.Value        := SQL.Fields[3].Value;
-        cds_MatchCUSTOATUAL.Value           := SQL.Fields[4].Value;
-        cds_MatchFORNCECEDORANTERIOR.Value  := SQL.Fields[5].Value;
-        cds_MatchFORNECEDORATUAL.Value      := SQL.Fields[6].Value;
-        cds_MatchSTATUS.Value               := 'NÃO ATUALIZADO';
+        cds_MatchCUSTOATUAL.Value           := SQL.Fields[3].Value;
+        cds_MatchFORNCECEDORANTERIOR.Value  := SQL.Fields[4].Value;
+        cds_MatchFORNECEDORATUAL.Value      := SQL.Fields[4].Value;
+        cds_MatchMATCH.Value                := False;
 
         //Carrega o último Lote
         SQLLOTE.Close;
@@ -273,15 +278,48 @@ begin
         SQLFORNECEDOR.Prepare;
         SQLFORNECEDOR.Params[0].Value := idLote; //Passa o IDLOTE
         SQLFORNECEDOR.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
+        SQLFORNECEDOR.Params[2].Value := rgFiltroStatus.ItemIndex; //Passa o Filtro de Status
         SQLFORNECEDOR.Open;
+
         if not SQLFORNECEDOR.IsEmpty then begin
-          cds_MatchFORNECEDORATUAL.Value  := SQLFORNECEDOR.Fields[0].Value;
-          cds_MatchCUSTOATUAL.Value       := SQLFORNECEDOR.Fields[1].Value;
-          cds_MatchSTATUS.Value           := 'ATUALIZADO';
+
+          AlteraForn := False;
+
+          SQLFORNECEDOR.First;
+          while not SQLFORNECEDOR.Eof do begin
+            if AnsiUpperCase(SQLFORNECEDOR.Fields[0].Value) = AnsiUpperCase(cds_MatchFORNCECEDORANTERIOR.Value) then begin
+              AlteraForn := True;
+              Break;
+            end;
+            SQLFORNECEDOR.Next;
+          end;
+
+          SQLFORNECEDOR.First;
+          if ((AlteraForn) AND (SQLFORNECEDOR.Fields[1].Value < cds_MatchCUSTOATUAL.Value)) then begin
+            cds_MatchFORNECEDORATUAL.Value  := SQLFORNECEDOR.Fields[0].Value;
+            cds_MatchCUSTOATUAL.Value       := SQLFORNECEDOR.Fields[1].Value;
+            cds_MatchMATCH.Value            := True;
+          end;
+        end;
+
+        case rgFiltroAtualizacao.ItemIndex of
+          0 : begin
+            if cds_MatchMATCH.Value then
+              cds_Match.Post
+            else
+              cds_Match.Cancel;
+          end;
+          1 : begin
+            if cds_MatchMATCH.Value then
+              cds_Match.Cancel
+            else
+              cds_Match.Post;
+
+          end;
+          2 : cds_Match.Post;
 
         end;
 
-        cds_Match.Post;
         SQL.Next
       end;
       cds_Match.First;
@@ -295,6 +333,11 @@ begin
     FreeAndNil(FWC);
   end;
 
+end;
+
+procedure TfrmMatch.ds_MatchDataChange(Sender: TObject; Field: TField);
+begin
+  edRegistroAtual.Text   := IntToStr(cds_Match.RecNo);
 end;
 
 procedure TfrmMatch.ExportClick(Sender: TObject);
@@ -325,7 +368,6 @@ begin
         While not cds_Match.Eof do begin
           Excel.Cells[cds_Match.RecNo + 1,1]  := cds_MatchSKU.Value;
           Excel.Cells[cds_Match.RecNo + 1,2]  := cds_MatchMARCA.Value;
-          Excel.Cells[cds_Match.RecNo + 1,3]  := cds_MatchSTATUS.Value;
           cds_Match.Next;
         end;
 
@@ -356,6 +398,13 @@ begin
 
 end;
 
+procedure TfrmMatch.Filtrar;
+begin
+  cds_Match.Filtered := False;
+  cds_Match.Filtered := Length(Trim(edFiltro.Text)) > 0;
+  edTotalizador.Text := IntToStr(cds_Match.RecordCount);
+end;
+
 procedure TfrmMatch.FormCreate(Sender: TObject);
 begin
   AjustaForm(Self);
@@ -368,6 +417,10 @@ begin
     VK_ESCAPE : begin
         Close;
     end;
+    VK_RETURN : begin
+      if edFiltro.Focused then
+        Filtrar;
+    end;
   end;
 end;
 
@@ -377,7 +430,20 @@ begin
 
   //AutoSizeDBGrid(gdPesquisa);
 
-  CarregaLoteImportacao;
+  CarregaLote;
+  edTotalizador.Text := IntToStr(cds_Match.RecordCount);
+end;
+
+procedure TfrmMatch.gdMatchDrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+
+  if cds_MatchMATCH.Value then
+    gdMatch.Canvas.Font.Color:= clBlue
+  else
+    gdMatch.Canvas.Font.Color:= clRed;
+
+  gdMatch.DefaultDrawColumnCell( Rect, DataCol, Column, State);
 end;
 
 procedure TfrmMatch.gdMatchTitleClick(Column: TColumn);
