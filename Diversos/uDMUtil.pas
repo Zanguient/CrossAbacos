@@ -4,10 +4,12 @@ interface
 
 uses
   System.SysUtils, System.Classes, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, forms, Vcl.Controls,
-  FireDAC.Stan.Intf, FireDAC.Comp.UI, Vcl.ImgList, uFWPersistence, Vcl.StdCtrls;
+  FireDAC.Stan.Intf, FireDAC.Comp.UI, Vcl.ImgList, uFWPersistence, Vcl.StdCtrls,
+  frxClass;
 
 type
   TDMUtil = class(TDataModule)
+    frxReport1: TfrxReport;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

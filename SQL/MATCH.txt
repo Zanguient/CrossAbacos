@@ -1,0 +1,13 @@
+CREATE TABLE if not exists match
+( id serial NOT NULL,
+  id_lote integer,  
+  data_hora time with time zone,  
+  id_usuario integer,  
+CONSTRAINT pk_match_id PRIMARY KEY (id),  
+CONSTRAINT fk_match_lote1 FOREIGN KEY (id_lote)      
+REFERENCES lote (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+CONSTRAINT fk_match_usuario1 FOREIGN KEY (id_usuario)      
+REFERENCES usuario (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);

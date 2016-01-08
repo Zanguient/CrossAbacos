@@ -24,7 +24,7 @@ uses
   uBeanGrupo in 'Beans\uBeanGrupo.pas',
   uCadastroFamilia in 'Cadastros\uCadastroFamilia.pas' {FrmCadastroFamilia},
   uBeanFamilia in 'Beans\uBeanFamilia.pas',
-  uMatch in 'uMatch.pas' {frmMatch},
+  uConsultaMatch in 'uConsultaMatch.pas' {frmConsultaMatch},
   uBeanLoteImportacao in 'Beans\uBeanLoteImportacao.pas',
   uImportacao in 'uImportacao.pas' {frmImportacao},
   uBeanAlmoxarifado in 'Beans\uBeanAlmoxarifado.pas',
@@ -32,7 +32,10 @@ uses
   uImportacaoArquivoFornecedor in 'uImportacaoArquivoFornecedor.pas' {frmImportacaoArquivoFornecedor},
   uSeleciona in 'uSeleciona.pas' {frmSeleciona},
   uBeanImportacao in 'Beans\uBeanImportacao.pas',
-  uBeanImportacao_Itens in 'Beans\uBeanImportacao_Itens.pas';
+  uBeanImportacao_Itens in 'Beans\uBeanImportacao_Itens.pas',
+  uBeanMatch in 'Beans\uBeanMatch.pas',
+  uBeanMatch_Itens in 'Beans\uBeanMatch_Itens.pas',
+  uGeraMatch in 'uGeraMatch.pas' {frmGeraMatch};
 
 {$R *.res}
 

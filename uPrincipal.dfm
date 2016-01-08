@@ -64,9 +64,13 @@ object FrmPrincipal: TFrmPrincipal
     end
     object Movimentaes1: TMenuItem
       Caption = 'Movimenta'#231#245'es'
-      object Match1: TMenuItem
-        Caption = 'Match'
-        OnClick = Match1Click
+      object GerarMatch1: TMenuItem
+        Caption = 'Gerar Match'
+        OnClick = GerarMatch1Click
+      end
+      object ConsultaMatch1: TMenuItem
+        Caption = 'Consultar Match'
+        OnClick = ConsultaMatch1Click
       end
     end
     object Relatrios1: TMenuItem

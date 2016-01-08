@@ -132,8 +132,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanFamilia.pas"/>
-        <DCCReference Include="uMatch.pas">
-            <Form>frmMatch</Form>
+        <DCCReference Include="uConsultaMatch.pas">
+            <Form>frmConsultaMatch</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanLoteImportacao.pas"/>
@@ -153,6 +153,12 @@
         </DCCReference>
         <DCCReference Include="Beans\uBeanImportacao.pas"/>
         <DCCReference Include="Beans\uBeanImportacao_Itens.pas"/>
+        <DCCReference Include="Beans\uBeanMatch.pas"/>
+        <DCCReference Include="Beans\uBeanMatch_Itens.pas"/>
+        <DCCReference Include="uGeraMatch.pas">
+            <Form>frmGeraMatch</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -22,9 +22,10 @@ type
     Familia1: TMenuItem;
     Importacoes2: TMenuItem;
     Movimentaes1: TMenuItem;
-    Match1: TMenuItem;
+    ConsultaMatch1: TMenuItem;
     GerarLote1: TMenuItem;
     ImportaodeArquivosdeFornecedores1: TMenuItem;
+    GerarMatch1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -33,8 +34,9 @@ type
     procedure Familia1Click(Sender: TObject);
     procedure Importacoes2Click(Sender: TObject);
     procedure GerarLote1Click(Sender: TObject);
-    procedure Match1Click(Sender: TObject);
+    procedure ConsultaMatch1Click(Sender: TObject);
     procedure ImportaodeArquivosdeFornecedores1Click(Sender: TObject);
+    procedure GerarMatch1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -58,8 +60,9 @@ uses
   uCadastroMargem,
   uCadastroFamilia,
   uImportacao,
-  uMatch,
-  uImportacaoArquivoFornecedor;
+  uConsultaMatch,
+  uImportacaoArquivoFornecedor,
+  uGeraMatch;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -96,6 +99,18 @@ begin
   GerarLoteImportacao;
 end;
 
+procedure TFrmPrincipal.GerarMatch1Click(Sender: TObject);
+begin
+  if frmGeraMatch = nil then
+    frmGeraMatch := TfrmGeraMatch.Create(nil);
+  try
+    frmGeraMatch.ShowModal;
+  finally
+    FreeAndNil(frmGeraMatch);
+  end;
+
+end;
+
 procedure TFrmPrincipal.Importacoes2Click(Sender: TObject);
 begin
   if frmImportacao = nil then
@@ -125,14 +140,14 @@ begin
   end;
 end;
 
-procedure TFrmPrincipal.Match1Click(Sender: TObject);
+procedure TFrmPrincipal.ConsultaMatch1Click(Sender: TObject);
 begin
   try
-    if frmMatch = nil then
-      frmMatch := TfrmMatch.Create(Self);
-    frmMatch.ShowModal;
+    if frmConsultaMatch = nil then
+      frmConsultaMatch := TfrmConsultaMatch.Create(Self);
+    frmConsultaMatch.ShowModal;
   finally
-    FreeAndNil(frmMatch);
+    FreeAndNil(frmConsultaMatch);
   end;
 end;
 

@@ -1,4 +1,4 @@
-unit uMatch;
+unit uConsultaMatch;
 
 interface
 
@@ -12,11 +12,11 @@ uses
   frxClass, frxDMPExport, System.Win.ComObj;
 
 type
-  TfrmMatch = class(TForm)
+  TfrmConsultaMatch = class(TForm)
     Panel2: TPanel;
     pnBotoesVisualizacao: TPanel;
     btSair: TSpeedButton;
-    btExport1: TSpeedButton;
+    btSalvar: TSpeedButton;
     btExport2: TSpeedButton;
     pnCabecalho: TPanel;
     gdMatch: TDBGrid;
@@ -59,6 +59,8 @@ type
     procedure ds_MatchDataChange(Sender: TObject; Field: TField);
     procedure gdMatchDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure btRelatorioClick(Sender: TObject);
+    procedure btSalvarClick(Sender: TObject);
   private
     Procedure CarregaLote;
     Procedure ConsultaMatch;
@@ -69,7 +71,7 @@ type
   end;
 
 var
-  frmMatch: TfrmMatch;
+  frmConsultaMatch: TfrmConsultaMatch;
 
 implementation
 
@@ -79,29 +81,57 @@ uses
   uBeanLOTEIMPORTACAO,
   uFWConnection,
   uMensagem,
-  uDMUtil;
+  uDMUtil, uBeanProduto;
 
 {$R *.dfm}
 
 { TfrmMatch }
 
-procedure TfrmMatch.btConsultarClick(Sender: TObject);
+procedure TfrmConsultaMatch.btConsultarClick(Sender: TObject);
 begin
   ConsultaMatch;
   edTotalizador.Text := IntToStr(cds_Match.RecordCount);
 end;
 
-procedure TfrmMatch.btFiltrarClick(Sender: TObject);
+procedure TfrmConsultaMatch.btFiltrarClick(Sender: TObject);
 begin
   Filtrar;
 end;
 
-procedure TfrmMatch.btSairClick(Sender: TObject);
+procedure TfrmConsultaMatch.btRelatorioClick(Sender: TObject);
+begin
+  DMUtil.frxReport1.LoadFromFile('D:\Projetos\CrossAbacos\Relatorios\frMatch.fr3');
+  DMUtil.frxReport1.Modified := False;
+  DMUtil.frxReport1.ShowReport();
+end;
+
+procedure TfrmConsultaMatch.btSairClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmMatch.CarregaLote;
+procedure TfrmConsultaMatch.btSalvarClick(Sender: TObject);
+Var
+  FWC : TFWConnection;
+  P   : TPRODUTO;
+begin
+
+  FWC := TFWConnection.Create;
+  P   := TPRODUTO.Create(FWC);
+
+  try
+    try
+
+    except
+
+    end;
+  finally
+    FreeAndNil(P);
+    FreeAndNil(FWC);
+  end;
+end;
+
+procedure TfrmConsultaMatch.CarregaLote;
 Var
   FWC : TFWConnection;
   L  : TLOTE;
@@ -139,7 +169,7 @@ begin
 
 end;
 
-procedure TfrmMatch.cds_MatchCalcFields(DataSet: TDataSet);
+procedure TfrmConsultaMatch.cds_MatchCalcFields(DataSet: TDataSet);
 begin
   with DataSet do begin
     FieldByName('PERCENTUALDIFERENCA').Value := 0.00;
@@ -158,7 +188,7 @@ begin
   end;
 end;
 
-procedure TfrmMatch.cds_MatchFilterRecord(DataSet: TDataSet;
+procedure TfrmConsultaMatch.cds_MatchFilterRecord(DataSet: TDataSet;
   var Accept: Boolean);
 Var
   I : Integer;
@@ -174,7 +204,7 @@ begin
   end;
 end;
 
-procedure TfrmMatch.ConsultaMatch;
+procedure TfrmConsultaMatch.ConsultaMatch;
 Var
   FWC           : TFWConnection;
   SQL           : TFDQuery;
@@ -223,11 +253,14 @@ begin
     SQLFORNECEDOR.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
     SQLFORNECEDOR.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
     SQLFORNECEDOR.SQL.Add('WHERE L.ID = :IDLOTE AND IMPI.ID_PRODUTO = :IDPRODUTO AND IMPI.CUSTO > 0');
-    SQLFORNECEDOR.SQL.Add('AND IMPI.QUANTIDADE > 0 AND IMPI.STATUS = :STATUS');
+    SQLFORNECEDOR.SQL.Add('AND IMPI.QUANTIDADE > 0');
+    if rgFiltroStatus.ItemIndex in [0,1] then begin    
+      SQLFORNECEDOR.SQL.Add('AND IMPI.STATUS = :STATUS');
+      SQLFORNECEDOR.Params[2].DataType := ftInteger;      
+    end;
     SQLFORNECEDOR.SQL.Add('ORDER BY IMPI.CUSTO ASC');
     SQLFORNECEDOR.Params[0].DataType := ftInteger;
     SQLFORNECEDOR.Params[1].DataType := ftInteger;
-    SQLFORNECEDOR.Params[2].DataType := ftInteger;
     SQLFORNECEDOR.Connection  := FWC.FDConnection;
 
     SQL.Close;
@@ -238,12 +271,20 @@ begin
     SQL.SQL.Add('	P.MARCA,');
     SQL.SQL.Add('	P.CUSTO AS CUSTOANTERIOR,');
     SQL.SQL.Add('	CAST(P.SUB_GRUPO AS VARCHAR(100)) AS FORNANTERIOR');
-    if rgFiltroStatus.ItemIndex = 1 then
-      SQL.SQL.Add('FROM PRODUTO P WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)')
-    else begin
-      SQL.SQL.Add('FROM PRODUTO P WHERE P.ID NOT IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)');
-      SQL.SQL.Add('AND P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE)');
+
+    case rgFiltroStatus.ItemIndex of
+      0 : begin
+        SQL.SQL.Add('FROM PRODUTO P WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)')
+      end;
+      1 : begin
+        SQL.SQL.Add('FROM PRODUTO P WHERE P.ID NOT IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1)');
+        SQL.SQL.Add('AND P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE)');
+      end;
+      2 : begin
+        SQL.SQL.Add('FROM PRODUTO P WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID) WHERE IMP.ID_LOTE = :IDLOTE)')
+      end;
     end;
+
     SQL.Params[0].DataType   := ftInteger;
     SQL.Connection           := FWC.FDConnection;
     SQL.Prepare;
@@ -278,7 +319,10 @@ begin
         SQLFORNECEDOR.Prepare;
         SQLFORNECEDOR.Params[0].Value := idLote; //Passa o IDLOTE
         SQLFORNECEDOR.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
-        SQLFORNECEDOR.Params[2].Value := rgFiltroStatus.ItemIndex; //Passa o Filtro de Status
+        case rgFiltroStatus.ItemIndex of
+          0 : SQLFORNECEDOR.Params[2].Value := 1; //Passa o Filtro de Status
+          1 : SQLFORNECEDOR.Params[2].Value := 0; //Passa o Filtro de Status                    
+        end;
         SQLFORNECEDOR.Open;
 
         if not SQLFORNECEDOR.IsEmpty then begin
@@ -295,7 +339,7 @@ begin
           end;
 
           SQLFORNECEDOR.First;
-          if ((AlteraForn) AND (SQLFORNECEDOR.Fields[1].Value < cds_MatchCUSTOATUAL.Value)) then begin
+          if ((AlteraForn) OR (SQLFORNECEDOR.Fields[1].Value < cds_MatchCUSTOATUAL.Value)) then begin
             cds_MatchFORNECEDORATUAL.Value  := SQLFORNECEDOR.Fields[0].Value;
             cds_MatchCUSTOATUAL.Value       := SQLFORNECEDOR.Fields[1].Value;
             cds_MatchMATCH.Value            := True;
@@ -335,12 +379,12 @@ begin
 
 end;
 
-procedure TfrmMatch.ds_MatchDataChange(Sender: TObject; Field: TField);
+procedure TfrmConsultaMatch.ds_MatchDataChange(Sender: TObject; Field: TField);
 begin
   edRegistroAtual.Text   := IntToStr(cds_Match.RecNo);
 end;
 
-procedure TfrmMatch.ExportClick(Sender: TObject);
+procedure TfrmConsultaMatch.ExportClick(Sender: TObject);
 Var
   Excel : Variant;
 begin
@@ -398,19 +442,19 @@ begin
 
 end;
 
-procedure TfrmMatch.Filtrar;
+procedure TfrmConsultaMatch.Filtrar;
 begin
   cds_Match.Filtered := False;
   cds_Match.Filtered := Length(Trim(edFiltro.Text)) > 0;
   edTotalizador.Text := IntToStr(cds_Match.RecordCount);
 end;
 
-procedure TfrmMatch.FormCreate(Sender: TObject);
+procedure TfrmConsultaMatch.FormCreate(Sender: TObject);
 begin
   AjustaForm(Self);
 end;
 
-procedure TfrmMatch.FormKeyDown(Sender: TObject; var Key: Word;
+procedure TfrmConsultaMatch.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case Key of
@@ -424,7 +468,7 @@ begin
   end;
 end;
 
-procedure TfrmMatch.FormShow(Sender: TObject);
+procedure TfrmConsultaMatch.FormShow(Sender: TObject);
 begin
   cds_Match.CreateDataSet;
 
@@ -434,7 +478,7 @@ begin
   edTotalizador.Text := IntToStr(cds_Match.RecordCount);
 end;
 
-procedure TfrmMatch.gdMatchDrawColumnCell(Sender: TObject; const Rect: TRect;
+procedure TfrmConsultaMatch.gdMatchDrawColumnCell(Sender: TObject; const Rect: TRect;
   DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
 
@@ -446,7 +490,7 @@ begin
   gdMatch.DefaultDrawColumnCell( Rect, DataCol, Column, State);
 end;
 
-procedure TfrmMatch.gdMatchTitleClick(Column: TColumn);
+procedure TfrmConsultaMatch.gdMatchTitleClick(Column: TColumn);
 Var
   I : Integer;
 begin

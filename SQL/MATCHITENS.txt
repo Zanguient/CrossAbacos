@@ -1,0 +1,31 @@
+CREATE TABLE if not exists match_itens
+(
+  id serial NOT NULL,
+  id_match integer,
+  id_produto integer,
+  custoanterior numeric(18,2),
+  custonovo numeric(18,2),
+  id_fornecedoranterior integer,
+  id_fornecedornovo integer,
+  id_ultimolote integer,
+  atualizado boolean,
+  importado boolean,
+  CONSTRAINT pk_matchitens_id PRIMARY KEY (id),
+  CONSTRAINT fk_matchitens_fornecedor1 FOREIGN KEY (id_fornecedoranterior)
+      REFERENCES fornecedor (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_matchitens_fornecedor2 FOREIGN KEY (id_fornecedornovo)
+      REFERENCES fornecedor (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_matchitens_lote1 FOREIGN KEY (id_ultimolote)
+      
+      REFERENCES lote (id) MATCH SIMPLE
+      
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_matchitens_match1 FOREIGN KEY (id_match)
+      REFERENCES match (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_matchitens_produto1 FOREIGN KEY (id_produto)
+      REFERENCES produto (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
