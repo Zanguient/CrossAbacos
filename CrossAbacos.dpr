@@ -35,7 +35,8 @@ uses
   uBeanImportacao_Itens in 'Beans\uBeanImportacao_Itens.pas',
   uBeanMatch in 'Beans\uBeanMatch.pas',
   uBeanMatch_Itens in 'Beans\uBeanMatch_Itens.pas',
-  uGeraMatch in 'uGeraMatch.pas' {frmGeraMatch};
+  uGeraMatch in 'uGeraMatch.pas' {frmGeraMatch},
+  uBeanUsuario_Permissao in 'Beans\uBeanUsuario_Permissao.pas';
 
 {$R *.res}
 

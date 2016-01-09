@@ -24,7 +24,7 @@ type
     property NOME                 : TFieldString read FNOME write SetNOME;
     property EMAIL                : TFieldString read FEMAIL write SetEMAIL;
     property SENHA                : TFieldString read FSENHA write SetSENHA;
-    property PERMITIR_CAD_USUARIO : TFieldBoolean read FPERMITIR_CAD_USUARIO write SetPERMITIR_CAD_USUARIO;
+//    property PERMITIR_CAD_USUARIO : TFieldBoolean read FPERMITIR_CAD_USUARIO write SetPERMITIR_CAD_USUARIO;
 
 
   end;
@@ -40,7 +40,7 @@ begin
 
   NOME.isNotNull                  := True;
   EMAIL.isNotNull                 := True;
-  PERMITIR_CAD_USUARIO.isNotNull  := True;
+//  PERMITIR_CAD_USUARIO.isNotNull  := True;
 
   NOME.Size                       := 100;
   EMAIL.Size                      := 100;

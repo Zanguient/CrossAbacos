@@ -67,8 +67,11 @@ uses
 
 procedure TFrmPrincipal.DefinirPermissoes;
 begin
-  Usuario1.Visible        := USUARIO.PERMITIRCADUSUARIO;
-  RedefinirSenha.Visible  := USUARIO.CODIGO > 0; //Usuário 0 é Administrador e não tem Cadastro
+  RedefinirSenha.Visible  := False; //Usuário 0 é Administrador e não tem Cadastro
+  if USUARIO.CODIGO > 0 then begin
+    DefinePermissaoMenu(MainMenu1);
+    miSair.Visible          := True;
+  end;
 end;
 
 procedure TFrmPrincipal.Familia1Click(Sender: TObject);
@@ -86,6 +89,8 @@ procedure TFrmPrincipal.FormShow(Sender: TObject);
 begin
   if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
     IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
+
+  CarregaArrayMenus(MainMenu1);
 
   DefinirPermissoes;
 
@@ -174,7 +179,7 @@ procedure TFrmPrincipal.Usuario1Click(Sender: TObject);
 begin
   try
     if FrmCadastroUsuario = nil then
-      FrmCadastroUsuario := TFrmCadastroUsuario.Create(Self);
+      FrmCadastroUsuario     := TFrmCadastroUsuario.Create(Self);
     FrmCadastroUsuario.ShowModal;
   finally
     FreeAndNil(FrmCadastroUsuario);

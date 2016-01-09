@@ -172,3 +172,21 @@ CREATE TABLE if not exists match_itens
       REFERENCES produto (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+CREATE TABLE usuario_permissao
+(
+
+  id serial NOT NULL,
+
+  id_usuario bigint,
+
+  menu character varying(100),
+
+  CONSTRAINT pk_usuario_permissao PRIMARY KEY (id),
+
+  CONSTRAINT fk_usuario_permissao_u FOREIGN KEY (id_usuario)
+
+      REFERENCES usuario (id) MATCH SIMPLE
+
+      ON UPDATE CASCADE ON DELETE CASCADE
+
+);

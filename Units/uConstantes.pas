@@ -23,7 +23,10 @@ type
     CODIGO : Integer;
     NOME : string;
     EMAIL : string;
-    PERMITIRCADUSUARIO : Boolean;
+  end;
+  TMENU = record
+    NOME    : string;
+    CAPTION : string;
   end;
 
 Const
@@ -35,6 +38,7 @@ Var
   LOGIN       : TDADOSLOGIN;
   CONEXAO     : TDADOSCONEXAO;
   USUARIO     : TDADOSUSUARIO;
+  MENUS       : array of TMENU;
 
 implementation
 

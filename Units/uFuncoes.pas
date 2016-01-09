@@ -11,9 +11,12 @@ uses
   DBGrids,
   DateUtils,
   Winapi.Windows,
+  Vcl.Menus,
   Vcl.Forms;
 
   procedure CarregarConfigLocal;
+  procedure CarregaArrayMenus(Menu : TMainMenu);
+  procedure DefinePermissaoMenu(Menu : TMainMenu);
   procedure CarregarConexaoBD;
   procedure AutoSizeDBGrid(const DBGrid: TDBGrid);
   procedure GerarLoteImportacao;
@@ -29,6 +32,7 @@ Uses
   IniFiles,
   uFWConnection,
   uBeanUsuario,
+  uBeanUsuario_Permissao,
   uDomains,
   uMensagem,
   uBeanLoteImportacao;
@@ -182,7 +186,6 @@ begin
       USUARIO.CODIGO              := 0;
       USUARIO.NOME                := 'ADMINISTRADOR';
       USUARIO.EMAIL               := '';
-      USUARIO.PERMITIRCADUSUARIO  := True;
       Result := True;
       Exit;
     end;
@@ -202,7 +205,7 @@ begin
           USUARIO.CODIGO              := TUSUARIO(USU.Itens[0]).ID.Value;
           USUARIO.NOME                := TUSUARIO(USU.Itens[0]).NOME.Value;
           USUARIO.EMAIL               := TUSUARIO(USU.Itens[0]).EMAIL.Value;
-          USUARIO.PERMITIRCADUSUARIO  := TUSUARIO(USU.Itens[0]).PERMITIR_CAD_USUARIO.Value;
+//          USUARIO.PERMITIRCADUSUARIO  := TUSUARIO(USU.Itens[0]).PERMITIR_CAD_USUARIO.Value;
           Result          := True;
         end;
       end;
@@ -264,6 +267,66 @@ begin
       end;
     end;
   end;
+end;
+procedure CarregaArrayMenus(Menu : TMainMenu);
+var
+  I,
+  J : Integer;
+begin
+  SetLength(MENUS, 0);
+  for I := 0 to Pred(Menu.Items.Count) do begin
+    if Menu.Items[I].Count = 0 then begin
+      SetLength(MENUS, Length(MENUS) + 1);
+      Menus[High(MENUS)].NOME   := Menu.Items[I].Name;
+      Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Caption, '&', '', [rfReplaceAll]);
+    end else begin
+      for J := 0 to Pred(Menu.Items[I].Count) do begin
+        SetLength(MENUS, Length(MENUS) + 1);
+        Menus[High(MENUS)].NOME   := Menu.Items[I].Items[J].Name;
+        Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Items[J].Caption, '&', '', [rfReplaceAll]);
+      end;
+    end;
+  end;
+end;
+
+procedure DefinePermissaoMenu(Menu : TMainMenu);
+var
+  I,
+  J   : Integer;
+  CON : TFWConnection;
+  PU  : TUSUARIO_PERMISSAO;
+begin
+  CON                                        :=  TFWConnection.Create;
+  PU                                         := TUSUARIO_PERMISSAO.Create(CON);
+  try
+    for I := 0 to Pred(Menu.Items.Count) do begin
+      if Menu.Items[I].Count = 0 then begin
+        PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Name));
+        Menu.Items[I].Visible                := PU.Count > 0;
+      end else begin
+        for J := 0 to Pred(Menu.Items[I].Count) do begin
+          PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
+          Menu.Items[I].Items[J].Visible     := PU.Count > 0;
+        end;
+      end;
+    end;
+    for I := 0 to Pred(Menu.Items.Count) do begin
+      if Menu.Items[I].Count > 0 then begin
+        Menu.Items[I].Visible                := False;
+        for J := 0 to Pred(Menu.Items[I].Count) do begin
+          PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
+          Menu.Items[I].Items[J].Visible     := PU.Count > 0;
+          if Menu.Items[I].Items[J].Visible then
+            Menu.Items[I].Visible            := True;
+
+        end;
+      end;
+    end;
+  finally
+    FreeAndNil(PU);
+    FreeAndNil(CON);
+  end;
+
 end;
 
 end.
