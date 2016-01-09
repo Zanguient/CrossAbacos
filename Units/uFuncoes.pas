@@ -47,6 +47,7 @@ begin
 
     LOGIN.Usuario         := ArqINI.ReadString('LOGIN', 'USUARIO', '');
     LOGIN.LembrarUsuario  := ArqINI.ReadBool('LOGIN', 'LEMBRARUSUARIO', True);
+    LOGIN.DirRelatorio    := ArqINI.ReadString('LOGIN', 'RELATORIO', '');
 
   finally
     FreeAndNil(ArqINI);

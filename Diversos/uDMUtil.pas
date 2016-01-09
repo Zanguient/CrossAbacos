@@ -16,6 +16,7 @@ type
   public
     { Public declarations }
     function Selecionar(Tabela : TFWPersistence; ValorControl : String = '') : Integer;
+    procedure ImprimirRelatorio(Relatorio : String);
   end;
 
 var
@@ -26,7 +27,8 @@ implementation
 Uses
   uConstantes,
   uFuncoes,
-  uSeleciona;
+  uSeleciona,
+  uMensagem;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -42,6 +44,20 @@ begin
 
   CarregarConexaoBD;
 
+end;
+
+procedure TDMUtil.ImprimirRelatorio(Relatorio: String);
+begin
+  frxReport1.Clear;
+
+  if not FileExists(LOGIN.DirRelatorio + Relatorio) then begin
+    DisplayMsg(MSG_WAR, 'Arquivo não encontrado!');
+    Exit;
+  end;
+
+  frxReport1.LoadFromFile(LOGIN.DirRelatorio + Relatorio);
+  frxReport1.DesignPreviewPage;
+  frxReport1.DesignReport();
 end;
 
 function TDMUtil.Selecionar(Tabela: TFWPersistence; ValorControl : String): Integer;

@@ -43,8 +43,16 @@ type
     btPesquisar: TSpeedButton;
     Panel2: TPanel;
     Panel3: TPanel;
-    cbAcessoCadUsuario: TCheckBox;
     csPesquisaPERMITIRCADUSUARIO: TBooleanField;
+    GridPanel1: TGridPanel;
+    pnUsuarioEsquerda: TPanel;
+    pnUsuarioDireita: TPanel;
+    gdMenus: TDBGrid;
+    csMenus: TClientDataSet;
+    dsMenus: TDataSource;
+    csMenusPERMITIR: TBooleanField;
+    csMenusMENU: TStringField;
+    csMenusCAPTION: TStringField;
     procedure sbFecharClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btBuscarClick(Sender: TObject);
@@ -59,10 +67,14 @@ type
     procedure btGravarClick(Sender: TObject);
     procedure btExcluirClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure gdMenusDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure gdMenusCellClick(Column: TColumn);
   private
     { Private declarations }
   public
     procedure CarregaDados;
+    procedure CarregaMenus;
     procedure InvertePaineis;
     procedure Cancelar;
     procedure Filtrar;
@@ -79,7 +91,9 @@ uses
   uFWConnection,
   uMensagem,
   uBeanUsuario,
-  uFuncoes;
+  uConstantes,
+  uFuncoes,
+  uBeanUsuario_Permissao;
 
 {$R *.dfm}
 
@@ -94,7 +108,6 @@ begin
     edEmail.Text                := csPesquisaEMAIL.Value;
     edSenha.Text                := Criptografa(csPesquisaSENHA.Value, 'D');
     edConfirmarSenha.Text       := Criptografa(csPesquisaSENHA.Value, 'D');
-    cbAcessoCadUsuario.Checked  := csPesquisaPERMITIRCADUSUARIO.Value;
     btGravar.Tag                := csPesquisaCODIGO.Value;
   end;
 end;
@@ -103,6 +116,7 @@ procedure TFrmCadastroUsuario.btAlterarClick(Sender: TObject);
 begin
   if not csPesquisa.IsEmpty then begin
     AtualizarEdits(False);
+    CarregaMenus;
     InvertePaineis;
   end;
 end;
@@ -165,11 +179,14 @@ procedure TFrmCadastroUsuario.btGravarClick(Sender: TObject);
 Var
   FWC : TFWConnection;
   USU : TUSUARIO;
+  UP  : TUSUARIO_PERMISSAO;
+  I   : Integer;
 begin
 
   try
     FWC := TFWConnection.Create;
     USU := TUSUARIO.Create(FWC);
+    UP  := TUSUARIO_PERMISSAO.Create(FWC);
     try
 
       if Length(Trim(edNome.Text)) = 0 then begin
@@ -193,19 +210,41 @@ begin
         Exit;
       end;
 
-      USU.NOME.Value                  := edNome.Text;
-      USU.EMAIL.Value                 := edEmail.Text;
-      USU.PERMITIR_CAD_USUARIO.Value  := cbAcessoCadUsuario.Checked;
+      USU.NOME.Value                    := edNome.Text;
+      USU.EMAIL.Value                   := edEmail.Text;
 
       if (Sender as TSpeedButton).Tag > 0 then begin
-        USU.ID.Value      := (Sender as TSpeedButton).Tag;
-        USU.SENHA.Value   := Criptografa(edSenha.Text, 'E');
+        USU.ID.Value                    := (Sender as TSpeedButton).Tag;
+        USU.SENHA.Value                 := Criptografa(edSenha.Text, 'E');
         USU.Update;
       end else begin
-        USU.SENHA.Value   := Criptografa(edSenha.Text, 'E');
+        USU.SENHA.Value                 := Criptografa(edSenha.Text, 'E');
         USU.Insert;
       end;
 
+      csMenus.DisableControls;
+      try
+        UP.SelectList('ID_USUARIO = ' + USU.ID.asSQL);
+        if UP.Count > 0 then begin
+          for I := 0 to Pred(UP.Count) do begin
+            UP.ID.Value                 := TUSUARIO_PERMISSAO(UP.Itens[I]).ID.Value;
+            UP.Delete;
+          end;
+        end;
+
+        csMenus.First;
+        while not csMenus.Eof do begin
+          if csMenusPERMITIR.Value then begin
+            UP.ID_USUARIO.Value         := USU.ID.Value;
+            UP.MENU.Value               := csMenusMENU.Value;
+            UP.Insert;
+          end;
+
+          csMenus.Next;
+        end;
+      finally
+        csMenus.EnableControls;
+      end;
       FWC.Commit;
 
       InvertePaineis;
@@ -219,6 +258,7 @@ begin
     end;
   finally
     FreeAndNil(USU);
+    FreeAndNil(UP);
     FreeAndNil(FWC);
   end;
 end;
@@ -226,6 +266,7 @@ end;
 procedure TFrmCadastroUsuario.btNovoClick(Sender: TObject);
 begin
   AtualizarEdits(True);
+  CarregaMenus;
   InvertePaineis;
 end;
 
@@ -261,7 +302,6 @@ begin
           csPesquisaNOME.Value                := TUSUARIO(USU.Itens[I]).NOME.Value;
           csPesquisaEMAIL.Value               := TUSUARIO(USU.Itens[I]).EMAIL.Value;
           csPesquisaSENHA.Value               := TUSUARIO(USU.Itens[I]).SENHA.Value;
-          csPesquisaPERMITIRCADUSUARIO.Value  := TUSUARIO(USU.Itens[I]).PERMITIR_CAD_USUARIO.Value;
           csPesquisa.Post;
         end;
       end;
@@ -275,6 +315,46 @@ begin
   finally
     FreeAndNil(USU);
     FreeAndNil(FWC);
+  end;
+end;
+
+procedure TFrmCadastroUsuario.CarregaMenus;
+var
+  I     : Integer;
+  CON   : TFWConnection;
+  PU    : TUSUARIO_PERMISSAO;
+begin
+  csMenus.EmptyDataSet;
+  csMenus.DisableControls;
+  try
+    for I := 0 to High(MENUS) do begin
+      csMenus.Append;
+      csMenusPERMITIR.Value        := False;
+      csMenusMENU.Value            := MENUS[I].NOME;
+      csMenusCAPTION.Value         := MENUS[I].CAPTION;
+      csMenusPERMITIR.Value        := False;
+      csMenus.Post;
+    end;
+
+    if btGravar.Tag > 0 then begin
+      CON                            := TFWConnection.Create;
+      PU                             := TUSUARIO_PERMISSAO.Create(CON);
+      try
+        PU.SelectList('ID_USUARIO = ' + IntToStr(btGravar.Tag));
+        for I := 0 to Pred(PU.Count) do begin
+          if csMenus.Locate(csMenusMENU.FieldName, TUSUARIO_PERMISSAO(PU.Itens[I]).MENU.Value, []) then begin
+            csMenus.Edit;
+            csMenusPERMITIR.Value    := True;
+            csMenus.Post;
+          end;
+        end;
+      finally
+        FreeAndNil(PU);
+        FreeAndNil(CON);
+      end;
+    end;
+  finally
+    csMenus.EnableControls;
   end;
 end;
 
@@ -359,8 +439,43 @@ begin
   CarregaDados;
   AutoSizeDBGrid(gdPesquisa);
 
+  csMenus.CreateDataSet;
+  csMenus.Open;
+
   if edPesquisa.CanFocus then
     edPesquisa.SetFocus;
+end;
+
+procedure TFrmCadastroUsuario.gdMenusCellClick(Column: TColumn);
+begin
+  csMenus.Edit;
+  csMenusPERMITIR.Value     := not csMenusPERMITIR.Value;
+  csMenus.Post;
+end;
+
+procedure TFrmCadastroUsuario.gdMenusDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+Const
+  CtrlState : array[Boolean] of Integer = (DFCS_BUTTONCHECK, DFCS_BUTTONCHECK or DFCS_CHECKED);
+var
+  CheckBoxRectangle : TRect;
+begin
+  if ((gdSelected in State) or (gdFocused in State)) then begin
+    gdMenus.Canvas.Font.Color  := clWhite;
+    gdMenus.Canvas.Brush.Color := clBlue;
+    gdMenus.Canvas.Font.Style  := [];
+  end;
+
+  gdMenus.DefaultDrawDataCell(Rect, gdMenus.Columns[DataCol].Field, State);
+
+  if Column.Field.FieldName = csMenusPERMITIR.FieldName then begin
+    gdMenus.Canvas.FillRect(Rect);
+    CheckBoxRectangle.Left   := Rect.Left + 2;
+    CheckBoxRectangle.Right  := Rect.Right - 2;
+    CheckBoxRectangle.Top    := Rect.Top + 2;
+    CheckBoxRectangle.Bottom := Rect.Bottom - 2;
+    DrawFrameControl(gdMenus.Canvas.Handle, CheckBoxRectangle, DFC_BUTTON, CtrlState[Column.Field.AsBoolean]);
+  end;
 end;
 
 procedure TFrmCadastroUsuario.InvertePaineis;

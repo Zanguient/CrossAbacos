@@ -6,6 +6,7 @@ type
   TDADOSLOGIN = record
     Usuario : String;
     LembrarUsuario : Boolean;
+    DirRelatorio : String;
   end;
 
   TDADOSCONEXAO = record
