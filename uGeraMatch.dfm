@@ -16,13 +16,15 @@ object frmGeraMatch: TfrmGeraMatch
   OldCreateOrder = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object lbProgresso: TLabel
-    Left = 0
-    Top = 301
-    Width = 759
+    AlignWithMargins = True
+    Left = 3
+    Top = 292
+    Width = 753
     Height = 19
     Align = alBottom
     Alignment = taCenter
@@ -53,8 +55,6 @@ object frmGeraMatch: TfrmGeraMatch
     ParentBackground = False
     ParentFont = False
     TabOrder = 0
-    ExplicitLeft = -163
-    ExplicitWidth = 751
   end
   object pnBotoesVisualizacao: TPanel
     AlignWithMargins = True
@@ -66,9 +66,6 @@ object frmGeraMatch: TfrmGeraMatch
     Color = clWhite
     ParentBackground = False
     TabOrder = 1
-    ExplicitLeft = -163
-    ExplicitTop = 343
-    ExplicitWidth = 751
     object btSair: TSpeedButton
       AlignWithMargins = True
       Left = 625
@@ -304,9 +301,9 @@ object frmGeraMatch: TfrmGeraMatch
   end
   object cbLoteImportacao: TComboBox
     AlignWithMargins = True
-    Left = 237
-    Top = 58
-    Width = 204
+    Left = 269
+    Top = 253
+    Width = 244
     Height = 33
     Style = csDropDownList
     Font.Charset = DEFAULT_CHARSET
@@ -318,14 +315,12 @@ object frmGeraMatch: TfrmGeraMatch
     TabOrder = 2
   end
   object ProgressBar1: TProgressBar
-    Left = 0
-    Top = 320
-    Width = 759
+    AlignWithMargins = True
+    Left = 3
+    Top = 317
+    Width = 753
     Height = 50
     Align = alBottom
     TabOrder = 3
-    ExplicitLeft = 224
-    ExplicitTop = 264
-    ExplicitWidth = 150
   end
 end

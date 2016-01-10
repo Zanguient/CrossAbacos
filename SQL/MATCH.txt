@@ -1,7 +1,7 @@
 CREATE TABLE if not exists match
 ( id serial NOT NULL,
   id_lote integer,  
-  data_hora time with time zone,  
+  data_hora timestamp without time zone,  
   id_usuario integer,  
 CONSTRAINT pk_match_id PRIMARY KEY (id),  
 CONSTRAINT fk_match_lote1 FOREIGN KEY (id_lote)      
