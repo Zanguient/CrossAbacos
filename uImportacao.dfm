@@ -99,9 +99,6 @@ object frmImportacao: TfrmImportacao
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = 5
-        ExplicitTop = 67
-        ExplicitHeight = 131
       end
       object pnCabProdutos: TPanel
         Left = 1
@@ -232,8 +229,6 @@ object frmImportacao: TfrmImportacao
         Height = 154
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 73
-        ExplicitHeight = 131
       end
       object pbImportaAlmoxarifado: TProgressBar
         Left = 1
@@ -262,8 +257,6 @@ object frmImportacao: TfrmImportacao
         Height = 155
         Align = alClient
         TabOrder = 1
-        ExplicitTop = 73
-        ExplicitHeight = 131
       end
       object pbImportaFornecedor: TProgressBar
         Left = 1
@@ -413,7 +406,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

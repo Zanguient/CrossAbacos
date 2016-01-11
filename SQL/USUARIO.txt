@@ -4,6 +4,5 @@ CREATE TABLE usuario
   nome character varying(100) NOT NULL,
   email character varying(100) NOT NULL,
   senha character varying(100),
-  permitir_cad_usuario boolean NOT NULL,
   CONSTRAINT pk_usuario PRIMARY KEY (id)
 );

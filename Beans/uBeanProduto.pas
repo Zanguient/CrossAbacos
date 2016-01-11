@@ -33,6 +33,10 @@ type TPRODUTO = Class(TFWPersistence)
     FQUANTIDADE_EMBALAGEM: TFieldInteger;
     FGRUPO: TFieldString;
     FCUSTO: TFieldFloat;
+    FID_ULTIMOLOTE: TFieldInteger;
+    FID_FORNECEDORANTERIOR: TFieldInteger;
+    FCUSTOANTERIOR: TFieldCurrency;
+    FID_FORNECEDORNOVO: TFieldInteger;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -61,6 +65,10 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetSUB_GRUPO(const Value: TFieldString);
     procedure SetUNIDADE_MEDIDA(const Value: TFieldString);
     procedure SetCUSTO(const Value: TFieldFloat);
+    procedure SetCUSTOANTERIOR(const Value: TFieldCurrency);
+    procedure SetID_FORNECEDORANTERIOR(const Value: TFieldInteger);
+    procedure SetID_FORNECEDORNOVO(const Value: TFieldInteger);
+    procedure SetID_ULTIMOLOTE(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -92,6 +100,10 @@ type TPRODUTO = Class(TFWPersistence)
     property DIAS_GARANTIA : TFieldInteger read FDIAS_GARANTIA write SetDIAS_GARANTIA;
     property ORIGEM_MERCADORIA : TFieldString read FORIGEM_MERCADORIA write SetORIGEM_MERCADORIA;
     property CUSTO : TFieldFloat read FCUSTO write SetCUSTO;
+    property CUSTOANTERIOR : TFieldCurrency read FCUSTOANTERIOR write SetCUSTOANTERIOR;
+    property ID_FORNECEDORANTERIOR : TFieldInteger read FID_FORNECEDORANTERIOR write SetID_FORNECEDORANTERIOR;
+    property ID_FORNECEDORNOVO : TFieldInteger read FID_FORNECEDORNOVO write SetID_FORNECEDORNOVO;
+    property ID_ULTIMOLOTE : TFieldInteger read FID_ULTIMOLOTE write SetID_ULTIMOLOTE;
 
 End;
 implementation
@@ -142,6 +154,11 @@ begin
   FCUSTO := Value;
 end;
 
+procedure TPRODUTO.SetCUSTOANTERIOR(const Value: TFieldCurrency);
+begin
+  FCUSTOANTERIOR := Value;
+end;
+
 procedure TPRODUTO.SetDIAS_GARANTIA(const Value: TFieldInteger);
 begin
   FDIAS_GARANTIA := Value;
@@ -180,6 +197,21 @@ end;
 procedure TPRODUTO.SetID(const Value: TFieldInteger);
 begin
   FID := Value;
+end;
+
+procedure TPRODUTO.SetID_FORNECEDORANTERIOR(const Value: TFieldInteger);
+begin
+  FID_FORNECEDORANTERIOR := Value;
+end;
+
+procedure TPRODUTO.SetID_FORNECEDORNOVO(const Value: TFieldInteger);
+begin
+  FID_FORNECEDORNOVO := Value;
+end;
+
+procedure TPRODUTO.SetID_ULTIMOLOTE(const Value: TFieldInteger);
+begin
+  FID_ULTIMOLOTE := Value;
 end;
 
 procedure TPRODUTO.SetL(const Value: TFieldFloat);

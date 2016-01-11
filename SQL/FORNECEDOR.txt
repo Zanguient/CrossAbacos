@@ -9,3 +9,5 @@ create table if not exists fornecedor (
   references almoxarifado (id)
   on delete restrict
   on update cascade);
+
+INSERT INTO FORNECEDOR(ID, NOME, CNPJ, ID_ALMOXARIFADO) VALUES (0, 'GERAL', '0', 0);

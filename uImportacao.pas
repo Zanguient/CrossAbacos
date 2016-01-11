@@ -504,12 +504,16 @@ begin
            end;
            if PROD.SKU.Value <> '' then begin
              PROD.SelectList('sku = ' + PROD.SKU.asSQL);
-             PROD.CUSTO.Value                                                  := 0;
              if PROD.Count > 0 then begin
-               PROD.ID.Value                                                   := TPRODUTO(PROD.Itens[0]).ID.Value;
+               PROD.ID.Value                                                    := TPRODUTO(PROD.Itens[0]).ID.Value;
                PROD.Update;
                mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
              end else begin
+               PROD.CUSTOANTERIOR.Value                                           := 0.00;
+               PROD.CUSTO.Value                                                   := 0.00;
+               PROD.ID_FORNECEDORANTERIOR.Value                                   := 0;
+               PROD.ID_FORNECEDORNOVO.Value                                       := 0;
+               PROD.ID_ULTIMOLOTE.Value                                           := 0;
                PROD.Insert;
                mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
              end;

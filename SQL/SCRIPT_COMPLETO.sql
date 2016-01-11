@@ -4,7 +4,6 @@ CREATE TABLE if not exists usuario
   nome character varying(100) NOT NULL,
   email character varying(100) NOT NULL,
   senha character varying(100),
-  permitir_cad_usuario boolean NOT NULL,
   CONSTRAINT pk_usuario PRIMARY KEY (id)
 );
 
@@ -15,6 +14,8 @@ CREATE TABLE if not exists lote
   CONSTRAINT pk_lote PRIMARY KEY (id)
 );
 
+INSERT INTO LOTE(ID, DATA_HORA) VALUES (0, CURRENT_TIMESTAMP);
+
 create table if not exists almoxarifado (
   id serial,
   nome character varying(100) not null,
@@ -22,37 +23,7 @@ create table if not exists almoxarifado (
   primary key (id)
 );
 
-create table if not exists produto (
-  id serial,
-  sku character varying(100) not null,
-  codigo_barras int null,
-  nome character varying(255) null,
-  custo numeric(18,2) null,
-  saldo numeric(18,2) null,
-  disponivel numeric(18,2) null,
-  icms numeric(18,2) null,
-  cf character varying(100) null,
-  produto_pai character varying(100) null,
-  marca character varying(100) null,
-  familia character varying(100) null,
-  classe character varying(100) null,
-  unidade_medida character varying(100) null,
-  grupo character varying(100) null,
-  sub_grupo character varying(100) null,
-  preco_venda numeric(18,2) null,
-  promocao_ipi numeric(18,2) null,
-  peso numeric(18,2) null,
-  ncm character varying(10) null,
-  estoque_maximo int null,
-  prazo_entrega int null,
-  quantidade_embalagem int null,
-  c numeric(18,2) null,
-  l numeric(18,2) null,
-  e numeric(18,2) null,
-  dias_garantia int null,
-  origem_mercadoria character varying(255) null,
-  primary key (id)
-);
+INSERT INTO ALMOXARIFADO(ID, NOME, CODIGO_E10) VALUES (0, 'GERAL', 0);
 
 create table if not exists fornecedor (
   id serial,
@@ -65,6 +36,54 @@ create table if not exists fornecedor (
   references almoxarifado (id)
   on delete restrict
   on update cascade);
+
+INSERT INTO FORNECEDOR(ID, NOME, CNPJ, ID_ALMOXARIFADO) VALUES (0, 'GERAL', '0', 0);
+
+CREATE TABLE if not exists produto
+(
+  id serial NOT NULL,
+  sku character varying(100) NOT NULL,
+  codigo_barras integer,
+  nome character varying(255),
+  custoanterior numeric(18,2),
+  saldo numeric(18,2),
+  disponivel numeric(18,2),
+  icms numeric(18,2),
+  cf character varying(100),
+  produto_pai character varying(100),
+  marca character varying(100),
+  familia character varying(100),
+  classe character varying(100),
+  unidade_medida character varying(100),
+  grupo character varying(100),
+  sub_grupo character varying(100),
+  preco_venda numeric(18,2),
+  promocao_ipi numeric(18,2),
+  peso numeric(18,2),
+  ncm character varying(10),
+  estoque_maximo integer,
+  prazo_entrega integer,
+  quantidade_embalagem integer,
+  c numeric(18,2),
+  l numeric(18,2),
+  e numeric(18,2),
+  dias_garantia integer,
+  origem_mercadoria character varying(255),
+  id_ultimolote integer NOT NULL DEFAULT 0,
+  custo numeric(18,2) NOT NULL DEFAULT 0,
+  id_fornecedoranterior integer NOT NULL DEFAULT 0,
+  id_fornecedornovo integer NOT NULL DEFAULT 0,
+  CONSTRAINT produto_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_produto_fornecedor1 FOREIGN KEY (id_fornecedoranterior)
+      REFERENCES fornecedor (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_produto_fornecedor2 FOREIGN KEY (id_fornecedornovo)
+      REFERENCES fornecedor (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_produto_lote1 FOREIGN KEY (id_ultimolote)
+      REFERENCES lote (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT
+);
 
 create table if not exists produtofornecedor (
   id serial,
@@ -130,7 +149,7 @@ CREATE TABLE if not exists match
 ( 
   id serial NOT NULL,
   id_lote integer,  
-  data_hora time with time zone,  
+  data_hora timestamp without time zone NOT NULL,  
   id_usuario integer,  
 CONSTRAINT pk_match_id PRIMARY KEY (id),  
 CONSTRAINT fk_match_lote1 FOREIGN KEY (id_lote)      
@@ -167,7 +186,7 @@ CREATE TABLE if not exists match_itens
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk_matchitens_match1 FOREIGN KEY (id_match)
       REFERENCES match (id) MATCH SIMPLE
-      ON UPDATE CASCADE ON DELETE CASCADE;
+      ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT fk_matchitens_produto1 FOREIGN KEY (id_produto)
       REFERENCES produto (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION

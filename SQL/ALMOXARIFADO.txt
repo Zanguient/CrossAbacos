@@ -3,3 +3,5 @@ create table if not exists almoxarifado (
   nome character varying(100) not null,
   codigo_e10 int not null,
   primary key (id));
+
+INSERT INTO ALMOXARIFADO(ID, NOME, CODIGO_E10) VALUES (0, 'GERAL', 0);
