@@ -33,7 +33,7 @@ type
 Const
   DirArqConf: String = 'C:\CrossAbacos\CrossAbacos.ini';
   DirInstall: String = 'C:\CrossAbacos\';
-  DirSaidaArquivos: String = 'C:\CrossAbacos\Arquivos\';
+  DirArquivosExcel: String = 'C:\CrossAbacos\Arquivos\';
 
 Var
   LOGIN       : TDADOSLOGIN;

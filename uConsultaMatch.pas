@@ -36,7 +36,6 @@ type
     cds_Match: TClientDataSet;
     cds_MatchIDMATCH: TIntegerField;
     cds_MatchIDLOTE: TIntegerField;
-    cds_MatchDATALOTE: TDateField;
     cds_MatchNOMEUSUARIO: TStringField;
     cds_MatchQTDIMPORTADOS: TIntegerField;
     cds_MatchQTDATUALIZADOS: TIntegerField;
@@ -65,6 +64,7 @@ type
     edLote: TEdit;
     cds_MatchItensATUALIZADONOMATCH: TBooleanField;
     btLimpar: TSpeedButton;
+    cds_MatchDATAHORAMATCH: TDateTimeField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -195,7 +195,7 @@ begin
       SQL.SQL.Add('SELECT');
       SQL.SQL.Add('	M.ID AS IDMATCH,');
       SQL.SQL.Add('	L.ID AS IDLOTE,');
-      SQL.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATALOTE,');
+      SQL.SQL.Add('	L.DATA_HORA AS DATAHORAMATCH,');
       SQL.SQL.Add('	U.NOME AS NOMEUSUARIO,');
       SQL.SQL.Add('	COALESCE((SELECT COUNT(MI.ID) FROM MATCH_ITENS MI WHERE MI.ID_MATCH = M.ID),0) AS QTDIMPORTADOS,');
       SQL.SQL.Add('	COALESCE((SELECT COUNT(MI.ID) FROM MATCH_ITENS MI WHERE MI.ID_MATCH = M.ID AND MI.ATUALIZADO = TRUE),0) AS QTDATUALIZADOS');
@@ -233,7 +233,7 @@ begin
           cds_Match.Append;
           cds_MatchIDMATCH.Value        := SQL.Fields[0].Value;
           cds_MatchIDLOTE.Value         := SQL.Fields[1].Value;
-          cds_MatchDATALOTE.Value       := SQL.Fields[2].Value;
+          cds_MatchDATAHORAMATCH.Value  := SQL.Fields[2].Value;
           cds_MatchNOMEUSUARIO.Value    := SQL.Fields[3].Value;
           cds_MatchQTDIMPORTADOS.Value  := SQL.Fields[4].Value;
           cds_MatchQTDATUALIZADOS.Value := SQL.Fields[5].Value;
@@ -437,61 +437,83 @@ begin
 end;
 
 procedure TfrmConsultaMatch.ExportClick(Sender: TObject);
-Var
-  Excel : Variant;
-begin
+var
+  PLANILHA,
+  Sheet   : Variant;
+  Linha   : Integer;
+  DirArquivo : String;
+Begin
 
-//  if not cds_Match.IsEmpty then begin
-//
-//
-//    cds_Match.DisableControls;
-//    Excel := CreateOleObject('Excel.Application');
-//
-//    try
-//
-//      Excel.WorkBooks.Add;
-//      Excel.WorkBooks[1].WorkSheets[1].Name := 'Estoque';
-//      Excel.Visible := False;
-//
-//      if (Sender as TSpeedButton).Name = 'btExport1' then begin
-//
-//        Excel.Caption := 'Atualização de Estoque Virtual';
-//        Excel.Cells[1,1] := 'SKU';
-//        Excel.Cells[1,2] := 'MARCA';
-//        Excel.Cells[1,3] := 'STATUS';
-//
-//        cds_Match.First;
-//        While not cds_Match.Eof do begin
-//          Excel.Cells[cds_Match.RecNo + 1,1]  := cds_MatchSKU.Value;
-//          Excel.Cells[cds_Match.RecNo + 1,2]  := cds_MatchMARCA.Value;
-//          cds_Match.Next;
-//        end;
-//
-//        Excel.Range['A1:C1'].Font.Bold       := True;
-//      end;
-//
-//      if (Sender as TSpeedButton).Name = 'btExport2' then begin
-//
-//      end;
-//
-//      Excel.Columns.AutoFit;
-//      Excel.DisplayAlerts := False;
-//
-//      if SaveDialog1.Execute then begin
-//        Excel.ActiveWorkbook.SaveAs(SaveDialog1.FileName);
-//        DisplayMsg(MSG_INF, 'Arquivo Gerado com Sucesso!');
-//      end;
-//
-//    finally
-//      Excel.Workbooks.close;
-//      Excel.Quit;
-//      Excel := Unassigned;
-//      cds_Match.EnableControls;
-//    end;
-//
-//  end else
-//    DisplayMsg(MSG_WAR, 'Não há Dados a serem Exportados, Verifique!');
-//
+  DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
+
+  if not DirectoryExists(DirArquivo) then begin
+    if not ForceDirectories(DirArquivo) then begin
+      DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
+      Exit;
+    end;
+  end;
+
+  DirArquivo := DirArquivo + '\Fornecedor.xlsx';
+
+  if FileExists(DirArquivo) then begin
+    DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
+                          'Deseja Sobreescrever?');
+    if ResultMsgModal <> mrYes then
+      Exit;
+
+    DeleteFile(DirArquivo);
+  end;
+
+  //cds_MatchItens.Filtered := False;
+  Linha :=  2;
+  PLANILHA := CreateOleObject('Excel.Application');
+  PLANILHA.Caption := 'Fornecedor';
+  PLANILHA.Visible := False;
+  PLANILHA.WorkBooks.add(1);
+  PLANILHA.Workbooks[1].WorkSheets[1].Name := 'Fornecedor';
+  Sheet := PLANILHA.Workbooks[1].WorkSheets['Fornecedor'];
+  Sheet.Range['A1','C1'].Font.Bold  := True;
+  Sheet.Range['A1','C1'].Font.Color := clBlue;
+
+  // TITULO DAS COLUNAS
+  PLANILHA.Cells[1,1] := 'SKU';
+  PLANILHA.Cells[1,2] := 'FORNECEDOR';
+  PLANILHA.Cells[1,3] := 'SUB_GRUPO';
+
+  cds_MatchItens.DisableControls;
+
+  // PRRENCHIMENTO DAS CÉLULAS COM OS VALORES DOS CAMPOS DA TABELA
+  Try
+    try
+      if not cds_MatchItens.IsEmpty then begin
+
+        cds_MatchItens.First;
+        While not cds_MatchItens.Eof do Begin
+          PLANILHA.Cells[Linha,1] := cds_MatchItensSKU.Value;
+          PLANILHA.Cells[linha,2] := cds_MatchItensFORNCECEDORANTERIOR.Value;
+          PLANILHA.Cells[Linha,3] := cds_MatchItensFORNECEDORNOVO.Value;
+          Linha := Linha + 1;
+          cds_MatchItens.Next;
+        End;
+      end;
+      PLANILHA.Columns.AutoFit;
+
+      PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+
+      DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
+
+    except
+      on E : Exception do begin
+        DisplayMsg(MSG_ERR, 'Erro ao Gerar arquivo,' + sLineBreak + DirArquivo);
+      end;
+    end;
+  Finally
+    cds_MatchItens.EnableControls;
+    if not VarIsEmpty(PLANILHA) then begin
+      PLANILHA.Quit;
+      PLANILHA := Unassigned;
+    end;
+  end;
 end;
 
 procedure TfrmConsultaMatch.Filtrar;
@@ -555,7 +577,10 @@ begin
   edDataF.Date  := Date;
   edUsuario.Clear;
   edLote.Clear;
+
   edFiltro.Clear;
+  Filtrar;
+
   cbProdutosForadoLote.Checked := False;
   cds_Match.EmptyDataSet;
   cds_MatchItens.EmptyDataSet;

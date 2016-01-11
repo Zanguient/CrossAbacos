@@ -37,7 +37,6 @@ object frmConsultaMatch: TfrmConsultaMatch
     ParentBackground = False
     ParentFont = False
     TabOrder = 0
-    ExplicitWidth = 751
   end
   object pnBotoesVisualizacao: TPanel
     AlignWithMargins = True
@@ -49,8 +48,6 @@ object frmConsultaMatch: TfrmConsultaMatch
     Color = clWhite
     ParentBackground = False
     TabOrder = 1
-    ExplicitTop = 416
-    ExplicitWidth = 751
     DesignSize = (
       872
       60)
@@ -446,7 +443,6 @@ object frmConsultaMatch: TfrmConsultaMatch
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 378
     end
     object edRegistroAtual: TEdit
       Left = 381
@@ -462,7 +458,6 @@ object frmConsultaMatch: TfrmConsultaMatch
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      ExplicitLeft = 260
     end
   end
   object pnCabecalho: TPanel
@@ -481,8 +476,6 @@ object frmConsultaMatch: TfrmConsultaMatch
       Height = 43
       Align = alBottom
       TabOrder = 0
-      ExplicitTop = 114
-      ExplicitWidth = 743
       object btFiltrar: TSpeedButton
         AlignWithMargins = True
         Left = 803
@@ -517,7 +510,6 @@ object frmConsultaMatch: TfrmConsultaMatch
         ParentFont = False
         TabOrder = 0
         TextHint = 'Digite o Filtro'
-        ExplicitWidth = 672
         ExplicitHeight = 27
       end
     end
@@ -1079,7 +1071,6 @@ object frmConsultaMatch: TfrmConsultaMatch
         ParentFont = False
         TabOrder = 0
         WordWrap = True
-        ExplicitWidth = 114
       end
     end
     object rgFiltroAtualizacao: TRadioGroup
@@ -1101,7 +1092,6 @@ object frmConsultaMatch: TfrmConsultaMatch
         'Ambos')
       ParentFont = False
       TabOrder = 2
-      ExplicitLeft = 579
     end
     object pnFiltroMatch: TPanel
       AlignWithMargins = True
@@ -1697,7 +1687,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       object btLimpar: TSpeedButton
         AlignWithMargins = True
         Left = 4
-        Top = 106
+        Top = 105
         Width = 110
         Height = 53
         Caption = '&Limpar'
@@ -1899,8 +1889,8 @@ object frmConsultaMatch: TfrmConsultaMatch
         end
         item
           Expanded = False
-          FieldName = 'DATALOTE'
-          Title.Caption = 'Data Lote'
+          FieldName = 'DATAHORAMATCH'
+          Title.Caption = 'Data hora Match'
           Visible = True
         end
         item
@@ -2038,9 +2028,8 @@ object frmConsultaMatch: TfrmConsultaMatch
     object cds_MatchIDLOTE: TIntegerField
       FieldName = 'IDLOTE'
     end
-    object cds_MatchDATALOTE: TDateField
-      FieldName = 'DATALOTE'
-      DisplayFormat = 'dd/MM/yyyy'
+    object cds_MatchDATAHORAMATCH: TDateTimeField
+      FieldName = 'DATAHORAMATCH'
     end
     object cds_MatchNOMEUSUARIO: TStringField
       DisplayWidth = 30

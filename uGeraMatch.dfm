@@ -301,8 +301,8 @@ object frmGeraMatch: TfrmGeraMatch
   end
   object cbLoteImportacao: TComboBox
     AlignWithMargins = True
-    Left = 269
-    Top = 253
+    Left = 253
+    Top = 157
     Width = 244
     Height = 33
     Style = csDropDownList

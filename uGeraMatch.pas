@@ -49,9 +49,9 @@ procedure TfrmGeraMatch.btGerarClick(Sender: TObject);
 Var
   FWC           : TFWConnection;
   M             : TMATCH;
+  MI            : TMATCH_ITENS;
   P             : TPRODUTO;
   SQL           : TFDQuery;
-  SQLI          : TFDQuery;
   SQLFORN       : TFDQuery;
   SQLULTIMOLOTE : TFDQuery;
   I             : Integer;
@@ -61,9 +61,9 @@ begin
 
   FWC           := TFWConnection.Create;
   M             := TMATCH.Create(FWC);
+  MI            := TMATCH_ITENS.Create(FWC);
   P             := TPRODUTO.Create(FWC);
   SQL           := TFDQuery.Create(nil);
-  SQLI          := TFDQuery.Create(nil);
   SQLFORN       := TFDQuery.Create(nil);
   SQLULTIMOLOTE := TFDQuery.Create(nil);
 
@@ -77,34 +77,6 @@ begin
         DisplayMsg(MSG_WAR, 'Não há lote selecionado, Verifique!');
         Exit;
       end;
-
-      //Verifica se o Lote já possui Match gravado
-      M.SelectList('ID_LOTE = ' + IntToStr(idLote));
-      if M.Count > 0 then begin
-        DisplayMsg(MSG_CONF, 'Já existe Match para este Lote!' + sLineBreak + 'Deseja Sobreescrever o Match desse Lote?');
-        if ResultMsgModal <> mrYes then
-          Exit;
-        M.ID.Value  := TMATCH(M.Itens[0]).ID.Value;
-        M.Delete;
-      end;
-
-      //SQL DE INSERÇÃO
-      SQLI.Close;
-      SQLI.SQL.Clear;
-      SQLI.SQL.ADD('INSERT INTO MATCH_ITENS(');
-      SQLI.SQL.ADD('            ID_MATCH, ID_PRODUTO, CUSTOANTERIOR, CUSTONOVO, ID_FORNECEDORANTERIOR,');
-      SQLI.SQL.ADD('            ID_FORNECEDORNOVO, ATUALIZADO, IMPORTADO, ID_ULTIMOLOTE)');
-      SQLI.SQL.ADD('    VALUES (:ID_MATCH, :ID_PRODUTO, :CUSTOANTERIOR, :CUSTONOVO, :ID_FORNECEDORANTERIOR, :ID_FORNECEDORNOVO, :ATUALIZADO, :IMPORTADO, :ID_ULTIMOLOTE)');      SQLI.Params[0].DataType   := ftInteger; //id_match
-      SQLI.Params[0].DataType   := ftInteger; //id_match
-      SQLI.Params[1].DataType   := ftInteger; //id_produto
-      SQLI.Params[2].DataType   := ftCurrency;//custoanterior
-      SQLI.Params[3].DataType   := ftCurrency; //custonovo
-      SQLI.Params[4].DataType   := ftInteger; //id_fornecedoranterior
-      SQLI.Params[5].DataType   := ftInteger; //id_fornecedornovo
-      SQLI.Params[6].DataType   := ftBoolean; //atualizado
-      SQLI.Params[7].DataType   := ftBoolean; //importado
-      SQLI.Params[8].DataType   := ftInteger; //id_ultimolote
-      SQLI.Connection           := FWC.FDConnection;
 
       //SQL FORNECEDOR
       SQLFORN.Close;
@@ -144,7 +116,7 @@ begin
       SQL.SQL.Add('COALESCE(F.ID,0) AS ID_FORNECEDOR');
       SQL.SQL.Add('FROM PRODUTO P');
       SQL.SQL.Add('LEFT JOIN FORNECEDOR F ON (UPPER(P.SUB_GRUPO) = UPPER(F.NOME))');
-      SQL.SQL.Add('WHERE P.ID IN (SELECT IMPI.ID FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO AND IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1))');
+      SQL.SQL.Add('WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO AND IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1))');
       SQL.Params[0].DataType   := ftInteger;
       SQL.Connection           := FWC.FDConnection;
       SQL.Prepare;
@@ -167,17 +139,16 @@ begin
 
         while not SQL.Eof do begin
 
-          SQLI.Close;
-          SQLI.Prepare;
-          SQLI.Params[0].Value   := M.ID.Value; //id_match
-          SQLI.Params[1].Value   := SQL.Fields[0].Value; //id_produto
-          SQLI.Params[2].Value   := SQL.Fields[1].Value; //custoanterior
-          SQLI.Params[4].Value   := SQL.Fields[2].Value; //id_fornecedoranterior
-          SQLI.Params[3].Value   := SQL.Fields[1].Value; //custonovo
-          SQLI.Params[5].Value   := SQL.Fields[2].Value; //id_fornecedornovo
-          SQLI.Params[6].Value   := False; //atualizado
-          SQLI.Params[7].Value   := False; //importado
-          SQLI.Params[8].Value   := 0; //id_ultimolote
+          MI.ID.isNull                    := True;
+          MI.ID_MATCH.Value               := M.ID.Value; //id_match
+          MI.ID_PRODUTO.Value             := SQL.Fields[0].Value; //id_produto
+          MI.CUSTOANTERIOR.Value          := SQL.Fields[1].Value; //custoanterior
+          MI.ID_FORNECEDORANTERIOR.Value  := SQL.Fields[2].Value; //id_fornecedoranterior
+          MI.CUSTONOVO.Value              := SQL.Fields[1].Value; //custonovo
+          MI.ID_FORNECEDORNOVO.Value      := SQL.Fields[2].Value; //id_fornecedornovo
+          MI.ATUALIZADO.Value             := False;
+          MI.IMPORTADO.Value              := False;
+          MI.ID_ULTIMOLOTE.Value          := 0;
 
           //Verifica ultimo lote para o Produto
           SQLULTIMOLOTE.Close;
@@ -186,7 +157,7 @@ begin
           SQLULTIMOLOTE.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
           SQLULTIMOLOTE.Open;
           if not SQLULTIMOLOTE.IsEmpty then
-            SQLI.Params[8].Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
+            MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
 
           //Verifica se tem Fornecedor com Custo Menor
           SQLFORN.Close;
@@ -201,7 +172,7 @@ begin
 
             SQLFORN.First;
             while not SQLFORN.Eof do begin
-              if SQLFORN.Fields[0].Value = SQL.Fields[0].Value then begin
+              if SQLFORN.Fields[0].Value = SQL.Fields[2].Value then begin
                 AlteraForn := True;
                 Break;
               end;
@@ -210,13 +181,13 @@ begin
 
             SQLFORN.First;
             if ((AlteraForn) OR (SQLFORN.Fields[2].Value < SQL.Fields[1].Value)) then begin
-              SQLI.Params[5].Value  := SQLFORN.Fields[0].Value;
-              SQLI.Params[3].Value  := SQLFORN.Fields[2].Value;
-              SQLI.Params[6].Value  := True;
+              MI.ID_FORNECEDORNOVO.Value  := SQLFORN.Fields[0].Value;
+              MI.CUSTONOVO.Value          := SQLFORN.Fields[2].Value;
+              MI.ATUALIZADO.Value         := True;
             end;
           end;
 
-          P.SelectList('ID = ' + IntToStr(SQLI.Params[1].Value));
+          P.SelectList('ID = ' + MI.ID_PRODUTO.asString);
           if P.Count > 0 then begin
             P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
             P.CUSTOANTERIOR.Value         := TPRODUTO(P.Itens[0]).CUSTOANTERIOR.Value;
@@ -229,17 +200,17 @@ begin
             if idLote > P.ID_ULTIMOLOTE.Value then
               P.ID_ULTIMOLOTE.Value       := idLote;
 
-            if SQLI.Params[6].Value = True then begin //Caso tenha Match/tenha atualização
+            if MI.ATUALIZADO.Value = True then begin //Caso tenha Match/tenha atualização
               P.CUSTOANTERIOR.Value         := P.CUSTO.Value;
               P.ID_FORNECEDORANTERIOR.Value := P.ID_FORNECEDORNOVO.Value;
-              P.CUSTO.Value                 := SQLI.Params[3].Value;
-              P.ID_FORNECEDORNOVO.Value     := SQLI.Params[5].Value;
+              P.CUSTO.Value                 := MI.CUSTONOVO.Value;
+              P.ID_FORNECEDORNOVO.Value     := MI.ID_FORNECEDORNOVO.Value;
             end;
 
             P.Update;
           end;
 
-          SQLI.ExecSQL;
+          MI.Insert;
 
           ProgressBar1.Position := SQL.RecNo + 1;
           lbProgresso.Caption := FormatCurr('0.00', (ProgressBar1.Position * 100) / ProgressBar1.Max) + ' %';
@@ -264,8 +235,8 @@ begin
     ProgressBar1.Position := 0;
     FreeAndNil(SQLULTIMOLOTE);
     FreeAndNil(SQLFORN);
-    FreeAndNil(SQLI);
     FreeAndNil(SQL);
+    FreeAndNil(MI);
     FreeAndNil(M);
     FreeAndNil(P);
     FreeAndNil(FWC);
