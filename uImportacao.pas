@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
-  Vcl.StdCtrls, comObj, TypInfo, uDomains;
+  Vcl.StdCtrls, comObj, TypInfo, uDomains, Vcl.Imaging.jpeg;
 type
   TfrmImportacao = class(TForm)
     GridPanel1: TGridPanel;
@@ -39,6 +39,8 @@ type
     edBuscaArquivoProdutoFornecedor: TButtonedEdit;
     mnImportaProdutoFornecedor: TMemo;
     pbImportaProdutoFornecedor: TProgressBar;
+    imFundo: TImage;
+    Panel1: TPanel;
     procedure edBuscaArquivoProdutosRightButtonClick(Sender: TObject);
     procedure btImportarProdutosClick(Sender: TObject);
     procedure btImportaAlmoxarifadoClick(Sender: TObject);
@@ -49,6 +51,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edBuscaArquivoProdutoFornecedorRightButtonClick(Sender: TObject);
     procedure btImportarProdutoFornecedorClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -60,7 +63,7 @@ var
 
 implementation
 uses uBeanProduto, uFWConnection, uMensagem, uBeanAlmoxarifado,
-     uBeanProdutoFornecedor, uBeanFornecedor;
+     uBeanProdutoFornecedor, uBeanFornecedor, uConstantes;
 
 {$R *.dfm}
 
@@ -601,6 +604,12 @@ procedure TfrmImportacao.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_ESCAPE then
     Close;
+end;
+
+procedure TfrmImportacao.FormShow(Sender: TObject);
+begin
+  if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
+    IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
 end;
 
 end.

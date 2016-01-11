@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ImgList, Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, comObj, TypInfo,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls, Vcl.Imaging.jpeg;
 
 type
   TExcelColluns = record
@@ -48,6 +48,8 @@ type
     csProdutosSTATUS: TIntegerField;
     cbFiltro: TComboBox;
     Label3: TLabel;
+    BitBtn1: TBitBtn;
+    IMFundo: TImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btNovoLoteClick(Sender: TObject);
@@ -68,6 +70,7 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure cbFiltroChange(Sender: TObject);
     procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -91,6 +94,11 @@ uses uDMUtil, uBeanLoteImportacao, uFWConnection, uMensagem, uBeanFornecedor,
 procedure TfrmImportacaoArquivoFornecedor.atualizaTotal;
 begin
   edTotalRegistros.Text     := IntToStr(csProdutos.RecordCount);
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.BitBtn1Click(Sender: TObject);
+begin
+  DMUtil.ImprimirRelatorio('frMatch.fr3');
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.bloqueioSalvar(Status : Integer = 0);
@@ -493,6 +501,8 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.FormShow(Sender: TObject);
 begin
+  if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
+    IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
   carregaLotes;
   csProdutos.CreateDataSet;
   csProdutos.Open;

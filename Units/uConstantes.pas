@@ -40,6 +40,7 @@ Var
   CONEXAO     : TDADOSCONEXAO;
   USUARIO     : TDADOSUSUARIO;
   MENUS       : array of TMENU;
+  DESIGNREL   : Boolean;
 
 implementation
 

@@ -5,11 +5,12 @@ interface
 uses
   System.SysUtils, System.Classes, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, forms, Vcl.Controls,
   FireDAC.Stan.Intf, FireDAC.Comp.UI, Vcl.ImgList, uFWPersistence, Vcl.StdCtrls,
-  frxClass;
+  frxClass, frxDesgn;
 
 type
   TDMUtil = class(TDataModule)
     frxReport1: TfrxReport;
+    frxDesigner1: TfrxDesigner;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -47,17 +48,28 @@ begin
 end;
 
 procedure TDMUtil.ImprimirRelatorio(Relatorio: String);
+var
+  Arquivo : String;
+  ArqText : TextFile;
 begin
   frxReport1.Clear;
+  Arquivo                  := LOGIN.DirRelatorio + Relatorio;
 
-  if not FileExists(LOGIN.DirRelatorio + Relatorio) then begin
+  if not FileExists(Arquivo) then begin
     DisplayMsg(MSG_WAR, 'Arquivo não encontrado!');
     Exit;
   end;
 
   frxReport1.LoadFromFile(LOGIN.DirRelatorio + Relatorio);
-  frxReport1.DesignPreviewPage;
-  frxReport1.DesignReport();
+  if DESIGNREL then begin
+    AssignFile(ArqText, Arquivo);
+
+    frxReport1.DesignReport();
+
+    Reset(ArqText);
+    CloseFile(ArqText);
+  end else
+    frxReport1.ShowReport();
 end;
 
 function TDMUtil.Selecionar(Tabela: TFWPersistence; ValorControl : String): Integer;

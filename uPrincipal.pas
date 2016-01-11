@@ -37,6 +37,7 @@ type
     procedure ConsultaMatch1Click(Sender: TObject);
     procedure ImportaodeArquivosdeFornecedores1Click(Sender: TObject);
     procedure GerarMatch1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -82,6 +83,18 @@ begin
     FrmCadastroFamilia.ShowModal;
   finally
     FreeAndNil(FrmCadastroFamilia);
+  end;
+end;
+
+procedure TFrmPrincipal.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) and (Key = VK_F11) then begin
+    DESIGNREL       := not DESIGNREL;
+    if DESIGNREL then
+      DisplayMsg(MSG_INF, 'Design de Relatórios Ativado!')
+    else
+      DisplayMsg(MSG_INF, 'Design de Relatórios Desativado!');
   end;
 end;
 
