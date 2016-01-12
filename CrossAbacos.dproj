@@ -96,11 +96,9 @@
         <DCCReference Include="Units\uFuncoes.pas"/>
         <DCCReference Include="Diversos\uMensagem.pas">
             <Form>frmMensagem</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Diversos\uDMUtil.pas">
             <Form>DMUtil</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="uFWConnection.pas"/>
@@ -109,47 +107,38 @@
         <DCCReference Include="Beans\uBeanUsuario.pas"/>
         <DCCReference Include="Cadastros\uCadPadrao.pas">
             <Form>frmCadPadrao</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Cadastros\uCadastroUsuario.pas">
             <Form>FrmCadastroUsuario</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanFornecedor.pas"/>
         <DCCReference Include="Beans\uBeanProduto.pas"/>
         <DCCReference Include="uRedefinirSenha.pas">
             <Form>FrmRedefinirSenha</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Cadastros\uCadastroMargem.pas">
             <Form>FrmCadastroMargem</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanMargem.pas"/>
         <DCCReference Include="Beans\uBeanGrupo.pas"/>
         <DCCReference Include="Cadastros\uCadastroFamilia.pas">
             <Form>FrmCadastroFamilia</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanFamilia.pas"/>
         <DCCReference Include="uConsultaMatch.pas">
             <Form>frmConsultaMatch</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanLoteImportacao.pas"/>
         <DCCReference Include="uImportacao.pas">
             <Form>frmImportacao</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanAlmoxarifado.pas"/>
         <DCCReference Include="Beans\uBeanProdutoFornecedor.pas"/>
         <DCCReference Include="uImportacaoArquivoFornecedor.pas">
             <Form>frmImportacaoArquivoFornecedor</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uSeleciona.pas">
             <Form>frmSeleciona</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanImportacao.pas"/>
         <DCCReference Include="Beans\uBeanImportacao_Itens.pas"/>
@@ -157,7 +146,6 @@
         <DCCReference Include="Beans\uBeanMatch_Itens.pas"/>
         <DCCReference Include="uGeraMatch.pas">
             <Form>frmGeraMatch</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beans\uBeanUsuario_Permissao.pas"/>
         <BuildConfiguration Include="Release">
@@ -328,7 +316,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectOSXEntitlements">
                     <Platform Name="OSX32">
-                        <RemoteDir>Contents</RemoteDir>
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -414,6 +402,7 @@
                 </DeployClass>
                 <DeployClass Name="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice">
+                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>

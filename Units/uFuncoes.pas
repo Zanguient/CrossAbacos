@@ -115,13 +115,13 @@ begin
     for i := 0 to ColumnCount-1 do
       DBGrid.Columns[i].Width := DBGrid.Columns[i].Width + Filler;
   end
-  else if TotalColumnWidth > GridClientWidth then begin
-    Filler := (TotalColumnWidth - GridClientWidth) div ColumnCount;
-    if (TotalColumnWidth - GridClientWidth) mod ColumnCount <> 0 then
-      Inc(Filler);
-    for i := 0 to ColumnCount-1 do
-      DBGrid.Columns[i].Width := DBGrid.Columns[i].Width - Filler;
-  end;
+//  else if TotalColumnWidth > GridClientWidth then begin
+//    Filler := (TotalColumnWidth - GridClientWidth) div ColumnCount;
+//    if (TotalColumnWidth - GridClientWidth) mod ColumnCount <> 0 then
+//      Inc(Filler);
+//    for i := 0 to ColumnCount-1 do
+//      DBGrid.Columns[i].Width := DBGrid.Columns[i].Width - Filler;
+//  end;
 end;
 
 procedure GerarLoteImportacao;

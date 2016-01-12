@@ -4232,6 +4232,7 @@ object FrmLogin: TFrmLogin
       Anchors = []
       BevelOuter = bvNone
       BiDiMode = bdLeftToRight
+      Color = clBlack
       Ctl3D = True
       ParentBiDiMode = False
       ParentCtl3D = False

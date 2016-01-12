@@ -3,6 +3,7 @@ program CrossAbacos;
 uses
   Vcl.Forms,
   Vcl.Controls,
+  MidasLib,
   System.SysUtils,
   uPrincipal in 'uPrincipal.pas' {FrmPrincipal},
   uLogin in 'uLogin.pas' {FrmLogin},

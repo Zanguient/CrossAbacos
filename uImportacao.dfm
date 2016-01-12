@@ -24,18 +24,19 @@ object frmImportacao: TfrmImportacao
     Width = 729
     Height = 476
     Align = alClient
+    Center = True
+    Stretch = True
     ExplicitLeft = 24
     ExplicitTop = 128
     ExplicitWidth = 105
     ExplicitHeight = 105
   end
-  object Panel1: TPanel
+  object pnPrincipal: TPanel
     Left = 0
     Top = 0
     Width = 729
     Height = 476
     Align = alClient
-    Caption = 'Panel1'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -43,10 +44,6 @@ object frmImportacao: TfrmImportacao
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitLeft = 328
-    ExplicitTop = 160
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object GridPanel1: TGridPanel
       Left = 1
       Top = 1
@@ -90,10 +87,6 @@ object frmImportacao: TfrmImportacao
           Value = 50.000000000000000000
         end>
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 729
-      ExplicitHeight = 476
       object pnImportacaoProduto: TPanel
         Left = 1
         Top = 1
@@ -102,8 +95,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 0
-        ExplicitWidth = 363
-        ExplicitHeight = 237
         object pbImportaProdutos: TProgressBar
           Left = 1
           Top = 203
@@ -113,8 +104,6 @@ object frmImportacao: TfrmImportacao
           ParentShowHint = False
           ShowHint = False
           TabOrder = 2
-          ExplicitTop = 204
-          ExplicitWidth = 361
         end
         object mnImportaProdutos: TMemo
           Left = 1
@@ -130,8 +119,6 @@ object frmImportacao: TfrmImportacao
           ParentFont = False
           ReadOnly = True
           TabOrder = 1
-          ExplicitWidth = 361
-          ExplicitHeight = 154
         end
         object pnCabProdutos: TPanel
           Left = 1
@@ -148,7 +135,6 @@ object frmImportacao: TfrmImportacao
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 361
           DesignSize = (
             360
             49)
@@ -174,7 +160,6 @@ object frmImportacao: TfrmImportacao
             ParentFont = False
             TabOrder = 1
             OnClick = btImportarProdutosClick
-            ExplicitLeft = 284
           end
           object edBuscaArquivoProdutos: TButtonedEdit
             Left = 5
@@ -194,7 +179,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoProdutosRightButtonClick
-            ExplicitWidth = 276
           end
         end
       end
@@ -206,9 +190,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 1
-        ExplicitLeft = 364
-        ExplicitWidth = 364
-        ExplicitHeight = 237
         object pnCabAlmoxarifado: TPanel
           Left = 1
           Top = 1
@@ -218,7 +199,6 @@ object frmImportacao: TfrmImportacao
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitWidth = 362
           DesignSize = (
             361
             49)
@@ -238,7 +218,6 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportaAlmoxarifadoClick
-            ExplicitLeft = 284
           end
           object edBuscaArquivoAlmoxarifado: TButtonedEdit
             Left = 4
@@ -258,7 +237,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoAlmoxarifadoRightButtonClick
-            ExplicitWidth = 278
           end
         end
         object mnImportaAlmoxarifado: TMemo
@@ -269,8 +247,6 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           ReadOnly = True
           TabOrder = 1
-          ExplicitWidth = 362
-          ExplicitHeight = 154
         end
         object pbImportaAlmoxarifado: TProgressBar
           Left = 1
@@ -281,8 +257,6 @@ object frmImportacao: TfrmImportacao
           ParentShowHint = False
           ShowHint = False
           TabOrder = 2
-          ExplicitTop = 204
-          ExplicitWidth = 362
         end
       end
       object pnImportaFornecedor: TPanel
@@ -293,9 +267,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 2
-        ExplicitTop = 238
-        ExplicitWidth = 363
-        ExplicitHeight = 237
         object mnImportaFornecedor: TMemo
           Left = 1
           Top = 49
@@ -304,8 +275,6 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           ReadOnly = True
           TabOrder = 1
-          ExplicitWidth = 361
-          ExplicitHeight = 155
         end
         object pbImportaFornecedor: TProgressBar
           Left = 1
@@ -316,8 +285,6 @@ object frmImportacao: TfrmImportacao
           ParentShowHint = False
           ShowHint = False
           TabOrder = 2
-          ExplicitTop = 204
-          ExplicitWidth = 361
         end
         object pnCabImportaFornecedor: TPanel
           Left = 1
@@ -328,7 +295,6 @@ object frmImportacao: TfrmImportacao
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitWidth = 361
           DesignSize = (
             360
             48)
@@ -348,7 +314,6 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportarFornecedorClick
-            ExplicitLeft = 284
           end
           object edBuscaArquivoFornecedor: TButtonedEdit
             Left = 5
@@ -368,7 +333,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoFornecedorRightButtonClick
-            ExplicitWidth = 276
           end
         end
       end
@@ -380,10 +344,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 3
-        ExplicitLeft = 364
-        ExplicitTop = 238
-        ExplicitWidth = 364
-        ExplicitHeight = 237
         object pnCabImportaProdutoFornecedor: TPanel
           Left = 1
           Top = 1
@@ -393,7 +353,6 @@ object frmImportacao: TfrmImportacao
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitWidth = 362
           DesignSize = (
             361
             48)
@@ -413,7 +372,6 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportarProdutoFornecedorClick
-            ExplicitLeft = 284
           end
           object edBuscaArquivoProdutoFornecedor: TButtonedEdit
             Left = 4
@@ -433,7 +391,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoProdutoFornecedorRightButtonClick
-            ExplicitWidth = 278
           end
         end
         object mnImportaProdutoFornecedor: TMemo
@@ -444,8 +401,6 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           ReadOnly = True
           TabOrder = 1
-          ExplicitWidth = 362
-          ExplicitHeight = 155
         end
         object pbImportaProdutoFornecedor: TProgressBar
           Left = 1
@@ -456,8 +411,6 @@ object frmImportacao: TfrmImportacao
           ParentShowHint = False
           ShowHint = False
           TabOrder = 2
-          ExplicitTop = 204
-          ExplicitWidth = 362
         end
       end
     end
@@ -470,7 +423,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

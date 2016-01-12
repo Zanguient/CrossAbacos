@@ -48,7 +48,6 @@ type
     csProdutosSTATUS: TIntegerField;
     cbFiltro: TComboBox;
     Label3: TLabel;
-    BitBtn1: TBitBtn;
     IMFundo: TImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -371,19 +370,15 @@ procedure TfrmImportacaoArquivoFornecedor.carregaLotes;
 var
   CON  : TFWConnection;
   LOTE : TLOTE;
-  Total,
   I    : Integer;
 begin
   CON                 := TFWConnection.Create;
   LOTE                := TLOTE.Create(CON);
   try
-    LOTE.SelectList('','id desc');
-    Total             := 5;
-    if LOTE.Count < Total then
-      Total           := LOTE.Count;
+    LOTE.SelectList('','ID DESC LIMIT 5');
     cbLote.Clear;
-    for I := 0 to Pred(Total) do
-      cbLote.Items.Add(TLOTE(LOTE.Itens[I]).ID.asString +'-'+ FormatDateTime('dd/mm/yyyy hh:MM:ss', TLOTE(LOTE.Itens[I]).DATA_HORA.Value));
+    for I := 0 to Pred(LOTE.Count) do
+      cbLote.Items.Add(TLOTE(LOTE.Itens[I]).ID.asString +'-'+ FormatDateTime('dd/mm/yyyy', TLOTE(LOTE.Itens[I]).DATA_HORA.Value));
     cbLote.ItemIndex  := 0;
   finally
     FreeAndNil(LOTE);
@@ -503,9 +498,13 @@ procedure TfrmImportacaoArquivoFornecedor.FormShow(Sender: TObject);
 begin
   if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
     IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
+  AutoSizeDBGrid(dgProdutos);
+
   carregaLotes;
+
   csProdutos.CreateDataSet;
   csProdutos.Open;
+
   bloqueioSalvar(0);
 end;
 

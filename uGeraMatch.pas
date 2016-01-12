@@ -16,6 +16,8 @@ type
     cbLoteImportacao: TComboBox;
     ProgressBar1: TProgressBar;
     lbProgresso: TLabel;
+    pnPrincipal: TPanel;
+    IMFundo: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -147,7 +149,6 @@ begin
           MI.CUSTONOVO.Value              := SQL.Fields[1].Value; //custonovo
           MI.ID_FORNECEDORNOVO.Value      := SQL.Fields[2].Value; //id_fornecedornovo
           MI.ATUALIZADO.Value             := False;
-          MI.IMPORTADO.Value              := False;
           MI.ID_ULTIMOLOTE.Value          := 0;
 
           //Verifica ultimo lote para o Produto
@@ -183,7 +184,7 @@ begin
             if ((AlteraForn) OR (SQLFORN.Fields[2].Value < SQL.Fields[1].Value)) then begin
               MI.ID_FORNECEDORNOVO.Value  := SQLFORN.Fields[0].Value;
               MI.CUSTONOVO.Value          := SQLFORN.Fields[2].Value;
-              MI.ATUALIZADO.Value         := True;
+              MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
             end;
           end;
 
@@ -308,6 +309,8 @@ end;
 
 procedure TfrmGeraMatch.FormShow(Sender: TObject);
 begin
+  if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
+    IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
   CarregaLote;
 end;
 

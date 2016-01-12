@@ -551,6 +551,7 @@ begin
   edDataF.Date := Date;
 
   AutoSizeDBGrid(gdMatch);
+  AutoSizeDBGrid(gdMatchItens);
 
   CarregaLote;
   edTotalizador.Text := IntToStr(cds_MatchItens.RecordCount);

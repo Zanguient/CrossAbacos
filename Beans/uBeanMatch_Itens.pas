@@ -15,7 +15,6 @@ type
     FCUSTONOVO: TFieldCurrency;
     FCUSTOANTERIOR: TFieldCurrency;
     FID: TFieldInteger;
-    FIMPORTADO: TFieldBoolean;
     FID_MATCH: TFieldInteger;
     FID_FORNECEDORNOVO: TFieldInteger;
     FID_ULTIMOLOTE: TFieldInteger;
@@ -27,7 +26,6 @@ type
     procedure SetID_FORNECEDORNOVO(const Value: TFieldInteger);
     procedure SetID_MATCH(const Value: TFieldInteger);
     procedure SetID_PRODUTO(const Value: TFieldInteger);
-    procedure SetIMPORTADO(const Value: TFieldBoolean);
     procedure SetID_ULTIMOLOTE(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
@@ -40,7 +38,6 @@ type
     property ID_FORNECEDORANTERIOR : TFieldInteger read FID_FORNECEDORANTERIOR write SetID_FORNECEDORANTERIOR;
     property ID_FORNECEDORNOVO : TFieldInteger read FID_FORNECEDORNOVO write SetID_FORNECEDORNOVO;
     property ATUALIZADO : TFieldBoolean read FATUALIZADO write SetATUALIZADO;
-    property IMPORTADO : TFieldBoolean read FIMPORTADO write SetIMPORTADO;
     property ID_ULTIMOLOTE : TFieldInteger read FID_ULTIMOLOTE write SetID_ULTIMOLOTE;
   end;
 
@@ -62,7 +59,6 @@ begin
   ID_FORNECEDORNOVO.isNotNull     := True;
   ID_ULTIMOLOTE.isNotNull         := True;
   ATUALIZADO.isNotNull            := True;
-  IMPORTADO.isNotNull             := True;
 end;
 
 procedure TMATCH_ITENS.SetATUALIZADO(const Value: TFieldBoolean);
@@ -108,11 +104,6 @@ end;
 procedure TMATCH_ITENS.SetID_ULTIMOLOTE(const Value: TFieldInteger);
 begin
   FID_ULTIMOLOTE := Value;
-end;
-
-procedure TMATCH_ITENS.SetIMPORTADO(const Value: TFieldBoolean);
-begin
-  FIMPORTADO := Value;
 end;
 
 end.

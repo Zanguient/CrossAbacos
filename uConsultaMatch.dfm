@@ -396,6 +396,7 @@ object frmConsultaMatch: TfrmConsultaMatch
         F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F4F2F2F2D6D6D6FF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       ParentFont = False
+      Visible = False
       OnClick = btRelatorioClick
       ExplicitLeft = 494
     end

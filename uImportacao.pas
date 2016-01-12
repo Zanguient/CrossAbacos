@@ -40,7 +40,7 @@ type
     mnImportaProdutoFornecedor: TMemo;
     pbImportaProdutoFornecedor: TProgressBar;
     imFundo: TImage;
-    Panel1: TPanel;
+    pnPrincipal: TPanel;
     procedure edBuscaArquivoProdutosRightButtonClick(Sender: TObject);
     procedure btImportarProdutosClick(Sender: TObject);
     procedure btImportaAlmoxarifadoClick(Sender: TObject);
