@@ -121,6 +121,12 @@ begin
 
       Count                                           := GetPropList(ALM.ClassInfo, tkProperties, @List, False);
 
+      for J := 0 to Pred(Count) do begin
+        if (TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelIndice <= 0) then begin
+          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas: ' + sLineBreak + 'ID, Nome.');
+          Exit;
+        end;
+      end;
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
@@ -229,6 +235,13 @@ begin
       FORN.buscaIndicesExcel(edBuscaArquivoFornecedor.Text, XLSAplicacao);
 
       Count                                                                    := GetPropList(FORN.ClassInfo, tkProperties, @List, False);
+
+      for J := 0 to Pred(Count) do begin
+        if (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice <= 0) then begin
+          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas:' + sLineBreak + 'ID_Forn, ' + sLineBreak + 'Nome,' + sLineBreak + 'ID_Almoxerifado');
+          Exit;
+        end;
+      end;
 
       CON.StartTransaction;
       try
@@ -351,6 +364,13 @@ begin
 
       Count                                                                    := GetPropList(FORPROD.ClassInfo, tkProperties, @List, False);
 
+      for J := 0 to Pred(Count) do begin
+        if (TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice <= 0) then begin
+          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas: ' + sLineBreak + 'SKU, ' + sLineBreak + 'CNPJ Fornecedor,' + sLineBreak + 'Cod.Forn');
+          Exit;
+        end;
+      end;
+
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
@@ -438,116 +458,147 @@ begin
     Exit;
   end;
    // Cria Excel- OLE Object
-   XLSAplicacao                                                                := CreateOleObject('Excel.Application');
-   btImportarProdutos.Enabled                                                  := False;
-   try
-     mnImportaProdutos.Clear;
-     // Esconde Excel
-     XLSAplicacao.Visible                                                      := False;
-     // Abre o Workbook
-     XLSAplicacao.Workbooks.Open(edBuscaArquivoProdutos.Text);
+  XLSAplicacao                                                                := CreateOleObject('Excel.Application');
+  btImportarProdutos.Enabled                                                  := False;
+  try
+    mnImportaProdutos.Clear;
+    // Esconde Excel
+    XLSAplicacao.Visible                                                      := False;
+    // Abre o Workbook
+    XLSAplicacao.Workbooks.Open(edBuscaArquivoProdutos.Text);
 
-     AbaXLS                                                                    := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutos.Text)].WorkSheets[1];
-     AbaXLS.select;
+    AbaXLS                                                                    := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutos.Text)].WorkSheets[1];
+    AbaXLS.select;
 
-     XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
-     //ROW
-     vrow                                                                      := XLSAplicacao.ActiveCell.Row;
-     vcol                                                                      := XLSAplicacao.ActiveCell.Column;
-     arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-     Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
-     arrData                                                                   := Range.value;
-     pbImportaProdutos.Max                                                     := vrow;
-     //COLLUM
-     CON                                                                       := TFWConnection.Create;
-     PROD                                                                      := TPRODUTO.Create(CON);
-     try
-       PROD.SKU.excelTitulo                                                    := 'SKU';
-       PROD.CODIGO_BARRAS.excelTitulo                                          := 'CODIGO DE BARRAS';
-       PROD.NOME.excelTitulo                                                   := 'NOME';
-       PROD.SALDO.excelTitulo                                                  := 'SALDO';
-       PROD.DISPONIVEL.excelTitulo                                             := 'DISP';
-       PROD.ICMS.excelTitulo                                                   := 'ICMS';
-       PROD.CF.excelTitulo                                                     := 'CF';
-       PROD.PRODUTO_PAI.excelTitulo                                            := 'PRODUTO PAI';
-       PROD.MARCA.excelTitulo                                                  := 'MARCA';
-       PROD.FAMILIA.excelTitulo                                                := 'Família';
-       PROD.CLASSE.excelTitulo                                                 := 'Classe';
-       PROD.UNIDADE_MEDIDA.excelTitulo                                         := 'Unidade de medida';
-       PROD.GRUPO.excelTitulo                                                  := 'Grupo';
-       PROD.SUB_GRUPO.excelTitulo                                              := 'Sub-grupo';
-       PROD.PRECO_VENDA.excelTitulo                                            := 'Preço de venda';
-       PROD.PROMOCAO_IPI.excelTitulo                                           := 'Promoção + IPI';
-       PROD.PESO.excelTitulo                                                   := 'Peso';
-       PROD.NCM.excelTitulo                                                    := 'Clas Fisc';
-       PROD.ESTOQUE_MAXIMO.excelTitulo                                         := 'Estoque máximo';
-       PROD.PRAZO_ENTREGA.excelTitulo                                          := 'Prazo de entrega';
-       PROD.QUANTIDADE_EMBALAGEM.excelTitulo                                   := 'Qtde. por embalagem';
-       PROD.C.excelTitulo                                                      := 'C';
-       PROD.L.excelTitulo                                                      := 'L';
-       PROD.E.excelTitulo                                                      := 'E';
-       PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
-       PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
+    XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+    //ROW
+    vrow                                                                      := XLSAplicacao.ActiveCell.Row;
+    vcol                                                                      := XLSAplicacao.ActiveCell.Column;
+    arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+    Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    arrData                                                                   := Range.value;
+    pbImportaProdutos.Max                                                     := vrow;
+    //COLLUM
+    CON                                                                       := TFWConnection.Create;
+    PROD                                                                      := TPRODUTO.Create(CON);
+    try
+      PROD.SKU.excelTitulo                                                    := 'SKU';
+      PROD.CODIGO_BARRAS.excelTitulo                                          := 'CODIGO DE BARRAS';
+      PROD.NOME.excelTitulo                                                   := 'NOME';
+      PROD.SALDO.excelTitulo                                                  := 'SALDO';
+      PROD.DISPONIVEL.excelTitulo                                             := 'DISP';
+      PROD.ICMS.excelTitulo                                                   := 'ICMS';
+      PROD.CF.excelTitulo                                                     := 'CF';
+      PROD.PRODUTO_PAI.excelTitulo                                            := 'PRODUTO PAI';
+      PROD.MARCA.excelTitulo                                                  := 'MARCA';
+      PROD.FAMILIA.excelTitulo                                                := 'Família';
+      PROD.CLASSE.excelTitulo                                                 := 'Classe';
+      PROD.UNIDADE_MEDIDA.excelTitulo                                         := 'Unidade de medida';
+      PROD.GRUPO.excelTitulo                                                  := 'Grupo';
+      PROD.SUB_GRUPO.excelTitulo                                              := 'Sub-grupo';
+      PROD.PRECO_VENDA.excelTitulo                                            := 'Preço de venda';
+      PROD.PROMOCAO_IPI.excelTitulo                                           := 'Promoção + IPI';
+      PROD.PESO.excelTitulo                                                   := 'Peso';
+      PROD.NCM.excelTitulo                                                    := 'Clas Fisc';
+      PROD.ESTOQUE_MAXIMO.excelTitulo                                         := 'Estoque máximo';
+      PROD.PRAZO_ENTREGA.excelTitulo                                          := 'Prazo de entrega';
+      PROD.QUANTIDADE_EMBALAGEM.excelTitulo                                   := 'Qtde. por embalagem';
+      PROD.C.excelTitulo                                                      := 'C';
+      PROD.L.excelTitulo                                                      := 'L';
+      PROD.E.excelTitulo                                                      := 'E';
+      PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
+      PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
 
-       PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
-       PROD.ID.excelIndice                                                     := -1;
+      PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
+      PROD.ID.excelIndice                                                     := -1;
 
-       Count                                                                   := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
+      Count                                                                   := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
+      for J := 0 to Pred(Count) do begin
+        if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice <= 0) then begin
+          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas: ' + sLineBreak + 'SKU, ' + sLineBreak +
+                                                                               'CODIGO DE BARRAS, ' + sLineBreak +
+                                                                               'NOME, ' + sLineBreak +
+                                                                               'SALDO, ' + sLineBreak +
+                                                                               'DISP, ' + sLineBreak +
+                                                                               'ICMS, ' + sLineBreak +
+                                                                               'CF, ' + sLineBreak +
+                                                                               'PRODUTO PAI, ' + sLineBreak +
+                                                                               'MARCA, ' + sLineBreak +
+                                                                               'Família, ' + sLineBreak +
+                                                                               'Classe, ' + sLineBreak +
+                                                                               'Unidade de medida, ' + sLineBreak +
+                                                                               'Grupo, ' + sLineBreak +
+                                                                               'Sub-grupo, ' + sLineBreak +
+                                                                               'Preço de venda, ' + sLineBreak +
+                                                                               'Promoção + IPI, ' + sLineBreak +
+                                                                               'Peso, ' + sLineBreak +
+                                                                               'Clas Fisc, ' + sLineBreak +
+                                                                               'Estoque máximo, ' + sLineBreak +
+                                                                               'Prazo de entrega, ' + sLineBreak +
+                                                                               'Qtde. por embalagem, ' + sLineBreak +
+                                                                               'C, ' + sLineBreak +
+                                                                               'L, ' + sLineBreak +
+                                                                               'E, ' + sLineBreak +
+                                                                               'Dias de garantia, ' + sLineBreak +
+                                                                               'Origem da mercadoria');
+          Exit;
+        end;
+      end;
 
-       CON.StartTransaction;
-       try
-         for I := 2 to vrow do begin
-           PROD.SKU.Value                                                      := '';
-           for J := 0 to Pred(Count) do begin
-             if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
-               Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
-               if Valor <> '' then
-                 TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant:= Valor;
-             end;
-           end;
-           if PROD.SKU.Value <> '' then begin
-             PROD.SelectList('sku = ' + PROD.SKU.asSQL);
-             if PROD.Count > 0 then begin
-               PROD.ID.Value                                                    := TPRODUTO(PROD.Itens[0]).ID.Value;
-               PROD.Update;
-               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
-             end else begin
-               PROD.CUSTOANTERIOR.Value                                           := 0.00;
-               PROD.CUSTO.Value                                                   := 0.00;
-               PROD.ID_FORNECEDORANTERIOR.Value                                   := 0;
-               PROD.ID_FORNECEDORNOVO.Value                                       := 0;
-               PROD.ID_ULTIMOLOTE.Value                                           := 0;
-               PROD.Insert;
-               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
-             end;
-           end;
-           pbImportaProdutos.Position                                          := I;
-           Application.ProcessMessages;
-         end;
-         CON.Commit;
-         mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(I));
-       except
-         on E : Exception do begin
-           CON.Rollback;
-           btImportarProdutos.Enabled                                          := True;
-           DisplayMsg(MSG_WAR, 'Erro ao importar os produtos!', '', E.Message);
-           Exit;
-         end;
-       end;
-     finally
-       FreeAndNil(PROD);
-       FreeAndNil(CON);
-     end;
+      CON.StartTransaction;
+      try
+        for I := 2 to vrow do begin
+          PROD.SKU.Value                                                      := '';
+          for J := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
+              Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
+              if Valor <> '' then
+                TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant:= Valor;
+            end;
+          end;
+          if PROD.SKU.Value <> '' then begin
+            PROD.SelectList('sku = ' + PROD.SKU.asSQL);
+            if PROD.Count > 0 then begin
+              PROD.ID.Value                                                    := TPRODUTO(PROD.Itens[0]).ID.Value;
+              PROD.Update;
+              mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
+            end else begin
+              PROD.CUSTOANTERIOR.Value                                           := 0.00;
+              PROD.CUSTO.Value                                                   := 0.00;
+              PROD.ID_FORNECEDORANTERIOR.Value                                   := 0;
+              PROD.ID_FORNECEDORNOVO.Value                                       := 0;
+              PROD.ID_ULTIMOLOTE.Value                                           := 0;
+              PROD.Insert;
+              mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
+            end;
+          end;
+          pbImportaProdutos.Position                                          := I;
+          Application.ProcessMessages;
+        end;
+        CON.Commit;
+        mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(I));
+      except
+        on E : Exception do begin
+          CON.Rollback;
+          btImportarProdutos.Enabled                                          := True;
+          DisplayMsg(MSG_WAR, 'Erro ao importar os produtos!', '', E.Message);
+          Exit;
+        end;
+      end;
+    finally
+      FreeAndNil(PROD);
+      FreeAndNil(CON);
+    end;
 
-   finally
-     // Fecha o Microsoft Excel
-     btImportarProdutos.Enabled     := True;
-     if not VarIsEmpty(XLSAplicacao) then begin
-       XLSAplicacao.Quit;
-       XLSAplicacao := Unassigned;
-       AbaXLS := Unassigned;
-     end;
-   end;
+  finally
+    // Fecha o Microsoft Excel
+    btImportarProdutos.Enabled     := True;
+    if not VarIsEmpty(XLSAplicacao) then begin
+      XLSAplicacao.Quit;
+      XLSAplicacao := Unassigned;
+      AbaXLS := Unassigned;
+    end;
+  end;
 end;
 
 procedure TfrmImportacao.edBuscaArquivoAlmoxarifadoRightButtonClick(Sender: TObject);
