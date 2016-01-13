@@ -5,13 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.ComCtrls, FireDAC.Comp.Client, Data.DB, System.Win.ComObj;
+  Vcl.ComCtrls, FireDAC.Comp.Client, Data.DB, System.Win.ComObj,
+  Vcl.Samples.Gauges;
 
 type
   TfrmGeraMatch = class(TForm)
     pnBotoesVisualizacao: TPanel;
     btSair: TSpeedButton;
-    ProgressBar1: TProgressBar;
     pnPrincipal: TPanel;
     IMFundo: TImage;
     GridPanel1: TGridPanel;
@@ -29,6 +29,8 @@ type
     Panel9: TPanel;
     Panel10: TPanel;
     cbLoteImportacao: TComboBox;
+    BarradeProgresso: TGauge;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -142,8 +144,6 @@ begin
       SQL.Open;
       SQL.FetchAll;
 
-      DisplayMsg(MSG_WAIT, 'Gerando Match!');
-
       if not SQL.IsEmpty then begin
 
         M.ID.isNull         := True;
@@ -152,7 +152,7 @@ begin
         M.ID_USUARIO.Value  := USUARIO.CODIGO;
         M.Insert;
 
-        ProgressBar1.Max := SQL.RecordCount;
+        BarradeProgresso.MaxValue   := SQL.RecordCount;
         SQL.First;
 
         while not SQL.Eof do begin
@@ -229,7 +229,7 @@ begin
 
           MI.Insert;
 
-          ProgressBar1.Position := SQL.RecNo + 1;
+          BarradeProgresso.Progress       := SQL.RecNo + 1;
           Application.ProcessMessages;
           SQL.Next;
         end;
@@ -246,8 +246,7 @@ begin
       End;
     end;
   finally
-    DisplayMsgFinaliza;
-    ProgressBar1.Position := 0;
+    BarradeProgresso.Progress := 0;
     FreeAndNil(SQLULTIMOLOTE);
     FreeAndNil(SQLFORN);
     FreeAndNil(SQL);
@@ -371,6 +370,9 @@ Begin
 
       if Not Consulta.IsEmpty then begin
 
+        BarradeProgresso.Progress := 0;
+        BarradeProgresso.MaxValue := Consulta.RecordCount;
+
         //cds_MatchItens.Filtered := False;
         Linha :=  2;
         PLANILHA := CreateOleObject('Excel.Application');
@@ -393,6 +395,7 @@ Begin
           PLANILHA.Cells[linha,2] := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
           PLANILHA.Cells[Linha,3] := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
           Linha := Linha + 1;
+          BarradeProgresso.Progress := Consulta.RecNo;
           Consulta.Next;
         End;
 
@@ -409,6 +412,7 @@ Begin
       end;
     end;
   Finally
+    BarradeProgresso.Progress := 0;
     FreeAndNil(Consulta);
     FreeAndNil(FWC);
     if not VarIsEmpty(PLANILHA) then begin
