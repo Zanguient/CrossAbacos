@@ -84,6 +84,8 @@ var
   List          : TPropList;
   Valor,
   arrData       : Variant;
+  arrInsert,
+  arrUpdate     : array of Integer;
 begin
   if not FileExists(edBuscaArquivoAlmoxarifado.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -92,6 +94,9 @@ begin
   // Cria Excel- OLE Object
   XLSAplicacao                                        := CreateOleObject('Excel.Application');
   edBuscaArquivoAlmoxarifado.Enabled                  := False;
+
+  SetLength(arrInsert, 0);
+  SetLength(arrUpdate, 0);
   try
     mnImportaAlmoxarifado.Clear;
     // Esconde Excel
@@ -144,9 +149,17 @@ begin
             if ALM.Count > 0 then begin
               ALM.ID.Value                            := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
               ALM.Update;
+
+              SetLength(arrUpdate, Length(arrUpdate) + 1);
+              arrInsert[High(arrUpdate)]              := ALM.ID.Value;
+
               mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - alterado com sucesso!');
             end else begin
               ALM.Insert;
+
+              SetLength(arrUpdate, Length(arrInsert) + 1);
+              arrInsert[High(arrInsert)]              := ALM.ID.Value;
+
               mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - inserido com sucesso!');
             end;
           end;
@@ -155,7 +168,12 @@ begin
           Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaAlmoxarifado.Lines.Add('Total de almoxarifados importados: ' + IntToStr(I));
+
+        if Length(arrInsert) > 0 then
+          mnImportaProdutos.Lines.Add('Total de almoxarifados inseridos: ' + IntToStr(Length(arrInsert)));
+        if Length(arrUpdate) > 0 then
+          mnImportaProdutos.Lines.Add('Total de almoxarifados alterados: ' + IntToStr(Length(arrUpdate)));
+
       except
         on E : Exception do begin
           CON.Rollback;
@@ -197,6 +215,8 @@ var
   List           : TPropList;
   Valor,
   arrData        : Variant;
+  arrInsert,
+  arrUpdate      : array of Integer;
 begin
   if not FileExists(edBuscaArquivoFornecedor.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -205,6 +225,9 @@ begin
   // Cria Excel- OLE Object
   XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
   btImportarFornecedor.Enabled                                                 := False;
+
+  SetLength(arrInsert, 0);
+  SetLength(arrUpdate, 0);
   try
     mnImportaFornecedor.Clear;
     // Esconde Excel
@@ -270,6 +293,10 @@ begin
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
               end else begin
                 FORN.Insert;
+
+                SetLength(arrUpdate, Length(arrUpdate) + 1);
+                arrInsert[High(arrUpdate)]                                     := ALM.ID.Value;
+
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - inserido com sucesso!');
               end;
             end else begin
@@ -280,7 +307,11 @@ begin
           Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaFornecedor.Lines.Add('Total de Fornecedores importados: ' + IntToStr(I));
+
+        if Length(arrInsert) > 0 then
+          mnImportaProdutos.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
+        if Length(arrUpdate) > 0 then
+          mnImportaProdutos.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
       except
         on E : Exception do begin
           CON.Rollback;
@@ -452,6 +483,8 @@ var
   List: TPropList;
   Valor,
   arrData : Variant;
+  arrInsert,
+  arrUpdate : array of Integer;
 begin
   if not FileExists(edBuscaArquivoProdutos.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -460,8 +493,12 @@ begin
    // Cria Excel- OLE Object
   XLSAplicacao                                                                := CreateOleObject('Excel.Application');
   btImportarProdutos.Enabled                                                  := False;
+
+  SetLength(arrInsert, 0);
+  SetLength(arrUpdate, 0);
   try
     mnImportaProdutos.Clear;
+    mnImportaProdutos.Lines.Add('Carregando dados, Aguarde!');
     // Esconde Excel
     XLSAplicacao.Visible                                                      := False;
     // Abre o Workbook
@@ -559,8 +596,12 @@ begin
           if PROD.SKU.Value <> '' then begin
             PROD.SelectList('sku = ' + PROD.SKU.asSQL);
             if PROD.Count > 0 then begin
-              PROD.ID.Value                                                    := TPRODUTO(PROD.Itens[0]).ID.Value;
+              PROD.ID.Value                                                      := TPRODUTO(PROD.Itens[0]).ID.Value;
               PROD.Update;
+
+              SetLength(arrUpdate, Length(arrUpdate) + 1);
+              arrUpdate[High(arrUpdate)]                                         := PROD.ID.Value;
+
               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
             end else begin
               PROD.CUSTOANTERIOR.Value                                           := 0.00;
@@ -569,14 +610,23 @@ begin
               PROD.ID_FORNECEDORNOVO.Value                                       := 0;
               PROD.ID_ULTIMOLOTE.Value                                           := 0;
               PROD.Insert;
+
+              SetLength(arrUpdate, Length(arrInsert) + 1);
+              arrInsert[High(arrInsert)]                                         := PROD.ID.Value;
+
               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
             end;
           end;
-          pbImportaProdutos.Position                                          := I;
+          pbImportaProdutos.Position                                             := I;
           Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaProdutos.Lines.Add('Total de produtos importados: ' + IntToStr(I));
+
+        if Length(arrInsert) > 0 then
+          mnImportaProdutos.Lines.Add('Total de produtos inseridos: ' + IntToStr(Length(arrInsert)));
+        if Length(arrUpdate) > 0 then
+          mnImportaProdutos.Lines.Add('Total de produtos alterados: ' + IntToStr(Length(arrUpdate)));
+
       except
         on E : Exception do begin
           CON.Rollback;

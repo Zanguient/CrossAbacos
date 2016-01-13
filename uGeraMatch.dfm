@@ -177,9 +177,9 @@ object frmGeraMatch: TfrmGeraMatch
     end
     object GridPanel1: TGridPanel
       Left = 1
-      Top = 1
+      Top = 42
       Width = 757
-      Height = 312
+      Height = 271
       Align = alClient
       ColumnCollection = <
         item
@@ -191,74 +191,37 @@ object frmGeraMatch: TfrmGeraMatch
       ControlCollection = <
         item
           Column = 0
-          ColumnSpan = 2
-          Control = Panel1
-          Row = 0
-        end
-        item
-          Column = 0
           Control = Panel3
-          Row = 1
+          Row = 0
         end
         item
           Column = 1
           Control = Panel5
-          Row = 1
+          Row = 0
         end>
       RowCollection = <
-        item
-          SizeStyle = ssAbsolute
-          Value = 50.000000000000000000
-        end
         item
           Value = 100.000000000000000000
         end>
       TabOrder = 2
-      ExplicitLeft = -6
-      ExplicitTop = -23
-      ExplicitHeight = 287
-      object Panel1: TPanel
-        Left = 1
-        Top = 1
-        Width = 755
-        Height = 56
-        Align = alTop
-        TabOrder = 0
-        object cbLoteImportacao: TComboBox
-          AlignWithMargins = True
-          Left = 4
-          Top = 19
-          Width = 747
-          Height = 33
-          Align = alBottom
-          Style = csDropDownList
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -21
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          ExplicitTop = 5
-        end
-      end
+      ExplicitTop = 1
+      ExplicitHeight = 312
       object Panel3: TPanel
         AlignWithMargins = True
         Left = 4
-        Top = 54
+        Top = 4
         Width = 371
-        Height = 254
+        Height = 263
         Align = alClient
-        TabOrder = 1
-        ExplicitLeft = 1
-        ExplicitTop = 96
-        ExplicitWidth = 377
-        ExplicitHeight = 190
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitTop = 54
+        ExplicitHeight = 254
         object Panel2: TPanel
           AlignWithMargins = True
-          Left = 4
-          Top = 4
-          Width = 363
+          Left = 3
+          Top = 3
+          Width = 365
           Height = 41
           Align = alTop
           BevelOuter = bvNone
@@ -271,25 +234,26 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 5
-          ExplicitTop = 1
-          ExplicitWidth = 372
+          ExplicitLeft = 4
+          ExplicitTop = 4
+          ExplicitWidth = 363
         end
         object Panel4: TPanel
           AlignWithMargins = True
-          Left = 4
-          Top = 190
-          Width = 363
+          Left = 3
+          Top = 200
+          Width = 365
           Height = 60
           Align = alBottom
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 1
-          ExplicitTop = 372
-          ExplicitWidth = 751
+          ExplicitLeft = 4
+          ExplicitTop = 190
+          ExplicitWidth = 363
           object btGerar: TSpeedButton
             AlignWithMargins = True
-            Left = 236
+            Left = 238
             Top = 3
             Width = 124
             Height = 54
@@ -410,20 +374,19 @@ object frmGeraMatch: TfrmGeraMatch
       object Panel5: TPanel
         AlignWithMargins = True
         Left = 381
-        Top = 54
+        Top = 4
         Width = 372
-        Height = 254
+        Height = 263
         Align = alClient
-        TabOrder = 2
-        ExplicitLeft = 536
-        ExplicitTop = 168
-        ExplicitWidth = 185
-        ExplicitHeight = 41
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitTop = 54
+        ExplicitHeight = 254
         object Panel6: TPanel
           AlignWithMargins = True
-          Left = 4
-          Top = 4
-          Width = 364
+          Left = 3
+          Top = 3
+          Width = 366
           Height = 41
           Align = alTop
           BevelOuter = bvNone
@@ -436,26 +399,26 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 2
-          ExplicitTop = 9
-          ExplicitWidth = 376
+          ExplicitLeft = 4
+          ExplicitTop = 4
+          ExplicitWidth = 364
         end
         object Panel7: TPanel
           AlignWithMargins = True
-          Left = 4
-          Top = 190
-          Width = 364
+          Left = 3
+          Top = 200
+          Width = 366
           Height = 60
           Align = alBottom
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 1
-          ExplicitLeft = 8
-          ExplicitTop = 185
-          ExplicitWidth = 370
+          ExplicitLeft = 4
+          ExplicitTop = 190
+          ExplicitWidth = 364
           object btExportarEstoque: TSpeedButton
             AlignWithMargins = True
-            Left = 237
+            Left = 239
             Top = 3
             Width = 124
             Height = 54
@@ -574,10 +537,10 @@ object frmGeraMatch: TfrmGeraMatch
         end
         object rgSaldoDisponivel: TRadioGroup
           AlignWithMargins = True
-          Left = 4
-          Top = 51
-          Width = 364
-          Height = 133
+          Left = 3
+          Top = 50
+          Width = 366
+          Height = 144
           Align = alClient
           Caption = 'Saldo Dispon'#237'vel '
           Font.Charset = DEFAULT_CHARSET
@@ -592,10 +555,109 @@ object frmGeraMatch: TfrmGeraMatch
             'Ambos')
           ParentFont = False
           TabOrder = 2
-          ExplicitLeft = 8
-          ExplicitWidth = 185
-          ExplicitHeight = 105
+          ExplicitLeft = 4
+          ExplicitTop = 51
+          ExplicitWidth = 364
+          ExplicitHeight = 133
         end
+      end
+    end
+    object GridPanel2: TGridPanel
+      Left = 1
+      Top = 1
+      Width = 757
+      Height = 41
+      Align = alTop
+      ColumnCollection = <
+        item
+          Value = 33.338885923101450000
+        end
+        item
+          Value = 33.330055994662910000
+        end
+        item
+          Value = 33.331058082235640000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = Panel8
+          Row = 0
+        end
+        item
+          Column = 1
+          Control = Panel9
+          Row = 0
+        end
+        item
+          Column = 2
+          Control = Panel10
+          Row = 0
+        end>
+      RowCollection = <
+        item
+          Value = 100.000000000000000000
+        end>
+      TabOrder = 3
+      ExplicitLeft = 2
+      ExplicitTop = -4
+      object Panel8: TPanel
+        Left = 1
+        Top = 1
+        Width = 251
+        Height = 39
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 0
+        ExplicitLeft = 176
+        ExplicitTop = 24
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+      end
+      object Panel9: TPanel
+        Left = 252
+        Top = 1
+        Width = 251
+        Height = 39
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        ExplicitLeft = 384
+        ExplicitTop = 16
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object cbLoteImportacao: TComboBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 245
+          Height = 33
+          Align = alClient
+          Style = csDropDownList
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -21
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          ExplicitLeft = 8
+          ExplicitTop = 6
+          ExplicitWidth = 177
+        end
+      end
+      object Panel10: TPanel
+        Left = 503
+        Top = 1
+        Width = 253
+        Height = 39
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 2
+        ExplicitLeft = 160
+        ExplicitTop = -1
+        ExplicitWidth = 185
+        ExplicitHeight = 41
       end
     end
   end

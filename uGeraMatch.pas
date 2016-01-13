@@ -15,8 +15,6 @@ type
     pnPrincipal: TPanel;
     IMFundo: TImage;
     GridPanel1: TGridPanel;
-    Panel1: TPanel;
-    cbLoteImportacao: TComboBox;
     Panel3: TPanel;
     Panel2: TPanel;
     Panel4: TPanel;
@@ -26,6 +24,11 @@ type
     Panel7: TPanel;
     btExportarEstoque: TSpeedButton;
     rgSaldoDisponivel: TRadioGroup;
+    GridPanel2: TGridPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
+    Panel10: TPanel;
+    cbLoteImportacao: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
