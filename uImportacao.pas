@@ -5,7 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.ImgList,
-  Vcl.StdCtrls, comObj, TypInfo, uDomains, Vcl.Imaging.jpeg;
+  Vcl.StdCtrls, comObj, TypInfo, uDomains, Vcl.Imaging.jpeg, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Samples.Gauges;
 type
   TfrmImportacao = class(TForm)
     GridPanel1: TGridPanel;
@@ -13,7 +16,6 @@ type
     pnImportaAlmoxarifados: TPanel;
     pnImportaFornecedor: TPanel;
     pnImportaProdutoFornecedor: TPanel;
-    pbImportaProdutos: TProgressBar;
     OpenDialog1: TOpenDialog;
     ImageList1: TImageList;
     mnImportaProdutos: TMemo;
@@ -26,9 +28,7 @@ type
     btImportaAlmoxarifado: TButton;
     edBuscaArquivoAlmoxarifado: TButtonedEdit;
     mnImportaAlmoxarifado: TMemo;
-    pbImportaAlmoxarifado: TProgressBar;
     mnImportaFornecedor: TMemo;
-    pbImportaFornecedor: TProgressBar;
     pnCabImportaFornecedor: TPanel;
     Label3: TLabel;
     btImportarFornecedor: TButton;
@@ -38,9 +38,12 @@ type
     btImportarProdutoFornecedor: TButton;
     edBuscaArquivoProdutoFornecedor: TButtonedEdit;
     mnImportaProdutoFornecedor: TMemo;
-    pbImportaProdutoFornecedor: TProgressBar;
     imFundo: TImage;
     pnPrincipal: TPanel;
+    pbImportaProdutos: TGauge;
+    pbImportaAlmoxarifado: TGauge;
+    pbImportaFornecedor: TGauge;
+    pbImportaProdutoFornecedor: TGauge;
     procedure edBuscaArquivoProdutosRightButtonClick(Sender: TObject);
     procedure btImportarProdutosClick(Sender: TObject);
     procedure btImportaAlmoxarifadoClick(Sender: TObject);
@@ -114,7 +117,7 @@ begin
     arrData                                           := VarArrayCreate([1, vrow, 1, vcol], varVariant);
     Range                                             := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
     arrData                                           := Range.value;
-    pbImportaAlmoxarifado.Max                         := vrow;
+    pbImportaAlmoxarifado.MaxValue                    := vrow;
     //COLLUM
     CON                                               := TFWConnection.Create;
     ALM                                               := TALMOXARIFADO.Create(CON);
@@ -151,7 +154,7 @@ begin
               ALM.Update;
 
               SetLength(arrUpdate, Length(arrUpdate) + 1);
-              arrInsert[High(arrUpdate)]              := ALM.ID.Value;
+              arrUpdate[High(arrUpdate)]              := ALM.ID.Value;
 
               mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - alterado com sucesso!');
             end else begin
@@ -164,7 +167,7 @@ begin
             end;
           end;
 
-          pbImportaAlmoxarifado.Position              := I;
+          pbImportaAlmoxarifado.Progress              := I;
           Application.ProcessMessages;
         end;
         CON.Commit;
@@ -245,7 +248,7 @@ begin
     arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
     Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
     arrData                                                                    := Range.value;
-    pbImportaFornecedor.Max                                                    := vrow;
+    pbImportaFornecedor.MaxValue                                               := vrow;
     //COLLUM
     CON                                                                        := TFWConnection.Create;
     FORN                                                                       := TFORNECEDOR.Create(CON);
@@ -279,7 +282,7 @@ begin
           end;
           if FORN.CNPJ.Value = '' then begin
             mnImportaFornecedor.Lines.Add('Linha vazia!');
-            pbImportaFornecedor.Position                                       := pbImportaFornecedor.Max;
+            pbImportaFornecedor.Progress                                       := pbImportaFornecedor.MaxValue;
             Break;
           end else begin
             ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
@@ -290,12 +293,16 @@ begin
               if FORN.Count > 0 then begin
                 FORN.ID.Value                                                  := TFORNECEDOR(FORN.Itens[0]).ID.Value;
                 FORN.Update;
+
+                SetLength(arrUpdate, Length(arrUpdate) + 1);
+                arrUpdate[High(arrUpdate)]                                     := ALM.ID.Value;
+
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
               end else begin
                 FORN.Insert;
 
-                SetLength(arrUpdate, Length(arrUpdate) + 1);
-                arrInsert[High(arrUpdate)]                                     := ALM.ID.Value;
+                SetLength(arrInsert, Length(arrInsert) + 1);
+                arrInsert[High(arrInsert)]                                     := FORN.ID.Value;
 
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - inserido com sucesso!');
               end;
@@ -303,7 +310,7 @@ begin
               mnImportaFornecedor.Lines.Add('Almoxarifado não encontrado! ' + FORN.ID_ALMOXARIFADO.asString);
             end;
           end;
-          pbImportaFornecedor.Position                                         := I;
+          pbImportaFornecedor.Progress                                         := I;
           Application.ProcessMessages;
         end;
         CON.Commit;
@@ -312,6 +319,7 @@ begin
           mnImportaProdutos.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
         if Length(arrUpdate) > 0 then
           mnImportaProdutos.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+
       except
         on E : Exception do begin
           CON.Rollback;
@@ -355,6 +363,8 @@ var
   List          : TPropList;
   Valor,
   arrData       : Variant;
+  arrInsert,
+  arrUpdate     : array of Integer;
 begin
   if not FileExists(edBuscaArquivoProdutoFornecedor.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -363,6 +373,9 @@ begin
   // Cria Excel- OLE Object
   XLSAplicacao                                                                 := CreateOleObject('Excel.Application');
   btImportarProdutoFornecedor.Enabled                                          := False;
+
+  SetLength(arrInsert, 0);
+  SetLength(arrUpdate, 0);
   try
     mnImportaProdutoFornecedor.Clear;
     // Esconde Excel
@@ -380,7 +393,7 @@ begin
     arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
     Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
     arrData                                                                    := Range.value;
-    pbImportaProdutoFornecedor.Max                                             := vrow;
+    pbImportaProdutoFornecedor.MaxValue                                        := vrow;
     //COLLUM
     CON                                                                        := TFWConnection.Create;
     PROD                                                                       := TPRODUTO.Create(CON);
@@ -437,17 +450,30 @@ begin
           if FORPROD.Count > 0 then begin
             FORPROD.ID.Value                                                   := TPRODUTOFORNECEDOR(FORPROD.Itens[0]).ID.Value;
             FORPROD.Update;
+
+            SetLength(arrUpdate, Length(arrUpdate) + 1);
+            arrUpdate[High(arrUpdate)]                                         := FORPROD.ID.Value;
+
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - alterado com sucesso!');
           end else begin
             FORPROD.Insert;
+
+            SetLength(arrInsert, Length(arrInsert) + 1);
+            arrUpdate[High(arrInsert)]                                         := FORPROD.ID.Value;
+
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - inserido com sucesso!');
           end;
 
-          pbImportaProdutoFornecedor.Position                                  := I;
+          pbImportaProdutoFornecedor.Progress                                  := I;
           Application.ProcessMessages;
         end;
         CON.Commit;
-        mnImportaProdutoFornecedor.Lines.Add('Total de códigos de produtos por fornecedor importados: ' + IntToStr(I));
+
+        if Length(arrInsert) > 0 then
+          mnImportaProdutos.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
+        if Length(arrUpdate) > 0 then
+          mnImportaProdutos.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+
       except
         on E : Exception do begin
           CON.Rollback;
@@ -478,13 +504,15 @@ const
 var
   XLSAplicacao, AbaXLS, Range: OLEVariant;
   vrow, vcol, i, j, Count: Integer;
-  CON  : TFWConnection;
-  PROD : TPRODUTO;
-  List: TPropList;
+  CON                 : TFWConnection;
+  PROD                : TPRODUTO;
+  List                : TPropList;
   Valor,
-  arrData : Variant;
+  arrData             : Variant;
   arrInsert,
-  arrUpdate : array of Integer;
+  arrUpdate           : array of Integer;
+  SQL                 : TFDQuery;
+  ListaProdutosInsert : String;
 begin
   if not FileExists(edBuscaArquivoProdutos.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -514,7 +542,7 @@ begin
     arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
     Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
     arrData                                                                   := Range.value;
-    pbImportaProdutos.Max                                                     := vrow;
+    pbImportaProdutos.MaxValue                                                := vrow;
     //COLLUM
     CON                                                                       := TFWConnection.Create;
     PROD                                                                      := TPRODUTO.Create(CON);
@@ -551,7 +579,7 @@ begin
 
       Count                                                                   := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
       for J := 0 to Pred(Count) do begin
-        if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice <= 0) then begin
+        if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice <= 0) and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).isNotNull) then begin
           DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas: ' + sLineBreak + 'SKU, ' + sLineBreak +
                                                                                'CODIGO DE BARRAS, ' + sLineBreak +
                                                                                'NOME, ' + sLineBreak +
@@ -617,8 +645,27 @@ begin
               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
             end;
           end;
-          pbImportaProdutos.Position                                             := I;
+          pbImportaProdutos.Progress                                             := I;
           Application.ProcessMessages;
+        end;
+        if Length(arrInsert) > 0 then begin
+          ListaProdutosInsert                                                    := '';
+          for I := 0 to High(arrInsert) do begin
+            if I = 0 then
+              ListaProdutosInsert                                                := IntToStr(arrInsert[I])
+            else
+              ListaProdutosInsert                                                := ListaProdutosInsert + ', ' + IntToStr(arrInsert[I])
+          end;
+
+          SQL                                                                    := TFDQuery.Create(nil);
+          try
+            SQL.Connection                                                       := CON.FDConnection;
+
+            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO)),0) WHERE ID IN (' + ListaProdutosInsert + ')')
+
+          finally
+            FreeAndNil(SQL);
+          end;
         end;
         CON.Commit;
 

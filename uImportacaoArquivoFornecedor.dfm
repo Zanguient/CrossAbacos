@@ -47,6 +47,25 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    object pgProdutos: TGauge
+      AlignWithMargins = True
+      Left = 3
+      Top = 440
+      Width = 727
+      Height = 44
+      Align = alBottom
+      BackColor = clBtnFace
+      ForeColor = clLime
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxValue = 0
+      ParentFont = False
+      Progress = 0
+      ExplicitTop = 441
+    end
     object gbSelecionaLote: TGroupBox
       Left = 0
       Top = 0
@@ -695,8 +714,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Left = 0
       Top = 225
       Width = 733
-      Height = 229
+      Height = 212
       Align = alClient
+      Color = clMoneyGreen
       DataSource = dsProdutos
       DrawingStyle = gdsGradient
       Font.Charset = DEFAULT_CHARSET
@@ -740,20 +760,12 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
           Visible = True
         end>
     end
-    object pgProdutos: TProgressBar
-      Left = 0
-      Top = 454
-      Width = 733
-      Height = 33
-      Align = alBottom
-      TabOrder = 6
-    end
   end
   object ImageList1: TImageList
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ImgList, Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, comObj, TypInfo,
-  Vcl.ComCtrls, Vcl.Imaging.jpeg;
+  Vcl.ComCtrls, Vcl.Imaging.jpeg, Vcl.Samples.Gauges;
 
 type
   TExcelColluns = record
@@ -44,11 +44,11 @@ type
     Label1: TLabel;
     Label2: TLabel;
     csProdutosDISPONIVEL: TFloatField;
-    pgProdutos: TProgressBar;
     csProdutosSTATUS: TIntegerField;
     cbFiltro: TComboBox;
     Label3: TLabel;
     IMFundo: TImage;
+    pgProdutos: TGauge;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btNovoLoteClick(Sender: TObject);
@@ -159,7 +159,7 @@ begin
     buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
     XLSAplicacao := CreateOleObject('Excel.Application');
     csProdutos.DisableControls;
-    pgProdutos.Position                             := 0;
+    pgProdutos.Progress                             := 0;
     try
       XLSAplicacao.Visible                          := False;
       // Abre o Workbook
@@ -172,7 +172,7 @@ begin
       vrow                                          := XLSAplicacao.ActiveCell.Row;
       vcol                                          := XLSAplicacao.ActiveCell.Column;
 
-      pgProdutos.Max                                := vRow;
+      pgProdutos.MaxValue                           := vRow;
       SetLength(ExcelColluns, 0);
       for I := 1 to vcol do begin
         if AbaXLS.Cells.Item[1, I].Value = 'Cód. do Fornecedor' then begin
@@ -215,7 +215,7 @@ begin
             end;
           end;
         end;
-        pgProdutos.Position                         := I;
+        pgProdutos.Progress                         := I;
       end;
       bloqueioSalvar(2);
     except
@@ -339,8 +339,8 @@ begin
   PROD                                              := TPRODUTO.Create(CON);
   try
     PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text);
-    pgProdutos.Max                                  := PRODFOR.Count;
-    pgProdutos.Position                             := 0;
+    pgProdutos.MaxValue                             := PRODFOR.Count;
+    pgProdutos.Progress                             := 0;
     for I := 0 to Pred(PRODFOR.Count) do begin
       csProdutos.Append;
       csProdutosCODIGO.Value                        := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).COD_PROD_FORNECEDOR.Value;
@@ -353,10 +353,10 @@ begin
       csProdutosCUSTO.Value                         := 0;
       csProdutosDISPONIVEL.Value                    := 0;
       csProdutos.Post;
-      pgProdutos.Position                           := I;
+      pgProdutos.Progress                           := I;
     end;
 
-    pgProdutos.Position                             := 0;
+    pgProdutos.Progress                             := 0;
 
   finally
     FreeAndNil(PRODFOR);
@@ -513,7 +513,7 @@ begin
   edFornecedor.Enabled                          := True;
   edArquivo.Enabled                             := True;
   csProdutos.EmptyDataSet;
-  pgProdutos.Position                           := 0;
+  pgProdutos.Progress                           := 0;
   edFornecedor.Text                             := '';
   edNomeFornecedor.Text                         := '';
   edArquivo.Text                                := '';

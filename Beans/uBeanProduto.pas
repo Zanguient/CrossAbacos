@@ -114,7 +114,13 @@ procedure TPRODUTO.InitInstance;
 begin
   inherited;
 
-  ID.isPK                  := True;
+  ID.isPK                := True;
+
+  NOME.isNotNull         := True;
+  SKU.isNotNull          := True;
+  GRUPO.isNotNull        := True;
+  SUB_GRUPO.isNotNull    := True;
+  NCM.isNotNull          := True;
 
   SKU.Size               := 100;
   NOME.Size              := 255;

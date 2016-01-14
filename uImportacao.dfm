@@ -95,22 +95,31 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 0
-        object pbImportaProdutos: TProgressBar
-          Left = 1
+        object pbImportaProdutos: TGauge
+          AlignWithMargins = True
+          Left = 4
           Top = 203
-          Width = 360
-          Height = 32
+          Width = 354
+          Height = 29
           Align = alBottom
-          ParentShowHint = False
-          ShowHint = False
-          TabOrder = 2
+          BackColor = clBtnFace
+          ForeColor = clLime
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxValue = 0
+          ParentFont = False
+          Progress = 0
         end
         object mnImportaProdutos: TMemo
           Left = 1
           Top = 50
           Width = 360
-          Height = 153
+          Height = 150
           Align = alClient
+          Color = clMoneyGreen
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -16
@@ -190,6 +199,25 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 1
+        object pbImportaAlmoxarifado: TGauge
+          AlignWithMargins = True
+          Left = 4
+          Top = 203
+          Width = 355
+          Height = 29
+          Align = alBottom
+          BackColor = clBtnFace
+          ForeColor = clLime
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxValue = 0
+          ParentFont = False
+          Progress = 0
+          ExplicitWidth = 354
+        end
         object pnCabAlmoxarifado: TPanel
           Left = 1
           Top = 1
@@ -243,20 +271,11 @@ object frmImportacao: TfrmImportacao
           Left = 1
           Top = 50
           Width = 361
-          Height = 153
+          Height = 150
           Align = alClient
+          Color = clMoneyGreen
           ReadOnly = True
           TabOrder = 1
-        end
-        object pbImportaAlmoxarifado: TProgressBar
-          Left = 1
-          Top = 203
-          Width = 361
-          Height = 32
-          Align = alBottom
-          ParentShowHint = False
-          ShowHint = False
-          TabOrder = 2
         end
       end
       object pnImportaFornecedor: TPanel
@@ -267,24 +286,33 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 2
+        object pbImportaFornecedor: TGauge
+          AlignWithMargins = True
+          Left = 4
+          Top = 203
+          Width = 354
+          Height = 29
+          Align = alBottom
+          BackColor = clBtnFace
+          ForeColor = clLime
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxValue = 0
+          ParentFont = False
+          Progress = 0
+        end
         object mnImportaFornecedor: TMemo
           Left = 1
           Top = 49
           Width = 360
-          Height = 154
+          Height = 151
           Align = alClient
+          Color = clMoneyGreen
           ReadOnly = True
           TabOrder = 1
-        end
-        object pbImportaFornecedor: TProgressBar
-          Left = 1
-          Top = 203
-          Width = 360
-          Height = 32
-          Align = alBottom
-          ParentShowHint = False
-          ShowHint = False
-          TabOrder = 2
         end
         object pnCabImportaFornecedor: TPanel
           Left = 1
@@ -344,6 +372,25 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 3
+        object pbImportaProdutoFornecedor: TGauge
+          AlignWithMargins = True
+          Left = 4
+          Top = 203
+          Width = 355
+          Height = 29
+          Align = alBottom
+          BackColor = clBtnFace
+          ForeColor = clLime
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxValue = 0
+          ParentFont = False
+          Progress = 0
+          ExplicitWidth = 354
+        end
         object pnCabImportaProdutoFornecedor: TPanel
           Left = 1
           Top = 1
@@ -397,20 +444,11 @@ object frmImportacao: TfrmImportacao
           Left = 1
           Top = 49
           Width = 361
-          Height = 154
+          Height = 151
           Align = alClient
+          Color = clMoneyGreen
           ReadOnly = True
           TabOrder = 1
-        end
-        object pbImportaProdutoFornecedor: TProgressBar
-          Left = 1
-          Top = 203
-          Width = 361
-          Height = 32
-          Align = alBottom
-          ParentShowHint = False
-          ShowHint = False
-          TabOrder = 2
         end
       end
     end
@@ -423,7 +461,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
