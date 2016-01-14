@@ -86,7 +86,7 @@ begin
     frmSeleciona.Retorno      := Control;
     frmSeleciona.FTabelaPai   := Tabela;
     if (frmSeleciona.ShowModal = mrOk) or (Control.Text <> '') then
-      Result := StrToInt(Control.Text);
+      Result                  := StrToIntDef(Control.Text,0);
   finally
     FreeAndNil(Control);
   end;

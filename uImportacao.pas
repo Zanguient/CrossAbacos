@@ -97,6 +97,7 @@ begin
   // Cria Excel- OLE Object
   XLSAplicacao                                        := CreateOleObject('Excel.Application');
   edBuscaArquivoAlmoxarifado.Enabled                  := False;
+  btImportaAlmoxarifado.Enabled                       := False;
 
   SetLength(arrInsert, 0);
   SetLength(arrUpdate, 0);
@@ -160,7 +161,7 @@ begin
             end else begin
               ALM.Insert;
 
-              SetLength(arrUpdate, Length(arrInsert) + 1);
+              SetLength(arrInsert, Length(arrInsert) + 1);
               arrInsert[High(arrInsert)]              := ALM.ID.Value;
 
               mnImportaAlmoxarifado.Lines.Add('Código: ' + ALM.CODIGO_E10.asString + ' - inserido com sucesso!');
@@ -173,10 +174,12 @@ begin
         CON.Commit;
 
         if Length(arrInsert) > 0 then
-          mnImportaProdutos.Lines.Add('Total de almoxarifados inseridos: ' + IntToStr(Length(arrInsert)));
+          mnImportaAlmoxarifado.Lines.Add('Total de almoxarifados inseridos: ' + IntToStr(Length(arrInsert)));
         if Length(arrUpdate) > 0 then
-          mnImportaProdutos.Lines.Add('Total de almoxarifados alterados: ' + IntToStr(Length(arrUpdate)));
+          mnImportaAlmoxarifado.Lines.Add('Total de almoxarifados alterados: ' + IntToStr(Length(arrUpdate)));
 
+        DisplayMsg(MSG_OK, 'Importação realizada com sucesso!');
+        pbImportaAlmoxarifado.Progress                := 0;
       except
         on E : Exception do begin
           CON.Rollback;
@@ -191,6 +194,7 @@ begin
 
   finally
     edBuscaArquivoAlmoxarifado.Enabled                                         := True;
+    btImportaAlmoxarifado.Enabled                                              := True;
     // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
       XLSAplicacao.Quit;
@@ -316,9 +320,12 @@ begin
         CON.Commit;
 
         if Length(arrInsert) > 0 then
-          mnImportaProdutos.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
+          mnImportaFornecedor.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
         if Length(arrUpdate) > 0 then
-          mnImportaProdutos.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+          mnImportaFornecedor.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+
+        DisplayMsg(MSG_OK, 'Importação realizada com sucesso!');
+        pbImportaFornecedor.Progress                                           := 0;
 
       except
         on E : Exception do begin
@@ -459,7 +466,7 @@ begin
             FORPROD.Insert;
 
             SetLength(arrInsert, Length(arrInsert) + 1);
-            arrUpdate[High(arrInsert)]                                         := FORPROD.ID.Value;
+            arrInsert[High(arrInsert)]                                         := FORPROD.ID.Value;
 
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - inserido com sucesso!');
           end;
@@ -470,9 +477,12 @@ begin
         CON.Commit;
 
         if Length(arrInsert) > 0 then
-          mnImportaProdutos.Lines.Add('Total de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
+          mnImportaProdutoFornecedor.Lines.Add('Total de Códigos de Produtos de Fornecedores inseridos: ' + IntToStr(Length(arrInsert)));
         if Length(arrUpdate) > 0 then
-          mnImportaProdutos.Lines.Add('Total de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+          mnImportaProdutoFornecedor.Lines.Add('Total de Códigos de Produtos de Fornecedores alterados: ' + IntToStr(Length(arrUpdate)));
+
+        DisplayMsg(MSG_OK, 'Importação realizada com sucesso!');
+        pbImportaProdutoFornecedor.Progress                                    := 0;
 
       except
         on E : Exception do begin
@@ -639,7 +649,7 @@ begin
               PROD.ID_ULTIMOLOTE.Value                                           := 0;
               PROD.Insert;
 
-              SetLength(arrUpdate, Length(arrInsert) + 1);
+              SetLength(arrInsert, Length(arrInsert) + 1);
               arrInsert[High(arrInsert)]                                         := PROD.ID.Value;
 
               mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
@@ -673,6 +683,9 @@ begin
           mnImportaProdutos.Lines.Add('Total de produtos inseridos: ' + IntToStr(Length(arrInsert)));
         if Length(arrUpdate) > 0 then
           mnImportaProdutos.Lines.Add('Total de produtos alterados: ' + IntToStr(Length(arrUpdate)));
+
+        DisplayMsg(MSG_OK, 'Importação realizada com sucesso!');
+        pbImportaProdutos.Progress                                               := 0;
 
       except
         on E : Exception do begin

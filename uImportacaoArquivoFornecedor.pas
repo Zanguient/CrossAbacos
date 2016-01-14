@@ -230,7 +230,9 @@ begin
       bloqueioSalvar(0);
       cbFiltro.ItemIndex                          := 2;
       cbFiltroChange(nil);
+      Exit;
     end;
+    DisplayMsg(MSG_INF, 'Importacao Realizada com sucesso!');
   finally
      // Fecha o Microsoft Excel
     if not VarIsEmpty(XLSAplicacao) then begin
@@ -238,6 +240,7 @@ begin
       XLSAplicacao                                := Unassigned;
     end;
     csProdutos.EnableControls;
+    pgProdutos.Progress                           := 0;
   end;
 end;
 

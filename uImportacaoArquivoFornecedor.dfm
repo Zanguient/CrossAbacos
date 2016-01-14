@@ -555,7 +555,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         733
         62)
       object Label1: TLabel
-        Left = 513
+        Left = 473
         Top = 11
         Width = 106
         Height = 19
@@ -563,15 +563,15 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Caption = 'Registro Atual:'
       end
       object Label2: TLabel
-        Left = 626
+        Left = 586
         Top = 11
-        Width = 106
+        Width = 134
         Height = 19
         Anchors = [akTop, akRight]
-        Caption = 'Registro Atual:'
+        Caption = 'Total de Registros:'
       end
       object Label3: TLabel
-        Left = 321
+        Left = 281
         Top = 11
         Width = 118
         Height = 19
@@ -658,9 +658,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         OnClick = btImportarClick
       end
       object edTotalRegistros: TEdit
-        Left = 626
+        Left = 586
         Top = 32
-        Width = 104
+        Width = 135
         Height = 27
         Anchors = [akTop, akRight]
         Enabled = False
@@ -673,7 +673,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         TabOrder = 1
       end
       object edRegistroAtual: TEdit
-        Left = 513
+        Left = 473
         Top = 32
         Width = 107
         Height = 27
@@ -688,7 +688,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         TabOrder = 2
       end
       object cbFiltro: TComboBox
-        Left = 321
+        Left = 281
         Top = 32
         Width = 186
         Height = 27
@@ -765,7 +765,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
