@@ -623,12 +623,17 @@ begin
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
-          PROD.SKU.Value                                                      := '';
+          PROD.SKU.Value                                                         := '';
+          PROD.CUSTOANTERIOR.isNull                                              := True;
+          PROD.CUSTO.isNull                                                      := True;
+          PROD.ID_FORNECEDORANTERIOR.isNull                                      := True;
+          PROD.ID_FORNECEDORNOVO.isNull                                          := True;
+          PROD.ID_ULTIMOLOTE.isNull                                              := True;
           for J := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
               Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
               if Valor <> '' then
-                TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant:= Valor;
+                TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant   := Valor;
             end;
           end;
           if PROD.SKU.Value <> '' then begin
