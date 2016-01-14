@@ -56,6 +56,8 @@ type
     procedure Update;
     procedure Delete;
 
+    procedure ClearFields;
+
     procedure Open;
     procedure Close;
     procedure StartTransaction;
@@ -497,6 +499,22 @@ begin
   except
   end;
 
+end;
+
+procedure TFWPersistence.ClearFields;
+var
+  I, Count: Integer;
+  List: TPropList;
+begin
+  try
+    Count := GetPropList(Self.ClassInfo, tkProperties, @List, False);
+    for I := 0 to Count - 1 do begin
+      SetObjectProp(Self, List[I]^.Name, TFieldTypeDomain(GetObjectPropClass(Self, List[I]^.Name).Create).Create);
+      TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).isNull    := True;
+      TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).asVariant := '';
+    end;
+  except
+  end;
 end;
 
 procedure TFWPersistence.Close;
