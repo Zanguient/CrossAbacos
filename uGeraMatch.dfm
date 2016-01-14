@@ -217,10 +217,6 @@ object frmGeraMatch: TfrmGeraMatch
           Value = 100.000000000000000000
         end>
       TabOrder = 1
-      ExplicitLeft = 1
-      ExplicitTop = 42
-      ExplicitWidth = 757
-      ExplicitHeight = 191
       object Panel3: TPanel
         AlignWithMargins = True
         Left = 4
@@ -230,8 +226,6 @@ object frmGeraMatch: TfrmGeraMatch
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 371
-        ExplicitHeight = 263
         object Panel2: TPanel
           AlignWithMargins = True
           Left = 3
@@ -249,7 +243,6 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 365
         end
         object Panel4: TPanel
           AlignWithMargins = True
@@ -261,8 +254,6 @@ object frmGeraMatch: TfrmGeraMatch
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 1
-          ExplicitTop = 200
-          ExplicitWidth = 365
           object btGerar: TSpeedButton
             AlignWithMargins = True
             Left = 235
@@ -392,9 +383,6 @@ object frmGeraMatch: TfrmGeraMatch
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitLeft = 381
-        ExplicitWidth = 372
-        ExplicitHeight = 263
         object Panel6: TPanel
           AlignWithMargins = True
           Left = 3
@@ -412,7 +400,6 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 366
         end
         object Panel7: TPanel
           AlignWithMargins = True
@@ -424,8 +411,6 @@ object frmGeraMatch: TfrmGeraMatch
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 1
-          ExplicitTop = 200
-          ExplicitWidth = 366
           object btExportarEstoque: TSpeedButton
             AlignWithMargins = True
             Left = 236
@@ -551,7 +536,7 @@ object frmGeraMatch: TfrmGeraMatch
           Top = 50
           Width = 363
           Height = 111
-          Align = alBottom
+          Align = alClient
           Caption = 'Saldo Dispon'#237'vel '
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -565,8 +550,6 @@ object frmGeraMatch: TfrmGeraMatch
             'Ambos')
           ParentFont = False
           TabOrder = 2
-          ExplicitWidth = 366
-          ExplicitHeight = 144
         end
       end
     end
@@ -615,7 +598,6 @@ object frmGeraMatch: TfrmGeraMatch
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 39
       end
       object Panel9: TPanel
         Left = 252
@@ -625,7 +607,6 @@ object frmGeraMatch: TfrmGeraMatch
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitHeight = 39
         object Label1: TLabel
           Left = 6
           Top = 5
@@ -654,7 +635,6 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitTop = 3
         end
       end
       object Panel10: TPanel
@@ -665,7 +645,6 @@ object frmGeraMatch: TfrmGeraMatch
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitHeight = 39
       end
     end
   end

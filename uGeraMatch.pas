@@ -41,6 +41,7 @@ type
   private
     Procedure CarregaLote;
     procedure ExportarEstoque;
+    procedure GerarMatch;
     { Private declarations }
   public
     { Public declarations }
@@ -64,10 +65,222 @@ uses
 
 procedure TfrmGeraMatch.btExportarEstoqueClick(Sender: TObject);
 begin
-  ExportarEstoque;
+  if btExportarEstoque.Tag = 0 then begin
+    btExportarEstoque.Tag := 1;
+    try
+      ExportarEstoque;
+    finally
+      btExportarEstoque.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TfrmGeraMatch.btGerarClick(Sender: TObject);
+begin
+  if btGerar.Tag = 0 then begin
+    btGerar.Tag := 1;
+    try
+      GerarMatch;
+    finally
+      btGerar.Tag := 0;
+    end;
+  end;
+end;
+
+procedure TfrmGeraMatch.btSairClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmGeraMatch.CarregaLote;
+Var
+  FWC : TFWConnection;
+  L  : TLOTE;
+  I   : Integer;
+begin
+
+  FWC := TFWConnection.Create;
+  L   := TLOTE.Create(FWC);
+
+  try
+    try
+
+      L.SelectList('','ID DESC LIMIT 10');
+
+      cbLoteImportacao.Items.Clear;
+
+      if L.Count > 0 then begin
+        for I := 0 to L.Count - 1 do
+          cbLoteImportacao.Items.Add(IntToStr(TLOTE(L.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(L.Itens[I]).DATA_HORA.Value));
+      end;
+
+      if cbLoteImportacao.Items.Count > 0 then
+        cbLoteImportacao.ItemIndex := 0;
+
+    except
+      on E : Exception do Begin
+        FWC.Rollback;
+        DisplayMsg(MSG_ERR, 'Erro ao Gerar lote de Importação', 'ClassName ' + E.ClassName + ' ' + E.Message);
+      End;
+    end;
+  finally
+    FreeAndNil(L);
+    FreeAndNil(FWC);
+  end;
+end;
+
+procedure TfrmGeraMatch.ExportarEstoque;
+var
+  PLANILHA,
+  Sheet   : Variant;
+  Linha   : Integer;
+  FWC     : TFWConnection;
+  Consulta: TFDQuery;
+  DirArquivo : String;
+  idLote  : Integer;
+Begin
+
+  idLote := StrToIntDef(Copy(cbLoteImportacao.Items[cbLoteImportacao.ItemIndex], 1, (Pos(' - ', cbLoteImportacao.Items[cbLoteImportacao.ItemIndex]) -1)),-1);
+  if idLote = -1 then begin
+    DisplayMsg(MSG_WAR, 'Não há lote selecionado, Verifique!');
+    Exit;
+  end;
+
+  DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
+
+  if not DirectoryExists(DirArquivo) then begin
+    if not ForceDirectories(DirArquivo) then begin
+      DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
+      Exit;
+    end;
+  end;
+
+  DirArquivo := DirArquivo + '\Estoque.xlsx';
+
+  if FileExists(DirArquivo) then begin
+    DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
+                          'Deseja Sobreescrever?');
+    if ResultMsgModal <> mrYes then
+      Exit;
+
+    DeleteFile(DirArquivo);
+  end;
+
+  FWC       := TFWConnection.Create;
+  Consulta  := TFDQuery.Create(nil);
+
+  Try
+    try
+
+      Consulta.Close;
+      Consulta.SQL.Clear;
+      Consulta.SQL.Add('SELECT');
+      Consulta.SQL.Add('	P.SKU,');
+      Consulta.SQL.Add('	IMPI.QUANTIDADE AS SALDODISPONIVEL,');
+      Consulta.SQL.Add('	A.NOME AS NOMEALMOXARIFADO FROM LOTE L');
+      Consulta.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
+      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
+      Consulta.SQL.Add('INNER JOIN ALMOXARIFADO A ON (A.ID = F.ID_ALMOXARIFADO)');
+      Consulta.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
+      Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = IMPI.ID_PRODUTO)');
+      Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
+
+      case rgSaldoDisponivel.ItemIndex of
+        0 : Consulta.SQL.Add('AND IMPI.QUANTIDADE > 0');//Com Saldo
+        1 : Consulta.SQL.Add('AND IMPI.QUANTIDADE = 0');//Sem Saldo
+      end;
+
+      Consulta.SQL.Add('ORDER BY P.SKU');
+      Consulta.Params[0].DataType := ftInteger;
+      Consulta.Connection         := FWC.FDConnection;
+      Consulta.Prepare;
+      Consulta.Params[0].Value    := idLote;
+      Consulta.Open;
+      Consulta.FetchAll;
+
+      if Not Consulta.IsEmpty then begin
+
+        BarradeProgresso.Progress := 0;
+        BarradeProgresso.MaxValue := Consulta.RecordCount;
+
+        //cds_MatchItens.Filtered := False;
+        Linha :=  2;
+        PLANILHA := CreateOleObject('Excel.Application');
+        PLANILHA.Caption := 'ESTOQUE';
+        PLANILHA.Visible := False;
+        PLANILHA.WorkBooks.add(1);
+        PLANILHA.Workbooks[1].WorkSheets[1].Name := 'ESTOQUE';
+        Sheet := PLANILHA.Workbooks[1].WorkSheets['ESTOQUE'];
+        Sheet.Range['A1','C1'].Font.Bold  := True;
+        Sheet.Range['A1','C1'].Font.Color := clBlue;
+
+        // TITULO DAS COLUNAS
+        PLANILHA.Cells[1,1] := 'IdentificadorProduto';
+        PLANILHA.Cells[1,2] := 'SaldoDisponivel';
+        PLANILHA.Cells[1,3] := 'Almoxarifado';
+
+        Consulta.First;
+        While not Consulta.Eof do Begin
+          PLANILHA.Cells[Linha,1] := Consulta.FieldByName('SKU').AsString; //SKU
+          PLANILHA.Cells[linha,2] := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
+          PLANILHA.Cells[Linha,3] := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
+          Linha := Linha + 1;
+          BarradeProgresso.Progress := Consulta.RecNo;
+          Consulta.Next;
+        End;
+
+        PLANILHA.Columns.AutoFit;
+
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+
+        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
+      end;
+
+    except
+      on E : Exception do begin
+        DisplayMsg(MSG_ERR, 'Erro ao Gerar arquivo,' + sLineBreak + DirArquivo);
+      end;
+    end;
+  Finally
+    BarradeProgresso.Progress := 0;
+    FreeAndNil(Consulta);
+    FreeAndNil(FWC);
+    if not VarIsEmpty(PLANILHA) then begin
+      PLANILHA.Quit;
+      PLANILHA := Unassigned;
+    end;
+  end;
+end;
+
+procedure TfrmGeraMatch.FormCreate(Sender: TObject);
+begin
+  AjustaForm(Self);
+end;
+
+procedure TfrmGeraMatch.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  case Key of
+    VK_ESCAPE : begin
+        Close;
+    end;
+  end;
+end;
+
+procedure TfrmGeraMatch.FormResize(Sender: TObject);
+begin
+  cbLoteImportacao.Top  := Self.Height div 2;
+  cbLoteImportacao.Left := ((Self.Width div 2) - (cbLoteImportacao.Width div 2));
+end;
+
+procedure TfrmGeraMatch.FormShow(Sender: TObject);
+begin
+  if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
+    IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
+  CarregaLote;
+end;
+
+procedure TfrmGeraMatch.GerarMatch;
 Var
   FWC           : TFWConnection;
   M             : TMATCH;
@@ -255,199 +468,6 @@ begin
     FreeAndNil(P);
     FreeAndNil(FWC);
   end;
-end;
-
-procedure TfrmGeraMatch.btSairClick(Sender: TObject);
-begin
-  Close;
-end;
-
-procedure TfrmGeraMatch.CarregaLote;
-Var
-  FWC : TFWConnection;
-  L  : TLOTE;
-  I   : Integer;
-begin
-
-  FWC := TFWConnection.Create;
-  L   := TLOTE.Create(FWC);
-
-  try
-    try
-
-      L.SelectList('','ID DESC LIMIT 5');
-
-      cbLoteImportacao.Items.Clear;
-
-      if L.Count > 0 then begin
-        for I := 0 to L.Count - 1 do
-          cbLoteImportacao.Items.Add(IntToStr(TLOTE(L.Itens[I]).ID.Value) + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(L.Itens[I]).DATA_HORA.Value));
-      end;
-
-      if cbLoteImportacao.Items.Count > 0 then
-        cbLoteImportacao.ItemIndex := 0;
-
-    except
-      on E : Exception do Begin
-        FWC.Rollback;
-        DisplayMsg(MSG_ERR, 'Erro ao Gerar lote de Importação', 'ClassName ' + E.ClassName + ' ' + E.Message);
-      End;
-    end;
-  finally
-    FreeAndNil(L);
-    FreeAndNil(FWC);
-  end;
-end;
-
-procedure TfrmGeraMatch.ExportarEstoque;
-var
-  PLANILHA,
-  Sheet   : Variant;
-  Linha   : Integer;
-  FWC     : TFWConnection;
-  Consulta: TFDQuery;
-  DirArquivo : String;
-  idLote  : Integer;
-Begin
-
-  idLote := StrToIntDef(Copy(cbLoteImportacao.Items[cbLoteImportacao.ItemIndex], 1, (Pos(' - ', cbLoteImportacao.Items[cbLoteImportacao.ItemIndex]) -1)),-1);
-  if idLote = -1 then begin
-    DisplayMsg(MSG_WAR, 'Não há lote selecionado, Verifique!');
-    Exit;
-  end;
-
-  DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
-
-  if not DirectoryExists(DirArquivo) then begin
-    if not ForceDirectories(DirArquivo) then begin
-      DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
-      Exit;
-    end;
-  end;
-
-  DirArquivo := DirArquivo + '\Estoque.xlsx';
-
-  if FileExists(DirArquivo) then begin
-    DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
-                          'Deseja Sobreescrever?');
-    if ResultMsgModal <> mrYes then
-      Exit;
-
-    DeleteFile(DirArquivo);
-  end;
-
-  FWC       := TFWConnection.Create;
-  Consulta  := TFDQuery.Create(nil);
-
-  Try
-    try
-
-      Consulta.Close;
-      Consulta.SQL.Clear;
-      Consulta.SQL.Add('SELECT');
-      Consulta.SQL.Add('	P.SKU,');
-      Consulta.SQL.Add('	IMPI.QUANTIDADE AS SALDODISPONIVEL,');
-      Consulta.SQL.Add('	A.NOME AS NOMEALMOXARIFADO FROM LOTE L');
-      Consulta.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
-      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
-      Consulta.SQL.Add('INNER JOIN ALMOXARIFADO A ON (A.ID = F.ID_ALMOXARIFADO)');
-      Consulta.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
-      Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = IMPI.ID_PRODUTO)');
-      Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
-
-      case rgSaldoDisponivel.ItemIndex of
-        0 : Consulta.SQL.Add('AND IMPI.QUANTIDADE > 0');//Com Saldo
-        1 : Consulta.SQL.Add('AND IMPI.QUANTIDADE = 0');//Sem Saldo
-      end;
-
-      Consulta.SQL.Add('ORDER BY P.SKU');
-      Consulta.Params[0].DataType := ftInteger;
-      Consulta.Connection         := FWC.FDConnection;
-      Consulta.Prepare;
-      Consulta.Params[0].Value    := idLote;
-      Consulta.Open;
-      Consulta.FetchAll;
-
-      if Not Consulta.IsEmpty then begin
-
-        BarradeProgresso.Progress := 0;
-        BarradeProgresso.MaxValue := Consulta.RecordCount;
-
-        //cds_MatchItens.Filtered := False;
-        Linha :=  2;
-        PLANILHA := CreateOleObject('Excel.Application');
-        PLANILHA.Caption := 'ESTOQUE';
-        PLANILHA.Visible := False;
-        PLANILHA.WorkBooks.add(1);
-        PLANILHA.Workbooks[1].WorkSheets[1].Name := 'ESTOQUE';
-        Sheet := PLANILHA.Workbooks[1].WorkSheets['ESTOQUE'];
-        Sheet.Range['A1','C1'].Font.Bold  := True;
-        Sheet.Range['A1','C1'].Font.Color := clBlue;
-
-        // TITULO DAS COLUNAS
-        PLANILHA.Cells[1,1] := 'IdentificadorProduto';
-        PLANILHA.Cells[1,2] := 'SaldoDisponivel';
-        PLANILHA.Cells[1,3] := 'Almoxarifado';
-
-        Consulta.First;
-        While not Consulta.Eof do Begin
-          PLANILHA.Cells[Linha,1] := Consulta.FieldByName('SKU').AsString; //SKU
-          PLANILHA.Cells[linha,2] := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
-          PLANILHA.Cells[Linha,3] := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
-          Linha := Linha + 1;
-          BarradeProgresso.Progress := Consulta.RecNo;
-          Consulta.Next;
-        End;
-
-        PLANILHA.Columns.AutoFit;
-
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
-
-        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
-      end;
-
-    except
-      on E : Exception do begin
-        DisplayMsg(MSG_ERR, 'Erro ao Gerar arquivo,' + sLineBreak + DirArquivo);
-      end;
-    end;
-  Finally
-    BarradeProgresso.Progress := 0;
-    FreeAndNil(Consulta);
-    FreeAndNil(FWC);
-    if not VarIsEmpty(PLANILHA) then begin
-      PLANILHA.Quit;
-      PLANILHA := Unassigned;
-    end;
-  end;
-end;
-
-procedure TfrmGeraMatch.FormCreate(Sender: TObject);
-begin
-  AjustaForm(Self);
-end;
-
-procedure TfrmGeraMatch.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  case Key of
-    VK_ESCAPE : begin
-        Close;
-    end;
-  end;
-end;
-
-procedure TfrmGeraMatch.FormResize(Sender: TObject);
-begin
-  cbLoteImportacao.Top  := Self.Height div 2;
-  cbLoteImportacao.Left := ((Self.Width div 2) - (cbLoteImportacao.Width div 2));
-end;
-
-procedure TfrmGeraMatch.FormShow(Sender: TObject);
-begin
-  if FileExists(DirInstall + 'Imagens\Fundo.jpg') then
-    IMFundo.Picture.LoadFromFile(DirInstall + 'Imagens\Fundo.jpg');
-  CarregaLote;
 end;
 
 end.

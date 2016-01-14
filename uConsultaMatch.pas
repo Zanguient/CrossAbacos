@@ -111,13 +111,27 @@ uses
 
 procedure TfrmConsultaMatch.btConsultarClick(Sender: TObject);
 begin
-  ConsultaItensMatch;
-  edTotalizador.Text := IntToStr(cds_MatchItens.RecordCount);
+  if btConsultar.Tag = 0 then begin
+    btConsultar.Tag := 1;
+    try
+      ConsultaItensMatch;
+      edTotalizador.Text := IntToStr(cds_MatchItens.RecordCount);
+    finally
+      btConsultar.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TfrmConsultaMatch.btFiltrarClick(Sender: TObject);
 begin
-  Filtrar;
+  if btFiltrar.Tag = 0 then begin
+    btFiltrar.Tag := 1;
+    try
+      Filtrar;
+    finally
+      btFiltrar.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TfrmConsultaMatch.btLimparClick(Sender: TObject);
@@ -201,9 +215,18 @@ begin
       SQL.SQL.Add('	COALESCE((SELECT COUNT(MI.ID) FROM MATCH_ITENS MI WHERE MI.ID_MATCH = M.ID AND MI.ATUALIZADO = TRUE),0) AS QTDATUALIZADOS');
       SQL.SQL.Add('FROM LOTE L INNER JOIN MATCH M ON (L.ID = M.ID_LOTE) INNER JOIN USUARIO U ON (M.ID_USUARIO = U.ID)');
       SQL.SQL.Add('WHERE 1 = 1');
-      SQL.SQL.Add('AND CAST(L.DATA_HORA AS DATE) BETWEEN :DATAI AND :DATAF');
-      SQL.ParamByName('DATAI').DataType   := ftDate;
-      SQL.ParamByName('DATAF').DataType   := ftDate;
+
+      if StrToIntDef(edLote.Text, 0) > 0 then begin
+        SQL.SQL.Add('AND L.ID = :IDLOTE');
+        SQL.ParamByName('IDLOTE').DataType  := ftInteger;
+        SQL.ParamByName('IDLOTE').Value     := StrToIntDef(edLote.Text, 0);
+      end else begin
+        SQL.SQL.Add('AND CAST(L.DATA_HORA AS DATE) BETWEEN :DATAI AND :DATAF');
+        SQL.ParamByName('DATAI').DataType   := ftDate;
+        SQL.ParamByName('DATAF').DataType   := ftDate;
+        SQL.ParamByName('DATAI').Value      := edDataI.Date;
+        SQL.ParamByName('DATAF').Value      := edDataF.Date;
+      end;
 
       //Filtro de Usuário
       if StrToIntDef(edUsuario.Text, -1) > -1 then begin
@@ -211,16 +234,6 @@ begin
         SQL.ParamByName('IDUSUARIO').DataType   := ftInteger;
         SQL.ParamByName('IDUSUARIO').Value      := StrToIntDef(edUsuario.Text, 0);
       end;
-
-      //Filtro de Lote
-      if StrToIntDef(edLote.Text, -1) > -1 then begin
-        SQL.SQL.Add('AND L.ID = :IDLOTE');
-        SQL.ParamByName('IDLOTE').DataType    := ftInteger;
-        SQL.ParamByName('IDLOTE').Value       := StrToIntDef(edLote.Text, 0);
-      end;
-
-      SQL.ParamByName('DATAI').Value := edDataI.Date;
-      SQL.ParamByName('DATAF').Value := edDataF.Date;
 
       SQL.Connection  := FWC.FDConnection;
       SQL.Prepare;
@@ -595,7 +608,14 @@ end;
 
 procedure TfrmConsultaMatch.btBuscarMatchClick(Sender: TObject);
 begin
-  CarregarMatch;
+  if btBuscarMatch.Tag = 0 then begin
+    btBuscarMatch.Tag := 1;
+    try
+      CarregarMatch;
+    finally
+      btBuscarMatch.Tag := 0;
+    end;
+  end;
 end;
 
 end.

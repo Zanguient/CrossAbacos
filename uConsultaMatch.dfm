@@ -1104,11 +1104,11 @@ object frmConsultaMatch: TfrmConsultaMatch
       TabOrder = 3
       object btBuscarMatch: TSpeedButton
         AlignWithMargins = True
-        Left = 120
-        Top = 105
-        Width = 153
+        Left = 140
+        Top = 101
+        Width = 130
         Height = 53
-        Caption = '&Buscar Matchs'
+        Caption = '&Buscar'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -1660,7 +1660,7 @@ object frmConsultaMatch: TfrmConsultaMatch
         ParentFont = False
       end
       object Label5: TLabel
-        Left = 160
+        Left = 140
         Top = 0
         Width = 109
         Height = 19
@@ -1673,7 +1673,7 @@ object frmConsultaMatch: TfrmConsultaMatch
         ParentFont = False
       end
       object Label6: TLabel
-        Left = 160
+        Left = 140
         Top = 48
         Width = 85
         Height = 19
@@ -1688,8 +1688,8 @@ object frmConsultaMatch: TfrmConsultaMatch
       object btLimpar: TSpeedButton
         AlignWithMargins = True
         Left = 4
-        Top = 105
-        Width = 110
+        Top = 101
+        Width = 130
         Height = 53
         Caption = '&Limpar'
         Font.Charset = DEFAULT_CHARSET
@@ -1802,7 +1802,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       object edDataI: TDateTimePicker
         Left = 4
         Top = 20
-        Width = 150
+        Width = 130
         Height = 27
         Date = 42379.480050324080000000
         Time = 42379.480050324080000000
@@ -1817,7 +1817,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       object edDataF: TDateTimePicker
         Left = 4
         Top = 68
-        Width = 150
+        Width = 130
         Height = 27
         Date = 42379.480050324080000000
         Time = 42379.480050324080000000
@@ -1831,9 +1831,9 @@ object frmConsultaMatch: TfrmConsultaMatch
       end
       object edUsuario: TEdit
         AlignWithMargins = True
-        Left = 160
+        Left = 140
         Top = 20
-        Width = 113
+        Width = 130
         Height = 27
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1845,9 +1845,9 @@ object frmConsultaMatch: TfrmConsultaMatch
       end
       object edLote: TEdit
         AlignWithMargins = True
-        Left = 160
+        Left = 140
         Top = 68
-        Width = 113
+        Width = 130
         Height = 27
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
