@@ -114,7 +114,8 @@ const
   xlCellTypeLastCell = $0000000B;
 var
   XLSAplicacao,
-  AbaXLS        : OLEVariant;
+  AbaXLS,
+  Range         : OLEVariant;
   vrow,
   vcol,
   i,
@@ -125,6 +126,8 @@ var
   Valor         : Variant;
   FORN          : TFORNECEDOR;
   CON           : TFWConnection;
+  arrData       : Variant;
+
 begin
   csProdutos.EmptyDataSet;
   if StrToIntDef(edFornecedor.Text, 0) <> 0 then begin
@@ -172,6 +175,12 @@ begin
       vrow                                          := XLSAplicacao.ActiveCell.Row;
       vcol                                          := XLSAplicacao.ActiveCell.Column;
 
+      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+
+      Range                                         := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+
+      arrData                                       := Range.value;
+
       pgProdutos.MaxValue                           := vRow;
       SetLength(ExcelColluns, 0);
       for I := 1 to vcol do begin
@@ -192,7 +201,8 @@ begin
       for I := 2 to vrow do begin
         for J := 0 to High(ExcelColluns) do begin
           if csProdutos.FieldByName(ExcelColluns[J].nome).FieldName = csProdutosCODIGO.FieldName then begin
-            Valor                                   := Trim(AbaXLS.Cells.Item[I, ExcelColluns[J].index].Value);
+            Valor                                   := Trim(arrData[I, ExcelColluns[J].index]);
+//            Valor                                   := Trim(AbaXLS.Cells.Item[I, ExcelColluns[J].index].Value);
             if Valor <> '' then begin
               if csProdutos.Locate(csProdutosCODIGO.FieldName, Valor, []) then
                 csProdutos.Edit
@@ -516,6 +526,8 @@ begin
   edFornecedor.Enabled                          := True;
   edArquivo.Enabled                             := True;
   csProdutos.EmptyDataSet;
+  edTotalRegistros.Text                         := '0';
+  edRegistroAtual.Text                          := '0';
   pgProdutos.Progress                           := 0;
   edFornecedor.Text                             := '';
   edNomeFornecedor.Text                         := '';

@@ -139,7 +139,7 @@ begin
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
-          ALM.CODIGO_E10.Value    := 0;
+          ALM.ClearFields;
           for J := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelIndice > 0) then begin
               Valor                                   := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(ALM, List[J]^.Name)).excelIndice]);
@@ -276,7 +276,7 @@ begin
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
-          FORN.CNPJ.Value                                                      := '';
+          FORN.ClearFields;
           for J := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice > 0) then begin
               Valor                                                            := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice]);
@@ -425,6 +425,7 @@ begin
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
+          FORPROD.ClearFields;
           for J := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice > 0) then begin
               Valor                                                            := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice]);
@@ -623,12 +624,7 @@ begin
       CON.StartTransaction;
       try
         for I := 2 to vrow do begin
-          PROD.SKU.Value                                                         := '';
-          PROD.CUSTOANTERIOR.isNull                                              := True;
-          PROD.CUSTO.isNull                                                      := True;
-          PROD.ID_FORNECEDORANTERIOR.isNull                                      := True;
-          PROD.ID_FORNECEDORNOVO.isNull                                          := True;
-          PROD.ID_ULTIMOLOTE.isNull                                              := True;
+          PROD.ClearFields;
           for J := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
               Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);

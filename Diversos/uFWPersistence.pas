@@ -508,11 +508,8 @@ var
 begin
   try
     Count := GetPropList(Self.ClassInfo, tkProperties, @List, False);
-    for I := 0 to Count - 1 do begin
-      SetObjectProp(Self, List[I]^.Name, TFieldTypeDomain(GetObjectPropClass(Self, List[I]^.Name).Create).Create);
+    for I := 0 to Count - 1 do
       TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).isNull    := True;
-      TFieldTypeDomain(GetObjectProp(Self, List[I]^.Name)).asVariant := '';
-    end;
   except
   end;
 end;
