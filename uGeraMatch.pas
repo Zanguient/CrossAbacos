@@ -234,7 +234,8 @@ Begin
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
 
         DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
-      end;
+      end else
+        DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Estoque, Verifique!');
 
     except
       on E : Exception do begin
@@ -281,6 +282,10 @@ begin
 end;
 
 procedure TfrmGeraMatch.GerarMatch;
+type
+  TArLote = record
+    idLote : Integer;
+  end;
 Var
   FWC           : TFWConnection;
   M             : TMATCH;
@@ -290,6 +295,8 @@ Var
   SQLFORN       : TFDQuery;
   SQLULTIMOLOTE : TFDQuery;
   I             : Integer;
+  ArLote        : array of TArLote;
+  idLoteAnterior,
   idLote        : Integer;
   AlteraForn    : Boolean;
 begin
@@ -305,11 +312,45 @@ begin
   try
     try
 
+      SetLength(ArLote, 0);
+
       idLote := StrToIntDef(Copy(cbLoteImportacao.Items[cbLoteImportacao.ItemIndex], 1, (Pos(' - ', cbLoteImportacao.Items[cbLoteImportacao.ItemIndex]) -1)),-1);
       if idLote = -1 then begin
         DisplayMsg(MSG_WAR, 'Não há lote selecionado, Verifique!');
         Exit;
       end;
+
+      SQL.Close;
+      SQL.SQL.Clear;
+      SQL.SQL.Add('SELECT');
+      SQL.SQL.Add('MAX(L.ID) AS MAIORLOTE');
+      SQL.SQL.Add('FROM LOTE L INNER JOIN MATCH M ON (L.ID = M.ID_LOTE)');
+      SQL.Connection  := FWC.FDConnection;
+      SQL.Prepare;
+      SQL.Open;
+      SQL.FetchAll;
+
+      if SQL.FieldByName('MAIORLOTE').AsInteger > idLote then begin
+        DisplayMsg(MSG_WAR, 'Já existe Match para Lote posterior, não permitido gerar Match, Verifique!');
+        Exit;
+      end;
+
+      idLoteAnterior := SQL.FieldByName('MAIORLOTE').AsInteger + 1;
+
+      if idLoteAnterior < idLote then begin
+        DisplayMsg(MSG_CONF, 'Existem Lotes anteriores sem Gerar o Match' + sLineBreak + 'Deseja Gerar para Todos agora?');
+        if ResultMsgModal = mrYes then begin
+          while idLoteAnterior < idLote do begin
+            SetLength(ArLote, Length(ArLote) + 1);
+            ArLote[High(ArLote)].idLote := idLoteAnterior;
+            idLoteAnterior := idLoteAnterior + 1;
+          end;
+        end;
+      end;
+
+      //Adiciona o Lote Selecionado para Gerar
+      SetLength(ArLote, Length(ArLote) + 1);
+      ArLote[High(ArLote)].idLote := idLote;
 
       //SQL FORNECEDOR
       SQLFORN.Close;
@@ -352,105 +393,120 @@ begin
       SQL.SQL.Add('WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO AND IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1))');
       SQL.Params[0].DataType   := ftInteger;
       SQL.Connection           := FWC.FDConnection;
-      SQL.Prepare;
-      SQL.Params[0].Value      := idLote; //Passa o ID do Lote
-      SQL.Open;
-      SQL.FetchAll;
 
-      if not SQL.IsEmpty then begin
+      for I := Low(ArLote) to High(ArLote) do begin
 
-        M.ID.isNull         := True;
-        M.ID_LOTE.Value     := idLote;
-        M.DATA_HORA.Value   := Now;
-        M.ID_USUARIO.Value  := USUARIO.CODIGO;
-        M.Insert;
+        BarradeProgresso.Progress := 0;
 
-        BarradeProgresso.MaxValue   := SQL.RecordCount;
-        SQL.First;
+        DisplayMsg(MSG_WAIT, 'Gerando Match para o Lote ' + IntToStr(ArLote[I].idLote));
 
-        while not SQL.Eof do begin
+        FWC.StartTransaction;
 
-          MI.ID.isNull                    := True;
-          MI.ID_MATCH.Value               := M.ID.Value; //id_match
-          MI.ID_PRODUTO.Value             := SQL.Fields[0].Value; //id_produto
-          MI.CUSTOANTERIOR.Value          := SQL.Fields[1].Value; //custoanterior
-          MI.ID_FORNECEDORANTERIOR.Value  := SQL.Fields[2].Value; //id_fornecedoranterior
-          MI.CUSTONOVO.Value              := SQL.Fields[1].Value; //custonovo
-          MI.ID_FORNECEDORNOVO.Value      := SQL.Fields[2].Value; //id_fornecedornovo
-          MI.ATUALIZADO.Value             := False;
-          MI.ID_ULTIMOLOTE.Value          := 0;
+        SQL.Close;
+        SQL.Prepare;
+        SQL.Params[0].Value      := ArLote[I].idLote; //Passa o ID do Lote
+        SQL.Open;
+        SQL.FetchAll;
 
-          //Verifica ultimo lote para o Produto
-          SQLULTIMOLOTE.Close;
-          SQLULTIMOLOTE.Prepare;
-          SQLULTIMOLOTE.Params[0].Value := idLote; //Passa o IDLOTE
-          SQLULTIMOLOTE.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
-          SQLULTIMOLOTE.Open;
-          if not SQLULTIMOLOTE.IsEmpty then
-            MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
+        if not SQL.IsEmpty then begin
 
-          //Verifica se tem Fornecedor com Custo Menor
-          SQLFORN.Close;
-          SQLFORN.Prepare;
-          SQLFORN.Params[0].Value := idLote; //Passa o IDLOTE
-          SQLFORN.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
-          SQLFORN.Open;
+          M.ID.isNull         := True;
+          M.ID_LOTE.Value     := ArLote[I].idLote;
+          M.DATA_HORA.Value   := Now;
+          M.ID_USUARIO.Value  := USUARIO.CODIGO;
+          M.Insert;
 
-          if not SQLFORN.IsEmpty then begin
+          BarradeProgresso.MaxValue   := SQL.RecordCount;
+          SQL.First;
 
-            AlteraForn := False;
+          while not SQL.Eof do begin
 
-            SQLFORN.First;
-            while not SQLFORN.Eof do begin
-              if SQLFORN.Fields[0].Value = SQL.Fields[2].Value then begin
-                AlteraForn := True;
-                Break;
+            MI.ID.isNull                    := True;
+            MI.ID_MATCH.Value               := M.ID.Value; //id_match
+            MI.ID_PRODUTO.Value             := SQL.Fields[0].Value; //id_produto
+            MI.CUSTOANTERIOR.Value          := SQL.Fields[1].Value; //custoanterior
+            MI.ID_FORNECEDORANTERIOR.Value  := SQL.Fields[2].Value; //id_fornecedoranterior
+            MI.CUSTONOVO.Value              := SQL.Fields[1].Value; //custonovo
+            MI.ID_FORNECEDORNOVO.Value      := SQL.Fields[2].Value; //id_fornecedornovo
+            MI.ATUALIZADO.Value             := False;
+            MI.ID_ULTIMOLOTE.Value          := 0;
+
+            //Verifica ultimo lote para o Produto
+            SQLULTIMOLOTE.Close;
+            SQLULTIMOLOTE.Prepare;
+            SQLULTIMOLOTE.Params[0].Value := ArLote[I].idLote; //Passa o IDLOTE
+            SQLULTIMOLOTE.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
+            SQLULTIMOLOTE.Open;
+            if not SQLULTIMOLOTE.IsEmpty then
+              MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
+
+            //Verifica se tem Fornecedor com Custo Menor
+            SQLFORN.Close;
+            SQLFORN.Prepare;
+            SQLFORN.Params[0].Value := ArLote[I].idLote; //Passa o IDLOTE
+            SQLFORN.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
+            SQLFORN.Open;
+
+            if not SQLFORN.IsEmpty then begin
+
+              AlteraForn := False;
+
+              SQLFORN.First;
+              while not SQLFORN.Eof do begin
+                if SQLFORN.Fields[0].Value = SQL.Fields[2].Value then begin
+                  AlteraForn := True;
+                  Break;
+                end;
+                SQLFORN.Next;
               end;
-              SQLFORN.Next;
+
+              SQLFORN.First;
+              if ((AlteraForn) OR (SQLFORN.Fields[2].Value < SQL.Fields[1].Value)) then begin
+                MI.ID_FORNECEDORNOVO.Value  := SQLFORN.Fields[0].Value;
+                MI.CUSTONOVO.Value          := SQLFORN.Fields[2].Value;
+                MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
+              end;
             end;
 
-            SQLFORN.First;
-            if ((AlteraForn) OR (SQLFORN.Fields[2].Value < SQL.Fields[1].Value)) then begin
-              MI.ID_FORNECEDORNOVO.Value  := SQLFORN.Fields[0].Value;
-              MI.CUSTONOVO.Value          := SQLFORN.Fields[2].Value;
-              MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
+            P.SelectList('ID = ' + MI.ID_PRODUTO.asString);
+            if P.Count > 0 then begin
+              P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
+              P.CUSTOANTERIOR.Value         := TPRODUTO(P.Itens[0]).CUSTOANTERIOR.Value;
+              P.CUSTO.Value                 := TPRODUTO(P.Itens[0]).CUSTO.Value;
+              P.ID_ULTIMOLOTE.Value         := TPRODUTO(P.Itens[0]).ID_ULTIMOLOTE.Value;
+              P.ID_FORNECEDORANTERIOR.Value := TPRODUTO(P.Itens[0]).ID_FORNECEDORANTERIOR.Value;
+              P.ID_FORNECEDORNOVO.Value     := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value;
+
+              //Atualiza o último lote para o produto caso for maior
+              if ArLote[I].idLote > P.ID_ULTIMOLOTE.Value then
+                P.ID_ULTIMOLOTE.Value       := ArLote[I].idLote;
+
+              if MI.ATUALIZADO.Value = True then begin //Caso tenha Match/tenha atualização
+                P.CUSTOANTERIOR.Value         := P.CUSTO.Value;
+                P.ID_FORNECEDORANTERIOR.Value := P.ID_FORNECEDORNOVO.Value;
+                P.CUSTO.Value                 := MI.CUSTONOVO.Value;
+                P.ID_FORNECEDORNOVO.Value     := MI.ID_FORNECEDORNOVO.Value;
+              end;
+
+              P.Update;
             end;
+
+            MI.Insert;
+
+            BarradeProgresso.Progress       := SQL.RecNo + 1;
+            Application.ProcessMessages;
+            SQL.Next;
           end;
 
-          P.SelectList('ID = ' + MI.ID_PRODUTO.asString);
-          if P.Count > 0 then begin
-            P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
-            P.CUSTOANTERIOR.Value         := TPRODUTO(P.Itens[0]).CUSTOANTERIOR.Value;
-            P.CUSTO.Value                 := TPRODUTO(P.Itens[0]).CUSTO.Value;
-            P.ID_ULTIMOLOTE.Value         := TPRODUTO(P.Itens[0]).ID_ULTIMOLOTE.Value;
-            P.ID_FORNECEDORANTERIOR.Value := TPRODUTO(P.Itens[0]).ID_FORNECEDORANTERIOR.Value;
-            P.ID_FORNECEDORNOVO.Value     := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value;
+          FWC.Commit;
 
-            //Atualiza o último lote para o produto caso for maior
-            if idLote > P.ID_ULTIMOLOTE.Value then
-              P.ID_ULTIMOLOTE.Value       := idLote;
-
-            if MI.ATUALIZADO.Value = True then begin //Caso tenha Match/tenha atualização
-              P.CUSTOANTERIOR.Value         := P.CUSTO.Value;
-              P.ID_FORNECEDORANTERIOR.Value := P.ID_FORNECEDORNOVO.Value;
-              P.CUSTO.Value                 := MI.CUSTONOVO.Value;
-              P.ID_FORNECEDORNOVO.Value     := MI.ID_FORNECEDORNOVO.Value;
-            end;
-
-            P.Update;
-          end;
-
-          MI.Insert;
-
-          BarradeProgresso.Progress       := SQL.RecNo + 1;
-          Application.ProcessMessages;
-          SQL.Next;
+        end else begin
+          DisplayMsg(MSG_WAR, 'Não há Dados de Importação para o Lote ' + IntToStr(ArLote[I].idLote) + sLineBreak + 'O Match não será gerado, Verifique!');
+          Exit;
         end;
-
-        FWC.Commit;
-
-        DisplayMsg(MSG_INF, 'Match gerado com Sucesso!');
       end;
+
+      DisplayMsg(MSG_INF, 'Geração de Match Concluído com Sucesso!');
 
     except
       on E : Exception do Begin
