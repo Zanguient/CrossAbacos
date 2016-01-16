@@ -29,8 +29,6 @@ object frmSeleciona: TfrmSeleciona
     Color = clWhite
     ParentBackground = False
     TabOrder = 0
-    ExplicitWidth = 656
-    ExplicitHeight = 351
     object GroupBox1: TGroupBox
       Left = 0
       Top = 0
@@ -45,7 +43,6 @@ object frmSeleciona: TfrmSeleciona
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 656
       DesignSize = (
         672
         57)
@@ -62,8 +59,6 @@ object frmSeleciona: TfrmSeleciona
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        OnKeyDown = edPesquisaKeyDown
-        ExplicitWidth = 426
       end
       object btSelecionar: TBitBtn
         Left = 562
@@ -597,7 +592,6 @@ object frmSeleciona: TfrmSeleciona
         ParentFont = False
         TabOrder = 1
         OnClick = btSelecionarClick
-        ExplicitLeft = 546
       end
       object btBuscar: TBitBtn
         Left = 454
@@ -1130,7 +1124,6 @@ object frmSeleciona: TfrmSeleciona
         ParentFont = False
         TabOrder = 2
         OnClick = btBuscarClick
-        ExplicitLeft = 438
       end
     end
     object dgSeleciona: TDBGrid
@@ -1146,6 +1139,7 @@ object frmSeleciona: TfrmSeleciona
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       ParentFont = False
       TabOrder = 1
       TitleFont.Charset = DEFAULT_CHARSET
@@ -1153,6 +1147,7 @@ object frmSeleciona: TfrmSeleciona
       TitleFont.Height = -20
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
+      OnDblClick = dgSelecionaDblClick
     end
   end
   object csSeleciona: TClientDataSet

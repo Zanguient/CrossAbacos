@@ -10,7 +10,7 @@ uses
 
 type
   TfrmGeraMatch = class(TForm)
-    pnBotoesVisualizacao: TPanel;
+    pnBotoes: TPanel;
     btSair: TSpeedButton;
     pnPrincipal: TPanel;
     IMFundo: TImage;
@@ -105,7 +105,7 @@ begin
   try
     try
 
-      L.SelectList('','ID DESC LIMIT 10');
+      L.SelectList('ID > 0','ID DESC LIMIT 10');
 
       cbLoteImportacao.Items.Clear;
 
@@ -500,10 +500,8 @@ begin
 
           FWC.Commit;
 
-        end else begin
+        end else
           DisplayMsg(MSG_WAR, 'Não há Dados de Importação para o Lote ' + IntToStr(ArLote[I].idLote) + sLineBreak + 'O Match não será gerado, Verifique!');
-          Exit;
-        end;
       end;
 
       DisplayMsg(MSG_INF, 'Geração de Match Concluído com Sucesso!');

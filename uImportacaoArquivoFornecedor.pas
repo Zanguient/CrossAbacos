@@ -49,6 +49,7 @@ type
     Label3: TLabel;
     IMFundo: TImage;
     pgProdutos: TGauge;
+    btLimpar: TSpeedButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btNovoLoteClick(Sender: TObject);
@@ -70,6 +71,7 @@ type
     procedure cbFiltroChange(Sender: TObject);
     procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure BitBtn1Click(Sender: TObject);
+    procedure btLimparClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -254,6 +256,12 @@ begin
   end;
 end;
 
+procedure TfrmImportacaoArquivoFornecedor.btLimparClick(Sender: TObject);
+begin
+  limpaCampos;
+  bloqueioSalvar(0);
+end;
+
 procedure TfrmImportacaoArquivoFornecedor.btNovoLoteClick(Sender: TObject);
 begin
   try
@@ -276,26 +284,37 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.btSalvarClick(Sender: TObject);
 var
-  IMPORTACAO    : TIMPORTACAO;
-  ITENS         : TIMPORTACAO_ITENS;
-  CON           : TFWConnection;
-  PROD          : TPRODUTO;
-  PRODFOR       : TPRODUTOFORNECEDOR;
-  I             : Integer;
+  IMPORTACAO : TIMPORTACAO;
+  ITENS      : TIMPORTACAO_ITENS;
+  CON        : TFWConnection;
+  PROD       : TPRODUTO;
+  PRODFOR    : TPRODUTOFORNECEDOR;
+  I,
+  idLote     : Integer;
 begin
+
+  idLote := StrToIntDef(Copy(cbLote.Items[cbLote.ItemIndex], 1, (Pos(' - ', cbLote.Items[cbLote.ItemIndex]) -1)),-1);
+
+  if idLote = -1 then begin
+    DisplayMsg(MSG_WAR, 'Não há Lote Selecionado, Verifique!');
+    Exit;
+  end;
+
   CON                                := TFWConnection.Create;
   IMPORTACAO                         := TIMPORTACAO.Create(CON);
   ITENS                              := TIMPORTACAO_ITENS.Create(CON);
   PROD                               := TPRODUTO.Create(CON);
   PRODFOR                            := TPRODUTOFORNECEDOR.Create(CON);
   csProdutos.DisableControls;
+
   DisplayMsg(MSG_WAIT, 'Gravando dados no banco de dados!');
+
   try
     CON.StartTransaction;
     try
       IMPORTACAO.DATA_HORA.Value       := Now;
       IMPORTACAO.ID_FORNECEDOR.Value   := StrToInt(edFornecedor.Text);
-      IMPORTACAO.ID_LOTE.Value         := StrToInt(Copy(cbLote.Text, 1, Pos('-', cbLote.Text) - 1));
+      IMPORTACAO.ID_LOTE.Value         := idLote;
       IMPORTACAO.ID_USUARIO.Value      := USUARIO.CODIGO;
       IMPORTACAO.Insert;
 
@@ -388,10 +407,10 @@ begin
   CON                 := TFWConnection.Create;
   LOTE                := TLOTE.Create(CON);
   try
-    LOTE.SelectList('','ID DESC LIMIT 5');
+    LOTE.SelectList('ID > 0','ID DESC LIMIT 5');
     cbLote.Clear;
     for I := 0 to Pred(LOTE.Count) do
-      cbLote.Items.Add(TLOTE(LOTE.Itens[I]).ID.asString +'-'+ FormatDateTime('dd/mm/yyyy', TLOTE(LOTE.Itens[I]).DATA_HORA.Value));
+      cbLote.Items.Add(TLOTE(LOTE.Itens[I]).ID.asString + ' - ' + FormatDateTime('dd/mm/yyyy', TLOTE(LOTE.Itens[I]).DATA_HORA.Value));
     cbLote.ItemIndex  := 0;
   finally
     FreeAndNil(LOTE);
@@ -492,12 +511,7 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.FormCreate(Sender: TObject);
 begin
-  Self.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.ClientWidth  := Application.MainForm.ClientWidth;
-  Self.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.Width        := Application.MainForm.ClientWidth;
-  Self.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
-  Self.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+  AjustaForm(Self);
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.FormKeyDown(Sender: TObject;
@@ -532,6 +546,8 @@ begin
   edFornecedor.Text                             := '';
   edNomeFornecedor.Text                         := '';
   edArquivo.Text                                := '';
+  if cbLote.CanFocus then
+    cbLote.SetFocus;
 end;
 
 end.

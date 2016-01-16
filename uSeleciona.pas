@@ -22,13 +22,12 @@ type
     btBuscar: TBitBtn;
     procedure csSelecionaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure btBuscarClick(Sender: TObject);
-    procedure edPesquisaKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure btSelecionarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure dgSelecionaDblClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,7 +35,8 @@ type
     FTabelaPai : TFWPersistence;
     Retorno    : TEdit;
     procedure SelecionaDados(CriaCampos : Boolean);
-    procedure filter;
+    procedure Filter;
+    procedure Seleciona;
   end;
 
 var
@@ -55,7 +55,7 @@ end;
 
 procedure TfrmSeleciona.btSelecionarClick(Sender: TObject);
 begin
-  Retorno.Text    := csSeleciona.Fields[0].AsString;
+  Seleciona;
 end;
 
 procedure TfrmSeleciona.csSelecionaFilterRecord(DataSet: TDataSet;
@@ -72,14 +72,12 @@ begin
   end;
 end;
 
-procedure TfrmSeleciona.edPesquisaKeyDown(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
+procedure TfrmSeleciona.dgSelecionaDblClick(Sender: TObject);
 begin
-  if Key = VK_RETURN then
-    filter;
+  Seleciona;
 end;
 
-procedure TfrmSeleciona.filter;
+procedure TfrmSeleciona.Filter;
 begin
   csSeleciona.Filtered := False;
   csSeleciona.Filtered := Length(edPesquisa.Text) > 0;
@@ -104,8 +102,35 @@ end;
 procedure TfrmSeleciona.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if key = VK_ESCAPE then
-    ModalResult := mrAbort;
+
+  case Key of
+    VK_ESCAPE : Close;
+    VK_RETURN : begin
+      if edPesquisa.Focused then
+        Filter
+      else begin
+        if dgSeleciona.Focused then begin
+          if not csSeleciona.IsEmpty then begin
+            Seleciona;
+            Close;
+          end;
+        end;
+      end;
+    end;
+    VK_UP : begin
+      if not csSeleciona.IsEmpty then begin
+        if csSeleciona.RecNo > 1 then
+          csSeleciona.Prior;
+      end;
+    end;
+    VK_DOWN : begin
+      if not csSeleciona.IsEmpty then begin
+        if csSeleciona.RecNo < csSeleciona.RecordCount then
+          csSeleciona.Next;
+      end;
+    end;
+  end;
+
 end;
 
 procedure TfrmSeleciona.FormShow(Sender: TObject);
@@ -118,6 +143,11 @@ begin
     PostMessage(Self.Handle, WM_CLOSE, 0, 0);
   end;
 
+end;
+
+procedure TfrmSeleciona.Seleciona;
+begin
+  Retorno.Text    := csSeleciona.Fields[0].AsString;
 end;
 
 procedure TfrmSeleciona.SelecionaDados(CriaCampos: Boolean);

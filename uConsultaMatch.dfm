@@ -36,7 +36,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     Font.Style = []
     ParentBackground = False
     ParentFont = False
-    TabOrder = 0
+    TabOrder = 3
   end
   object pnBotoesVisualizacao: TPanel
     AlignWithMargins = True
@@ -47,7 +47,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     Align = alBottom
     Color = clWhite
     ParentBackground = False
-    TabOrder = 1
+    TabOrder = 2
     DesignSize = (
       872
       60)
@@ -468,7 +468,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     Width = 872
     Height = 219
     Align = alTop
-    TabOrder = 2
+    TabOrder = 0
     object pnFiltro: TPanel
       AlignWithMargins = True
       Left = 4
@@ -476,7 +476,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       Width = 864
       Height = 43
       Align = alBottom
-      TabOrder = 0
+      TabOrder = 4
       object btFiltrar: TSpeedButton
         AlignWithMargins = True
         Left = 803
@@ -521,7 +521,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       Width = 140
       Height = 162
       Align = alRight
-      TabOrder = 1
+      TabOrder = 3
       object btConsultar: TSpeedButton
         AlignWithMargins = True
         Left = 5
@@ -1101,7 +1101,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       Width = 277
       Height = 162
       Align = alLeft
-      TabOrder = 3
+      TabOrder = 0
       object btBuscarMatch: TSpeedButton
         AlignWithMargins = True
         Left = 140
@@ -1875,7 +1875,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       Font.Style = []
       Options = [dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       ParentFont = False
-      TabOrder = 4
+      TabOrder = 1
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -16
@@ -1920,6 +1920,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     Top = 276
     Width = 872
     Height = 206
+    TabStop = False
     Align = alClient
     Color = clMoneyGreen
     DataSource = ds_MatchItens
@@ -1931,7 +1932,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     Font.Style = []
     Options = [dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -16

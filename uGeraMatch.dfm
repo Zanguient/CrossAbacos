@@ -61,7 +61,7 @@ object frmGeraMatch: TfrmGeraMatch
       ExplicitTop = 213
       ExplicitWidth = 757
     end
-    object pnBotoesVisualizacao: TPanel
+    object pnBotoes: TPanel
       AlignWithMargins = True
       Left = 4
       Top = 372
@@ -69,7 +69,8 @@ object frmGeraMatch: TfrmGeraMatch
       Height = 60
       Align = alBottom
       Color = clWhite
-      TabOrder = 0
+      TabOrder = 2
+      TabStop = True
       object btSair: TSpeedButton
         AlignWithMargins = True
         Left = 623
@@ -399,7 +400,7 @@ object frmGeraMatch: TfrmGeraMatch
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
-          TabOrder = 0
+          TabOrder = 1
         end
         object Panel7: TPanel
           AlignWithMargins = True
@@ -410,7 +411,7 @@ object frmGeraMatch: TfrmGeraMatch
           Align = alBottom
           BevelOuter = bvNone
           Color = clWhite
-          TabOrder = 1
+          TabOrder = 0
           object btExportarEstoque: TSpeedButton
             AlignWithMargins = True
             Left = 236
@@ -550,6 +551,7 @@ object frmGeraMatch: TfrmGeraMatch
             'Ambos')
           ParentFont = False
           TabOrder = 2
+          TabStop = True
         end
       end
     end
@@ -589,7 +591,7 @@ object frmGeraMatch: TfrmGeraMatch
         item
           Value = 100.000000000000000000
         end>
-      TabOrder = 2
+      TabOrder = 0
       object Panel8: TPanel
         Left = 1
         Top = 1

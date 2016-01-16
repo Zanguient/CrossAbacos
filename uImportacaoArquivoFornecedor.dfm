@@ -67,9 +67,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       ExplicitTop = 441
     end
     object gbSelecionaLote: TGroupBox
-      Left = 0
-      Top = 0
-      Width = 733
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 727
       Height = 60
       Align = alTop
       Caption = '  Selecione o Lote de importa'#231#227'o  '
@@ -83,13 +84,13 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       object cbLote: TComboBox
         Left = 8
         Top = 26
-        Width = 227
+        Width = 202
         Height = 27
         Style = csDropDownList
         TabOrder = 0
       end
       object btNovoLote: TBitBtn
-        Left = 244
+        Left = 216
         Top = 17
         Width = 99
         Height = 39
@@ -210,12 +211,13 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Height = 75
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 5
       object GridPanel1: TGridPanel
-        Left = 0
-        Top = 0
-        Width = 733
-        Height = 75
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 727
+        Height = 69
         Align = alClient
         BevelOuter = bvNone
         ColumnCollection = <
@@ -242,10 +244,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
           end>
         TabOrder = 0
         object btSalvar: TBitBtn
-          Left = 291
+          Left = 288
           Top = 0
           Width = 75
-          Height = 75
+          Height = 69
           Align = alRight
           Caption = 'Salvar'
           Glyph.Data = {
@@ -384,10 +386,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
           OnClick = btSalvarClick
         end
         object btSair: TBitBtn
-          Left = 366
+          Left = 363
           Top = 0
           Width = 75
-          Height = 75
+          Height = 69
           Align = alLeft
           Caption = 'Sair'
           Glyph.Data = {
@@ -454,9 +456,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       end
     end
     object gbSelecionaFornecedor: TGroupBox
-      Left = 0
-      Top = 60
-      Width = 733
+      AlignWithMargins = True
+      Left = 3
+      Top = 69
+      Width = 727
       Height = 52
       Align = alTop
       Caption = '  Selecione o Fornecedor  '
@@ -466,9 +469,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 1
       DesignSize = (
-        733
+        727
         52)
       object lbFornecedor: TLabel
         Left = 167
@@ -479,7 +482,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       object edFornecedor: TButtonedEdit
         Left = 8
         Top = 21
-        Width = 153
+        Width = 202
         Height = 27
         Images = ImageList1
         RightButton.ImageIndex = 1
@@ -490,9 +493,9 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         OnRightButtonClick = edFornecedorRightButtonClick
       end
       object edNomeFornecedor: TEdit
-        Left = 167
+        Left = 216
         Top = 21
-        Width = 554
+        Width = 499
         Height = 27
         Anchors = [akLeft, akTop, akRight]
         Enabled = False
@@ -506,9 +509,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       end
     end
     object gbSelecionaArquivo: TGroupBox
-      Left = 0
-      Top = 112
-      Width = 733
+      AlignWithMargins = True
+      Left = 3
+      Top = 127
+      Width = 727
       Height = 51
       Align = alTop
       Caption = '  Selecione o Arquivo a Importar  '
@@ -518,14 +522,14 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 2
       DesignSize = (
-        733
+        727
         51)
       object edArquivo: TButtonedEdit
         Left = 8
         Top = 20
-        Width = 713
+        Width = 707
         Height = 27
         Anchors = [akLeft, akTop, akRight]
         Font.Charset = DEFAULT_CHARSET
@@ -544,34 +548,37 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       end
     end
     object gbImportar: TGroupBox
-      Left = 0
-      Top = 163
-      Width = 733
+      AlignWithMargins = True
+      Left = 3
+      Top = 184
+      Width = 727
       Height = 62
       Align = alTop
       Caption = '  Importar  '
-      TabOrder = 4
+      TabOrder = 3
       DesignSize = (
-        733
+        727
         62)
       object Label1: TLabel
-        Left = 473
+        Left = 467
         Top = 11
         Width = 106
         Height = 19
         Anchors = [akTop, akRight]
         Caption = 'Registro Atual:'
+        ExplicitLeft = 473
       end
       object Label2: TLabel
-        Left = 586
+        Left = 580
         Top = 11
         Width = 134
         Height = 19
         Anchors = [akTop, akRight]
         Caption = 'Total de Registros:'
+        ExplicitLeft = 586
       end
       object Label3: TLabel
-        Left = 281
+        Left = 275
         Top = 11
         Width = 118
         Height = 19
@@ -583,6 +590,121 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+        ExplicitLeft = 281
+      end
+      object btLimpar: TSpeedButton
+        AlignWithMargins = True
+        Left = 111
+        Top = 21
+        Width = 103
+        Height = 39
+        Caption = '&Limpar'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Glyph.Data = {
+          360C0000424D360C000000000000360000002800000020000000200000000100
+          180000000000000C0000C40E0000C40E00000000000000000000FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFEFEFEFDFDFDFDFDFDFCFCFCFCFCFCFDFDFDFDFDFDFE
+          FEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFC
+          FCF8F8F8F4F4F4F2F2F2EFEFEFEEEEEEECECECECECECECECECECECECEDEDEDEE
+          EEEEF0F0F0F4F4F4F9F9F9FCFCFCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFEFEF9F9F9F4F4F4F0F0
+          F0ECECECE9E9E9E6E6E6E3E3E3E1E1E1DFDFDFDEDEDEDEDEDEDFDFDFE0E0E0E2
+          E2E2E4E4E4E7E7E7EBEBEBEEEEEEF2F2F2F8F8F8FEFEFEFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF6F6F6F1F1F1ECECECE8E8
+          E8A6D1DA23ABCA25ABC85DB8CDA3C9D1D0D1D2D1D1D1D1D1D1D2D2D2D3D3D3D6
+          D6D6D9D9D9DDDDDDE1E1E1E6E6E6EAEAEAEFEFEFF4F4F4FBFBFBFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFCF7F7F7F2F2F2ECECECE7E7E7C0D8
+          DD0BA4C65CCBDF51BFD748C5DC1CABCB08A2C452AFC4A6BEC3C5C5C5C8C8C8CC
+          CCCCD0D0D0D5D5D5DADADADFDFDFE4E4E4EAEAEAEFEFEFF4F4F4FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF5F5F5F0F0F0EAEAEAE4E5E526AC
+          CA43C8DD75CFE144CCE061D1E40CA6C778D8E757CADD04A0C536AAC2A2BCC2C7
+          C7C7CCCCCCD2D2D2D7D7D7DDDDDDE2E2E2E8E8E8EDEDEDF3F3F3FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCFCFCF6F6F6F1F1F1ECECEC90CBD923B2
+          CF77D6E70EB4D13ACDE008A5C818C1DA60D9E839BED63DBCD658CBDF0AA4C740
+          AEC6C5CDCED4D4D4D9D9D9DEDEDEE4E4E4E9E9E9EEEEEEF4F4F4FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFAFAF5F5F5EFF0F01AABCA57D1
+          E33DC0D807BED728BCD607B1D140D5E848CFE302A4C647D1E352C9DD13A9CB2B
+          B8D212A7C7ABCED6DFDFDFE4E4E4E9E9E9EEEEEEF3F3F3F8F8F8FFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBB3DFE921B2CF64D5
+          E606B4D119C8E109AACC1ACDE75DDEEF13ADCD1CC0DA42C8DD03A5C81CC4DB89
+          E2EE6CD5E50EA5C866C0D4ECECECF0F0F0F5F5F5F9F9F9FEFEFEFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF54C1D840C7DC38C8
+          DD0BC1DC13C1DC12BDDB35DBF03BCAE307ABCD42D1E50CA7CA02BBD533CDE050
+          D4E43CC0D916AAC930B4D16FC8DBF9FAFAFEFEFEFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFEFF0CA6C864D8E71BC2
+          DB19CFE814BDDA25D4EE41DFF306A6C92ACDE523B8D401B4D221C9DE47D0E20E
+          ADCD1FB4D195E3EE9EE3EE0FA6C799D9E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD4EFF519ADCC6FDDEB15C7
+          E225D6EE1BC3E036E3FA21C7E213B9D731C9E208B4D213C4DC3ECCE007ACCC31
+          C1D897E4EF73D2E21FADCCACE0ECFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA1DCE92DB9D461DCED23D4
+          ED2BD8F02FD4EE3CDFF714B7D72FD6EE16BBD813C9DF30C8DD04AFCE3BC8DD9A
+          E4EE48BED663C6DCF6FCFDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FCFE23BC4DC5AE0F131E0
+          F834D7F048E2F830CBE72DD1EC20C8E41ACBE428C8DF03B3D048CEE191E0EC2E
+          B2D0A3DDEAFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF64C6DC48CDE15AE5F63EE4
+          FC46DCF354E1F737CFE937DCF423D0EA23CEE506B9D44AD1E285DCE921ADCDC8
+          EBF2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDADAE958B5D24DCFE565EAFC4EE6
+          FC5FE6F953DBF04EE3F733DBF425D7EE14C6DE50D3E474D5E61FADCCD7F0F6FF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB5B5D30A0B740107700D5AA08EE8F889EF
+          FE7AEDFD64E5F950E6FC35E3F92AD5EC63DBEA5CCDDF25AFCEE4F5F9FFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF1F1F800000AA0000B7020889020E754E92
+          C1B4F5FE7AEEFD48E7FD4DE4F778E2F144C1D937B7D2EFF9FBFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFF1FAFC0913780003950000BF1010CD1F1FC00A11
+          810C298671BDDC91F0FD6EDBED29B2D05EC4DBF9FDFEFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFC0E8F005A2C521A4C71741930309751011AE3333E34B4B
+          F43031BF030872053E902EB1CFB5E3EEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFF8CD4E402A1C42CBFD75DDCED4DAFD41124841016884545
+          DF4747EE2B2BD20E0E7BBCBCD8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFDBF2F7179FC310A5C864DAED8EEFFC5193C40D13
+          79181C991A1AB20D0D74EEEEF5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFABC7DA13669A228EBE099FC526B2D283E5F495E5
+          F4174F9915197BAEAED0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFE2ECF21063964292C22E89C1167AB7188FBD059FC346C5
+          DD0FA7C8E0F3F8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFDFEFE387DA93E8CBB5DA7D5107CBF3990C72378AE5192B770CB
+          DF00A0C4FCFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFF85B0CA2A78A88DC1E12186C51982C362A9D4116498CEDFE9FFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFCCDEE912649890C0DE3F92C60F7BBF51A0D14B95C4367DA8FFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFF4787B05FA0C71E6D9E19689A12689E97C6E32372A4B1CCDCFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFF0E62967AB0D12873A0ECEEEE19689A6BA7CD1D6C9DFDFEFEFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFF1E6D9E93C1DE16699D1264972F79A73580AE9ABDD3FFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFF7BA9C63884B29DC7E28FBEDB5497C02570A0F6F9FBFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFF8FAFC5B94B813659817679A5F97BAEAF1F6FFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+        ParentFont = False
+        OnClick = btLimparClick
       end
       object btImportar: TBitBtn
         Left = 2
@@ -658,7 +780,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         OnClick = btImportarClick
       end
       object edTotalRegistros: TEdit
-        Left = 586
+        Left = 580
         Top = 32
         Width = 135
         Height = 27
@@ -670,10 +792,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 3
       end
       object edRegistroAtual: TEdit
-        Left = 473
+        Left = 467
         Top = 32
         Width = 107
         Height = 27
@@ -688,7 +810,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         TabOrder = 2
       end
       object cbFiltro: TComboBox
-        Left = 281
+        Left = 275
         Top = 32
         Width = 186
         Height = 27
@@ -701,7 +823,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         Font.Style = []
         ItemIndex = 0
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 1
         Text = 'Todos'
         OnChange = cbFiltroChange
         Items.Strings = (
@@ -711,10 +833,11 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       end
     end
     object dgProdutos: TDBGrid
-      Left = 0
-      Top = 225
-      Width = 733
-      Height = 212
+      AlignWithMargins = True
+      Left = 3
+      Top = 252
+      Width = 727
+      Height = 182
       Align = alClient
       Color = clMoneyGreen
       DataSource = dsProdutos
@@ -726,7 +849,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -20
@@ -765,7 +888,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800900010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
