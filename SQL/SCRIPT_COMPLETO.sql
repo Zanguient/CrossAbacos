@@ -90,6 +90,8 @@ create table if not exists produtofornecedor (
   cod_prod_fornecedor varchar(100) not null,
   id_produto int not null,
   id_fornecedor int not null,
+  custo numeric(18,2),
+  id_ultimolote integer,
   primary key (id),
   constraint fk_produtofornecedor_produto1
     foreign key (id_produto)
@@ -132,7 +134,6 @@ create table if not exists importacao_itens (
   id_importacao int not null,
   id_produto int not null,
   status smallint not null,
-  custo_dia_e10 decimal(18,2) not null,
   primary key (id),
   constraint fk_importacao_itens_importacao1
     foreign key (id_importacao)
@@ -142,8 +143,8 @@ create table if not exists importacao_itens (
   constraint fk_importacao_itens_produto1
     foreign key (id_produto)
     references produto (id)
-    on delete no action
-    on update no action);
+    on delete restrict
+    on update cascade);
 
 CREATE TABLE if not exists match
 ( 

@@ -15,9 +15,6 @@ type
   end;
   TfrmImportacaoArquivoFornecedor = class(TForm)
     pnPrincipal: TPanel;
-    gbSelecionaLote: TGroupBox;
-    cbLote: TComboBox;
-    btNovoLote: TBitBtn;
     pnBotton: TPanel;
     GridPanel1: TGridPanel;
     btSalvar: TBitBtn;
@@ -50,9 +47,12 @@ type
     IMFundo: TImage;
     pgProdutos: TGauge;
     btLimpar: TSpeedButton;
+    csProdutosID_PRODUTO: TIntegerField;
+    gbSelecionaLote: TGroupBox;
+    cbLote: TComboBox;
+    csProdutosID_PRODUTOFORNECEDOR: TIntegerField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
-    procedure btNovoLoteClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btSairClick(Sender: TObject);
     procedure edFornecedorRightButtonClick(Sender: TObject);
@@ -70,7 +70,6 @@ type
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure cbFiltroChange(Sender: TObject);
     procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure BitBtn1Click(Sender: TObject);
     procedure btLimparClick(Sender: TObject);
   private
     { Private declarations }
@@ -95,11 +94,6 @@ uses uDMUtil, uBeanLoteImportacao, uFWConnection, uMensagem, uBeanFornecedor,
 procedure TfrmImportacaoArquivoFornecedor.atualizaTotal;
 begin
   edTotalRegistros.Text     := IntToStr(csProdutos.RecordCount);
-end;
-
-procedure TfrmImportacaoArquivoFornecedor.BitBtn1Click(Sender: TObject);
-begin
-  DMUtil.ImprimirRelatorio('frMatch.fr3');
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.bloqueioSalvar(Status : Integer = 0);
@@ -162,9 +156,12 @@ begin
   btImportar.Tag                       := 0;
   try
     buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
+
     XLSAplicacao := CreateOleObject('Excel.Application');
+
     csProdutos.DisableControls;
     pgProdutos.Progress                             := 0;
+
     try
       XLSAplicacao.Visible                          := False;
       // Abre o Workbook
@@ -220,7 +217,9 @@ begin
                 csProdutos.Cancel
               else begin
                 if csProdutosSKU.Value = '' then
-                  btImportar.Tag                    := 1;;
+                  btImportar.Tag                    := 1;
+                if csProdutosCUSTO.Value = 0 then
+                  csProdutosDISPONIVEL.Value        := 0;
                 csProdutos.Post;
               end;
               Break;
@@ -260,21 +259,6 @@ procedure TfrmImportacaoArquivoFornecedor.btLimparClick(Sender: TObject);
 begin
   limpaCampos;
   bloqueioSalvar(0);
-end;
-
-procedure TfrmImportacaoArquivoFornecedor.btNovoLoteClick(Sender: TObject);
-begin
-  try
-    DisplayMsg(MSG_WAIT, 'Gravando lote...');
-    GerarLoteImportacao;
-    carregaLotes;
-    DisplayMsgFinaliza;
-  except
-    on E : Exception do begin
-      DisplayMsg(MSG_WAR, 'Erro ao incluir lote!', '', E.Message);
-      Exit;
-    end;
-  end;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btSairClick(Sender: TObject);
@@ -321,26 +305,24 @@ begin
       csProdutos.First;
       while not csProdutos.Eof do begin
         if csProdutosSKU.Value <> '' then begin
-          PROD.SelectList('sku = ' + QuotedStr(csProdutosSKU.AsString));
-          if PROD.Count > 0 then begin
-            ITENS.ID_IMPORTACAO.Value  := IMPORTACAO.ID.Value;
-            ITENS.ID_PRODUTO.Value     := TPRODUTO(PROD.Itens[0]).ID.Value;
-            ITENS.CUSTO.Value          := csProdutosCUSTO.Value;
-            ITENS.QUANTIDADE.Value     := csProdutosDISPONIVEL.Value;
-            ITENS.CUSTO_DIA_E10.Value  := 0;
-            if not (TPRODUTO(PROD.Itens[0]).CUSTO.isNull) then
-              ITENS.CUSTO_DIA_E10.Value:= TPRODUTO(PROD.Itens[0]).CUSTO.Value;
-            ITENS.STATUS.Value         := csProdutosSTATUS.Value;
+          ITENS.ID_IMPORTACAO.Value    := IMPORTACAO.ID.Value;
+          ITENS.ID_PRODUTO.Value       := csProdutosID_PRODUTO.Value;
+          ITENS.CUSTO.Value            := csProdutosCUSTO.Value;
+          ITENS.QUANTIDADE.Value       := csProdutosDISPONIVEL.Value;
+          ITENS.STATUS.Value           := csProdutosSTATUS.Value;
 
-            ITENS.Insert;
-          end;
+          ITENS.Insert;
+
+          PRODFOR.ID.Value             := csProdutosID_PRODUTOFORNECEDOR.Value;
+          PRODFOR.ID_ULTIMOLOTE.Value  := idLote;
+          PRODFOR.CUSTO.Value          := csProdutosCUSTO.Value;
         end;
         csProdutos.Next;
       end;
       CON.Commit;
       bloqueioSalvar(0);
       limpaCampos;
-      DisplayMsg(MSG_OK, 'Sucesso!');
+      DisplayMsg(MSG_OK, 'Dados gravados com sucesso!');
     except
       on E : Exception do begin
         CON.Rollback;
@@ -376,7 +358,9 @@ begin
     for I := 0 to Pred(PRODFOR.Count) do begin
       csProdutos.Append;
       csProdutosCODIGO.Value                        := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).COD_PROD_FORNECEDOR.Value;
-      PROD.SelectList('id = ' + TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID_PRODUTO.asSQL);
+      csProdutosID_PRODUTO.Value                    := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID_PRODUTO.Value;
+      csProdutosID_PRODUTOFORNECEDOR.Value          := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID.Value;
+      PROD.SelectList('id = ' + csProdutosID_PRODUTO.asString);
       if PROD.Count > 0 then begin
         csProdutosSKU.Value                         := TPRODUTO(PROD.Itens[0]).SKU.Value;
         csProdutosNOME.Value                        := TPRODUTO(PROD.Itens[0]).NOME.Value;

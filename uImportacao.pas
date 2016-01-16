@@ -464,6 +464,9 @@ begin
 
             mnImportaProdutoFornecedor.Lines.Add('Código: ' + FORPROD.COD_PROD_FORNECEDOR.asString + ' - alterado com sucesso!');
           end else begin
+            FORPROD.ID_ULTIMOLOTE.Value                                        := 0;
+            FORPROD.CUSTO.Value                                                := 0.00;
+
             FORPROD.Insert;
 
             SetLength(arrInsert, Length(arrInsert) + 1);
