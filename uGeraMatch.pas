@@ -221,9 +221,12 @@ Begin
 
         Consulta.First;
         While not Consulta.Eof do Begin
-          PLANILHA.Cells[Linha,1] := Consulta.FieldByName('SKU').AsString; //SKU
-          PLANILHA.Cells[linha,2] := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
-          PLANILHA.Cells[Linha,3] := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
+          PLANILHA.Cells[Linha,1].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,2].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,3].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,1]               := Consulta.FieldByName('SKU').AsString; //SKU
+          PLANILHA.Cells[linha,2]               := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
+          PLANILHA.Cells[Linha,3]               := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
           Linha := Linha + 1;
           BarradeProgresso.Progress := Consulta.RecNo;
           Consulta.Next;
