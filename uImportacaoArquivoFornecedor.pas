@@ -316,6 +316,8 @@ begin
           PRODFOR.ID.Value             := csProdutosID_PRODUTOFORNECEDOR.Value;
           PRODFOR.ID_ULTIMOLOTE.Value  := idLote;
           PRODFOR.CUSTO.Value          := csProdutosCUSTO.Value;
+          PRODFOR.QUANTIDADE.Value     := csProdutosDISPONIVEL.Value;
+          PRODFOR.Update;
         end;
         csProdutos.Next;
       end;
