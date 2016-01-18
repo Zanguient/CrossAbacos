@@ -59,7 +59,9 @@ uses
   uBeanLoteImportacao,
   uBeanProduto,
   uBeanMatch,
-  uConstantes, uBeanMatch_Itens;
+  uConstantes,
+  uBeanMatch_Itens,
+  uBeanProdutoFornecedor;
 
 {$R *.dfm}
 
@@ -294,20 +296,21 @@ Var
   M             : TMATCH;
   MI            : TMATCH_ITENS;
   P             : TPRODUTO;
+  PF            : TPRODUTOFORNECEDOR;
   SQL           : TFDQuery;
   SQLFORN       : TFDQuery;
   SQLULTIMOLOTE : TFDQuery;
-  I             : Integer;
+  I, J          : Integer;
   ArLote        : array of TArLote;
   idLoteAnterior,
   idLote        : Integer;
-  AlteraForn    : Boolean;
 begin
 
   FWC           := TFWConnection.Create;
   M             := TMATCH.Create(FWC);
   MI            := TMATCH_ITENS.Create(FWC);
   P             := TPRODUTO.Create(FWC);
+  PF            := TPRODUTOFORNECEDOR.Create(FWC);
   SQL           := TFDQuery.Create(nil);
   SQLFORN       := TFDQuery.Create(nil);
   SQLULTIMOLOTE := TFDQuery.Create(nil);
@@ -355,23 +358,6 @@ begin
       SetLength(ArLote, Length(ArLote) + 1);
       ArLote[High(ArLote)].idLote := idLote;
 
-      //SQL FORNECEDOR
-      SQLFORN.Close;
-      SQLFORN.SQL.Clear;
-      SQLFORN.SQL.Add('SELECT');
-      SQLFORN.SQL.Add('	F.ID,');
-      SQLFORN.SQL.Add('	F.NOME,');
-      SQLFORN.SQL.Add('	IMPI.CUSTO AS CUSTOATUAL');
-      SQLFORN.SQL.Add('FROM LOTE L INNER JOIN IMPORTACAO IMP ON (IMP.ID_LOTE = L.ID)');
-      SQLFORN.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMPI.ID_IMPORTACAO = IMP.ID)');
-      SQLFORN.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
-      SQLFORN.SQL.Add('WHERE L.ID = :IDLOTE AND IMPI.ID_PRODUTO = :IDPRODUTO AND IMPI.CUSTO > 0');
-      SQLFORN.SQL.Add('AND IMPI.QUANTIDADE > 0');
-      SQLFORN.SQL.Add('ORDER BY IMPI.CUSTO ASC');
-      SQLFORN.Params[0].DataType := ftInteger;
-      SQLFORN.Params[1].DataType := ftInteger;
-      SQLFORN.Connection  := FWC.FDConnection;
-
       //SQL DO ÚLTIMO LOTE
       SQLULTIMOLOTE.Close;
       SQLULTIMOLOTE.SQL.Clear;
@@ -390,9 +376,8 @@ begin
       SQL.SQL.Add('SELECT');
       SQL.SQL.Add('P.ID,');
       SQL.SQL.Add('P.CUSTO,');
-      SQL.SQL.Add('COALESCE(F.ID,0) AS ID_FORNECEDOR');
+      SQL.SQL.Add('P.ID_FORNECEDORNOVO AS ID_FORNECEDOR');
       SQL.SQL.Add('FROM PRODUTO P');
-      SQL.SQL.Add('LEFT JOIN FORNECEDOR F ON (UPPER(P.SUB_GRUPO) = UPPER(F.NOME))');
       SQL.SQL.Add('WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO AND IMP.ID_LOTE = :IDLOTE AND IMPI.STATUS = 1))');
       SQL.Params[0].DataType   := ftInteger;
       SQL.Connection           := FWC.FDConnection;
@@ -443,32 +428,16 @@ begin
             if not SQLULTIMOLOTE.IsEmpty then
               MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
 
-            //Verifica se tem Fornecedor com Custo Menor
-            SQLFORN.Close;
-            SQLFORN.Prepare;
-            SQLFORN.Params[0].Value := ArLote[I].idLote; //Passa o IDLOTE
-            SQLFORN.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
-            SQLFORN.Open;
-
-            if not SQLFORN.IsEmpty then begin
-
-              AlteraForn := False;
-
-              SQLFORN.First;
-              while not SQLFORN.Eof do begin
-                if SQLFORN.Fields[0].Value = SQL.Fields[2].Value then begin
-                  AlteraForn := True;
-                  Break;
-                end;
-                SQLFORN.Next;
-              end;
-
-              SQLFORN.First;
-              if ((AlteraForn) OR (SQLFORN.Fields[2].Value < SQL.Fields[1].Value)) then begin
-                MI.ID_FORNECEDORNOVO.Value  := SQLFORN.Fields[0].Value;
-                MI.CUSTONOVO.Value          := SQLFORN.Fields[2].Value;
-                MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
-              end;
+            //Verifica o Fornecedor com Custo Menor
+            PF.SelectList('ID_PRODUTO = ' + SQL.Fields[0].AsString + ' AND CUSTO > 0', 'CUSTO ASC');
+            if PF.Count > 0 then begin
+              MI.ID_FORNECEDORNOVO.Value  := TPRODUTOFORNECEDOR(PF.Itens[0]).ID_FORNECEDOR.Value;
+              MI.CUSTONOVO.Value          := TPRODUTOFORNECEDOR(PF.Itens[0]).CUSTO.Value;
+              MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
+            end else begin
+              MI.ID_FORNECEDORNOVO.Value  := 0; //Fora de estoque Virtual
+              MI.CUSTONOVO.Value          := 0.00;
+              MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
             end;
 
             P.SelectList('ID = ' + MI.ID_PRODUTO.asString);
@@ -523,6 +492,7 @@ begin
     FreeAndNil(MI);
     FreeAndNil(M);
     FreeAndNil(P);
+    FreeAndNil(PF);
     FreeAndNil(FWC);
   end;
 end;
