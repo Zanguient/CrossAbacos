@@ -1939,6 +1939,7 @@ object frmConsultaMatch: TfrmConsultaMatch
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
     OnDrawColumnCell = gdMatchItensDrawColumnCell
+    OnTitleClick = gdMatchItensTitleClick
     Columns = <
       item
         Expanded = False

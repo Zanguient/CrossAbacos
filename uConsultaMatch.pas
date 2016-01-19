@@ -81,6 +81,7 @@ type
     procedure gdMatchItensDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure btLimparClick(Sender: TObject);
+    procedure gdMatchItensTitleClick(Column: TColumn);
   private
     Procedure CarregaLote;
     Procedure ConsultaItensMatch;
@@ -312,6 +313,7 @@ begin
 
       idMatch   := 0;
       ProdnoLote:= '';
+      cds_MatchItens.IndexFieldNames := ''; //Limpa uma possível Ordenação
 
       //Carrega o id do Match se tiver selecionado
       if not cds_Match.IsEmpty then
@@ -583,6 +585,15 @@ begin
   end;
 
   gdMatchItens.DefaultDrawColumnCell( Rect, DataCol, Column, State);
+end;
+
+procedure TfrmConsultaMatch.gdMatchItensTitleClick(Column: TColumn);
+Var
+  I : Integer;
+begin
+
+  if (Column.Field.FieldKind <> fkCalculated) then
+    cds_MatchItens.IndexFieldNames := Column.FieldName;
 end;
 
 procedure TfrmConsultaMatch.LimparTela;

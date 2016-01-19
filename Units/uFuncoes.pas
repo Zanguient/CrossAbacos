@@ -135,7 +135,7 @@ begin
 
   try
     try
-      LI.SelectList('CAST(DATA_HORA AS DATE) = CURRENT_DATE');
+      LI.SelectList('ID > 0 AND CAST(DATA_HORA AS DATE) = CURRENT_DATE');
       if LI.Count > 0 then begin
         DisplayMsg(MSG_CONF, 'Já existe lote de Importação para o Dia.: ' +
                               FormatDateTime('dd/mm/yyyy', TLOTE(LI.Itens[0]).DATA_HORA.Value) + sLineBreak +

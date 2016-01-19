@@ -40,7 +40,6 @@ type
     edRegistroAtual: TEdit;
     Label1: TLabel;
     Label2: TLabel;
-    csProdutosDISPONIVEL: TFloatField;
     csProdutosSTATUS: TIntegerField;
     cbFiltro: TComboBox;
     Label3: TLabel;
@@ -51,6 +50,7 @@ type
     gbSelecionaLote: TGroupBox;
     cbLote: TComboBox;
     csProdutosID_PRODUTOFORNECEDOR: TIntegerField;
+    csProdutosDISPONIVEL: TIntegerField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
