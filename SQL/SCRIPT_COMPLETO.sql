@@ -97,13 +97,20 @@ create table if not exists produtofornecedor (
   constraint fk_produtofornecedor_produto1
     foreign key (id_produto)
     references produto (id)
-    on delete no action
-    on update no action,
+	ON UPDATE CASCADE 
+	ON DELETE RESTRICT,
+  CONSTRAINT fk_produtofornecedor_lote1 
+	FOREIGN KEY (id_ultimolote)
+      
+	REFERENCES lote (id) MATCH SIMPLE
+      
+	ON UPDATE CASCADE 
+	ON DELETE RESTRICT,
   constraint fk_produtofornecedor_fornecedor1
     foreign key (id_fornecedor)
     references fornecedor (id)
-    on delete no action
-    on update no action);
+	ON UPDATE CASCADE 
+	ON DELETE RESTRICT);
 
 create table if not exists importacao (
   id serial,
@@ -115,18 +122,18 @@ create table if not exists importacao (
   constraint fk_importacao_usuario1
     foreign key (id_usuario)
     references usuario (id)
-    on delete no action
-    on update no action,
+    on delete RESTRICT
+    on update cascade,
   constraint fk_importacao_fornecedor1
     foreign key (id_fornecedor)
     references fornecedor (id)
-    on delete no action
-    on update no action,
+    on delete RESTRICT
+    on update cascade,
   constraint fk_importacao_lote1
     foreign key (id_lote)
     references lote (id)
-    on delete no action
-    on update no action);
+    on delete RESTRICT
+    on update cascade);
 
 create table if not exists importacao_itens (
   id serial,
