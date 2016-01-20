@@ -167,7 +167,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       OnClick = btSairClick
       ExplicitLeft = 624
     end
-    object btExport2: TSpeedButton
+    object btExport: TSpeedButton
       AlignWithMargins = True
       Left = 4
       Top = 4
@@ -280,7 +280,7 @@ object frmConsultaMatch: TfrmConsultaMatch
         3106823457A875FBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       ParentFont = False
-      OnClick = ExportClick
+      OnClick = btExportClick
       ExplicitLeft = 133
     end
     object btRelatorio: TSpeedButton
@@ -2053,6 +2053,9 @@ object frmConsultaMatch: TfrmConsultaMatch
     OnFilterRecord = cds_MatchItensFilterRecord
     Left = 256
     Top = 336
+    object cds_MatchItensID_PRODUTO: TIntegerField
+      FieldName = 'ID_PRODUTO'
+    end
     object cds_MatchItensSKU: TStringField
       DisplayWidth = 200
       FieldName = 'SKU'
