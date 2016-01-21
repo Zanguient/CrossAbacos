@@ -24,6 +24,7 @@ uses
   function ValidaUsuario(Email, Senha : String) : Boolean;
   function MD5(Texto : String): String;
   Function Criptografa(Texto : String; Tipo : String) : String;
+  function SoNumeros(Texto: String): String;
 
 implementation
 
@@ -328,6 +329,22 @@ begin
     FreeAndNil(CON);
   end;
 
+end;
+
+function SoNumeros(Texto: String): String;
+var
+    I : Integer;
+Begin
+  I := 1;
+  if Length(Texto) > 0 then
+    while I <= Length(Texto) do begin
+      if not (Texto[I] in ['0'..'9']) then begin
+        Delete(Texto,I,1);
+        Continue;
+      end;
+      Inc(I);
+    end;
+  Result := Texto;
 end;
 
 end.

@@ -9,7 +9,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  frxClass, frxDMPExport, System.Win.ComObj, Vcl.ComCtrls;
+  frxClass, frxDMPExport, System.Win.ComObj, Vcl.ComCtrls, Vcl.Samples.Gauges;
 
 type
   TfrmConsultaMatch = class(TForm)
@@ -66,6 +66,7 @@ type
     btLimpar: TSpeedButton;
     cds_MatchDATAHORAMATCH: TDateTimeField;
     cds_MatchItensID_PRODUTO: TIntegerField;
+    pbExportaFornecedor: TGauge;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -129,10 +130,15 @@ procedure TfrmConsultaMatch.btExportClick(Sender: TObject);
 begin
   if btExport.Tag = 0 then begin
     btExport.Tag := 1;
+    pbExportaFornecedor.Visible      := True;
+    pbExportaFornecedor.MaxValue     := cds_MatchItens.RecordCount;
+    pbExportaFornecedor.Progress     := 0;
     try
       ExportarProdutos;
     finally
       btExport.Tag := 0;
+      pbExportaFornecedor.Progress   := 0;
+    pbExportaFornecedor.Visible      := False;
     end;
   end;
 end;
@@ -471,7 +477,9 @@ end;
 procedure TfrmConsultaMatch.ExportarProdutos;
 var
   PLANILHA,
-  Sheet   : Variant;
+  Sheet,
+  Range,
+  arrData : Variant;
   Linha,
   I       : Integer;
   FWC     : TFWConnection;
@@ -480,8 +488,6 @@ var
 Begin
 
   if Not cds_MatchItens.IsEmpty then begin
-
-    DisplayMsg(MSG_WAIT, 'Gerando arquivo de Fornecedores!');
 
     DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
 
@@ -502,18 +508,20 @@ Begin
 
       DeleteFile(DirArquivo);
     end;
+    DisplayMsg(MSG_WAIT, 'Gerando arquivo de Fornecedores!');
 
-    FWC   := TFWConnection.Create;
-    P     := TPRODUTO.Create(FWC);
+    arrData := VarArrayCreate([1, cds_MatchItens.RecordCount + 1, 1, 65], varVariant);
+
+    FWC     := TFWConnection.Create;
+    P       := TPRODUTO.Create(FWC);
 
     Try
       try
 
         cds_MatchItens.DisableControls;
 
-        Linha :=  2;
         PLANILHA := CreateOleObject('Excel.Application');
-        PLANILHA.Caption := 'ESTOQUE';
+        PLANILHA.Caption := 'FORNECEDOR';
         PLANILHA.Visible := False;
         PLANILHA.WorkBooks.add(1);
         PLANILHA.Workbooks[1].WorkSheets[1].Name := 'FORNECEDOR';
@@ -522,72 +530,73 @@ Begin
         Sheet.Range['A1','BN1'].Font.Color := clBlue;
 
         // TITULO DAS COLUNAS
-        PLANILHA.Cells[1,1]  := 'CodigoProduto';
-        PLANILHA.Cells[1,2]  := 'CodigoProdutoPai';
-        PLANILHA.Cells[1,3]  := 'Codigobarras';
-        PLANILHA.Cells[1,4]  := 'CodigoFabricante';
-        PLANILHA.Cells[1,5]  := 'TipoProduto';
-        PLANILHA.Cells[1,6]  := 'NomeProduto';
-        PLANILHA.Cells[1,7]  := 'Descricao';
-        PLANILHA.Cells[1,8]  := 'DescricaoNotaFiscal';
-        PLANILHA.Cells[1,9]  := 'Classe';
-        PLANILHA.Cells[1,10] := 'Marca';
-        PLANILHA.Cells[1,11] := 'Familia';
-        PLANILHA.Cells[1,12] := 'Grupo';
-        PLANILHA.Cells[1,13] := 'SubGrupo';
-        PLANILHA.Cells[1,14] := 'Peso';
-        PLANILHA.Cells[1,15] := 'Comprimento';
-        PLANILHA.Cells[1,16] := 'Largura';
-        PLANILHA.Cells[1,17] := 'Espessura';
-        PLANILHA.Cells[1,18] := 'QtdePorEmbalagem';
-        PLANILHA.Cells[1,19] := 'QtdeMinimaEstoque';
-        PLANILHA.Cells[1,20] := 'QtdeMaximaEstoque';
-        PLANILHA.Cells[1,21] := 'UnidadeMedidaNome';
-        PLANILHA.Cells[1,22] := 'UnidadeMedidaAbrev';
-        PLANILHA.Cells[1,23] := 'CodigoCategoriaFiscal';
-        PLANILHA.Cells[1,24] := 'ClassificacaoFiscal';
-        PLANILHA.Cells[1,25] := 'DescritorSimples1';
-        PLANILHA.Cells[1,26] := 'DescritorSimples2';
-        PLANILHA.Cells[1,27] := 'DescritorSimples3';
-        PLANILHA.Cells[1,28] := 'DescritorPreDefinido1';
-        PLANILHA.Cells[1,29] := 'DescritorPreDefinido2';
-        PLANILHA.Cells[1,30] := 'DescritorPreDefinido3';
-        PLANILHA.Cells[1,31] := 'DescricaoComplementar1';
-        PLANILHA.Cells[1,32] := 'DescricaoComplementar2';
-        PLANILHA.Cells[1,33] := 'DescricaoComplementar3';
-        PLANILHA.Cells[1,34] := 'DescricaoComplementar4';
-        PLANILHA.Cells[1,35] := 'DescricaoComplementar5';
-        PLANILHA.Cells[1,36] := 'DescricaoComplementar6';
-        PLANILHA.Cells[1,37] := 'DescricaoComplementar7';
-        PLANILHA.Cells[1,38] := 'DescricaoComplementar8';
-        PLANILHA.Cells[1,39] := 'DescricaoComplementar9';
-        PLANILHA.Cells[1,40] := 'DescricaoComplementar10';
-        PLANILHA.Cells[1,41] := 'PrecoTabela1';
-        PLANILHA.Cells[1,42] := 'PrecoPromocao1';
-        PLANILHA.Cells[1,43] := 'InicioPromocao1';
-        PLANILHA.Cells[1,44] := 'TerminoPromocao1';
-        PLANILHA.Cells[1,45] := 'PrecoTabela2';
-        PLANILHA.Cells[1,46] := 'PrecoPromocao2';
-        PLANILHA.Cells[1,47] := 'InicioPromocao2';
-        PLANILHA.Cells[1,48] := 'TerminoPromocao2';
-        PLANILHA.Cells[1,49] := 'DiasGarantia';
-        PLANILHA.Cells[1,50] := 'PrazoEntregaDias';
-        PLANILHA.Cells[1,51] := 'ControlaEstoque';
-        PLANILHA.Cells[1,52] := 'ProdutoSerBrinde';
-        PLANILHA.Cells[1,53] := 'CategoriasSite';
-        PLANILHA.Cells[1,54] := 'Interfaces';
-        PLANILHA.Cells[1,55] := 'AtributoEstendido1';
-        PLANILHA.Cells[1,56] := 'AtributoEstendido2';
-        PLANILHA.Cells[1,57] := 'AtributoEstendido3';
-        PLANILHA.Cells[1,58] := 'AtributoEstendido4';
-        PLANILHA.Cells[1,59] := 'AtributoEstendido5';
-        PLANILHA.Cells[1,60] := 'AtributoEstendido6';
-        PLANILHA.Cells[1,61] := 'AtributoEstendido7';
-        PLANILHA.Cells[1,62] := 'AtributoEstendido8';
-        PLANILHA.Cells[1,63] := 'AtributoEstendido9';
-        PLANILHA.Cells[1,64] := 'AtributoEstendido10';
-        PLANILHA.Cells[1,65] := 'OrigemMercadoria';
+        arrData[1,1]  := 'CodigoProduto';
+        arrData[1,2]  := 'CodigoProdutoPai';
+        arrData[1,3]  := 'Codigobarras';
+        arrData[1,4]  := 'CodigoFabricante';
+        arrData[1,5]  := 'TipoProduto';
+        arrData[1,6]  := 'NomeProduto';
+        arrData[1,7]  := 'Descricao';
+        arrData[1,8]  := 'DescricaoNotaFiscal';
+        arrData[1,9]  := 'Classe';
+        arrData[1,10] := 'Marca';
+        arrData[1,11] := 'Familia';
+        arrData[1,12] := 'Grupo';
+        arrData[1,13] := 'SubGrupo';
+        arrData[1,14] := 'Peso';
+        arrData[1,15] := 'Comprimento';
+        arrData[1,16] := 'Largura';
+        arrData[1,17] := 'Espessura';
+        arrData[1,18] := 'QtdePorEmbalagem';
+        arrData[1,19] := 'QtdeMinimaEstoque';
+        arrData[1,20] := 'QtdeMaximaEstoque';
+        arrData[1,21] := 'UnidadeMedidaNome';
+        arrData[1,22] := 'UnidadeMedidaAbrev';
+        arrData[1,23] := 'CodigoCategoriaFiscal';
+        arrData[1,24] := 'ClassificacaoFiscal';
+        arrData[1,25] := 'DescritorSimples1';
+        arrData[1,26] := 'DescritorSimples2';
+        arrData[1,27] := 'DescritorSimples3';
+        arrData[1,28] := 'DescritorPreDefinido1';
+        arrData[1,29] := 'DescritorPreDefinido2';
+        arrData[1,30] := 'DescritorPreDefinido3';
+        arrData[1,31] := 'DescricaoComplementar1';
+        arrData[1,32] := 'DescricaoComplementar2';
+        arrData[1,33] := 'DescricaoComplementar3';
+        arrData[1,34] := 'DescricaoComplementar4';
+        arrData[1,35] := 'DescricaoComplementar5';
+        arrData[1,36] := 'DescricaoComplementar6';
+        arrData[1,37] := 'DescricaoComplementar7';
+        arrData[1,38] := 'DescricaoComplementar8';
+        arrData[1,39] := 'DescricaoComplementar9';
+        arrData[1,40] := 'DescricaoComplementar10';
+        arrData[1,41] := 'PrecoTabela1';
+        arrData[1,42] := 'PrecoPromocao1';
+        arrData[1,43] := 'InicioPromocao1';
+        arrData[1,44] := 'TerminoPromocao1';
+        arrData[1,45] := 'PrecoTabela2';
+        arrData[1,46] := 'PrecoPromocao2';
+        arrData[1,47] := 'InicioPromocao2';
+        arrData[1,48] := 'TerminoPromocao2';
+        arrData[1,49] := 'DiasGarantia';
+        arrData[1,50] := 'PrazoEntregaDias';
+        arrData[1,51] := 'ControlaEstoque';
+        arrData[1,52] := 'ProdutoSerBrinde';
+        arrData[1,53] := 'CategoriasSite';
+        arrData[1,54] := 'Interfaces';
+        arrData[1,55] := 'AtributoEstendido1';
+        arrData[1,56] := 'AtributoEstendido2';
+        arrData[1,57] := 'AtributoEstendido3';
+        arrData[1,58] := 'AtributoEstendido4';
+        arrData[1,59] := 'AtributoEstendido5';
+        arrData[1,60] := 'AtributoEstendido6';
+        arrData[1,61] := 'AtributoEstendido7';
+        arrData[1,62] := 'AtributoEstendido8';
+        arrData[1,63] := 'AtributoEstendido9';
+        arrData[1,64] := 'AtributoEstendido10';
+        arrData[1,65] := 'OrigemMercadoria';
 
+        Linha :=  2;
         cds_MatchItens.First;
         while not cds_MatchItens.Eof do begin
 
@@ -599,77 +608,82 @@ Begin
 
           if P.Count > 0 then begin
 
-            PLANILHA.Cells[Linha,1]  := TPRODUTO(P.Itens[0]).SKU.Value; //CodigoProduto
-            PLANILHA.Cells[Linha,2]  := ''; //CodigoProdutoPai
-            PLANILHA.Cells[Linha,3]  := ''; //Codigobarras
-            PLANILHA.Cells[Linha,4]  := ''; //CodigoFabricante
-            PLANILHA.Cells[Linha,5]  := 'P'; //TipoProduto
-            PLANILHA.Cells[Linha,6]  := TPRODUTO(P.Itens[0]).NOME.Value; //NomeProduto
-            PLANILHA.Cells[Linha,7]  := ''; //Descricao
-            PLANILHA.Cells[Linha,8]  := ''; //DescricaoNotaFiscal
-            PLANILHA.Cells[Linha,9]  := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
-            PLANILHA.Cells[Linha,10] := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
-            PLANILHA.Cells[Linha,11] := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
-            PLANILHA.Cells[Linha,12] := 'VERIFICAR'; //Grupo
-            PLANILHA.Cells[Linha,13] := cds_MatchItensFORNECEDORNOVO.Value; //SubGrupo
-            PLANILHA.Cells[Linha,14] := TPRODUTO(P.Itens[0]).PESO.Value; //Peso
-            PLANILHA.Cells[Linha,15] := TPRODUTO(P.Itens[0]).C.Value; //Comprimento
-            PLANILHA.Cells[Linha,16] := TPRODUTO(P.Itens[0]).L.Value; //Largura
-            PLANILHA.Cells[Linha,17] := TPRODUTO(P.Itens[0]).E.Value; //Espessura
-            PLANILHA.Cells[Linha,18] := TPRODUTO(P.Itens[0]).QUANTIDADE_EMBALAGEM.Value; //QtdePorEmbalagem
-            PLANILHA.Cells[Linha,19] := 'VERIFICAR'; //QtdeMinimaEstoque
-            PLANILHA.Cells[Linha,20] := 'VERIFICAR'; //QtdeMaximaEstoque
-            PLANILHA.Cells[Linha,21] := 'VERIFICAR'; //UnidadeMedidaNome
-            PLANILHA.Cells[Linha,22] := 'VERIFICAR'; //UnidadeMedidaAbrev
-            PLANILHA.Cells[Linha,23] := 'VERIFICAR'; //CodigoCategoriaFiscal
-            PLANILHA.Cells[Linha,24] := 'VERIFICAR'; //ClassificacaoFiscal
-            PLANILHA.Cells[Linha,25] := ''; //DescritorSimples1
-            PLANILHA.Cells[Linha,26] := ''; //DescritorSimples2
-            PLANILHA.Cells[Linha,27] := ''; //DescritorSimples3
-            PLANILHA.Cells[Linha,28] := ''; //DescritorPreDefinido1
-            PLANILHA.Cells[Linha,29] := ''; //DescritorPreDefinido2
-            PLANILHA.Cells[Linha,30] := ''; //DescritorPreDefinido3
-            PLANILHA.Cells[Linha,31] := ''; //DescricaoComplementar1
-            PLANILHA.Cells[Linha,32] := ''; //DescricaoComplementar2
-            PLANILHA.Cells[Linha,33] := ''; //DescricaoComplementar3
-            PLANILHA.Cells[Linha,34] := ''; //DescricaoComplementar4
-            PLANILHA.Cells[Linha,35] := ''; //DescricaoComplementar5
-            PLANILHA.Cells[Linha,36] := ''; //DescricaoComplementar6
-            PLANILHA.Cells[Linha,37] := ''; //DescricaoComplementar7
-            PLANILHA.Cells[Linha,38] := ''; //DescricaoComplementar8
-            PLANILHA.Cells[Linha,39] := ''; //DescricaoComplementar9
-            PLANILHA.Cells[Linha,40] := ''; //DescricaoComplementar10
-            PLANILHA.Cells[Linha,41] := ''; //PrecoTabela1
-            PLANILHA.Cells[Linha,42] := ''; //PrecoPromocao1
-            PLANILHA.Cells[Linha,43] := ''; //InicioPromocao1
-            PLANILHA.Cells[Linha,44] := ''; //TerminoPromocao1
-            PLANILHA.Cells[Linha,45] := ''; //PrecoTabela2
-            PLANILHA.Cells[Linha,46] := ''; //PrecoPromocao2
-            PLANILHA.Cells[Linha,47] := ''; //InicioPromocao2
-            PLANILHA.Cells[Linha,48] := ''; //TerminoPromocao2
-            PLANILHA.Cells[Linha,49] := TPRODUTO(P.Itens[0]).DIAS_GARANTIA.Value; //DiasGarantia
-            PLANILHA.Cells[Linha,50] := TPRODUTO(P.Itens[0]).PRAZO_ENTREGA.Value; //PrazoEntregaDias
-            PLANILHA.Cells[Linha,51] := 'S'; //ControlaEstoque
-            PLANILHA.Cells[Linha,52] := 'N'; //ProdutoSerBrinde
-            PLANILHA.Cells[Linha,53] := ''; //CategoriasSite
-            PLANILHA.Cells[Linha,54] := ''; //Interfaces
-            PLANILHA.Cells[Linha,55] := ''; //AtributoEstendido1
-            PLANILHA.Cells[Linha,56] := ''; //AtributoEstendido2
-            PLANILHA.Cells[Linha,57] := ''; //AtributoEstendido3
-            PLANILHA.Cells[Linha,58] := ''; //AtributoEstendido4
-            PLANILHA.Cells[Linha,59] := ''; //AtributoEstendido5
-            PLANILHA.Cells[Linha,60] := ''; //AtributoEstendido6
-            PLANILHA.Cells[Linha,61] := ''; //AtributoEstendido7
-            PLANILHA.Cells[Linha,62] := ''; //AtributoEstendido8
-            PLANILHA.Cells[Linha,63] := ''; //AtributoEstendido9
-            PLANILHA.Cells[Linha,64] := ''; //AtributoEstendido10
-            PLANILHA.Cells[Linha,65] := TPRODUTO(P.Itens[0]).ORIGEM_MERCADORIA.Value; //OrigemMercadoria
+            arrData[Linha,1]  := TPRODUTO(P.Itens[0]).SKU.Value; //CodigoProduto
+            arrData[Linha,2]  := ''; //CodigoProdutoPai
+            arrData[Linha,3]  := ''; //Codigobarras
+            arrData[Linha,4]  := ''; //CodigoFabricante
+            arrData[Linha,5]  := 'P'; //TipoProduto
+            arrData[Linha,6]  := TPRODUTO(P.Itens[0]).NOME.Value; //NomeProduto
+            arrData[Linha,7]  := ''; //Descricao
+            arrData[Linha,8]  := ''; //DescricaoNotaFiscal
+            arrData[Linha,9]  := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
+            arrData[Linha,10] := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
+            arrData[Linha,11] := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
+            arrData[Linha,12] := 'VERIFICAR'; //Grupo
+            arrData[Linha,13] := cds_MatchItensFORNECEDORNOVO.Value; //SubGrupo
+            arrData[Linha,14] := StringReplace(TPRODUTO(P.Itens[0]).PESO.asString, ',', '.', [rfReplaceAll]); //Peso
+            arrData[Linha,15] := ''; //Comprimento
+            arrData[Linha,16] := ''; //Largura
+            arrData[Linha,17] := ''; //Espessura
+            arrData[Linha,18] := TPRODUTO(P.Itens[0]).QUANTIDADE_EMBALAGEM.Value; //QtdePorEmbalagem
+            arrData[Linha,19] := 'VERIFICAR'; //QtdeMinimaEstoque
+            arrData[Linha,20] := TPRODUTO(P.Itens[0]).ESTOQUE_MAXIMO.Value; //QtdeMaximaEstoque
+            arrData[Linha,21] := TPRODUTO(P.Itens[0]).UNIDADE_MEDIDA.Value; //UnidadeMedidaNome
+            arrData[Linha,22] := TPRODUTO(P.Itens[0]).UN.Value; //UnidadeMedidaAbrev
+            arrData[Linha,23] := TPRODUTO(P.Itens[0]).CODIGO_CF.Value; //CodigoCategoriaFiscal
+            arrData[Linha,24] := SoNumeros(TPRODUTO(P.Itens[0]).NCM.Value); //ClassificacaoFiscal
+            arrData[Linha,25] := ''; //DescritorSimples1
+            arrData[Linha,26] := ''; //DescritorSimples2
+            arrData[Linha,27] := ''; //DescritorSimples3
+            arrData[Linha,28] := ''; //DescritorPreDefinido1
+            arrData[Linha,29] := ''; //DescritorPreDefinido2
+            arrData[Linha,30] := ''; //DescritorPreDefinido3
+            arrData[Linha,31] := ''; //DescricaoComplementar1
+            arrData[Linha,32] := ''; //DescricaoComplementar2
+            arrData[Linha,33] := ''; //DescricaoComplementar3
+            arrData[Linha,34] := ''; //DescricaoComplementar4
+            arrData[Linha,35] := ''; //DescricaoComplementar5
+            arrData[Linha,36] := ''; //DescricaoComplementar6
+            arrData[Linha,37] := ''; //DescricaoComplementar7
+            arrData[Linha,38] := ''; //DescricaoComplementar8
+            arrData[Linha,39] := ''; //DescricaoComplementar9
+            arrData[Linha,40] := ''; //DescricaoComplementar10
+            arrData[Linha,41] := ''; //PrecoTabela1
+            arrData[Linha,42] := ''; //PrecoPromocao1
+            arrData[Linha,43] := ''; //InicioPromocao1
+            arrData[Linha,44] := ''; //TerminoPromocao1
+            arrData[Linha,45] := ''; //PrecoTabela2
+            arrData[Linha,46] := ''; //PrecoPromocao2
+            arrData[Linha,47] := ''; //InicioPromocao2
+            arrData[Linha,48] := ''; //TerminoPromocao2
+            arrData[Linha,49] := TPRODUTO(P.Itens[0]).DIAS_GARANTIA.Value; //DiasGarantia
+            arrData[Linha,50] := TPRODUTO(P.Itens[0]).PRAZO_ENTREGA.Value; //PrazoEntregaDias
+            arrData[Linha,51] := 'S'; //ControlaEstoque
+            arrData[Linha,52] := 'N'; //ProdutoSerBrinde
+            arrData[Linha,53] := ''; //CategoriasSite
+            arrData[Linha,54] := ''; //Interfaces
+            arrData[Linha,55] := ''; //AtributoEstendido1
+            arrData[Linha,56] := ''; //AtributoEstendido2
+            arrData[Linha,57] := ''; //AtributoEstendido3
+            arrData[Linha,58] := ''; //AtributoEstendido4
+            arrData[Linha,59] := ''; //AtributoEstendido5
+            arrData[Linha,60] := ''; //AtributoEstendido6
+            arrData[Linha,61] := ''; //AtributoEstendido7
+            arrData[Linha,62] := ''; //AtributoEstendido8
+            arrData[Linha,63] := ''; //AtributoEstendido9
+            arrData[Linha,64] := ''; //AtributoEstendido10
+            arrData[Linha,65] := Copy(TPRODUTO(P.Itens[0]).ORIGEM_MERCADORIA.Value, 1, 1); //OrigemMercadoria
 
             Linha := Linha + 1;
           end;
 
+          pbExportaFornecedor.Progress   := cds_MatchItens.RecNo + 1;
           cds_MatchItens.Next;
         end;
+
+
+        Range       := Sheet.Range[Sheet.cells[1,1], Sheet.Cells[cds_MatchItens.RecordCount + 1, 65]];
+        Range.Value := arrData;
 
         PLANILHA.Columns.AutoFit;
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);

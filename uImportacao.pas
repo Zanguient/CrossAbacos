@@ -588,6 +588,8 @@ begin
       PROD.E.excelTitulo                                                      := 'E';
       PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
       PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
+      PROD.UN.excelTitulo                                                     := 'UN';
+      PROD.CODIGO_CF.excelTitulo                                              := 'Código Classificacao Fical';
 
       PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
       PROD.ID.excelIndice                                                     := -1;
@@ -611,6 +613,8 @@ begin
                                                                                'Sub-grupo, ' + sLineBreak +
                                                                                'Preço de venda, ' + sLineBreak +
                                                                                'Promoção + IPI, ' + sLineBreak +
+                                                                               'Código Classificacao Fical, ' + sLineBreak +
+                                                                               'UN, ' + sLineBreak +
                                                                                'Peso, ' + sLineBreak +
                                                                                'Clas Fisc, ' + sLineBreak +
                                                                                'Estoque máximo, ' + sLineBreak +

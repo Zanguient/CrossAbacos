@@ -37,6 +37,8 @@ type TPRODUTO = Class(TFWPersistence)
     FID_FORNECEDORANTERIOR: TFieldInteger;
     FCUSTOANTERIOR: TFieldCurrency;
     FID_FORNECEDORNOVO: TFieldInteger;
+    FUN: TFieldString;
+    FCODIGO_CF: TFieldInteger;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -69,6 +71,8 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetID_FORNECEDORANTERIOR(const Value: TFieldInteger);
     procedure SetID_FORNECEDORNOVO(const Value: TFieldInteger);
     procedure SetID_ULTIMOLOTE(const Value: TFieldInteger);
+    procedure SetUN(const Value: TFieldString);
+    procedure SetCODIGO_CF(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -104,6 +108,8 @@ type TPRODUTO = Class(TFWPersistence)
     property ID_FORNECEDORANTERIOR : TFieldInteger read FID_FORNECEDORANTERIOR write SetID_FORNECEDORANTERIOR;
     property ID_FORNECEDORNOVO : TFieldInteger read FID_FORNECEDORNOVO write SetID_FORNECEDORNOVO;
     property ID_ULTIMOLOTE : TFieldInteger read FID_ULTIMOLOTE write SetID_ULTIMOLOTE;
+    property UN : TFieldString read FUN write SetUN;
+    property CODIGO_CF : TFieldInteger read FCODIGO_CF write SetCODIGO_CF;
 
 End;
 implementation
@@ -133,6 +139,7 @@ begin
   GRUPO.Size             := 100;
   SUB_GRUPO.Size         := 100;
   NCM.Size               := 10;
+  UN.Size                := 3;
   ORIGEM_MERCADORIA.Size := 255;
 end;
 procedure TPRODUTO.SetC(const Value: TFieldFloat);
@@ -153,6 +160,11 @@ end;
 procedure TPRODUTO.SetCODIGO_BARRAS(const Value: TFieldInteger);
 begin
   FCODIGO_BARRAS := Value;
+end;
+
+procedure TPRODUTO.SetCODIGO_CF(const Value: TFieldInteger);
+begin
+  FCODIGO_CF := Value;
 end;
 
 procedure TPRODUTO.SetCUSTO(const Value: TFieldFloat);
@@ -288,6 +300,11 @@ end;
 procedure TPRODUTO.SetSUB_GRUPO(const Value: TFieldString);
 begin
   FSUB_GRUPO := Value;
+end;
+
+procedure TPRODUTO.SetUN(const Value: TFieldString);
+begin
+  FUN := Value;
 end;
 
 procedure TPRODUTO.SetUNIDADE_MEDIDA(const Value: TFieldString);

@@ -430,6 +430,25 @@ object frmConsultaMatch: TfrmConsultaMatch
       ParentFont = False
       ExplicitLeft = 260
     end
+    object pbExportaFornecedor: TGauge
+      AlignWithMargins = True
+      Left = 134
+      Top = 4
+      Width = 52
+      Height = 52
+      Align = alLeft
+      BorderStyle = bsNone
+      ForeColor = clLime
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Kind = gkPie
+      ParentFont = False
+      Progress = 0
+      Visible = False
+    end
     object edTotalizador: TEdit
       Left = 499
       Top = 29

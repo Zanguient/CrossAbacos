@@ -67,6 +67,8 @@ CREATE TABLE if not exists produto
   c numeric(18,2),
   l numeric(18,2),
   e numeric(18,2),
+  un character varying(255),
+  codigo_cf integer,
   dias_garantia integer,
   origem_mercadoria character varying(255),
   id_ultimolote integer NOT NULL DEFAULT 0,
