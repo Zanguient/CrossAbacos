@@ -284,7 +284,7 @@ begin
                 TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).asVariant := Valor;
             end;
           end;
-          if FORN.CNPJ.Value = '' then begin
+          if FORN.CNPJ.isNull then begin
             mnImportaFornecedor.Lines.Add('Linha vazia!');
             pbImportaFornecedor.Progress                                       := pbImportaFornecedor.MaxValue;
             Break;
@@ -590,6 +590,7 @@ begin
       PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
       PROD.UN.excelTitulo                                                     := 'UN';
       PROD.CODIGO_CF.excelTitulo                                              := 'Código Classificacao Fical';
+      PROD.ESTOQUE_MINIMO.excelTitulo                                         := 'Em';
 
       PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
       PROD.ID.excelIndice                                                     := -1;

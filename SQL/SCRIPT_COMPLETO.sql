@@ -61,6 +61,7 @@ CREATE TABLE if not exists produto
   promocao_ipi numeric(18,2),
   peso numeric(18,2),
   ncm character varying(10),
+  estoque_minimo integer,
   estoque_maximo integer,
   prazo_entrega integer,
   quantidade_embalagem integer,

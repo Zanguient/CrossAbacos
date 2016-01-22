@@ -626,7 +626,7 @@ Begin
             arrData[Linha,16] := ''; //Largura
             arrData[Linha,17] := ''; //Espessura
             arrData[Linha,18] := TPRODUTO(P.Itens[0]).QUANTIDADE_EMBALAGEM.Value; //QtdePorEmbalagem
-            arrData[Linha,19] := 'VERIFICAR'; //QtdeMinimaEstoque
+            arrData[Linha,19] := TPRODUTO(P.Itens[0]).ESTOQUE_MINIMO.Value; //QtdeMinimaEstoque
             arrData[Linha,20] := TPRODUTO(P.Itens[0]).ESTOQUE_MAXIMO.Value; //QtdeMaximaEstoque
             arrData[Linha,21] := TPRODUTO(P.Itens[0]).UNIDADE_MEDIDA.Value; //UnidadeMedidaNome
             arrData[Linha,22] := TPRODUTO(P.Itens[0]).UN.Value; //UnidadeMedidaAbrev

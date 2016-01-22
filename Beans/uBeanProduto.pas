@@ -39,6 +39,7 @@ type TPRODUTO = Class(TFWPersistence)
     FID_FORNECEDORNOVO: TFieldInteger;
     FUN: TFieldString;
     FCODIGO_CF: TFieldInteger;
+    FESTOQUE_MINIMO: TFieldInteger;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -73,6 +74,7 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetID_ULTIMOLOTE(const Value: TFieldInteger);
     procedure SetUN(const Value: TFieldString);
     procedure SetCODIGO_CF(const Value: TFieldInteger);
+    procedure SetESTOQUE_MINIMO(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -110,6 +112,7 @@ type TPRODUTO = Class(TFWPersistence)
     property ID_ULTIMOLOTE : TFieldInteger read FID_ULTIMOLOTE write SetID_ULTIMOLOTE;
     property UN : TFieldString read FUN write SetUN;
     property CODIGO_CF : TFieldInteger read FCODIGO_CF write SetCODIGO_CF;
+    property ESTOQUE_MINIMO : TFieldInteger read FESTOQUE_MINIMO write SetESTOQUE_MINIMO;
 
 End;
 implementation
@@ -195,6 +198,11 @@ end;
 procedure TPRODUTO.SetESTOQUE_MAXIMO(const Value: TFieldInteger);
 begin
   FESTOQUE_MAXIMO := Value;
+end;
+
+procedure TPRODUTO.SetESTOQUE_MINIMO(const Value: TFieldInteger);
+begin
+  FESTOQUE_MINIMO := Value;
 end;
 
 procedure TPRODUTO.SetFAMILIA(const Value: TFieldString);
