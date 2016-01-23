@@ -25,6 +25,7 @@ uses
   function MD5(Texto : String): String;
   Function Criptografa(Texto : String; Tipo : String) : String;
   function SoNumeros(Texto: String): String;
+  function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
 
 implementation
 
@@ -345,6 +346,14 @@ Begin
       Inc(I);
     end;
   Result := Texto;
+end;
+
+function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
+begin
+  Result := 0.00;
+  if ValorAnterior > 0.00 then
+    if ValorNovo > 0.00 then
+        Result := Trunc((((ValorNovo * 100) / ValorAnterior) - 100) * 100) / 100.00
 end;
 
 end.

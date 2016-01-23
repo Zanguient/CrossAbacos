@@ -431,7 +431,7 @@ begin
               Valor                                                            := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(FORPROD, List[J]^.Name)).excelIndice]);
               if Valor <> '' then begin
                 if List[J]^.Name = 'ID_PRODUTO' then begin
-                  PROD.SelectList('sku = ' + QuotedStr(Valor));
+                  PROD.SelectList('upper(sku) = ' + QuotedStr(AnsiUpperCase(Valor)));
                   if PROD.Count > 0 then
                     FORPROD.ID_PRODUTO.Value                                   := TPRODUTO(PROD.Itens[0]).ID.Value
                   else begin
@@ -454,7 +454,7 @@ begin
             end;
           end;
 
-          FORPROD.SelectList('id_produto = ' + FORPROD.ID_PRODUTO.asSQL + ' and id_fornecedor = ' + FORPROD.ID_FORNECEDOR.asSQL);
+          FORPROD.SelectList('id_produto = ' + FORPROD.ID_PRODUTO.asString + ' and id_fornecedor = ' + FORPROD.ID_FORNECEDOR.asString);
           if FORPROD.Count > 0 then begin
             FORPROD.ID.Value                                                   := TPRODUTOFORNECEDOR(FORPROD.Itens[0]).ID.Value;
             FORPROD.Update;
@@ -641,8 +641,8 @@ begin
                 TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant   := Valor;
             end;
           end;
-          if PROD.SKU.Value <> '' then begin
-            PROD.SelectList('sku = ' + PROD.SKU.asSQL);
+          if (PROD.SKU.Value <> '') and (Copy(PROD.SKU.Value, 1, 4) <> '345.') then begin
+            PROD.SelectList('upper(sku) = ' + QuotedStr(AnsiUpperCase(PROD.SKU.asString)));
             if PROD.Count > 0 then begin
               PROD.ID.Value                                                      := TPRODUTO(PROD.Itens[0]).ID.Value;
               PROD.Update;

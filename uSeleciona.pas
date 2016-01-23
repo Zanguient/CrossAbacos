@@ -43,7 +43,10 @@ var
   frmSeleciona: TfrmSeleciona;
 
 implementation
-uses uFWConnection, uDomains;
+uses
+  uFWConnection,
+  uDomains,
+  uFuncoes;
 {$R *.dfm}
 
 { TfrmSeleciona }
@@ -91,12 +94,7 @@ end;
 
 procedure TfrmSeleciona.FormCreate(Sender: TObject);
 begin
-  Self.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.ClientWidth  := Application.MainForm.ClientWidth;
-  Self.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.Width        := Application.MainForm.ClientWidth;
-  Self.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
-  Self.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+  AjustaForm(Self);
 end;
 
 procedure TfrmSeleciona.FormKeyDown(Sender: TObject; var Key: Word;

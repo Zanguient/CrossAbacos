@@ -76,7 +76,6 @@ type
     procedure ds_MatchItensDataChange(Sender: TObject; Field: TField);
     procedure btRelatorioClick(Sender: TObject);
     procedure btBuscarMatchClick(Sender: TObject);
-    procedure cds_MatchItensCalcFields(DataSet: TDataSet);
     procedure cds_MatchItensFilterRecord(DataSet: TDataSet;
       var Accept: Boolean);
     procedure gdMatchItensDrawColumnCell(Sender: TObject; const Rect: TRect;
@@ -288,16 +287,6 @@ begin
   end;
 end;
 
-procedure TfrmConsultaMatch.cds_MatchItensCalcFields(DataSet: TDataSet);
-begin
-  with DataSet do begin
-    FieldByName('PERCENTUALDIFERENCA').Value := 0.00;
-    if FieldByName('CUSTOANTERIOR').Value > 0.00 then
-      if FieldByName('CUSTOATUAL').Value > 0.00 then
-          FieldByName('PERCENTUALDIFERENCA').Value := Trunc((((FieldByName('CUSTOATUAL').Value * 100) / FieldByName('CUSTOANTERIOR').Value) - 100) * 100) / 100.00
-  end;
-end;
-
 procedure TfrmConsultaMatch.cds_MatchItensFilterRecord(DataSet: TDataSet;
   var Accept: Boolean);
 Var
@@ -394,6 +383,7 @@ begin
             cds_MatchItensIDULTIMOLOTE.Value         := SQL.Fields[7].Value;
             cds_MatchItensDATAULTIMOLOTE.Value       := SQL.Fields[8].Value;
             cds_MatchItensATUALIZADONOMATCH.Value    := SQL.Fields[9].Value;
+            cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := True;
             cds_MatchItens.Post;
 
@@ -450,6 +440,7 @@ begin
             cds_MatchItensIDULTIMOLOTE.Value         := SQL.Fields[7].Value;
             cds_MatchItensDATAULTIMOLOTE.Value       := SQL.Fields[8].Value;
             cds_MatchItensATUALIZADONOMATCH.Value    := SQL.Fields[9].Value;
+            cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := False;
             cds_MatchItens.Post;
             SQL.Next
@@ -770,7 +761,7 @@ Var
   I : Integer;
 begin
 
-  if (Column.Field.FieldKind <> fkCalculated) then
+  //if (Column.Field.FieldKind <> fkCalculated) then
     cds_MatchItens.IndexFieldNames := Column.FieldName;
 end;
 

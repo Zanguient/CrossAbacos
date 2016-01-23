@@ -127,6 +127,7 @@ object frmImportacao: TfrmImportacao
           Font.Style = []
           ParentFont = False
           ReadOnly = True
+          ScrollBars = ssVertical
           TabOrder = 1
         end
         object pnCabProdutos: TPanel
@@ -275,6 +276,7 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           Color = clMoneyGreen
           ReadOnly = True
+          ScrollBars = ssVertical
           TabOrder = 1
         end
       end
@@ -312,6 +314,7 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           Color = clMoneyGreen
           ReadOnly = True
+          ScrollBars = ssVertical
           TabOrder = 1
         end
         object pnCabImportaFornecedor: TPanel
@@ -448,6 +451,7 @@ object frmImportacao: TfrmImportacao
           Align = alClient
           Color = clMoneyGreen
           ReadOnly = True
+          ScrollBars = ssVertical
           TabOrder = 1
         end
       end
@@ -461,7 +465,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C0101020008007C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

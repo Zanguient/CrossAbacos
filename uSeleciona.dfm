@@ -1,7 +1,9 @@
 object frmSeleciona: TfrmSeleciona
   Left = 0
   Top = 0
+  BorderIcons = []
   BorderStyle = bsNone
+  Caption = 'Tela de Sele'#231#227'o'
   ClientHeight = 390
   ClientWidth = 672
   Color = clBtnFace
@@ -11,8 +13,7 @@ object frmSeleciona: TfrmSeleciona
   Font.Name = 'Tahoma'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
-  Position = poDesktopCenter
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown

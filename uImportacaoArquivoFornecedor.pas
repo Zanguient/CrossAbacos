@@ -239,7 +239,7 @@ begin
     if btImportar.Tag <> 0 then begin
       DisplayMsg(MSG_WAR, 'Existem produtos não cadastrados no arquivo!');
       bloqueioSalvar(0);
-      cbFiltro.ItemIndex                          := 2;
+      cbFiltro.ItemIndex                            := 2;
       cbFiltroChange(nil);
       Exit;
     end;

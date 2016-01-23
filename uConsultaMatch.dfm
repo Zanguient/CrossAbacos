@@ -2068,7 +2068,6 @@ object frmConsultaMatch: TfrmConsultaMatch
   object cds_MatchItens: TClientDataSet
     Aggregates = <>
     Params = <>
-    OnCalcFields = cds_MatchItensCalcFields
     OnFilterRecord = cds_MatchItensFilterRecord
     Left = 256
     Top = 336
@@ -2095,10 +2094,8 @@ object frmConsultaMatch: TfrmConsultaMatch
     end
     object cds_MatchItensPERCENTUALDIFERENCA: TCurrencyField
       DisplayWidth = 110
-      FieldKind = fkCalculated
       FieldName = 'PERCENTUALDIFERENCA'
       DisplayFormat = '#,##0.00%'
-      Calculated = True
     end
     object cds_MatchItensFORNCECEDORANTERIOR: TStringField
       FieldName = 'FORNCECEDORANTERIOR'

@@ -37,7 +37,7 @@ create table if not exists fornecedor (
   on delete restrict
   on update cascade);
 
-INSERT INTO FORNECEDOR(ID, NOME, CNPJ, ID_ALMOXARIFADO) VALUES (0, 'GERAL', '0', 0);
+INSERT INTO FORNECEDOR(ID, NOME, CNPJ, ID_ALMOXARIFADO) VALUES (0, 'Fora de Estoque Virtual', '0', 0);
 
 CREATE TABLE if not exists produto
 (
@@ -68,7 +68,7 @@ CREATE TABLE if not exists produto
   c numeric(18,2),
   l numeric(18,2),
   e numeric(18,2),
-  un character varying(255),
+  un character varying(3),
   codigo_cf integer,
   dias_garantia integer,
   origem_mercadoria character varying(255),

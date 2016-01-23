@@ -36,6 +36,8 @@ begin
 
   ID.isPK       := True;
 
+  NOME.isNotNull:= True;
+
   NOME.Size     := 100;
   CNPJ.Size     := 14;
 
