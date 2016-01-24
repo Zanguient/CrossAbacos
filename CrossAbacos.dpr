@@ -37,7 +37,8 @@ uses
   uBeanMatch in 'Beans\uBeanMatch.pas',
   uBeanMatch_Itens in 'Beans\uBeanMatch_Itens.pas',
   uGeraMatch in 'uGeraMatch.pas' {frmGeraMatch},
-  uBeanUsuario_Permissao in 'Beans\uBeanUsuario_Permissao.pas';
+  uBeanUsuario_Permissao in 'Beans\uBeanUsuario_Permissao.pas',
+  uInativaProdutoFornecedor in 'uInativaProdutoFornecedor.pas' {frmInativaProdutoFornecedor};
 
 {$R *.res}
 

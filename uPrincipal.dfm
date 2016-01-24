@@ -47,6 +47,10 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Familia'
         OnClick = Familia1Click
       end
+      object ConfiguraodeProdutos1: TMenuItem
+        Caption = 'Configura'#231#227'o de Produtos'
+        OnClick = ConfiguraodeProdutos1Click
+      end
     end
     object Importaes1: TMenuItem
       Caption = 'Importa'#231#245'es'

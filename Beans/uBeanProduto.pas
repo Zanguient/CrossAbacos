@@ -131,6 +131,19 @@ begin
   SUB_GRUPO.isNotNull    := True;
   NCM.isNotNull          := True;
 
+  SKU.isSearchField      := True;
+  NOME.isSearchField     := True;
+  MARCA.isSearchField    := True;
+
+  SKU.displayLabel       := 'SKU';
+  NOME.displayLabel      := 'Nome';
+  MARCA.displayLabel     := 'Marca';
+
+  SKU.displayWidth       := 15;
+  NOME.displayWidth      := 60;
+  MARCA.displayWidth     := 40;
+
+
   SKU.Size               := 100;
   NOME.Size              := 255;
   CF.Size                := 100;

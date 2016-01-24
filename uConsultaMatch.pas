@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls, Vcl.Grids,
   Vcl.DBGrids, Vcl.StdCtrls, Data.DB, Datasnap.DBClient, Vcl.DBCtrls,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, DateUtils,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   frxClass, frxDMPExport, System.Win.ComObj, Vcl.ComCtrls, Vcl.Samples.Gauges;
@@ -489,7 +489,7 @@ Begin
       end;
     end;
 
-    DirArquivo := DirArquivo + '\Fornecedor.xlsx';
+    DirArquivo := DirArquivo + '\Fornecedor_'+ IntToStr(HourOf(Now))+ '_'+ IntToStr(MinuteOf(Now)) +'.xlsx';
 
     if FileExists(DirArquivo) then begin
       DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
@@ -499,8 +499,7 @@ Begin
 
       DeleteFile(DirArquivo);
     end;
-    DisplayMsg(MSG_WAIT, 'Gerando arquivo de Fornecedores!');
-
+    DisplayMsg(MSG_WAIT, 'Buscando informações dos produtos!');
     arrData := VarArrayCreate([1, cds_MatchItens.RecordCount + 1, 1, 65], varVariant);
 
     FWC     := TFWConnection.Create;
@@ -591,10 +590,6 @@ Begin
         cds_MatchItens.First;
         while not cds_MatchItens.Eof do begin
 
-          //Passa todas as Colunas para Formato de Texto
-          for I := 1 to 65 do
-            PLANILHA.Cells[Linha,I].NumberFormat := '@';
-
           P.SelectList('ID = ' + cds_MatchItensID_PRODUTO.AsString);
 
           if P.Count > 0 then begin
@@ -672,9 +667,11 @@ Begin
           cds_MatchItens.Next;
         end;
 
+        DisplayMsg(MSG_WAIT, 'Salvando dados no arquivo Excel!');
 
-        Range       := Sheet.Range[Sheet.cells[1,1], Sheet.Cells[cds_MatchItens.RecordCount + 1, 65]];
-        Range.Value := arrData;
+        Range               := Sheet.Range[Sheet.cells[1,1], Sheet.Cells[cds_MatchItens.RecordCount + 1, 65]];
+        Range.NumberFormat  := '@';
+        Range.Value         := arrData;
 
         PLANILHA.Columns.AutoFit;
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
@@ -689,11 +686,13 @@ Begin
     Finally
       FreeAndNil(P);
       FreeAndNil(FWC);
+      DisplayMsg(MSG_WAIT, 'Finalizando processo do Excel no Windows!');
       if not VarIsEmpty(PLANILHA) then begin
         PLANILHA.Quit;
         PLANILHA := Unassigned;
       end;
       cds_MatchItens.EnableControls;
+      DisplayMsgFinaliza;
     end;
   end else begin
     DisplayMsg(MSG_WAR, 'Não há dados para Geração dos Fornecedores, Verifique!');

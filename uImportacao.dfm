@@ -37,11 +37,13 @@ object frmImportacao: TfrmImportacao
     Width = 729
     Height = 476
     Align = alClient
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
+    ParentBackground = False
     ParentFont = False
     TabOrder = 0
     object GridPanel1: TGridPanel
@@ -62,17 +64,17 @@ object frmImportacao: TfrmImportacao
         item
           Column = 0
           Control = pnImportacaoProduto
-          Row = 0
+          Row = 1
         end
         item
-          Column = 1
+          Column = 0
           Control = pnImportaAlmoxarifados
           Row = 0
         end
         item
-          Column = 0
+          Column = 1
           Control = pnImportaFornecedor
-          Row = 1
+          Row = 0
         end
         item
           Column = 1
@@ -89,12 +91,13 @@ object frmImportacao: TfrmImportacao
       TabOrder = 0
       object pnImportacaoProduto: TPanel
         Left = 1
-        Top = 1
+        Top = 237
         Width = 362
         Height = 236
         Align = alClient
         Color = clWhite
-        TabOrder = 0
+        TabOrder = 2
+        ExplicitTop = 1
         object pbImportaProdutos: TGauge
           AlignWithMargins = True
           Left = 4
@@ -114,10 +117,11 @@ object frmImportacao: TfrmImportacao
           Progress = 0
         end
         object mnImportaProdutos: TMemo
-          Left = 1
-          Top = 50
-          Width = 360
-          Height = 150
+          AlignWithMargins = True
+          Left = 4
+          Top = 53
+          Width = 354
+          Height = 144
           Align = alClient
           Color = clMoneyGreen
           Font.Charset = DEFAULT_CHARSET
@@ -129,6 +133,10 @@ object frmImportacao: TfrmImportacao
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
+          ExplicitLeft = 1
+          ExplicitTop = 50
+          ExplicitWidth = 360
+          ExplicitHeight = 150
         end
         object pnCabProdutos: TPanel
           Left = 1
@@ -193,6 +201,103 @@ object frmImportacao: TfrmImportacao
         end
       end
       object pnImportaAlmoxarifados: TPanel
+        Left = 1
+        Top = 1
+        Width = 362
+        Height = 236
+        Align = alClient
+        Color = clWhite
+        TabOrder = 0
+        ExplicitLeft = 363
+        ExplicitWidth = 363
+        object pbImportaAlmoxarifado: TGauge
+          AlignWithMargins = True
+          Left = 4
+          Top = 203
+          Width = 354
+          Height = 29
+          Align = alBottom
+          BackColor = clBtnFace
+          ForeColor = clLime
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          MaxValue = 0
+          ParentFont = False
+          Progress = 0
+        end
+        object pnCabAlmoxarifado: TPanel
+          Left = 1
+          Top = 1
+          Width = 360
+          Height = 49
+          Align = alTop
+          BevelOuter = bvNone
+          Color = clWhite
+          TabOrder = 0
+          ExplicitWidth = 361
+          DesignSize = (
+            360
+            49)
+          object Label2: TLabel
+            Left = 4
+            Top = 0
+            Width = 210
+            Height = 19
+            Caption = 'Importa'#231#227'o de Almoxarifados'
+          end
+          object btImportaAlmoxarifado: TButton
+            Left = 282
+            Top = 20
+            Width = 75
+            Height = 27
+            Anchors = [akTop, akRight]
+            Caption = 'Importar'
+            TabOrder = 1
+            OnClick = btImportaAlmoxarifadoClick
+            ExplicitLeft = 283
+          end
+          object edBuscaArquivoAlmoxarifado: TButtonedEdit
+            Left = 4
+            Top = 20
+            Width = 276
+            Height = 27
+            Anchors = [akLeft, akTop, akRight]
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            Images = ImageList1
+            ParentFont = False
+            RightButton.ImageIndex = 1
+            RightButton.Visible = True
+            TabOrder = 0
+            TextHint = 'Selecione o Arquivo...'
+            OnRightButtonClick = edBuscaArquivoAlmoxarifadoRightButtonClick
+            ExplicitWidth = 277
+          end
+        end
+        object mnImportaAlmoxarifado: TMemo
+          AlignWithMargins = True
+          Left = 4
+          Top = 53
+          Width = 354
+          Height = 144
+          Align = alClient
+          Color = clMoneyGreen
+          ReadOnly = True
+          ScrollBars = ssVertical
+          TabOrder = 1
+          ExplicitLeft = 1
+          ExplicitTop = 50
+          ExplicitWidth = 361
+          ExplicitHeight = 150
+        end
+      end
+      object pnImportaFornecedor: TPanel
         Left = 363
         Top = 1
         Width = 363
@@ -200,7 +305,10 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 1
-        object pbImportaAlmoxarifado: TGauge
+        ExplicitLeft = 1
+        ExplicitTop = 237
+        ExplicitWidth = 362
+        object pbImportaFornecedor: TGauge
           AlignWithMargins = True
           Left = 4
           Top = 203
@@ -219,115 +327,34 @@ object frmImportacao: TfrmImportacao
           Progress = 0
           ExplicitWidth = 354
         end
-        object pnCabAlmoxarifado: TPanel
-          Left = 1
-          Top = 1
-          Width = 361
-          Height = 49
-          Align = alTop
-          BevelOuter = bvNone
-          Color = clWhite
-          TabOrder = 0
-          DesignSize = (
-            361
-            49)
-          object Label2: TLabel
-            Left = 4
-            Top = 0
-            Width = 210
-            Height = 19
-            Caption = 'Importa'#231#227'o de Almoxarifados'
-          end
-          object btImportaAlmoxarifado: TButton
-            Left = 283
-            Top = 20
-            Width = 75
-            Height = 27
-            Anchors = [akTop, akRight]
-            Caption = 'Importar'
-            TabOrder = 1
-            OnClick = btImportaAlmoxarifadoClick
-          end
-          object edBuscaArquivoAlmoxarifado: TButtonedEdit
-            Left = 4
-            Top = 20
-            Width = 277
-            Height = 27
-            Anchors = [akLeft, akTop, akRight]
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            Images = ImageList1
-            ParentFont = False
-            RightButton.ImageIndex = 1
-            RightButton.Visible = True
-            TabOrder = 0
-            TextHint = 'Selecione o Arquivo...'
-            OnRightButtonClick = edBuscaArquivoAlmoxarifadoRightButtonClick
-          end
-        end
-        object mnImportaAlmoxarifado: TMemo
-          Left = 1
-          Top = 50
-          Width = 361
-          Height = 150
-          Align = alClient
-          Color = clMoneyGreen
-          ReadOnly = True
-          ScrollBars = ssVertical
-          TabOrder = 1
-        end
-      end
-      object pnImportaFornecedor: TPanel
-        Left = 1
-        Top = 237
-        Width = 362
-        Height = 236
-        Align = alClient
-        Color = clWhite
-        TabOrder = 2
-        object pbImportaFornecedor: TGauge
+        object mnImportaFornecedor: TMemo
           AlignWithMargins = True
           Left = 4
-          Top = 203
-          Width = 354
-          Height = 29
-          Align = alBottom
-          BackColor = clBtnFace
-          ForeColor = clLime
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          MaxValue = 0
-          ParentFont = False
-          Progress = 0
-        end
-        object mnImportaFornecedor: TMemo
-          Left = 1
-          Top = 49
-          Width = 360
-          Height = 151
+          Top = 52
+          Width = 355
+          Height = 145
           Align = alClient
           Color = clMoneyGreen
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
+          ExplicitLeft = 1
+          ExplicitTop = 49
+          ExplicitWidth = 360
+          ExplicitHeight = 151
         end
         object pnCabImportaFornecedor: TPanel
           Left = 1
           Top = 1
-          Width = 360
+          Width = 361
           Height = 48
           Align = alTop
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
+          ExplicitWidth = 360
           DesignSize = (
-            360
+            361
             48)
           object Label3: TLabel
             Left = 5
@@ -337,7 +364,7 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importa'#231#227'o de Fornecedores'
           end
           object btImportarFornecedor: TButton
-            Left = 283
+            Left = 284
             Top = 19
             Width = 75
             Height = 27
@@ -345,11 +372,12 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportarFornecedorClick
+            ExplicitLeft = 283
           end
           object edBuscaArquivoFornecedor: TButtonedEdit
             Left = 5
             Top = 19
-            Width = 275
+            Width = 276
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Font.Charset = DEFAULT_CHARSET
@@ -364,6 +392,7 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoFornecedorRightButtonClick
+            ExplicitWidth = 275
           end
         end
       end
@@ -444,15 +473,20 @@ object frmImportacao: TfrmImportacao
           end
         end
         object mnImportaProdutoFornecedor: TMemo
-          Left = 1
-          Top = 49
-          Width = 361
-          Height = 151
+          AlignWithMargins = True
+          Left = 4
+          Top = 52
+          Width = 355
+          Height = 145
           Align = alClient
           Color = clMoneyGreen
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
+          ExplicitLeft = 1
+          ExplicitTop = 49
+          ExplicitWidth = 361
+          ExplicitHeight = 151
         end
       end
     end
@@ -465,7 +499,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

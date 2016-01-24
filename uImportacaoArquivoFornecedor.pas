@@ -17,8 +17,6 @@ type
     pnPrincipal: TPanel;
     pnBotton: TPanel;
     GridPanel1: TGridPanel;
-    btSalvar: TBitBtn;
-    btSair: TBitBtn;
     gbSelecionaFornecedor: TGroupBox;
     edFornecedor: TButtonedEdit;
     ImageList1: TImageList;
@@ -51,6 +49,11 @@ type
     cbLote: TComboBox;
     csProdutosID_PRODUTOFORNECEDOR: TIntegerField;
     csProdutosDISPONIVEL: TIntegerField;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    btSalvar: TBitBtn;
+    btSair: TBitBtn;
+    btExport: TSpeedButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -71,6 +74,7 @@ type
     procedure cbFiltroChange(Sender: TObject);
     procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure btLimparClick(Sender: TObject);
+    procedure btExportClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -80,6 +84,7 @@ type
     procedure atualizaTotal;
     procedure bloqueioSalvar(Status : Integer = 0);//0 - Bloqueio Botao Salvar 1 - Bloqueio Tudo 2 - Bloqueio Importar
     procedure buscaProdutosFornecedor(CodFornecedor : Integer);
+    procedure exportaprodutos;
   end;
 
 var
@@ -103,6 +108,11 @@ begin
   edArquivo.Enabled    := Status in [0];
   btImportar.Enabled   := Status in [0];
   btSalvar.Enabled     := Status in [2];;
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.btExportClick(Sender: TObject);
+begin
+  exportaprodutos;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btImportarClick(Sender: TObject);
@@ -197,11 +207,16 @@ begin
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTO.FieldName;
         end;
       end;
+
+      if Length(ExcelColluns) < 3 then begin
+        DisplayMsg(MSG_WAR, 'Estrutura do arquivo inválida!', '', 'Colunas: Cód. do Fornecedor, Estoque, Custo Final C/ IPI+ST+Desc');
+        Exit;
+      end;
+
       for I := 2 to vrow do begin
         for J := 0 to High(ExcelColluns) do begin
           if csProdutos.FieldByName(ExcelColluns[J].nome).FieldName = csProdutosCODIGO.FieldName then begin
             Valor                                   := Trim(arrData[I, ExcelColluns[J].index]);
-//            Valor                                   := Trim(AbaXLS.Cells.Item[I, ExcelColluns[J].index].Value);
             if Valor <> '' then begin
               if csProdutos.Locate(csProdutosCODIGO.FieldName, Valor, []) then
                 csProdutos.Edit
@@ -239,7 +254,7 @@ begin
     if btImportar.Tag <> 0 then begin
       DisplayMsg(MSG_WAR, 'Existem produtos não cadastrados no arquivo!');
       bloqueioSalvar(0);
-      cbFiltro.ItemIndex                            := 2;
+      cbFiltro.ItemIndex                            := 3;
       cbFiltroChange(nil);
       Exit;
     end;
@@ -263,6 +278,10 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.btSairClick(Sender: TObject);
 begin
+  if not csProdutos.IsEmpty then begin
+    DisplayMsg(MSG_CONF, 'Tem certeza que deseja sair?');
+    if not (ResultMsgModal in [mrOk, mrYes]) then Exit;
+  end;
   Close;
 end;
 
@@ -289,6 +308,8 @@ begin
   ITENS                              := TIMPORTACAO_ITENS.Create(CON);
   PROD                               := TPRODUTO.Create(CON);
   PRODFOR                            := TPRODUTOFORNECEDOR.Create(CON);
+  pgProdutos.MaxValue                := csProdutos.RecordCount;
+  pgProdutos.Progress                := 0;
   csProdutos.DisableControls;
 
   DisplayMsg(MSG_WAIT, 'Gravando dados no banco de dados!');
@@ -319,10 +340,12 @@ begin
           PRODFOR.QUANTIDADE.Value     := csProdutosDISPONIVEL.Value;
           PRODFOR.Update;
         end;
+        pgProdutos.Progress            := csProdutos.RecNo;
         csProdutos.Next;
       end;
       CON.Commit;
       bloqueioSalvar(0);
+      pgProdutos.Progress              := 0;
       limpaCampos;
       DisplayMsg(MSG_OK, 'Dados gravados com sucesso!');
     except
@@ -421,10 +444,11 @@ end;
 procedure TfrmImportacaoArquivoFornecedor.csProdutosFilterRecord(
   DataSet: TDataSet; var Accept: Boolean);
 begin
-  if cbFiltro.ItemIndex = 1 then
-    Accept   := csProdutosSTATUS.Value = 0
-  else
-    Accept   := csProdutosSKU.Value = '';
+  case cbFiltro.ItemIndex of
+    1 : Accept   := csProdutosSTATUS.Value = 1;
+    2 : Accept   := csProdutosSTATUS.Value = 0;
+    3 : Accept   := csProdutosSKU.Value  = '';
+  end;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.dgProdutosDrawColumnCell(
@@ -485,6 +509,81 @@ begin
   finally
     FreeAndNil(FORNECEDOR);
     FreeAndNil(CON);
+  end;
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.exportaprodutos;
+var
+  XLSAplicacao,
+  AbaXLS,
+  RangeTitulos,
+  RangeDados   : OLEVariant;
+  arrTitulos,
+  arrData      : Variant;
+  I            : Integer;
+  DirArquivo   : String;
+begin
+  DirArquivo    := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date) + '\';
+
+  if not DirectoryExists(DirArquivo) then begin
+    if not ForceDirectories(DirArquivo) then begin
+      DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
+      Exit;
+    end;
+  end;
+
+  DirArquivo    := DirArquivo + edNomeFornecedor.Text + '.xlsx';
+
+  if FileExists(DirArquivo) then begin
+    DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
+                          'Deseja Sobreescrever?');
+    if ResultMsgModal <> mrYes then
+      Exit;
+
+    DeleteFile(DirArquivo);
+  end;
+
+  DisplayMsg(MSG_WAIT, 'Carregando dados para o Arquivo!');
+
+  XLSAplicacao := CreateOleObject('Excel.Application');
+  csProdutos.DisableControls;
+  try
+    XLSAplicacao.Caption := 'IMPORTACAO ' + edNomeFornecedor.Text;
+    XLSAplicacao.Visible := False;
+    XLSAplicacao.WorkBooks.add(1);
+    XLSAplicacao.Workbooks[1].WorkSheets[1].Name := edNomeFornecedor.Text;
+    AbaXLS                  := XLSAplicacao.Workbooks[1].WorkSheets[edNomeFornecedor.Text];
+
+    arrTitulos              := VarArrayCreate([1, 1, 1, csProdutos.FieldCount], varVariant);
+    for I := 0 to Pred(csProdutos.FieldCount) do
+      arrTitulos[1, I + 1]  := csProdutos.Fields[I].DisplayLabel;
+    RangeTitulos            := AbaXLS.Range[AbaXLS.cells[1,1], AbaXLS.Cells[1, csProdutos.FieldCount]];
+    RangeTitulos.Font.Bold  := True;
+    RangeTitulos.Font.Color := clBlue;
+    RangeTitulos.Value      := arrTitulos;
+
+    arrData                 := VarArrayCreate([1, csProdutos.RecordCount + 1, 1 , csProdutos.FieldCount], varVariant);
+
+    csProdutos.First;
+    while not csProdutos.Eof do begin
+      for I := 0 to Pred(csProdutos.FieldCount) do
+        arrData[csProdutos.RecNo, I + 1] := csProdutos.Fields[I].Value;
+      csProdutos.Next;
+    end;
+
+    RangeDados              := AbaXLS.Range[AbaXLS.cells[2,1], AbaXLS.Cells[csProdutos.RecordCount + 1, csProdutos.FieldCount]];
+    RangeDados.numberFormat := '@';
+    RangeDados.Value        := arrData;
+
+    AbaXLS.Columns.AutoFit;
+    XLSAplicacao.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+    DisplayMsg(MSG_OK, 'Arquivo gerado com sucesso!','', DirArquivo);
+  finally
+    csProdutos.EnableControls;
+    AbaXLS                  := Unassigned;
+
+    XLSAplicacao.Quit;
+    XLSAplicacao            := Unassigned;
   end;
 end;
 

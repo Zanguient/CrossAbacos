@@ -26,6 +26,7 @@ type
     GerarLote1: TMenuItem;
     ImportaodeArquivosdeFornecedores1: TMenuItem;
     GerarMatch1: TMenuItem;
+    ConfiguraodeProdutos1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -38,6 +39,7 @@ type
     procedure ImportaodeArquivosdeFornecedores1Click(Sender: TObject);
     procedure GerarMatch1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ConfiguraodeProdutos1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -63,7 +65,8 @@ uses
   uImportacao,
   uConsultaMatch,
   uImportacaoArquivoFornecedor,
-  uGeraMatch;
+  uGeraMatch,
+  uInativaProdutoFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -155,6 +158,17 @@ begin
     FrmCadastroMargem.ShowModal;
   finally
     FreeAndNil(FrmCadastroMargem);
+  end;
+end;
+
+procedure TFrmPrincipal.ConfiguraodeProdutos1Click(Sender: TObject);
+begin
+  if frmInativaProdutoFornecedor = nil then
+    frmInativaProdutoFornecedor := TfrmInativaProdutoFornecedor.Create(nil);
+  try
+    frmInativaProdutoFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmInativaProdutoFornecedor);
   end;
 end;
 
