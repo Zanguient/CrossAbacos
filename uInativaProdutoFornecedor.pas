@@ -8,7 +8,8 @@ uses
   Vcl.Grids, Vcl.DBGrids, Vcl.ImgList, Data.DB, Datasnap.DBClient,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  Vcl.Samples.Gauges;
 
 type
   TfrmInativaProdutoFornecedor = class(TForm)
@@ -45,6 +46,10 @@ type
     csProdutosPRODUTOFORNECEDOR: TIntegerField;
     cbStatus: TComboBox;
     Label4: TLabel;
+    pnFiltro: TPanel;
+    btFiltrar: TSpeedButton;
+    edFiltro: TEdit;
+    pbBusca: TGauge;
     procedure FormCreate(Sender: TObject);
     procedure edFornecedorRightButtonClick(Sender: TObject);
     procedure edFornecedorKeyDown(Sender: TObject; var Key: Word;
@@ -66,6 +71,9 @@ type
     procedure dsProdutosDataChange(Sender: TObject; Field: TField);
     procedure csProdutosAfterPost(DataSet: TDataSet);
     procedure csProdutosAfterDelete(DataSet: TDataSet);
+    procedure edFiltroKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure btFiltrarClick(Sender: TObject);
   private
     { Private declarations }
     procedure selecionaFornecedor;
@@ -126,6 +134,11 @@ begin
   ativar(True);
 end;
 
+procedure TfrmInativaProdutoFornecedor.btFiltrarClick(Sender: TObject);
+begin
+  filtrar;
+end;
+
 procedure TfrmInativaProdutoFornecedor.btInativarClick(Sender: TObject);
 begin
   ativar(False);
@@ -158,11 +171,22 @@ end;
 
 procedure TfrmInativaProdutoFornecedor.csProdutosFilterRecord(DataSet: TDataSet;
   var Accept: Boolean);
+var
+  I : Integer;
 begin
-  if cbStatus.ItemIndex = 1 then
-    Accept   := csProdutosSTATUS.Value
-  else
-    Accept   := not csProdutosSTATUS.Value;
+  case cbStatus.ItemIndex of
+    0 : Accept     := True;
+    1 : Accept     := csProdutosSTATUS.Value;
+    2 : Accept     := not csProdutosSTATUS.Value;
+  end;
+
+  if (Accept) and (edFiltro.Text <> '') then begin
+    for I := 0 to Pred(csProdutos.FieldCount) do begin
+      Accept    := Pos(AnsiUpperCase(edFiltro.Text), AnsiUpperCase(csProdutos.Fields[I].AsString)) > 0;
+      if Accept then Break;
+    end;
+  end;
+    
 end;
 
 procedure TfrmInativaProdutoFornecedor.dgProdutosCellClick(Column: TColumn);
@@ -208,6 +232,13 @@ begin
   edRegistroAtual.Text   := IntToStr(csProdutos.RecNo);
 end;
 
+procedure TfrmInativaProdutoFornecedor.edFiltroKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_RETURN then filtrar;
+
+end;
+
 procedure TfrmInativaProdutoFornecedor.edFornecedorKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
@@ -237,7 +268,7 @@ end;
 procedure TfrmInativaProdutoFornecedor.filtrar;
 begin
   csProdutos.Filtered      := False;
-  csProdutos.Filtered      := cbStatus.ItemIndex > 0;
+  csProdutos.Filtered      := (cbStatus.ItemIndex > 0) or (edFiltro.Text <> '');
 
   edTotalRegistros.Text    := IntToStr(csProdutos.RecordCount);
   edRegistroAtual.Text     := IntToStr(csProdutos.RecNo);
@@ -281,6 +312,7 @@ begin
   P                    := TPRODUTO.Create(CON);
   F                    := TFORNECEDOR.Create(CON);
   DisplayMsg(MSG_WAIT, 'Buscando dados no banco de dados!');
+  pbBusca.Progress     := 0;
   try
     Filtro             := '';
     if (edFornecedor.Text <> '') and (edNomeFornecedor.Text <> '') then
@@ -296,6 +328,9 @@ begin
     PF.SelectList(Filtro);
 
     if PF.Count > 0 then begin
+      DisplayMsg(MSG_WAIT, 'Adicionando dados a tela!');
+      pbBusca.MaxValue   := PF.Count;
+
       for I := 0 to Pred(PF.Count) do begin
         P.SelectList('id = ' + TPRODUTOFORNECEDOR(PF.Itens[I]).ID_PRODUTO.asString);
         F.SelectList('id = ' + TPRODUTOFORNECEDOR(PF.Itens[I]).ID_FORNECEDOR.asString);
@@ -310,6 +345,8 @@ begin
         csProdutosSTATUS.Value           := TPRODUTOFORNECEDOR(PF.Itens[I]).STATUS.Value;
         csProdutosPRODUTOFORNECEDOR.Value:= TPRODUTOFORNECEDOR(PF.Itens[I]).ID.Value;
         csProdutos.Post;
+
+        pbBusca.Progress                 := csProdutos.RecordCount;
       end;
     end;
 
@@ -320,6 +357,7 @@ begin
     FreeAndNil(PF);
     FreeAndNil(CON);
     csProdutos.EnableControls;
+    pbBusca.Progress                    := 0;
   end;
 end;
 

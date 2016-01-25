@@ -34,7 +34,16 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     ParentBackground = False
     ParentFont = False
     TabOrder = 0
-    ExplicitHeight = 528
+    object pbBusca: TGauge
+      AlignWithMargins = True
+      Left = 3
+      Top = 187
+      Width = 794
+      Height = 38
+      Align = alTop
+      ForeColor = clLime
+      Progress = 0
+    end
     object gbImportar: TGroupBox
       AlignWithMargins = True
       Left = 3
@@ -177,8 +186,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
         ParentFont = False
         OnClick = btAtivarClick
-        ExplicitTop = 18
-        ExplicitHeight = 39
+        ExplicitTop = 26
       end
       object btInativar: TSpeedButton
         AlignWithMargins = True
@@ -378,8 +386,6 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         ParentFont = False
         TabOrder = 0
         OnClick = btPesquisarClick
-        ExplicitTop = 18
-        ExplicitHeight = 39
       end
       object edTotalRegistros: TEdit
         Left = 647
@@ -437,9 +443,9 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     object dgProdutos: TDBGrid
       AlignWithMargins = True
       Left = 3
-      Top = 187
+      Top = 280
       Width = 794
-      Height = 410
+      Height = 317
       Align = alClient
       Color = clMoneyGreen
       DataSource = dsProdutos
@@ -607,12 +613,61 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         TabOrder = 1
       end
     end
+    object pnFiltro: TPanel
+      AlignWithMargins = True
+      Left = 3
+      Top = 231
+      Width = 794
+      Height = 43
+      Align = alTop
+      TabOrder = 4
+      ExplicitLeft = 4
+      ExplicitTop = 172
+      ExplicitWidth = 864
+      object btFiltrar: TSpeedButton
+        AlignWithMargins = True
+        Left = 733
+        Top = 4
+        Width = 57
+        Height = 35
+        Align = alRight
+        Caption = 'Filtrar'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        NumGlyphs = 4
+        ParentFont = False
+        OnClick = btFiltrarClick
+        ExplicitLeft = 688
+        ExplicitHeight = 33
+      end
+      object edFiltro: TEdit
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 723
+        Height = 35
+        Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        TextHint = 'Digite o Filtro'
+        OnKeyDown = edFiltroKeyDown
+        ExplicitHeight = 27
+      end
+    end
   end
   object ImageList1: TImageList
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800B00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800B40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -808,7 +863,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 440
     Top = 328
     Bitmap = {
-      494C010102000C002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C00300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
