@@ -97,7 +97,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 2
-        ExplicitTop = 1
         object pbImportaProdutos: TGauge
           AlignWithMargins = True
           Left = 4
@@ -133,10 +132,6 @@ object frmImportacao: TfrmImportacao
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
-          ExplicitLeft = 1
-          ExplicitTop = 50
-          ExplicitWidth = 360
-          ExplicitHeight = 150
         end
         object pnCabProdutos: TPanel
           Left = 1
@@ -208,8 +203,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 0
-        ExplicitLeft = 363
-        ExplicitWidth = 363
         object pbImportaAlmoxarifado: TGauge
           AlignWithMargins = True
           Left = 4
@@ -237,7 +230,6 @@ object frmImportacao: TfrmImportacao
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitWidth = 361
           DesignSize = (
             360
             49)
@@ -257,7 +249,6 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportaAlmoxarifadoClick
-            ExplicitLeft = 283
           end
           object edBuscaArquivoAlmoxarifado: TButtonedEdit
             Left = 4
@@ -277,7 +268,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoAlmoxarifadoRightButtonClick
-            ExplicitWidth = 277
           end
         end
         object mnImportaAlmoxarifado: TMemo
@@ -291,10 +281,6 @@ object frmImportacao: TfrmImportacao
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
-          ExplicitLeft = 1
-          ExplicitTop = 50
-          ExplicitWidth = 361
-          ExplicitHeight = 150
         end
       end
       object pnImportaFornecedor: TPanel
@@ -305,9 +291,6 @@ object frmImportacao: TfrmImportacao
         Align = alClient
         Color = clWhite
         TabOrder = 1
-        ExplicitLeft = 1
-        ExplicitTop = 237
-        ExplicitWidth = 362
         object pbImportaFornecedor: TGauge
           AlignWithMargins = True
           Left = 4
@@ -338,10 +321,6 @@ object frmImportacao: TfrmImportacao
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
-          ExplicitLeft = 1
-          ExplicitTop = 49
-          ExplicitWidth = 360
-          ExplicitHeight = 151
         end
         object pnCabImportaFornecedor: TPanel
           Left = 1
@@ -352,7 +331,6 @@ object frmImportacao: TfrmImportacao
           BevelOuter = bvNone
           Color = clWhite
           TabOrder = 0
-          ExplicitWidth = 360
           DesignSize = (
             361
             48)
@@ -372,7 +350,6 @@ object frmImportacao: TfrmImportacao
             Caption = 'Importar'
             TabOrder = 1
             OnClick = btImportarFornecedorClick
-            ExplicitLeft = 283
           end
           object edBuscaArquivoFornecedor: TButtonedEdit
             Left = 5
@@ -392,7 +369,6 @@ object frmImportacao: TfrmImportacao
             TabOrder = 0
             TextHint = 'Selecione o Arquivo...'
             OnRightButtonClick = edBuscaArquivoFornecedorRightButtonClick
-            ExplicitWidth = 275
           end
         end
       end
@@ -483,10 +459,6 @@ object frmImportacao: TfrmImportacao
           ReadOnly = True
           ScrollBars = ssVertical
           TabOrder = 1
-          ExplicitLeft = 1
-          ExplicitTop = 49
-          ExplicitWidth = 361
-          ExplicitHeight = 151
         end
       end
     end
@@ -499,7 +471,7 @@ object frmImportacao: TfrmImportacao
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020008008C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

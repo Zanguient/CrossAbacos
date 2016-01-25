@@ -467,6 +467,7 @@ begin
             FORPROD.ID_ULTIMOLOTE.Value                                        := 0;
             FORPROD.CUSTO.Value                                                := 0.00;
             FORPROD.QUANTIDADE.Value                                           := 0;
+            FORPROD.STATUS.Value                                               := True;
 
             FORPROD.Insert;
 

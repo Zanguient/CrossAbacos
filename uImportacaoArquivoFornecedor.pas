@@ -523,6 +523,11 @@ var
   I            : Integer;
   DirArquivo   : String;
 begin
+  if csProdutos.IsEmpty then begin
+    DisplayMsg(MSG_WAR, 'Não existem dados para exportar');
+    Exit;
+  end;
+
   DirArquivo    := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date) + '\';
 
   if not DirectoryExists(DirArquivo) then begin
