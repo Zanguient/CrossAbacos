@@ -26,6 +26,7 @@ uses
   Function Criptografa(Texto : String; Tipo : String) : String;
   function SoNumeros(Texto: String): String;
   function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
+  function StrZero(Zeros : string; Quant : Integer): string;
 
 implementation
 
@@ -354,6 +355,15 @@ begin
   if ValorAnterior > 0.00 then
     if ValorNovo > 0.00 then
         Result := Trunc((((ValorNovo * 100) / ValorAnterior) - 100) * 100) / 100.00
+end;
+
+
+function StrZero(Zeros : string; Quant : Integer): string;
+begin
+  Result := Zeros;
+  Quant := Quant - Length(Result);
+  if Quant > 0 then
+   Result := StringOfChar('0', Quant)+Result;
 end;
 
 end.

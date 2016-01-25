@@ -148,7 +148,7 @@ Begin
     Exit;
   end;
 
-  DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
+  DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
 
   if not DirectoryExists(DirArquivo) then begin
     if not ForceDirectories(DirArquivo) then begin
@@ -399,14 +399,16 @@ begin
             MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
 
           //Verifica o Fornecedor com Custo Menor
-          PF.SelectList('ID_PRODUTO = ' + SQL.Fields[0].AsString + ' AND CUSTO > 0 AND QUANTIDADE > 0', 'CUSTO ASC');
+          PF.SelectList('ID_PRODUTO = ' + SQL.Fields[0].AsString + ' AND CUSTO > 0 AND QUANTIDADE > 0 AND STATUS = True', 'CUSTO ASC');
           if PF.Count > 0 then begin
             MI.ID_FORNECEDORNOVO.Value  := TPRODUTOFORNECEDOR(PF.Itens[0]).ID_FORNECEDOR.Value;
             MI.CUSTONOVO.Value          := TPRODUTOFORNECEDOR(PF.Itens[0]).CUSTO.Value;
+            MI.QUANTIDADE.Value         := TPRODUTOFORNECEDOR(PF.Itens[0]).QUANTIDADE.Value;
             MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
           end else begin
             MI.ID_FORNECEDORNOVO.Value  := 0; //Fora de estoque Virtual
             MI.CUSTONOVO.Value          := 0.00;
+            MI.QUANTIDADE.Value         := 0;
             MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
           end;
 

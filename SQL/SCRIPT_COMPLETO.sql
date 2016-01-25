@@ -184,6 +184,7 @@ CREATE TABLE if not exists match_itens
   id_fornecedornovo integer,
   id_ultimolote integer,
   atualizado boolean,
+  quantidade integer,
   CONSTRAINT pk_matchitens_id PRIMARY KEY (id),
   CONSTRAINT fk_matchitens_fornecedor1 FOREIGN KEY (id_fornecedoranterior)
       REFERENCES fornecedor (id) MATCH SIMPLE

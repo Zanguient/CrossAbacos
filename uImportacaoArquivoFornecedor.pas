@@ -85,6 +85,7 @@ type
     procedure bloqueioSalvar(Status : Integer = 0);//0 - Bloqueio Botao Salvar 1 - Bloqueio Tudo 2 - Bloqueio Importar
     procedure buscaProdutosFornecedor(CodFornecedor : Integer);
     procedure exportaprodutos;
+    procedure filtrar;
   end;
 
 var
@@ -136,6 +137,7 @@ var
 
 begin
   csProdutos.EmptyDataSet;
+  csProdutos.Filtered                               := False;
   if StrToIntDef(edFornecedor.Text, 0) <> 0 then begin
     CON                                             := TFWConnection.Create;
     FORN                                            := TFORNECEDOR.Create(CON);
@@ -265,6 +267,7 @@ begin
       XLSAplicacao.Quit;
       XLSAplicacao                                := Unassigned;
     end;
+    filtrar;
     csProdutos.EnableControls;
     pgProdutos.Progress                           := 0;
   end;
@@ -311,6 +314,7 @@ begin
   pgProdutos.MaxValue                := csProdutos.RecordCount;
   pgProdutos.Progress                := 0;
   csProdutos.DisableControls;
+  csProdutos.Filtered                := False;
 
   DisplayMsg(MSG_WAIT, 'Gravando dados no banco de dados!');
 
@@ -356,6 +360,7 @@ begin
       end;
     end;
   finally
+    filtrar;
     csProdutos.EnableControls;
     FreeAndNil(IMPORTACAO);
     FreeAndNil(ITENS);
@@ -377,7 +382,7 @@ begin
   PRODFOR                                           := TPRODUTOFORNECEDOR.Create(CON);
   PROD                                              := TPRODUTO.Create(CON);
   try
-    PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text);
+    PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text + ' AND STATUS = True');
     pgProdutos.MaxValue                             := PRODFOR.Count;
     pgProdutos.Progress                             := 0;
     for I := 0 to Pred(PRODFOR.Count) do begin
@@ -429,10 +434,7 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.cbFiltroChange(Sender: TObject);
 begin
-  csProdutos.Filtered        := False;
-  if cbFiltro.ItemIndex <> 0 then
-    csProdutos.Filtered      := True;
-  atualizaTotal;
+  filtrar;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.csProdutosAfterPost(
@@ -528,7 +530,7 @@ begin
     Exit;
   end;
 
-  DirArquivo    := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date) + '\';
+  DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
 
   if not DirectoryExists(DirArquivo) then begin
     if not ForceDirectories(DirArquivo) then begin
@@ -537,7 +539,7 @@ begin
     end;
   end;
 
-  DirArquivo    := DirArquivo + edNomeFornecedor.Text + '.xlsx';
+  DirArquivo    := DirArquivo + '\' + edNomeFornecedor.Text + '.xlsx';
 
   if FileExists(DirArquivo) then begin
     DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
@@ -590,6 +592,14 @@ begin
     XLSAplicacao.Quit;
     XLSAplicacao            := Unassigned;
   end;
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.filtrar;
+begin
+  csProdutos.Filtered        := False;
+  if cbFiltro.ItemIndex <> 0 then
+    csProdutos.Filtered      := True;
+  atualizaTotal;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.FormClose(Sender: TObject;

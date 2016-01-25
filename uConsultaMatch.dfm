@@ -1095,9 +1095,9 @@ object frmConsultaMatch: TfrmConsultaMatch
     end
     object rgFiltroAtualizacao: TRadioGroup
       AlignWithMargins = True
-      Left = 578
+      Left = 568
       Top = 4
-      Width = 144
+      Width = 154
       Height = 162
       Align = alRight
       Font.Charset = DEFAULT_CHARSET
@@ -1105,10 +1105,11 @@ object frmConsultaMatch: TfrmConsultaMatch
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = 2
+      ItemIndex = 3
       Items.Strings = (
         'Atualizados'
         'N'#227'o Atualizados'
+        'Fornecedor Atua.'
         'Ambos')
       ParentFont = False
       TabOrder = 2
@@ -1881,7 +1882,7 @@ object frmConsultaMatch: TfrmConsultaMatch
       AlignWithMargins = True
       Left = 287
       Top = 4
-      Width = 285
+      Width = 275
       Height = 162
       Align = alClient
       Color = clMoneyGreen
@@ -1973,6 +1974,11 @@ object frmConsultaMatch: TfrmConsultaMatch
         Title.Alignment = taCenter
         Title.Caption = 'Marca'
         Width = 200
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'QUANTIDADE'
         Visible = True
       end
       item
@@ -2116,6 +2122,10 @@ object frmConsultaMatch: TfrmConsultaMatch
     end
     object cds_MatchItensESTANOMATCH: TBooleanField
       FieldName = 'ESTANOMATCH'
+    end
+    object cds_MatchItensQUANTIDADE: TIntegerField
+      DisplayLabel = 'Quant.'
+      FieldName = 'QUANTIDADE'
     end
   end
 end

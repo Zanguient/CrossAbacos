@@ -74,6 +74,8 @@ type
     procedure edFiltroKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btFiltrarClick(Sender: TObject);
+    procedure edFornecedorExit(Sender: TObject);
+    procedure edProdutoExit(Sender: TObject);
   private
     { Private declarations }
     procedure selecionaFornecedor;
@@ -203,6 +205,8 @@ const
 var
   DrawRect: TRect;
 begin
+  if csProdutos.IsEmpty then Exit;
+  
   if (gdSelected in State) or (gdFocused in State) then begin
     dgProdutos.Canvas.Font.Color   := clWhite;
     dgProdutos.Canvas.Brush.Color  := clBlue;
@@ -213,13 +217,13 @@ begin
 
   if Column.FieldName = csProdutosSTATUS.FieldName then begin
     dgProdutos.Canvas.FillRect(Rect);
-    ImageList2.Draw(dgProdutos.Canvas, Rect.Left + 2, Rect.Top + 2, 0);
-
     if csProdutosSTATUS.Value then // Cadastro está ativo
-      ImageList2.Draw(dgProdutos.Canvas, Rect.Left + 2, Rect.Top + 2, 1);
+      ImageList2.Draw(dgProdutos.Canvas, (Rect.Left + (Rect.Width div 2) - 1), Rect.Top + 2, 1)
+    else
+      ImageList2.Draw(dgProdutos.Canvas, (Rect.Left + (Rect.Width div 2) - 1), Rect.Top + 2, 0);
   end;
   if Column.FieldName = csProdutosSELECIONAR.FieldName then begin
-    DrawRect   :=Rect;
+    DrawRect   := Rect;
     InflateRect(DrawRect,-1,-1);
     dgProdutos.Canvas.FillRect(Rect);
     DrawFrameControl(dgProdutos.Canvas.Handle, DrawRect, DFC_BUTTON, ISChecked[Column.Field.AsBoolean]);
@@ -239,6 +243,12 @@ begin
 
 end;
 
+procedure TfrmInativaProdutoFornecedor.edFornecedorExit(Sender: TObject);
+begin
+  if (edFornecedor.Text = '') or (edFornecedor.Text = '0') then
+    edNomeFornecedor.Text := '';
+end;
+
 procedure TfrmInativaProdutoFornecedor.edFornecedorKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
@@ -250,6 +260,12 @@ procedure TfrmInativaProdutoFornecedor.edFornecedorRightButtonClick(
   Sender: TObject);
 begin
   selecionaFornecedor;
+end;
+
+procedure TfrmInativaProdutoFornecedor.edProdutoExit(Sender: TObject);
+begin
+  if (edProduto.Text = '') or (edProduto.Text = '0') then
+    edProduto.Text := '';
 end;
 
 procedure TfrmInativaProdutoFornecedor.edProdutoKeyDown(Sender: TObject;
@@ -290,6 +306,8 @@ procedure TfrmInativaProdutoFornecedor.FormShow(Sender: TObject);
 begin
   csProdutos.CreateDataSet;
   csProdutos.Open;
+
+  AutoSizeDBGrid(dgProdutos);
 end;
 
 procedure TfrmInativaProdutoFornecedor.pesquisar;

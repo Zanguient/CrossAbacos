@@ -37,25 +37,26 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     object pbBusca: TGauge
       AlignWithMargins = True
       Left = 3
-      Top = 187
+      Top = 195
       Width = 794
       Height = 38
       Align = alTop
       ForeColor = clLime
       Progress = 0
+      ExplicitTop = 187
     end
     object gbImportar: TGroupBox
       AlignWithMargins = True
       Left = 3
       Top = 119
       Width = 794
-      Height = 62
+      Height = 70
       Align = alTop
       Caption = '  Importar  '
-      TabOrder = 0
+      TabOrder = 2
       DesignSize = (
         794
-        62)
+        70)
       object Label2: TLabel
         Left = 534
         Top = 11
@@ -77,7 +78,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         Left = 114
         Top = 24
         Width = 110
-        Height = 33
+        Height = 41
         Align = alLeft
         Caption = '&Ativar'
         Font.Charset = DEFAULT_CHARSET
@@ -187,13 +188,14 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         ParentFont = False
         OnClick = btAtivarClick
         ExplicitTop = 26
+        ExplicitHeight = 33
       end
       object btInativar: TSpeedButton
         AlignWithMargins = True
         Left = 230
         Top = 24
         Width = 98
-        Height = 33
+        Height = 41
         Align = alLeft
         Caption = '&Inativar'
         Font.Charset = DEFAULT_CHARSET
@@ -318,7 +320,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         Left = 5
         Top = 24
         Width = 103
-        Height = 33
+        Height = 41
         Align = alLeft
         Caption = 'Buscar'
         Font.Charset = DEFAULT_CHARSET
@@ -386,6 +388,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         ParentFont = False
         TabOrder = 0
         OnClick = btPesquisarClick
+        ExplicitHeight = 33
       end
       object edTotalRegistros: TEdit
         Left = 647
@@ -443,9 +446,9 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     object dgProdutos: TDBGrid
       AlignWithMargins = True
       Left = 3
-      Top = 280
+      Top = 288
       Width = 794
-      Height = 317
+      Height = 309
       Align = alClient
       Color = clMoneyGreen
       DataSource = dsProdutos
@@ -457,7 +460,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       ParentFont = False
-      TabOrder = 1
+      TabOrder = 4
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -20
@@ -521,7 +524,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 1
       DesignSize = (
         794
         52)
@@ -541,6 +544,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         RightButton.Visible = True
         TabOrder = 0
         TextHint = 'Selecione o Produto...'
+        OnExit = edProdutoExit
         OnKeyDown = edProdutoKeyDown
         OnRightButtonClick = edProdutoRightButtonClick
       end
@@ -574,7 +578,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 0
       DesignSize = (
         794
         52)
@@ -594,6 +598,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         RightButton.Visible = True
         TabOrder = 0
         TextHint = 'Selecione o Fornecedor...'
+        OnExit = edFornecedorExit
         OnKeyDown = edFornecedorKeyDown
         OnRightButtonClick = edFornecedorRightButtonClick
       end
@@ -616,11 +621,12 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     object pnFiltro: TPanel
       AlignWithMargins = True
       Left = 3
-      Top = 231
+      Top = 239
       Width = 794
       Height = 43
       Align = alTop
-      TabOrder = 4
+      TabOrder = 3
+      ExplicitTop = 231
       object btFiltrar: TSpeedButton
         AlignWithMargins = True
         Left = 733
@@ -664,7 +670,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800B80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800C00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -860,7 +866,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 440
     Top = 328
     Bitmap = {
-      494C010102000C00340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

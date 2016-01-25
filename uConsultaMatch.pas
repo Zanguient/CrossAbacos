@@ -67,6 +67,7 @@ type
     cds_MatchDATAHORAMATCH: TDateTimeField;
     cds_MatchItensID_PRODUTO: TIntegerField;
     pbExportaFornecedor: TGauge;
+    cds_MatchItensQUANTIDADE: TIntegerField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -344,7 +345,8 @@ begin
         SQL.SQL.Add('	FN.NOME AS FORNECEDORNOVO,');
         SQL.SQL.Add('	L.ID AS IDULTIMOLOTE,');
         SQL.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATAULTIMOLOTE,');
-        SQL.SQL.Add('	MI.ATUALIZADO AS MATCH');
+        SQL.SQL.Add('	MI.ATUALIZADO AS MATCH,');
+        SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE');
         SQL.SQL.Add('FROM MATCH M');
         SQL.SQL.Add('INNER JOIN MATCH_ITENS MI ON (M.ID = MI.ID_MATCH)');
         SQL.SQL.Add('INNER JOIN PRODUTO P ON (MI.ID_PRODUTO = P.ID)');
@@ -364,7 +366,11 @@ begin
             0 : SQL.ParamByName('ATUALIZADO').Value := True;
             1 : SQL.ParamByName('ATUALIZADO').Value := False;
           end;
+        end else if rgFiltroAtualizacao.ItemIndex = 2 then begin
+          SQL.SQL.Add('AND MI.ID_FORNECEDORANTERIOR <> MI.ID_FORNECEDORNOVO');
         end;
+
+
 
         SQL.Connection           := FWC.FDConnection;
         SQL.Prepare;
@@ -387,6 +393,7 @@ begin
             cds_MatchItensATUALIZADONOMATCH.Value    := SQL.Fields[9].Value;
             cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := True;
+            cds_MatchItensQUANTIDADE.Value           := SQL.Fields[10].Value;
             cds_MatchItens.Post;
 
             if Length(Trim(ProdnoLote)) = 0 then
@@ -414,11 +421,13 @@ begin
         SQL.SQL.ADD('	FN.NOME AS FORNECEDORNOVO,');
         SQL.SQL.ADD('	L.ID AS IDULTIMOLOTE,');
         SQL.SQL.ADD('	CAST(L.DATA_HORA AS DATE) AS DATAULTIMOLOTE,');
-        SQL.SQL.ADD('	FALSE AS MATCH');
+        SQL.SQL.ADD('	FALSE AS MATCH,');
+        SQL.SQL.ADD(' COALESCE(PF.QUANTIDADE ,0)');
         SQL.SQL.ADD('FROM PRODUTO P');
         SQL.SQL.ADD('INNER JOIN LOTE L ON (P.ID_ULTIMOLOTE = L.ID)');
         SQL.SQL.ADD('INNER JOIN FORNECEDOR FA ON (P.ID_FORNECEDORANTERIOR = FA.ID)');
         SQL.SQL.ADD('INNER JOIN FORNECEDOR FN ON (P.ID_FORNECEDORNOVO = FN.ID)');
+        SQL.SQL.ADD('LEFT JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR) AND (PF.STATUS = TRUE )');
         SQL.SQL.ADD('WHERE 1 = 1');
         if Length(Trim(ProdnoLote)) > 0 then
           SQL.SQL.Add('AND P.ID NOT IN (' + Trim(ProdnoLote) + ')');
@@ -442,6 +451,7 @@ begin
             cds_MatchItensIDULTIMOLOTE.Value         := SQL.Fields[7].Value;
             cds_MatchItensDATAULTIMOLOTE.Value       := SQL.Fields[8].Value;
             cds_MatchItensATUALIZADONOMATCH.Value    := SQL.Fields[9].Value;
+            cds_MatchItensQUANTIDADE.Value           := SQL.Fields[10].Value;
             cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := False;
             cds_MatchItens.Post;
@@ -483,7 +493,7 @@ Begin
 
   if Not cds_MatchItens.IsEmpty then begin
 
-    DirArquivo := DirArquivosExcel + FormatDateTime('ddmmyyyy', Date);
+    DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
 
     if not DirectoryExists(DirArquivo) then begin
       if not ForceDirectories(DirArquivo) then begin
@@ -492,8 +502,7 @@ Begin
       end;
     end;
 
-    DirArquivo := DirArquivo + '\Fornecedor_'+ IntToStr(HourOf(Now))+ '_'+ IntToStr(MinuteOf(Now)) +'.xlsx';
-
+    DirArquivo := DirArquivo + '\Fornecedor.'+ StrZero(IntToStr(HourOf(Now)),2) + '.' + StrZero(IntToStr(MinuteOf(Now)),0) +'.xlsx';
     if FileExists(DirArquivo) then begin
       DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
                             'Deseja Sobreescrever?');
@@ -683,7 +692,7 @@ Begin
         PLANILHA.Columns.AutoFit;
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
 
-        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
+        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso!', '', DirArquivo);
 
       except
         on E : Exception do begin

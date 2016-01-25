@@ -78,8 +78,8 @@ begin
     frmMensagem.pnMsgExtendida.Visible    := False;
     frmMensagem.ClientHeight              := 276;
     ResultMsgModal                        := mrCancel;
-    frmMensagem.btDetalhes.Visible        := ((MsgTypeNo in [MSG_ERR, MSG_WAR, MSG_CONF]) and (MsgExtendida <> ''));
-    frmMensagem.lbDetalhes.Visible        := ((MsgTypeNo in [MSG_ERR, MSG_WAR, MSG_CONF]) and (MsgExtendida <> ''));
+    frmMensagem.btDetalhes.Visible        := ((MsgTypeNo in [MSG_ERR, MSG_WAR, MSG_INF, MSG_OK, MSG_CONF]) and (MsgExtendida <> ''));
+    frmMensagem.lbDetalhes.Visible        := ((MsgTypeNo in [MSG_ERR, MSG_WAR, MSG_INF, MSG_OK, MSG_CONF]) and (MsgExtendida <> ''));
     frmMensagem.btSim.Visible             := (MsgTypeNo = MSG_CONF);
     frmMensagem.btNao.Visible             := (MsgTypeNo in [MSG_CONF, MSG_PASSWORD, MSG_INPUT_TEXT, MSG_INPUT_INT, MSG_INPUT_CURR]);
     frmMensagem.btOk.Visible              := (MsgTypeNo <> MSG_CONF);

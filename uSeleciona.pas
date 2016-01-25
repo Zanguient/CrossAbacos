@@ -104,15 +104,9 @@ begin
   case Key of
     VK_ESCAPE : Close;
     VK_RETURN : begin
-      if edPesquisa.Focused then
-        Filter
-      else begin
-        if dgSeleciona.Focused then begin
-          if not csSeleciona.IsEmpty then begin
-            Seleciona;
-            Close;
-          end;
-        end;
+      if not csSeleciona.IsEmpty then begin
+        Seleciona;
+        Close;
       end;
     end;
     VK_UP : begin
@@ -174,6 +168,7 @@ begin
     QRConsulta.Connection := FDC.FDConnection;
     QRConsulta.Prepare;
     QRConsulta.Open();
+    QRConsulta.Offline;
 
     Count := GetPropList(FTabelaPai.ClassInfo, tkProperties, @List, False);
 
@@ -201,14 +196,20 @@ begin
     end;
 
     csSeleciona.EmptyDataSet;
-    while not QRConsulta.Eof do begin
-      csSeleciona.Append;
-      for I := 0 to QRConsulta.FieldCount - 1 do begin
-        if csSeleciona.FindField(QRConsulta.Fields[I].FieldName) <> nil then
-          csSeleciona.FieldByName(QRConsulta.Fields[I].FieldName).Value := QRConsulta.Fields[I].Value;
+    csSeleciona.DisableControls;
+    QRConsulta.DisableControls;
+    try
+      while not QRConsulta.Eof do begin
+        csSeleciona.Append;
+        for I := 0 to QRConsulta.FieldCount - 1 do begin
+          if csSeleciona.FindField(QRConsulta.Fields[I].FieldName) <> nil then
+            csSeleciona.FieldByName(QRConsulta.Fields[I].FieldName).Value := QRConsulta.Fields[I].Value;
+        end;
+        csSeleciona.Post;
+        QRConsulta.Next;
       end;
-      csSeleciona.Post;
-      QRConsulta.Next;
+    finally
+      csSeleciona.EnableControls;
     end;
 
   finally

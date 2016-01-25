@@ -18,6 +18,7 @@ type
     FID_MATCH: TFieldInteger;
     FID_FORNECEDORNOVO: TFieldInteger;
     FID_ULTIMOLOTE: TFieldInteger;
+    FQUANTIDADE: TFieldInteger;
     procedure SetATUALIZADO(const Value: TFieldBoolean);
     procedure SetCUSTOANTERIOR(const Value: TFieldCurrency);
     procedure SetCUSTONOVO(const Value: TFieldCurrency);
@@ -27,6 +28,7 @@ type
     procedure SetID_MATCH(const Value: TFieldInteger);
     procedure SetID_PRODUTO(const Value: TFieldInteger);
     procedure SetID_ULTIMOLOTE(const Value: TFieldInteger);
+    procedure SetQUANTIDADE(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -39,6 +41,7 @@ type
     property ID_FORNECEDORNOVO : TFieldInteger read FID_FORNECEDORNOVO write SetID_FORNECEDORNOVO;
     property ATUALIZADO : TFieldBoolean read FATUALIZADO write SetATUALIZADO;
     property ID_ULTIMOLOTE : TFieldInteger read FID_ULTIMOLOTE write SetID_ULTIMOLOTE;
+    property QUANTIDADE : TFieldInteger read FQUANTIDADE write SetQUANTIDADE;
   end;
 
 implementation
@@ -104,6 +107,11 @@ end;
 procedure TMATCH_ITENS.SetID_ULTIMOLOTE(const Value: TFieldInteger);
 begin
   FID_ULTIMOLOTE := Value;
+end;
+
+procedure TMATCH_ITENS.SetQUANTIDADE(const Value: TFieldInteger);
+begin
+  FQUANTIDADE := Value;
 end;
 
 end.
