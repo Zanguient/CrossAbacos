@@ -106,7 +106,9 @@ uses
   uBeanLOTEIMPORTACAO,
   uFWConnection,
   uMensagem,
-  uDMUtil, uBeanProduto;
+  uDMUtil,
+  uBeanProduto,
+  uBeanProdutoFornecedor;
 
 {$R *.dfm}
 
@@ -475,6 +477,7 @@ var
   I       : Integer;
   FWC     : TFWConnection;
   P       : TPRODUTO;
+  PF      : TPRODUTOFORNECEDOR;
   DirArquivo : String;
 Begin
 
@@ -504,6 +507,7 @@ Begin
 
     FWC     := TFWConnection.Create;
     P       := TPRODUTO.Create(FWC);
+    PF      := TPRODUTOFORNECEDOR.Create(FWC);
 
     Try
       try
@@ -605,7 +609,10 @@ Begin
             arrData[Linha,9]  := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
             arrData[Linha,10] := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
             arrData[Linha,11] := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
-            arrData[Linha,12] := 'VERIFICAR'; //Grupo
+            arrData[Linha,12] := 'Normal'; //Grupo
+            PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and status = True');
+            if PF.Count > 0 then
+              arrData[Linha,12] := 'Estoque Virtual'; //Grupo
             arrData[Linha,13] := cds_MatchItensFORNECEDORNOVO.Value; //SubGrupo
             arrData[Linha,14] := StringReplace(TPRODUTO(P.Itens[0]).PESO.asString, ',', '.', [rfReplaceAll]); //Peso
             arrData[Linha,15] := ''; //Comprimento
@@ -685,6 +692,7 @@ Begin
       end;
     Finally
       FreeAndNil(P);
+      FreeAndNil(PF);
       FreeAndNil(FWC);
       DisplayMsg(MSG_WAIT, 'Finalizando processo do Excel no Windows!');
       if not VarIsEmpty(PLANILHA) then begin
