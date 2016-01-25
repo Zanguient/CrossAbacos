@@ -295,9 +295,7 @@ end;
 procedure TfrmInativaProdutoFornecedor.pesquisar;
 var
   CON      : TFWConnection;
-  P        : TPRODUTO;
-  F        : TFORNECEDOR;
-  PF       : TPRODUTOFORNECEDOR;
+  SQL      : TFDQuery;
   Filtro   : String;
   I        : Integer;
 begin
@@ -308,53 +306,62 @@ begin
   edTotalRegistros.Text:= '0';
 
   CON                  := TFWConnection.Create;
-  PF                   := TPRODUTOFORNECEDOR.Create(CON);
-  P                    := TPRODUTO.Create(CON);
-  F                    := TFORNECEDOR.Create(CON);
+  SQL                  := TFDQuery.Create(nil);
   DisplayMsg(MSG_WAIT, 'Buscando dados no banco de dados!');
   pbBusca.Progress     := 0;
   try
+    SQL.Connection     := CON.FDConnection;
     Filtro             := '';
     if (edFornecedor.Text <> '') and (edNomeFornecedor.Text <> '') then
-      Filtro           := 'id_fornecedor = ' + edFornecedor.Text;
+      Filtro           := 'pf.id_fornecedor = ' + edFornecedor.Text;
 
     if (edProduto.Text <> '') and (edNomeProduto.Text <> '') then begin
       if Filtro <> '' then
-        Filtro         := Filtro + ' and id_produto = ' + edProduto.Text
+        Filtro         := Filtro + ' and pf.id_produto = ' + edProduto.Text
       else
-      Filtro           := Filtro + 'id_produto = ' + edProduto.Text;
+      Filtro           := Filtro + 'pf.id_produto = ' + edProduto.Text;
     end;
 
-    PF.SelectList(Filtro);
+    SQL.SQL.Add('select');
+    SQL.SQL.Add('	pf.id,');
+    SQL.SQL.Add('	p.id as produto,');
+    SQL.SQL.Add('	p.sku,');
+    SQL.SQL.Add('	p.nome as produtonome,');
+    SQL.SQL.Add('	f.id as fornecedor,');
+    SQL.SQL.Add('	f.nome as fornecedornome,');
+    SQL.SQL.Add('	pf.cod_prod_fornecedor,');
+    SQL.SQL.Add('	pf.status');
+    SQL.SQL.Add('from produtofornecedor pf');
+    SQL.SQL.Add('inner join produto p on pf.id_produto = p.id');
+    SQL.SQL.Add('inner join fornecedor f on pf.id_fornecedor = f.id');
+    if Filtro <> '' then
+      SQL.SQL.Add('where ' + Filtro);
+    SQL.Open();
 
-    if PF.Count > 0 then begin
+    if not SQL.IsEmpty then begin
       DisplayMsg(MSG_WAIT, 'Adicionando dados a tela!');
-      pbBusca.MaxValue   := PF.Count;
+      pbBusca.MaxValue   := SQL.RecordCount;
 
-      for I := 0 to Pred(PF.Count) do begin
-        P.SelectList('id = ' + TPRODUTOFORNECEDOR(PF.Itens[I]).ID_PRODUTO.asString);
-        F.SelectList('id = ' + TPRODUTOFORNECEDOR(PF.Itens[I]).ID_FORNECEDOR.asString);
-
+      while not SQL.Eof do begin
         csProdutos.Append;
-        csProdutosPRODUTO.Value          := TPRODUTOFORNECEDOR(PF.Itens[I]).ID_PRODUTO.Value;
-        csProdutosSKU.Value              := TPRODUTO(P.Itens[0]).SKU.Value;
-        csProdutosPRODUTONOME.Value      := TPRODUTO(P.Itens[0]).NOME.Value;
-        csProdutosCODIGO.Value           := TPRODUTOFORNECEDOR(PF.Itens[I]).COD_PROD_FORNECEDOR.Value;
-        csProdutosFORNECEDOR.Value       := TFORNECEDOR(F.Itens[0]).ID.Value;
-        csProdutosFORNECEDORNOME.Value   := TFORNECEDOR(F.Itens[0]).NOME.Value;
-        csProdutosSTATUS.Value           := TPRODUTOFORNECEDOR(PF.Itens[I]).STATUS.Value;
-        csProdutosPRODUTOFORNECEDOR.Value:= TPRODUTOFORNECEDOR(PF.Itens[I]).ID.Value;
+        csProdutosPRODUTO.Value          := SQL.FieldByName('produto').Value;
+        csProdutosSKU.Value              := SQL.FieldByName('sku').Value;
+        csProdutosPRODUTONOME.Value      := SQL.FieldByName('produtonome').Value;
+        csProdutosCODIGO.Value           := SQL.FieldByName('cod_prod_fornecedor').Value;
+        csProdutosFORNECEDOR.Value       := SQL.FieldByName('fornecedor').Value;
+        csProdutosFORNECEDORNOME.Value   := SQL.FieldByName('fornecedornome').Value;
+        csProdutosSTATUS.Value           := SQL.FieldByName('status').Value;
+        csProdutosPRODUTOFORNECEDOR.Value:= SQL.FieldByName('id').Value;
         csProdutos.Post;
 
-        pbBusca.Progress                 := csProdutos.RecordCount;
+        pbBusca.Progress                 := SQL.RecNo;
+        SQL.Next;
       end;
     end;
 
   finally
     DisplayMsgFinaliza;
-    FreeAndNil(P);
-    FreeAndNil(F);
-    FreeAndNil(PF);
+    FreeAndNil(SQL);
     FreeAndNil(CON);
     csProdutos.EnableControls;
     pbBusca.Progress                    := 0;
