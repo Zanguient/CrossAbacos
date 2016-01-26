@@ -37,7 +37,6 @@ type
     csProdutosPRODUTO: TIntegerField;
     csProdutosPRODUTONOME: TStringField;
     csProdutosCODIGO: TStringField;
-    csProdutosFORNECEDOR: TIntegerField;
     csProdutosFORNECEDORNOME: TStringField;
     csProdutosSKU: TStringField;
     ImageList2: TImageList;
@@ -50,6 +49,7 @@ type
     btFiltrar: TSpeedButton;
     edFiltro: TEdit;
     pbBusca: TGauge;
+    csProdutosMOTIVO: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure edFornecedorRightButtonClick(Sender: TObject);
     procedure edFornecedorKeyDown(Sender: TObject; var Key: Word;
@@ -99,12 +99,18 @@ procedure TfrmInativaProdutoFornecedor.ativar(Status : Boolean);
 var
   CON      : TFWConnection;
   PF       : TPRODUTOFORNECEDOR;
+  Motivo   : String;
 begin
   csProdutos.DisableControls;
   CON                     := TFWConnection.Create;
   PF                      := TPRODUTOFORNECEDOR.Create(CON);
   DisplayMsg(MSG_WAIT, 'Atualizando produtos!');
   try
+    while Motivo = '' do begin
+      DisplayMsg(MSG_INPUT_TEXT, 'Digite o motivo para inativar o produto!');
+      Motivo := ResultMsgInputText;
+    end;
+
     CON.StartTransaction;
 
     csProdutos.First;
@@ -112,8 +118,11 @@ begin
       if csProdutosSELECIONAR.Value then begin
         PF.SelectList('id = ' + csProdutosPRODUTOFORNECEDOR.AsString);
         if PF.Count > 0 then begin
-          PF.ID.Value     := csProdutosPRODUTOFORNECEDOR.Value;
-          PF.STATUS.Value := Status;
+          PF.ID.Value           := csProdutosPRODUTOFORNECEDOR.Value;
+          PF.STATUS.Value       := Status;
+          PF.MOTIVO.Value       := '';
+          if not Status then
+            PF.MOTIVO.Value     := Motivo;
 
           PF.Update;
         end;
@@ -348,7 +357,8 @@ begin
     SQL.SQL.Add('	f.id as fornecedor,');
     SQL.SQL.Add('	f.nome as fornecedornome,');
     SQL.SQL.Add('	pf.cod_prod_fornecedor,');
-    SQL.SQL.Add('	pf.status');
+    SQL.SQL.Add('	pf.status,');
+    SQL.SQL.Add('coalesce(pf.motivo,'''') as motivo');
     SQL.SQL.Add('from produtofornecedor pf');
     SQL.SQL.Add('inner join produto p on pf.id_produto = p.id');
     SQL.SQL.Add('inner join fornecedor f on pf.id_fornecedor = f.id');
@@ -366,10 +376,10 @@ begin
         csProdutosSKU.Value              := SQL.FieldByName('sku').Value;
         csProdutosPRODUTONOME.Value      := SQL.FieldByName('produtonome').Value;
         csProdutosCODIGO.Value           := SQL.FieldByName('cod_prod_fornecedor').Value;
-        csProdutosFORNECEDOR.Value       := SQL.FieldByName('fornecedor').Value;
-        csProdutosFORNECEDORNOME.Value   := SQL.FieldByName('fornecedornome').Value;
+        csProdutosFORNECEDORNOME.Value   := SQL.FieldByName('fornecedor').AsString + ' - ' + SQL.FieldByName('fornecedornome').AsString;
         csProdutosSTATUS.Value           := SQL.FieldByName('status').Value;
         csProdutosPRODUTOFORNECEDOR.Value:= SQL.FieldByName('id').Value;
+        csProdutosMOTIVO.Value           := SQL.FieldByName('motivo').Value;
         csProdutos.Post;
 
         pbBusca.Progress                 := SQL.RecNo;

@@ -388,7 +388,6 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         ParentFont = False
         TabOrder = 0
         OnClick = btPesquisarClick
-        ExplicitHeight = 33
       end
       object edTotalRegistros: TEdit
         Left = 647
@@ -499,14 +498,14 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         end
         item
           Expanded = False
-          FieldName = 'FORNECEDOR'
-          Width = 150
+          FieldName = 'FORNECEDORNOME'
+          Width = 250
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'FORNECEDORNOME'
-          Width = 500
+          FieldName = 'MOTIVO'
+          Width = 400
           Visible = True
         end>
     end
@@ -626,7 +625,6 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       Height = 43
       Align = alTop
       TabOrder = 3
-      ExplicitTop = 231
       object btFiltrar: TSpeedButton
         AlignWithMargins = True
         Left = 733
@@ -670,7 +668,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800C00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800C80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -835,14 +833,10 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       FieldName = 'CODIGO'
       Size = 100
     end
-    object csProdutosFORNECEDOR: TIntegerField
-      DisplayLabel = 'C'#243'd. Fornecedor'
-      FieldName = 'FORNECEDOR'
-    end
     object csProdutosFORNECEDORNOME: TStringField
       DisplayLabel = 'Fornecedor'
       FieldName = 'FORNECEDORNOME'
-      Size = 100
+      Size = 120
     end
     object csProdutosSELECIONAR: TBooleanField
       DisplayLabel = 'Selecionar'
@@ -855,6 +849,11 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     object csProdutosPRODUTOFORNECEDOR: TIntegerField
       FieldName = 'PRODUTOFORNECEDOR'
     end
+    object csProdutosMOTIVO: TStringField
+      DisplayLabel = 'Motivo'
+      FieldName = 'MOTIVO'
+      Size = 100
+    end
   end
   object dsProdutos: TDataSource
     DataSet = csProdutos
@@ -866,7 +865,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 440
     Top = 328
     Bitmap = {
-      494C010102000C003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C00440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

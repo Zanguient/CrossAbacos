@@ -97,6 +97,7 @@ create table if not exists produtofornecedor (
   id_ultimolote integer,
   quantidade integer,
   status boolean,
+  motivo character varying(100),
   primary key (id),
   constraint fk_produtofornecedor_produto1
     foreign key (id_produto)

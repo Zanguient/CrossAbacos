@@ -17,6 +17,7 @@ type
     FCUSTO: TFieldCurrency;
     FQUANTIDADE: TFieldInteger;
     FSTATUS: TFieldBoolean;
+    FMOTIVO: TFieldString;
     procedure SetCOD_PROD_FORNECEDOR(const Value: TFieldString);
     procedure SetID(const Value: TFieldInteger);
     procedure SetID_FORNECEDOR(const Value: TFieldInteger);
@@ -25,6 +26,7 @@ type
     procedure SetCUSTO(const Value: TFieldCurrency);
     procedure SetQUANTIDADE(const Value: TFieldInteger);
     procedure SetSTATUS(const Value: TFieldBoolean);
+    procedure SetMOTIVO(const Value: TFieldString);
   protected
     procedure InitInstance; override;
   published
@@ -36,6 +38,7 @@ type
     property CUSTO : TFieldCurrency read FCUSTO write SetCUSTO;
     property QUANTIDADE : TFieldInteger read FQUANTIDADE write SetQUANTIDADE;
     property STATUS : TFieldBoolean read FSTATUS write SetSTATUS;
+    property MOTIVO : TFieldString read FMOTIVO write SetMOTIVO;
 end;
 
 implementation
@@ -48,6 +51,7 @@ begin
   ID.isPK := True;
 
   COD_PROD_FORNECEDOR.Size   := 100;
+  MOTIVO.Size                := 100;
 end;
 
 procedure TPRODUTOFORNECEDOR.SetCOD_PROD_FORNECEDOR(const Value: TFieldString);
@@ -78,6 +82,11 @@ end;
 procedure TPRODUTOFORNECEDOR.SetID_ULTIMOLOTE(const Value: TFieldInteger);
 begin
   FID_ULTIMOLOTE := Value;
+end;
+
+procedure TPRODUTOFORNECEDOR.SetMOTIVO(const Value: TFieldString);
+begin
+  FMOTIVO := Value;
 end;
 
 procedure TPRODUTOFORNECEDOR.SetQUANTIDADE(const Value: TFieldInteger);
