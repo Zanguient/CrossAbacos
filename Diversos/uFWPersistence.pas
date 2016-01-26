@@ -450,8 +450,8 @@ begin
     end;
 
     SQLScript(SQL.Text);
-    while not SQLDS.Eof do
-    begin
+    SQLDS.DisableControls;
+    while not SQLDS.Eof do begin
       objTmp := TFWPersistence((Self.ClassType).Create).CreateFields(FWC);
       for I := 0 to (Count - 1) do
       begin

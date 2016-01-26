@@ -682,7 +682,7 @@ begin
           try
             SQL.Connection                                                       := CON.FDConnection;
 
-            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO)),0) WHERE ID IN (' + ListaProdutosInsert + ')')
+            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
 
           finally
             FreeAndNil(SQL);
