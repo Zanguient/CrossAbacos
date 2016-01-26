@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ImgList, Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, comObj, TypInfo,
-  Vcl.ComCtrls, Vcl.Imaging.jpeg, Vcl.Samples.Gauges;
+  Vcl.ComCtrls, Vcl.Imaging.jpeg, Vcl.Samples.Gauges, TlHelp32;
 
 type
   TExcelColluns = record
@@ -113,28 +113,29 @@ end;
 
 procedure TfrmImportacaoArquivoFornecedor.btExportClick(Sender: TObject);
 begin
-  exportaprodutos;
+  if btExport.Tag = 0 then begin
+    btExport.Tag := 1;
+    try
+      exportaprodutos;
+    finally
+      btExport.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btImportarClick(Sender: TObject);
-const
-  xlCellTypeLastCell = $0000000B;
 var
-  XLSAplicacao,
-  AbaXLS,
-  Range         : OLEVariant;
+  Excel         : OleVariant;
+  arrData       : Variant;
   vrow,
   vcol,
   i,
   j,
-  k,
-  Count         : Integer;
+  k             : Integer;
   ExcelColluns  : array of TExcelColluns;
   Valor         : Variant;
   FORN          : TFORNECEDOR;
   CON           : TFWConnection;
-  arrData       : Variant;
-
 begin
   csProdutos.EmptyDataSet;
   csProdutos.Filtered                               := False;
@@ -165,45 +166,41 @@ begin
   end;
 
   bloqueioSalvar(1);
-  btImportar.Tag                       := 0;
+  btImportar.Tag                                    := 0;
   try
     buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
 
-    XLSAplicacao := CreateOleObject('Excel.Application');
+    Excel                                           := CreateOleObject('Excel.Application');
 
     csProdutos.DisableControls;
     pgProdutos.Progress                             := 0;
 
     try
-      XLSAplicacao.Visible                          := False;
+      Excel.Visible                                 := False;
       // Abre o Workbook
-      XLSAplicacao.Workbooks.Open(edArquivo.Text);
+      Excel.Workbooks.Open(edArquivo.Text);
 
-      AbaXLS                                        := XLSAplicacao.Workbooks[ExtractFileName(edArquivo.Text)].WorkSheets[1];
-
-      XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+//      XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
       //ROW
-      vrow                                          := XLSAplicacao.ActiveCell.Row;
-      vcol                                          := XLSAplicacao.ActiveCell.Column;
+      vrow                                          := Excel.ActiveCell.Row;
+      vcol                                          := Excel.ActiveCell.Column;
 
-      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
+//      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
 
-      Range                                         := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
-
-      arrData                                       := Range.value;
+      arrData                                       := Excel.Range['A1', Excel.Cells.Item[vrow, vcol]].Value;
 
       pgProdutos.MaxValue                           := vRow;
       SetLength(ExcelColluns, 0);
       for I := 1 to vcol do begin
-        if AbaXLS.Cells.Item[1, I].Value = 'Cód. do Fornecedor' then begin
+        if arrData[1, I] = 'Cód. do Fornecedor' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCODIGO.FieldName;
-        end else if AbaXLS.Cells.Item[1, I].Value = 'Estoque' then begin
+        end else if arrData[1, I] = 'Estoque' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosDISPONIVEL.FieldName;
-        end else if AbaXLS.Cells.Item[1, I].Value = 'Custo Final C/ IPI+ST+Desc' then begin
+        end else if arrData[1, I] = 'Custo Final C/ IPI+ST+Desc' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTO.FieldName;
@@ -225,7 +222,7 @@ begin
               else
                 csProdutos.Append;
               for k := 0 to High(ExcelColluns) do begin
-                Valor                               := Trim(AbaXLS.Cells.Item[I, ExcelColluns[k].index].Value);
+                Valor                               := Trim(arrData[I, ExcelColluns[K].index]);
                 if Valor <> '' then
                   csProdutos.FieldByName(ExcelColluns[k].nome).Value := Valor;
               end;
@@ -262,14 +259,16 @@ begin
     end;
     DisplayMsg(MSG_INF, 'Importacao Realizada com sucesso!');
   finally
+    arrData                                         := Unassigned;
      // Fecha o Microsoft Excel
-    if not VarIsEmpty(XLSAplicacao) then begin
-      XLSAplicacao.Quit;
-      XLSAplicacao                                := Unassigned;
+    if not VarIsEmpty(Excel) then begin
+      Excel.Quit;
+      Excel                                         := Unassigned;
     end;
     filtrar;
     csProdutos.EnableControls;
-    pgProdutos.Progress                           := 0;
+    pgProdutos.Progress                             := 0;
+    Application.ProcessMessages;
   end;
 end;
 
@@ -519,7 +518,7 @@ var
   XLSAplicacao,
   AbaXLS,
   RangeTitulos,
-  RangeDados   : OLEVariant;
+  RangeDados,
   arrTitulos,
   arrData      : Variant;
   I            : Integer;
@@ -587,10 +586,17 @@ begin
     DisplayMsg(MSG_OK, 'Arquivo gerado com sucesso!','', DirArquivo);
   finally
     csProdutos.EnableControls;
-    AbaXLS                  := Unassigned;
 
-    XLSAplicacao.Quit;
-    XLSAplicacao            := Unassigned;
+    if not VarIsEmpty(XLSAplicacao) then begin
+      AbaXLS                := Unassigned;
+      RangeTitulos          := Unassigned;
+      RangeDados            := Unassigned;
+      arrTitulos            := Unassigned;
+      arrData               := Unassigned;
+
+      XLSAplicacao.Quit;
+      XLSAplicacao          := Unassigned;
+    end;
   end;
 end;
 
