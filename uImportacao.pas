@@ -116,7 +116,7 @@ begin
     vrow                                              := XLSAplicacao.ActiveCell.Row;
     vcol                                              := XLSAplicacao.ActiveCell.Column;
     arrData                                           := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                             := XLSAplicacao.WorkSheets[1].Range['A1', Alfabeto[vcol] + IntToStr(vrow)];
+    Range                                             := XLSAplicacao.WorkSheets[1].Range['A1', XLSAplicacao.WorkSheets[1].Cells[vrow, vcol].Address];
     arrData                                           := Range.value;
     pbImportaAlmoxarifado.MaxValue                    := vrow;
     //COLLUM
@@ -224,6 +224,7 @@ var
   arrData        : Variant;
   arrInsert,
   arrUpdate      : array of Integer;
+  Nome           : String;
 begin
   if not FileExists(edBuscaArquivoFornecedor.Text) then begin
     DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
@@ -250,7 +251,7 @@ begin
     vrow                                                                       := XLSAplicacao.ActiveCell.Row;
     vcol                                                                       := XLSAplicacao.ActiveCell.Column;
     arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    Range                                                                      := XLSAplicacao.WorkSheets[1].Range['A1', XLSAplicacao.WorkSheets[1].Cells[vrow, vcol].Address];
     arrData                                                                    := Range.value;
     pbImportaFornecedor.MaxValue                                               := vrow;
     //COLLUM
@@ -398,7 +399,7 @@ begin
     vrow                                                                       := XLSAplicacao.ActiveCell.Row;
     vcol                                                                       := XLSAplicacao.ActiveCell.Column;
     arrData                                                                    := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    Range                                                                      := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol].Address];
     arrData                                                                    := Range.value;
     pbImportaProdutoFornecedor.MaxValue                                        := vrow;
     //COLLUM
@@ -556,7 +557,7 @@ begin
     vrow                                                                      := XLSAplicacao.ActiveCell.Row;
     vcol                                                                      := XLSAplicacao.ActiveCell.Column;
     arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol].Address];
     arrData                                                                   := Range.value;
     pbImportaProdutos.MaxValue                                                := vrow;
     //COLLUM

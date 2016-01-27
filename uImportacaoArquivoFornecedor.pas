@@ -187,7 +187,7 @@ begin
 
 //      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
 
-      arrData                                       := Excel.Range['A1', Alfabeto[vcol] + IntToStr(vrow)].Value;
+      arrData                                       := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
 
       pgProdutos.MaxValue                           := vRow;
       SetLength(ExcelColluns, 0);
@@ -563,7 +563,7 @@ begin
     arrTitulos              := VarArrayCreate([1, 1, 1, csProdutos.FieldCount], varVariant);
     for I := 0 to Pred(csProdutos.FieldCount) do
       arrTitulos[1, I + 1]  := csProdutos.Fields[I].DisplayLabel;
-    RangeTitulos            := AbaXLS.Range[AbaXLS.cells[1,1], AbaXLS.Cells[1, csProdutos.FieldCount]];
+    RangeTitulos            := AbaXLS.Range[AbaXLS.cells[1,1].Address, AbaXLS.Cells[1, csProdutos.FieldCount].Address];
     RangeTitulos.Font.Bold  := True;
     RangeTitulos.Font.Color := clBlue;
     RangeTitulos.Value      := arrTitulos;
@@ -577,7 +577,7 @@ begin
       csProdutos.Next;
     end;
 
-    RangeDados              := AbaXLS.Range[AbaXLS.cells[2,1], AbaXLS.Cells[csProdutos.RecordCount + 1, csProdutos.FieldCount]];
+    RangeDados              := AbaXLS.Range[AbaXLS.cells[2,1].Address, AbaXLS.Cells[csProdutos.RecordCount + 1, csProdutos.FieldCount].Address];
     RangeDados.numberFormat := '@';
     RangeDados.Value        := arrData;
 

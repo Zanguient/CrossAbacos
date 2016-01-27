@@ -685,7 +685,7 @@ Begin
 
         DisplayMsg(MSG_WAIT, 'Salvando dados no arquivo Excel!');
 
-        Range               := Sheet.Range[Sheet.cells[1,1], Sheet.Cells[cds_MatchItens.RecordCount + 1, 65]];
+        Range               := Sheet.Range[Sheet.cells[1,1].Address, Sheet.Cells[cds_MatchItens.RecordCount + 1, 65].Address];
         Range.NumberFormat  := '@';
         Range.Value         := arrData;
 
