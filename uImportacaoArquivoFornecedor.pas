@@ -187,7 +187,7 @@ begin
 
 //      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
 
-      arrData                                       := Excel.Range['A1', Excel.Cells.Item[vrow, vcol]].Value;
+      arrData                                       := Excel.Range['A1', Alfabeto[vcol] + IntToStr(vrow)].Value;
 
       pgProdutos.MaxValue                           := vRow;
       SetLength(ExcelColluns, 0);

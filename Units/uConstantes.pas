@@ -34,6 +34,7 @@ Const
   DirArqConf: String = 'C:\CrossAbacos\CrossAbacos.ini';
   DirInstall: String = 'C:\CrossAbacos\';
   DirArquivosExcel: String = 'C:\CrossAbacos\Arquivos\';
+  Alfabeto: String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 Var
   LOGIN       : TDADOSLOGIN;

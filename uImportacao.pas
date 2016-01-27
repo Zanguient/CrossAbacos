@@ -76,7 +76,7 @@ const
 var
   XLSAplicacao,
   AbaXLS,
-  Range         : OLEVariant;
+  Range         : Variant;
   vrow,
   vcol,
   i,
@@ -116,7 +116,7 @@ begin
     vrow                                              := XLSAplicacao.ActiveCell.Row;
     vcol                                              := XLSAplicacao.ActiveCell.Column;
     arrData                                           := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                             := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol]];
+    Range                                             := XLSAplicacao.WorkSheets[1].Range['A1', Alfabeto[vcol] + IntToStr(vrow)];
     arrData                                           := Range.value;
     pbImportaAlmoxarifado.MaxValue                    := vrow;
     //COLLUM
