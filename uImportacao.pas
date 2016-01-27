@@ -469,6 +469,7 @@ begin
             FORPROD.CUSTO.Value                                                := 0.00;
             FORPROD.QUANTIDADE.Value                                           := 0;
             FORPROD.STATUS.Value                                               := True;
+            FORPROD.MOTIVO.Value                                               := '';
 
             FORPROD.Insert;
 

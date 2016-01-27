@@ -238,7 +238,7 @@ Begin
 
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
 
-        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
+        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
       end else
         DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Estoque, Verifique!');
 
@@ -447,7 +447,7 @@ begin
       end else
         DisplayMsg(MSG_WAR, 'Não há Dados de Importação para o Lote ' + IntToStr(idLote) + sLineBreak + 'O Match não será gerado, Verifique!');
 
-      DisplayMsg(MSG_INF, 'Geração de Match Concluído com Sucesso!');
+      DisplayMsg(MSG_OK, 'Geração de Match Concluído com Sucesso!');
 
     except
       on E : Exception do Begin

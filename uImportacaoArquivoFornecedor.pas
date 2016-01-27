@@ -124,6 +124,8 @@ begin
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.btImportarClick(Sender: TObject);
+const
+  xlCellTypeLastCell = $0000000B;
 var
   Excel         : OleVariant;
   arrData       : Variant;
@@ -180,12 +182,10 @@ begin
       // Abre o Workbook
       Excel.Workbooks.Open(edArquivo.Text);
 
-//      XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+      Excel.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
       //ROW
       vrow                                          := Excel.ActiveCell.Row;
       vcol                                          := Excel.ActiveCell.Column;
-
-//      arrData                                       := VarArrayCreate([1, vrow, 1, vcol], varVariant);
 
       arrData                                       := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
 
@@ -222,9 +222,11 @@ begin
               else
                 csProdutos.Append;
               for k := 0 to High(ExcelColluns) do begin
-                Valor                               := Trim(arrData[I, ExcelColluns[K].index]);
-                if Valor <> '' then
-                  csProdutos.FieldByName(ExcelColluns[k].nome).Value := Valor;
+                if ExcelColluns[K].nome <> csProdutosCODIGO.FieldName then begin
+                  Valor                               := Trim(arrData[I, ExcelColluns[K].index]);
+                  if Valor <> '' then
+                    csProdutos.FieldByName(ExcelColluns[k].nome).Value := Valor;
+                end;
               end;
               csProdutosSTATUS.Value                := 1;
               if ((csProdutosCODIGO.IsNull) or (csProdutosCODIGO.Value = '')) then
@@ -257,7 +259,7 @@ begin
       cbFiltroChange(nil);
       Exit;
     end;
-    DisplayMsg(MSG_INF, 'Importacao Realizada com sucesso!');
+    DisplayMsg(MSG_OK, 'Importacao Realizada com sucesso!');
   finally
     arrData                                         := Unassigned;
      // Fecha o Microsoft Excel

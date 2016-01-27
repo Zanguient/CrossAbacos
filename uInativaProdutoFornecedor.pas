@@ -106,9 +106,13 @@ begin
   PF                      := TPRODUTOFORNECEDOR.Create(CON);
   DisplayMsg(MSG_WAIT, 'Atualizando produtos!');
   try
-    while Motivo = '' do begin
+    if not Status then begin
       DisplayMsg(MSG_INPUT_TEXT, 'Digite o motivo para inativar o produto!');
       Motivo := ResultMsgInputText;
+      if Motivo = '' then begin
+        DisplayMsg(MSG_INF, 'O procedimento será cancelado pelo não preenchimento do motivo!');
+        Exit;
+      end;
     end;
 
     CON.StartTransaction;

@@ -153,7 +153,7 @@ begin
 
       FWC.Commit;
 
-      DisplayMsg(MSG_INF, 'Novo Lote Gerado com Sucesso!');
+      DisplayMsg(MSG_OK, 'Novo Lote Gerado com Sucesso!');
 
     except
       on E : Exception do Begin

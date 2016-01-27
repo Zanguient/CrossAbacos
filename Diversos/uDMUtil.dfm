@@ -1,6 +1,7 @@
 object DMUtil: TDMUtil
   OldCreateOrder = False
   OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 330
   Width = 495
   object frxReport1: TfrxReport
@@ -18,8 +19,8 @@ object DMUtil: TDMUtil
       'begin'
       ''
       'end.')
-    Left = 240
-    Top = 104
+    Left = 352
+    Top = 24
     Datasets = <>
     Variables = <>
     Style = <>
@@ -43,7 +44,36 @@ object DMUtil: TDMUtil
     Restrictions = []
     RTLLanguage = False
     MemoParentFont = False
-    Left = 296
-    Top = 152
+    Left = 352
+    Top = 72
+  end
+  object frxDBDataset1: TfrxDBDataset
+    UserName = 'frxDBDataset1'
+    CloseDataSource = False
+    BCDToCurrency = False
+    Left = 352
+    Top = 120
+  end
+  object frxPDFExport1: TfrxPDFExport
+    UseFileCache = True
+    ShowProgress = True
+    OverwritePrompt = False
+    DataOnly = False
+    PrintOptimized = False
+    Outline = False
+    Background = False
+    HTMLTags = True
+    Quality = 95
+    Author = 'FastReport'
+    Subject = 'FastReport PDF export'
+    ProtectionFlags = [ePrint, eModify, eCopy, eAnnot]
+    HideToolbar = False
+    HideMenubar = False
+    HideWindowUI = False
+    FitWindow = False
+    CenterWindow = False
+    PrintScaling = False
+    Left = 352
+    Top = 176
   end
 end

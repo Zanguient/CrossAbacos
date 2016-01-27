@@ -313,6 +313,7 @@ Var
   idMatch     : Integer;
   ProdnoLote  : String;
 begin
+  DisplayMsg(MSG_WAIT, 'Buscando dados!');
 
   FWC           := TFWConnection.Create;
   SQL           := TFDQuery.Create(nil);
@@ -459,6 +460,7 @@ begin
           end;
         end;
       end;
+      DisplayMsgFinaliza;
     except
       on E : Exception do Begin
         FWC.Rollback;
@@ -692,7 +694,7 @@ Begin
         PLANILHA.Columns.AutoFit;
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
 
-        DisplayMsg(MSG_INF, 'Arquivo gerado com Sucesso!', '', DirArquivo);
+        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', DirArquivo);
 
       except
         on E : Exception do begin
