@@ -75,6 +75,7 @@ type
     procedure csProdutosFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure btLimparClick(Sender: TObject);
     procedure btExportClick(Sender: TObject);
+    procedure edFornecedorChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -486,6 +487,11 @@ begin
       edArquivo.Text := OpenDialog1.FileName;
     end;
   end;
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.edFornecedorChange(Sender: TObject);
+begin
+  edNomeFornecedor.Clear;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.edFornecedorKeyDown(Sender: TObject;

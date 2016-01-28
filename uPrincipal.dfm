@@ -80,9 +80,12 @@ object FrmPrincipal: TFrmPrincipal
     end
     object Relatrios1: TMenuItem
       Caption = 'Relat'#243'rios'
-      object ItensdoFornecedor1: TMenuItem
-        Caption = 'Itens do Fornecedor'
-        OnClick = ItensdoFornecedor1Click
+      object Cross1: TMenuItem
+        Caption = 'Cross'
+        object ItensdoFornecedor1: TMenuItem
+          Caption = 'Itens do Fornecedor'
+          OnClick = ItensdoFornecedor1Click
+        end
       end
     end
     object Configuraes1: TMenuItem

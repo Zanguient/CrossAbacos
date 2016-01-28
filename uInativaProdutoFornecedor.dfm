@@ -543,6 +543,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         RightButton.Visible = True
         TabOrder = 0
         TextHint = 'Selecione o Produto...'
+        OnChange = edProdutoChange
         OnExit = edProdutoExit
         OnKeyDown = edProdutoKeyDown
         OnRightButtonClick = edProdutoRightButtonClick
@@ -597,6 +598,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         RightButton.Visible = True
         TabOrder = 0
         TextHint = 'Selecione o Fornecedor...'
+        OnChange = edFornecedorChange
         OnExit = edFornecedorExit
         OnKeyDown = edFornecedorKeyDown
         OnRightButtonClick = edFornecedorRightButtonClick
@@ -668,7 +670,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800CC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800D00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -865,7 +867,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 440
     Top = 328
     Bitmap = {
-      494C010102000C00480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

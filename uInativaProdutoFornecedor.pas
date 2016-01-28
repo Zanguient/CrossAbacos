@@ -76,6 +76,8 @@ type
     procedure btFiltrarClick(Sender: TObject);
     procedure edFornecedorExit(Sender: TObject);
     procedure edProdutoExit(Sender: TObject);
+    procedure edFornecedorChange(Sender: TObject);
+    procedure edProdutoChange(Sender: TObject);
   private
     { Private declarations }
     procedure selecionaFornecedor;
@@ -256,6 +258,11 @@ begin
 
 end;
 
+procedure TfrmInativaProdutoFornecedor.edFornecedorChange(Sender: TObject);
+begin
+  edNomeFornecedor.Clear;
+end;
+
 procedure TfrmInativaProdutoFornecedor.edFornecedorExit(Sender: TObject);
 begin
   if (edFornecedor.Text = '') or (edFornecedor.Text = '0') then
@@ -273,6 +280,11 @@ procedure TfrmInativaProdutoFornecedor.edFornecedorRightButtonClick(
   Sender: TObject);
 begin
   selecionaFornecedor;
+end;
+
+procedure TfrmInativaProdutoFornecedor.edProdutoChange(Sender: TObject);
+begin
+  edNomeProduto.Clear;
 end;
 
 procedure TfrmInativaProdutoFornecedor.edProdutoExit(Sender: TObject);

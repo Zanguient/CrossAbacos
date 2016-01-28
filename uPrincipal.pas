@@ -29,6 +29,7 @@ type
     GerarMatch1: TMenuItem;
     ConfiguraodeProdutos1: TMenuItem;
     ItensdoFornecedor1: TMenuItem;
+    Cross1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -44,7 +45,6 @@ type
     procedure ConfiguraodeProdutos1Click(Sender: TObject);
     procedure ItensdoFornecedor1Click(Sender: TObject);
   private
-    Procedure RelItensdoFornecedor;
     { Private declarations }
   public
     procedure CriarComandoSequenciaMenu(Menu: TMainMenu);
@@ -71,7 +71,8 @@ uses
   uImportacaoArquivoFornecedor,
   uGeraMatch,
   uInativaProdutoFornecedor,
-  uFWConnection, uDMUtil;
+  uFWConnection, uDMUtil,
+  uRelItensdoFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -157,7 +158,13 @@ end;
 
 procedure TFrmPrincipal.ItensdoFornecedor1Click(Sender: TObject);
 begin
-  RelItensdoFornecedor;
+  if not Assigned(frmRelItensdoFornecedor) then
+    frmRelItensdoFornecedor   := TfrmRelItensdoFornecedor.Create(nil);
+  try
+    frmRelItensdoFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRelItensdoFornecedor);
+  end;
 end;
 
 procedure TFrmPrincipal.Margem1Click(Sender: TObject);
@@ -209,47 +216,6 @@ begin
     FrmRedefinirSenha.ShowModal;
   finally
     FreeAndNil(FrmRedefinirSenha);
-  end;
-end;
-
-procedure TFrmPrincipal.RelItensdoFornecedor;
-var
-  FWC       : TFWConnection;
-  Consulta  : TFDQuery;
-begin
-
-  FWC       := TFWConnection.Create;
-  Consulta  := TFDQuery.Create(nil);
-
-  try
-    try
-
-      Consulta.Close;
-      Consulta.SQL.Clear;
-      Consulta.SQL.Add('SELECT');
-      Consulta.SQL.Add('	P.SKU,');
-      Consulta.SQL.Add('	PF.COD_PROD_FORNECEDOR AS CODIGOFORNECEDOR,');
-      Consulta.SQL.Add('	F.NOME AS NOMEFORNECEDOR,');
-      Consulta.SQL.Add('	PF.QUANTIDADE,');
-      Consulta.SQL.Add('	PF.CUSTO');
-      Consulta.SQL.Add('FROM PRODUTOFORNECEDOR PF');
-      Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = PF.ID_PRODUTO)');
-      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = PF.ID_FORNECEDOR)');
-      Consulta.SQL.Add('ORDER BY P.SKU, F.ID');
-      Consulta.Connection           := FWC.FDConnection;
-      Consulta.Prepare;
-      Consulta.Open;
-      Consulta.FetchAll;
-
-      DMUtil.frxDBDataset1.DataSet := Consulta;
-      DMUtil.ImprimirRelatorio('frProdutosFornecedor.fr3');
-
-    Except
-
-    end;
-  finally
-    FreeAndNil(Consulta);
-    FreeAndNil(FWC);
   end;
 end;
 

@@ -68,6 +68,7 @@ type
     cds_MatchItensID_PRODUTO: TIntegerField;
     pbExportaFornecedor: TGauge;
     cds_MatchItensQUANTIDADE: TIntegerField;
+    cds_MatchItensID_FORNECEDORNOVO: TIntegerField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -109,7 +110,8 @@ uses
   uMensagem,
   uDMUtil,
   uBeanProduto,
-  uBeanProdutoFornecedor;
+  uBeanProdutoFornecedor,
+  uBeanFornecedor;
 
 {$R *.dfm}
 
@@ -347,7 +349,8 @@ begin
         SQL.SQL.Add('	L.ID AS IDULTIMOLOTE,');
         SQL.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATAULTIMOLOTE,');
         SQL.SQL.Add('	MI.ATUALIZADO AS MATCH,');
-        SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE');
+        SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE,');
+        SQL.SQL.Add('	FN.ID AS ID_FORNECEDORNOVO');
         SQL.SQL.Add('FROM MATCH M');
         SQL.SQL.Add('INNER JOIN MATCH_ITENS MI ON (M.ID = MI.ID_MATCH)');
         SQL.SQL.Add('INNER JOIN PRODUTO P ON (MI.ID_PRODUTO = P.ID)');
@@ -395,6 +398,7 @@ begin
             cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := True;
             cds_MatchItensQUANTIDADE.Value           := SQL.Fields[10].Value;
+            cds_MatchItensID_FORNECEDORNOVO.Value    := SQL.Fields[11].Value;
             cds_MatchItens.Post;
 
             if Length(Trim(ProdnoLote)) = 0 then
@@ -423,7 +427,8 @@ begin
         SQL.SQL.ADD('	L.ID AS IDULTIMOLOTE,');
         SQL.SQL.ADD('	CAST(L.DATA_HORA AS DATE) AS DATAULTIMOLOTE,');
         SQL.SQL.ADD('	FALSE AS MATCH,');
-        SQL.SQL.ADD(' COALESCE(PF.QUANTIDADE ,0)');
+        SQL.SQL.ADD(' COALESCE(PF.QUANTIDADE ,0),');
+        SQL.SQL.ADD(' FN.ID AS ID_FORNECEDORNOVO');
         SQL.SQL.ADD('FROM PRODUTO P');
         SQL.SQL.ADD('INNER JOIN LOTE L ON (P.ID_ULTIMOLOTE = L.ID)');
         SQL.SQL.ADD('INNER JOIN FORNECEDOR FA ON (P.ID_FORNECEDORANTERIOR = FA.ID)');
@@ -453,6 +458,7 @@ begin
             cds_MatchItensDATAULTIMOLOTE.Value       := SQL.Fields[8].Value;
             cds_MatchItensATUALIZADONOMATCH.Value    := SQL.Fields[9].Value;
             cds_MatchItensQUANTIDADE.Value           := SQL.Fields[10].Value;
+            cds_MatchItensID_FORNECEDORNOVO.Value    := SQL.Fields[11].Value;
             cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := False;
             cds_MatchItens.Post;
@@ -490,6 +496,7 @@ var
   FWC     : TFWConnection;
   P       : TPRODUTO;
   PF      : TPRODUTOFORNECEDOR;
+  F       : TFORNECEDOR;
   DirArquivo : String;
 Begin
 
@@ -519,6 +526,7 @@ Begin
     FWC     := TFWConnection.Create;
     P       := TPRODUTO.Create(FWC);
     PF      := TPRODUTOFORNECEDOR.Create(FWC);
+    F       := TFORNECEDOR.Create(FWC);
 
     Try
       try
@@ -662,6 +670,11 @@ Begin
             arrData[Linha,48] := ''; //TerminoPromocao2
             arrData[Linha,49] := TPRODUTO(P.Itens[0]).DIAS_GARANTIA.Value; //DiasGarantia
             arrData[Linha,50] := TPRODUTO(P.Itens[0]).PRAZO_ENTREGA.Value; //PrazoEntregaDias
+            if cds_MatchItensID_FORNECEDORNOVO.Value > 0 then begin
+              F.SelectList('id = ' + cds_MatchItensID_FORNECEDORNOVO.AsString);
+              if F.Count > 0 then
+                arrData[Linha,50] := TFORNECEDOR(F.Itens[0]).PRAZO_ENTREGA.Value;
+            end;
             arrData[Linha,51] := 'S'; //ControlaEstoque
             arrData[Linha,52] := 'N'; //ProdutoSerBrinde
             arrData[Linha,53] := ''; //CategoriasSite
@@ -704,6 +717,7 @@ Begin
     Finally
       FreeAndNil(P);
       FreeAndNil(PF);
+      FreeAndNil(F);
       FreeAndNil(FWC);
       DisplayMsg(MSG_WAIT, 'Finalizando processo do Excel no Windows!');
       if not VarIsEmpty(PLANILHA) then begin

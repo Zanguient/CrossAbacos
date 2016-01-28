@@ -275,7 +275,8 @@ end;
 procedure CarregaArrayMenus(Menu : TMainMenu);
 var
   I,
-  J : Integer;
+  J,
+  K : Integer;
 begin
   SetLength(MENUS, 0);
   for I := 0 to Pred(Menu.Items.Count) do begin
@@ -285,9 +286,17 @@ begin
       Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Caption, '&', '', [rfReplaceAll]);
     end else begin
       for J := 0 to Pred(Menu.Items[I].Count) do begin
-        SetLength(MENUS, Length(MENUS) + 1);
-        Menus[High(MENUS)].NOME   := Menu.Items[I].Items[J].Name;
-        Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Items[J].Caption, '&', '', [rfReplaceAll]);
+        if Menu.Items[I].Items[J].Count = 0 then begin
+          SetLength(MENUS, Length(MENUS) + 1);
+          Menus[High(MENUS)].NOME   := Menu.Items[I].Items[J].Name;
+          Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Items[J].Caption, '&', '', [rfReplaceAll]);
+        end else begin
+          for K := 0 to Pred(Menu.Items[I].Items[J].Count) do begin
+            SetLength(MENUS, Length(MENUS) + 1);
+            Menus[High(MENUS)].NOME   := Menu.Items[I].Items[J].Items[K].Name;
+            Menus[High(MENUS)].CAPTION:= StringReplace(Menu.Items[I].Items[J].Items[K].Caption, '&', '', [rfReplaceAll]);
+          end;
+        end;
       end;
     end;
   end;
@@ -296,30 +305,48 @@ end;
 procedure DefinePermissaoMenu(Menu : TMainMenu);
 var
   I,
-  J   : Integer;
+  J,
+  K   : Integer;
   CON : TFWConnection;
   PU  : TUSUARIO_PERMISSAO;
 begin
   CON                                        :=  TFWConnection.Create;
   PU                                         := TUSUARIO_PERMISSAO.Create(CON);
   try
-    for I := 0 to Pred(Menu.Items.Count) do begin
-      if Menu.Items[I].Count = 0 then begin
-        PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Name));
-        Menu.Items[I].Visible                := PU.Count > 0;
-      end else begin
-        for J := 0 to Pred(Menu.Items[I].Count) do begin
-          PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
-          Menu.Items[I].Items[J].Visible     := PU.Count > 0;
-        end;
-      end;
-    end;
+//    for I := 0 to Pred(Menu.Items.Count) do begin
+//      if Menu.Items[I].Count = 0 then begin
+//        PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Name));
+//        Menu.Items[I].Visible                := PU.Count > 0;
+//      end else begin
+//        for J := 0 to Pred(Menu.Items[I].Count) do begin
+//          if Menu.Items[I].Items[J].Count = 0 then begin
+//            PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
+//            Menu.Items[I].Items[J].Visible     := PU.Count > 0;
+//          end else begin
+//            for K := 0 to Pred(Menu.Items[I].Items[J].Count) do begin
+//              PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Items[K].Name));
+//              Menu.Items[I].Items[J].Items[K].Visible     := PU.Count > 0;
+//            end;
+//          end;
+//        end;
+//      end;
+//    end;
     for I := 0 to Pred(Menu.Items.Count) do begin
       if Menu.Items[I].Count > 0 then begin
         Menu.Items[I].Visible                := False;
         for J := 0 to Pred(Menu.Items[I].Count) do begin
-          PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
-          Menu.Items[I].Items[J].Visible     := PU.Count > 0;
+          if Menu.Items[I].Items[J].Count = 0 then begin
+            PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Name));
+            Menu.Items[I].Items[J].Visible     := PU.Count > 0;
+          end else begin
+            Menu.Items[I].Items[J].Visible     := False;
+            for K := 0 to Pred(Menu.Items[I].Items[J].Count) do begin
+              PU.SelectList('ID_USUARIO = ' + IntToStr(USUARIO.CODIGO) + ' AND MENU = ' + QuotedStr(Menu.Items[I].Items[J].Items[K].Name));
+              Menu.Items[I].Items[J].Items[K].Visible     := PU.Count > 0;
+              if Menu.Items[I].Items[J].Items[K].Visible then
+                Menu.Items[I].Items[J].Visible            := True;
+            end;
+          end;
           if Menu.Items[I].Items[J].Visible then
             Menu.Items[I].Visible            := True;
 

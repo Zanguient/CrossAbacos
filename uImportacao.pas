@@ -262,6 +262,7 @@ begin
       FORN.CNPJ.excelTitulo                                                    := 'ID_Forn';
       FORN.NOME.excelTitulo                                                    := 'Nome';
       FORN.ID_ALMOXARIFADO.excelTitulo                                         := 'ID_Almoxerifado';
+      FORN.PRAZO_ENTREGA.excelTitulo                                           := 'PrazoEntregaDias';
 
       FORN.buscaIndicesExcel(edBuscaArquivoFornecedor.Text, XLSAplicacao);
 
@@ -628,7 +629,14 @@ begin
                                                                                'L, ' + sLineBreak +
                                                                                'E, ' + sLineBreak +
                                                                                'Dias de garantia, ' + sLineBreak +
-                                                                               'Origem da mercadoria');
+                                                                               'Origem da mercadoria' + sLineBreak +
+                                                                               'UN'  + sLineBreak +
+                                                                               'Código Classificacao Fical'  + sLineBreak +
+                                                                               'Em');
+
+
+
+
           Exit;
         end;
       end;
@@ -685,7 +693,7 @@ begin
             SQL.Connection                                                       := CON.FDConnection;
 
             SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
-
+            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORANTERIOR = ID_FORNECEDORNOVO WHERE ID IN (' + ListaProdutosInsert + ')');
           finally
             FreeAndNil(SQL);
           end;
