@@ -14,6 +14,7 @@ type
     frxDBDataset1: TfrxDBDataset;
     frxPDFExport1: TfrxPDFExport;
     frxXLSExport1: TfrxXLSExport;
+    ImageList1: TImageList;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -66,14 +67,15 @@ var
   I       : Integer;
 begin
   frxReport1.Clear;
-  Arquivo                  := LOGIN.DirRelatorio + Relatorio;
+
+  Arquivo                  := CONFIG_LOCAL.DirRelatorios + Relatorio;
 
   if not FileExists(Arquivo) then begin
-    DisplayMsg(MSG_WAR, 'Arquivo não encontrado!');
+    DisplayMsg(MSG_WAR, 'Arquivo ' + Arquivo + ' não encontrado, Verifique!');
     Exit;
   end;
 
-  frxReport1.LoadFromFile(LOGIN.DirRelatorio + Relatorio);
+  frxReport1.LoadFromFile(Arquivo);
 
   frxReport1.Variables['Usuario'] := QuotedStr(USUARIO.NOME);
 

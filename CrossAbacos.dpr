@@ -39,7 +39,11 @@ uses
   uGeraMatch in 'uGeraMatch.pas' {frmGeraMatch},
   uBeanUsuario_Permissao in 'Beans\uBeanUsuario_Permissao.pas',
   uInativaProdutoFornecedor in 'uInativaProdutoFornecedor.pas' {frmInativaProdutoFornecedor},
-  uRelItensdoFornecedor in 'uRelItensdoFornecedor.pas' {frmRelItensdoFornecedor};
+  uRelItensdoFornecedor in 'uRelItensdoFornecedor.pas' {frmRelItensdoFornecedor},
+  uRelListagemProdutos in 'uRelListagemProdutos.pas' {frmRelListagemProdutos},
+  uRelListagemFornecedor in 'uRelListagemFornecedor.pas' {frmRelListagemFornecedor},
+  uConfiguracoesSistema in 'uConfiguracoesSistema.pas' {frmConfiguracoesSistema},
+  uRelListagemAtualizacaoporFornecedor in 'uRelListagemAtualizacaoporFornecedor.pas' {frmRelListagemAtualizacaoporFornecedor};
 
 {$R *.res}
 

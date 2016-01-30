@@ -157,6 +157,22 @@
             <Form>frmRelItensdoFornecedor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uRelListagemProdutos.pas">
+            <Form>frmRelListagemProdutos</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uRelListagemFornecedor.pas">
+            <Form>frmRelListagemFornecedor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uConfiguracoesSistema.pas">
+            <Form>frmConfiguracoesSistema</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uRelListagemAtualizacaoporFornecedor.pas">
+            <Form>frmRelListagemAtualizacaoporFornecedor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

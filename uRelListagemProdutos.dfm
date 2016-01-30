@@ -1,10 +1,9 @@
-object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
+object frmRelListagemProdutos: TfrmRelListagemProdutos
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
-  Caption = 'Relat'#243'rio de Itens do fornecedor'
-  ClientHeight = 309
-  ClientWidth = 486
+  Caption = 'Relat'#243'rio de Listagem de Produtos'
+  ClientHeight = 371
+  ClientWidth = 534
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +19,8 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
   object pnPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 486
-    Height = 309
+    Width = 534
+    Height = 371
     Align = alClient
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -35,7 +34,7 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 480
+      Width = 528
       Height = 52
       Align = alTop
       Caption = '  Selecione o Fornecedor  '
@@ -47,7 +46,7 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
       ParentFont = False
       TabOrder = 0
       DesignSize = (
-        480
+        528
         52)
       object edFornecedor: TButtonedEdit
         Left = 8
@@ -60,7 +59,6 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         TabOrder = 0
         TextHint = 'Selecione o Fornecedor...'
         OnChange = edFornecedorChange
-        OnExit = edFornecedorExit
         OnKeyDown = edFornecedorKeyDown
         OnRightButtonClick = edFornecedorRightButtonClick
       end
@@ -68,7 +66,7 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         AlignWithMargins = True
         Left = 159
         Top = 21
-        Width = 305
+        Width = 353
         Height = 27
         Anchors = [akLeft, akTop, akRight]
         Enabled = False
@@ -84,8 +82,8 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
     object rgSaldo: TRadioGroup
       AlignWithMargins = True
       Left = 3
-      Top = 61
-      Width = 480
+      Top = 235
+      Width = 528
       Height = 52
       Align = alTop
       Caption = '  Saldo dos Itens  '
@@ -103,33 +101,11 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
       ParentFont = False
       TabOrder = 1
     end
-    object rgStatus: TRadioGroup
-      AlignWithMargins = True
-      Left = 3
-      Top = 119
-      Width = 480
-      Height = 52
-      Align = alTop
-      Caption = '  Produtos Ativos/Inativos  '
-      Columns = 3
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ItemIndex = 2
-      Items.Strings = (
-        'Ativos'
-        'Inativos'
-        'Todos')
-      ParentFont = False
-      TabOrder = 2
-    end
     object GridPanel1: TGridPanel
       AlignWithMargins = True
       Left = 3
-      Top = 246
-      Width = 480
+      Top = 308
+      Width = 528
       Height = 60
       Align = alBottom
       BevelOuter = bvLowered
@@ -155,21 +131,21 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         item
           Value = 100.000000000000000000
         end>
-      TabOrder = 3
+      TabOrder = 2
       ExplicitLeft = 0
-      ExplicitTop = 254
-      ExplicitWidth = 486
+      ExplicitTop = 311
+      ExplicitWidth = 534
       object Panel1: TPanel
         Left = 1
         Top = 1
-        Width = 239
+        Width = 263
         Height = 58
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 242
+        ExplicitWidth = 266
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
-          Left = 120
+          Left = 144
           Top = 4
           Width = 115
           Height = 50
@@ -698,19 +674,18 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
           NumGlyphs = 4
           ParentFont = False
           OnClick = btRelatorioClick
-          ExplicitLeft = 123
+          ExplicitLeft = 147
         end
       end
       object Panel2: TPanel
-        Left = 240
+        Left = 264
         Top = 1
-        Width = 239
+        Width = 263
         Height = 58
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 243
-        ExplicitWidth = 242
-        ExplicitHeight = 49
+        ExplicitLeft = 267
+        ExplicitWidth = 266
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
@@ -825,8 +800,126 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           ParentFont = False
           OnClick = btSairClick
-          ExplicitHeight = 41
         end
+      end
+    end
+    object gbProduto: TGroupBox
+      AlignWithMargins = True
+      Left = 3
+      Top = 61
+      Width = 528
+      Height = 52
+      Align = alTop
+      Caption = '  Selecione o Produto  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      DesignSize = (
+        528
+        52)
+      object edProduto: TButtonedEdit
+        Left = 8
+        Top = 21
+        Width = 145
+        Height = 27
+        Images = DMUtil.ImageList1
+        RightButton.ImageIndex = 0
+        RightButton.Visible = True
+        TabOrder = 0
+        TextHint = 'Selecione o Fornecedor...'
+        OnChange = edProdutoChange
+        OnKeyDown = edProdutoKeyDown
+        OnRightButtonClick = edProdutoRightButtonClick
+      end
+      object edNomeProduto: TEdit
+        AlignWithMargins = True
+        Left = 159
+        Top = 21
+        Width = 353
+        Height = 27
+        Anchors = [akLeft, akTop, akRight]
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+      end
+    end
+    object gbMarca: TGroupBox
+      AlignWithMargins = True
+      Left = 3
+      Top = 119
+      Width = 528
+      Height = 52
+      Align = alTop
+      Caption = '  Marca  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      DesignSize = (
+        528
+        52)
+      object edMarca: TEdit
+        AlignWithMargins = True
+        Left = 8
+        Top = 21
+        Width = 504
+        Height = 27
+        Anchors = [akLeft, akTop, akRight]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        TextHint = 'Digite a Marca...'
+      end
+    end
+    object gbCategoria: TGroupBox
+      AlignWithMargins = True
+      Left = 3
+      Top = 177
+      Width = 528
+      Height = 52
+      Align = alTop
+      Caption = '  Categoria/Familia  '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+      DesignSize = (
+        528
+        52)
+      object edCategoria: TEdit
+        AlignWithMargins = True
+        Left = 8
+        Top = 21
+        Width = 504
+        Height = 27
+        Anchors = [akLeft, akTop, akRight]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        TextHint = 'Digite a Categoria/Familia...'
       end
     end
   end

@@ -30,6 +30,9 @@ type
     ConfiguraodeProdutos1: TMenuItem;
     ItensdoFornecedor1: TMenuItem;
     Cross1: TMenuItem;
+    ListagemdeProdutos1: TMenuItem;
+    ListagemdeFornecedores1: TMenuItem;
+    ListagemdeAtualizaoporFornecedor1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -44,6 +47,10 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ConfiguraodeProdutos1Click(Sender: TObject);
     procedure ItensdoFornecedor1Click(Sender: TObject);
+    procedure ListagemdeProdutos1Click(Sender: TObject);
+    procedure ListagemdeFornecedores1Click(Sender: TObject);
+    procedure ConfigGerais1Click(Sender: TObject);
+    procedure ListagemdeAtualizaoporFornecedor1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -72,7 +79,11 @@ uses
   uGeraMatch,
   uInativaProdutoFornecedor,
   uFWConnection, uDMUtil,
-  uRelItensdoFornecedor;
+  uRelItensdoFornecedor,
+  uRelListagemProdutos,
+  uRelListagemFornecedor,
+  uConfiguracoesSistema,
+  uRelListagemAtualizacaoporFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -167,6 +178,39 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.ListagemdeAtualizaoporFornecedor1Click(Sender: TObject);
+begin
+  try
+    if frmRelListagemAtualizacaoporFornecedor = nil then
+      frmRelListagemAtualizacaoporFornecedor := TfrmRelListagemAtualizacaoporFornecedor.Create(Self);
+    frmRelListagemAtualizacaoporFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRelListagemAtualizacaoporFornecedor);
+  end;
+end;
+
+procedure TFrmPrincipal.ListagemdeFornecedores1Click(Sender: TObject);
+begin
+  if not Assigned(frmRelListagemFornecedor) then
+    frmRelListagemFornecedor := TfrmRelListagemFornecedor.Create(nil);
+  try
+    frmRelListagemFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRelListagemFornecedor);
+  end;
+end;
+
+procedure TFrmPrincipal.ListagemdeProdutos1Click(Sender: TObject);
+begin
+  if not Assigned(frmRelListagemProdutos) then
+    frmRelListagemProdutos := TfrmRelListagemProdutos.Create(nil);
+  try
+    frmRelListagemProdutos.ShowModal;
+  finally
+    FreeAndNil(frmRelListagemProdutos);
+  end;
+end;
+
 procedure TFrmPrincipal.Margem1Click(Sender: TObject);
 begin
   try
@@ -175,6 +219,17 @@ begin
     FrmCadastroMargem.ShowModal;
   finally
     FreeAndNil(FrmCadastroMargem);
+  end;
+end;
+
+procedure TFrmPrincipal.ConfigGerais1Click(Sender: TObject);
+begin
+  try
+    if frmConfiguracoesSistema = nil then
+      frmConfiguracoesSistema := TfrmConfiguracoesSistema.Create(Self);
+    frmConfiguracoesSistema.ShowModal;
+  finally
+    FreeAndNil(frmConfiguracoesSistema);
   end;
 end;
 

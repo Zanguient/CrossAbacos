@@ -48,9 +48,10 @@ begin
   ArqINI := TIniFile.Create(DirArqConf);
   try
 
-    LOGIN.Usuario         := ArqINI.ReadString('LOGIN', 'USUARIO', '');
-    LOGIN.LembrarUsuario  := ArqINI.ReadBool('LOGIN', 'LEMBRARUSUARIO', True);
-    LOGIN.DirRelatorio    := ArqINI.ReadString('LOGIN', 'RELATORIO', '');
+    LOGIN.Usuario               := ArqINI.ReadString('LOGIN', 'USUARIO', '');
+    LOGIN.LembrarUsuario        := ArqINI.ReadBool('LOGIN', 'LEMBRARUSUARIO', True);
+
+    CONFIG_LOCAL.DirRelatorios  := ArqINI.ReadString('CONFIGURACOES', 'DIR_RELATORIOS', 'C:\CrossAbacos\Relatorios\');
 
   finally
     FreeAndNil(ArqINI);

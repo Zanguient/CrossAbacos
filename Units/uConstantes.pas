@@ -6,7 +6,6 @@ type
   TDADOSLOGIN = record
     Usuario : String;
     LembrarUsuario : Boolean;
-    DirRelatorio : String;
   end;
 
   TDADOSCONEXAO = record
@@ -25,9 +24,14 @@ type
     NOME : string;
     EMAIL : string;
   end;
+
   TMENU = record
     NOME    : string;
     CAPTION : string;
+  end;
+
+  TCONFIGURACOESLOCAIS = record
+    DirRelatorios : string;
   end;
 
 Const
@@ -40,6 +44,7 @@ Var
   LOGIN       : TDADOSLOGIN;
   CONEXAO     : TDADOSCONEXAO;
   USUARIO     : TDADOSUSUARIO;
+  CONFIG_LOCAL: TCONFIGURACOESLOCAIS;
   MENUS       : array of TMENU;
   DESIGNREL   : Boolean;
 

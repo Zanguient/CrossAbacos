@@ -19,7 +19,6 @@ type
     rgSaldo: TRadioGroup;
     rgStatus: TRadioGroup;
     GridPanel1: TGridPanel;
-    ImageList1: TImageList;
     Panel1: TPanel;
     Panel2: TPanel;
     btRelatorio: TSpeedButton;
@@ -64,8 +63,6 @@ begin
       btRelatorio.Tag := 0;
     end;
   end;
-
-
 end;
 
 procedure TfrmRelItensdoFornecedor.btSairClick(Sender: TObject);

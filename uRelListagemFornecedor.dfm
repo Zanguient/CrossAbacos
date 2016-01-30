@@ -1,10 +1,9 @@
-object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
+object frmRelListagemFornecedor: TfrmRelListagemFornecedor
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
-  Caption = 'Relat'#243'rio de Itens do fornecedor'
-  ClientHeight = 309
-  ClientWidth = 486
+  Caption = 'Relat'#243'rio de Listagem de Fornecedor'
+  ClientHeight = 128
+  ClientWidth = 468
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,13 +14,14 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
   OldCreateOrder = False
   Position = poMainFormCenter
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 486
-    Height = 309
+    Width = 468
+    Height = 128
     Align = alClient
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -35,9 +35,9 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 480
-      Height = 52
-      Align = alTop
+      Width = 462
+      Height = 56
+      Align = alClient
       Caption = '  Selecione o Fornecedor  '
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -46,9 +46,10 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitHeight = 65
       DesignSize = (
-        480
-        52)
+        462
+        56)
       object edFornecedor: TButtonedEdit
         Left = 8
         Top = 21
@@ -60,7 +61,6 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         TabOrder = 0
         TextHint = 'Selecione o Fornecedor...'
         OnChange = edFornecedorChange
-        OnExit = edFornecedorExit
         OnKeyDown = edFornecedorKeyDown
         OnRightButtonClick = edFornecedorRightButtonClick
       end
@@ -68,7 +68,7 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         AlignWithMargins = True
         Left = 159
         Top = 21
-        Width = 305
+        Width = 287
         Height = 27
         Anchors = [akLeft, akTop, akRight]
         Enabled = False
@@ -81,55 +81,11 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         TabOrder = 1
       end
     end
-    object rgSaldo: TRadioGroup
-      AlignWithMargins = True
-      Left = 3
-      Top = 61
-      Width = 480
-      Height = 52
-      Align = alTop
-      Caption = '  Saldo dos Itens  '
-      Columns = 3
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ItemIndex = 2
-      Items.Strings = (
-        'Com Saldo'
-        'Sem Saldo'
-        'Todos')
-      ParentFont = False
-      TabOrder = 1
-    end
-    object rgStatus: TRadioGroup
-      AlignWithMargins = True
-      Left = 3
-      Top = 119
-      Width = 480
-      Height = 52
-      Align = alTop
-      Caption = '  Produtos Ativos/Inativos  '
-      Columns = 3
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ItemIndex = 2
-      Items.Strings = (
-        'Ativos'
-        'Inativos'
-        'Todos')
-      ParentFont = False
-      TabOrder = 2
-    end
     object GridPanel1: TGridPanel
       AlignWithMargins = True
       Left = 3
-      Top = 246
-      Width = 480
+      Top = 65
+      Width = 462
       Height = 60
       Align = alBottom
       BevelOuter = bvLowered
@@ -155,21 +111,22 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
         item
           Value = 100.000000000000000000
         end>
-      TabOrder = 3
+      TabOrder = 1
       ExplicitLeft = 0
-      ExplicitTop = 254
-      ExplicitWidth = 486
+      ExplicitTop = 78
+      ExplicitWidth = 468
       object Panel1: TPanel
         Left = 1
         Top = 1
-        Width = 239
+        Width = 230
         Height = 58
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 242
+        ExplicitWidth = 233
+        ExplicitHeight = 48
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
-          Left = 120
+          Left = 111
           Top = 4
           Width = 115
           Height = 50
@@ -698,19 +655,18 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
           NumGlyphs = 4
           ParentFont = False
           OnClick = btRelatorioClick
-          ExplicitLeft = 123
+          ExplicitLeft = 114
         end
       end
       object Panel2: TPanel
-        Left = 240
+        Left = 231
         Top = 1
-        Width = 239
+        Width = 230
         Height = 58
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 243
-        ExplicitWidth = 242
-        ExplicitHeight = 49
+        ExplicitLeft = 234
+        ExplicitWidth = 233
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
@@ -825,9 +781,37 @@ object frmRelItensdoFornecedor: TfrmRelItensdoFornecedor
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           ParentFont = False
           OnClick = btSairClick
-          ExplicitHeight = 41
         end
       end
+    end
+  end
+  object csFornecedores: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 403
+    Top = 51
+    object csFornecedoresNOME: TStringField
+      FieldName = 'NOME'
+      Size = 100
+    end
+    object csFornecedoresCNPJ: TStringField
+      FieldName = 'CNPJ'
+      Size = 18
+    end
+    object csFornecedoresDATAULTIMAATUA: TDateTimeField
+      FieldName = 'DATAULTIMAATUA'
+    end
+    object csFornecedoresDATALOTE: TDateTimeField
+      FieldName = 'DATALOTE'
+    end
+    object csFornecedoresQUANTIDADE: TIntegerField
+      FieldName = 'QUANTIDADE'
+    end
+    object csFornecedoresSALDO: TIntegerField
+      FieldName = 'SALDO'
+    end
+    object csFornecedoresTICKET: TCurrencyField
+      FieldName = 'TICKET'
     end
   end
 end

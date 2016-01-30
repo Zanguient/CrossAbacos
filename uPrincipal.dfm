@@ -86,12 +86,25 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Itens do Fornecedor'
           OnClick = ItensdoFornecedor1Click
         end
+        object ListagemdeProdutos1: TMenuItem
+          Caption = 'Listagem de Produtos'
+          OnClick = ListagemdeProdutos1Click
+        end
+        object ListagemdeFornecedores1: TMenuItem
+          Caption = 'Listagem de Fornecedores'
+          OnClick = ListagemdeFornecedores1Click
+        end
+        object ListagemdeAtualizaoporFornecedor1: TMenuItem
+          Caption = 'Listagem de Atualiza'#231#227'o por Fornecedor'
+          OnClick = ListagemdeAtualizaoporFornecedor1Click
+        end
       end
     end
     object Configuraes1: TMenuItem
       Caption = 'Configura'#231#245'es'
       object ConfigGerais1: TMenuItem
-        Caption = 'Config. Gerais'
+        Caption = 'Configura'#231#245'es do Sistema'
+        OnClick = ConfigGerais1Click
       end
       object RedefinirSenha: TMenuItem
         Caption = 'Redefinir Senha'
