@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42396,6390752662" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
+<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42400,0237015278" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
+  <Datasets>
+    <item DataSet="frxDBDataset1" DataSetName="frxDBDataset1"/>
+  </Datasets>
   <Variables>
-    <item Name="Usuario" Value="user"/>
+    <item Name="Usuario" Value="'Sergio Jonas NetSchulz'"/>
     <item Name="UserLogin" Value="user"/>
     <item Name="Login" Value="'Sergio Jonas NetSchulz'"/>
   </Variables>
@@ -19,10 +22,30 @@
         </Formats>
       </TfrxMemoView>
     </TfrxReportTitle>
-    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="22,67718" Left="0" Top="185,19697" Width="718,1107" ColumnWidth="0" ColumnGap="0" RowCount="0"/>
-    <TfrxPageFooter Name="PageFooter1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="22,67718" Left="0" Top="268,34663" Width="718,1107">
+    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,8976378" Left="0" Top="275,90569" Width="718,1107" ColumnWidth="0" ColumnGap="0" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" RowCount="0">
+      <TfrxMemoView Name="Memo21" Align="baRight" Left="529,1342" Top="0" Width="188,9765" Height="18,89765" Font.Charset="1" Font.Color="536870911" Font.Height="-13" Font.Name="Times New Roman" Font.Style="0" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="[frxDBDataset1.&#34;sku_importados_fornecedor&#34;]"/>
+      <TfrxMemoView Name="Memo25" Align="baWidth" Left="37,7953" Top="0" Width="491,3389" Height="18,89765" Font.Charset="1" Font.Color="536870911" Font.Height="-13" Font.Name="Times New Roman" Font.Style="0" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="[frxDBDataset1.&#34;nomefornecedor&#34;]"/>
+      <TfrxMemoView Name="Memo26" Align="baLeft" Left="0" Top="0" Width="37,7953" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="Arial" Font.Style="0" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text=""/>
+    </TfrxMasterData>
+    <TfrxPageFooter Name="PageFooter1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="22,67718" Left="0" Top="355,27582" Width="718,1107">
       <TfrxMemoView Name="Memo1" Left="487,55937" Top="0" Width="230,55133" Height="18,89765" HAlign="haRight" Text="Página [Page#] de [TotalPages#]"/>
     </TfrxPageFooter>
-    <TfrxHeader Name="Header1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="22,67718" Left="0" Top="139,84261" Width="718,1107" Stretched="True"/>
+    <TfrxHeader Name="Header1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="49,13389" Left="0" Top="139,84261" Width="718,1107" Stretched="True">
+      <TfrxMemoView Name="Memo7" Align="baWidth" Left="0" Top="0" Width="718,1107" Height="22,67718" Font.Charset="1" Font.Color="-16777208" Font.Height="-19" Font.Name="times New Roman" Font.Style="1" Frame.Typ="12" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Listagem de Lotes"/>
+      <TfrxMemoView Name="Memo6" Align="baWidth" Left="0" Top="26,45671" Width="529,1342" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="16711680" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" ParentFont="False" VAlign="vaCenter" Text="Lote"/>
+      <TfrxMemoView Name="Memo12" Align="baRight" Left="529,1342" Top="26,45671" Width="188,9765" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="16711680" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Número de SKU's Importados"/>
+    </TfrxHeader>
+    <TfrxGroupHeader Name="GroupHeader1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="41,5748178" Left="0" Top="211,65368" Width="718,1107" Condition="frxDBDataset1.&#34;lote&#34;">
+      <TfrxMemoView Name="Memo10" Align="baWidth" Left="0" Top="0" Width="529,1342" Height="18,89765" Font.Charset="1" Font.Color="16711680" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" Frame.Style="fsDot" Frame.Typ="15" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="[frxDBDataset1.&#34;lote&#34;] - [frxDBDataset1.&#34;data_hora&#34;]"/>
+      <TfrxMemoView Name="Memo11" Align="baRight" Left="529,1342" Top="0" Width="188,9765" Height="18,89765" Font.Charset="1" Font.Color="16711680" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" Frame.Style="fsDot" Frame.Typ="15" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="[frxDBDataset1.&#34;sku_importados_lote&#34;]">
+        <Formats>
+          <item/>
+          <item/>
+        </Formats>
+      </TfrxMemoView>
+      <TfrxMemoView Name="Memo8" Align="baRight" Left="529,1342" Top="22,67718" Width="188,9765" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="536870911" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="Número de Itens Importados"/>
+      <TfrxMemoView Name="Memo16" Align="baWidth" Left="37,7953" Top="22,6771922" Width="491,3389" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="536870911" Font.Height="-13" Font.Name="Times New Roman" Font.Style="1" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text="Fornecedor"/>
+      <TfrxMemoView Name="Memo17" Align="baLeft" Left="0" Top="22,6771922" Width="37,7953" Height="18,89765" AllowExpressions="False" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="Arial" Font.Style="0" HAlign="haCenter" ParentFont="False" WordWrap="False" VAlign="vaCenter" Text=""/>
+    </TfrxGroupHeader>
   </TfrxReportPage>
 </TfrxReport>
