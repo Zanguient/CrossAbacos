@@ -114,6 +114,13 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Listagem de Lotes'
           OnClick = ListagemdeLotes1Click
         end
+        object RatingporFornecedor1: TMenuItem
+          Caption = 'Rating por Fornecedor'
+          OnClick = RatingporFornecedor1Click
+        end
+        object HistricodeCustoporSKU1: TMenuItem
+          Caption = 'Hist'#243'rico de Custo por SKU'
+        end
       end
     end
     object Configuraes1: TMenuItem

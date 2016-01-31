@@ -43,7 +43,9 @@ uses
   uRelListagemProdutos in 'uRelListagemProdutos.pas' {frmRelListagemProdutos},
   uRelListagemFornecedor in 'uRelListagemFornecedor.pas' {frmRelListagemFornecedor},
   uConfiguracoesSistema in 'uConfiguracoesSistema.pas' {frmConfiguracoesSistema},
-  uRelListagemAtualizacaoporFornecedor in 'uRelListagemAtualizacaoporFornecedor.pas' {frmRelListagemAtualizacaoporFornecedor};
+  uRelListagemAtualizacaoporFornecedor in 'uRelListagemAtualizacaoporFornecedor.pas' {frmRelListagemAtualizacaoporFornecedor},
+  uRelRatingporFornecedor in 'uRelRatingporFornecedor.pas' {frmRatingporFornecedor},
+  uRelatorios in 'Units\uRelatorios.pas';
 
 {$R *.res}
 

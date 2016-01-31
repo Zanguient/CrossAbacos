@@ -37,6 +37,8 @@ type
     ListagemSimplesdeFornecedor1: TMenuItem;
     ListagemdeAlmoxarifados1: TMenuItem;
     ListagemdeLotes1: TMenuItem;
+    RatingporFornecedor1: TMenuItem;
+    HistricodeCustoporSKU1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -59,6 +61,7 @@ type
     procedure ListagemSimplesdeFornecedor1Click(Sender: TObject);
     procedure ListagemdeAlmoxarifados1Click(Sender: TObject);
     procedure ListagemdeLotes1Click(Sender: TObject);
+    procedure RatingporFornecedor1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -94,7 +97,8 @@ uses
   uRelListagemAtualizacaoporFornecedor,
   uRelHistoricoporSKU,
   uRelatorios,
-  uRelListagemdeLotes;
+  uRelListagemdeLotes,
+  uRelRatingporFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -304,6 +308,17 @@ begin
 
   if (ResultMsgModal = mrYes) then
     Close;
+end;
+
+procedure TFrmPrincipal.RatingporFornecedor1Click(Sender: TObject);
+begin
+  try
+    if frmRatingporFornecedor = nil then
+      frmRatingporFornecedor := TfrmRatingporFornecedor.Create(Self);
+    frmRatingporFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRatingporFornecedor);
+  end;
 end;
 
 procedure TFrmPrincipal.RedefinirSenhaClick(Sender: TObject);
