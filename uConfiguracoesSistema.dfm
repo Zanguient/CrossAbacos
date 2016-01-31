@@ -293,12 +293,18 @@ object frmConfiguracoesSistema: TfrmConfiguracoesSistema
       'Configura'#231#245'es Locais')
     TabIndex = 0
     object pnConfiguracoesLocais: TPanel
-      Left = 4
-      Top = 36
-      Width = 871
-      Height = 384
+      AlignWithMargins = True
+      Left = 7
+      Top = 39
+      Width = 865
+      Height = 378
       Align = alClient
+      BevelOuter = bvNone
       TabOrder = 0
+      ExplicitLeft = 4
+      ExplicitTop = 36
+      ExplicitWidth = 871
+      ExplicitHeight = 384
       object Label1: TLabel
         Left = 3
         Top = 243
