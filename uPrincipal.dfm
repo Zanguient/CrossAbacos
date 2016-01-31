@@ -98,6 +98,22 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Listagem de Atualiza'#231#227'o por Fornecedor'
           OnClick = ListagemdeAtualizaoporFornecedor1Click
         end
+        object HistricodeAtualizaoporSKU1: TMenuItem
+          Caption = 'Hist'#243'rico por SKU'
+          OnClick = HistricodeAtualizaoporSKU1Click
+        end
+        object ListagemSimplesdeFornecedor1: TMenuItem
+          Caption = 'Listagem Simples de Fornecedores'
+          OnClick = ListagemSimplesdeFornecedor1Click
+        end
+        object ListagemdeAlmoxarifados1: TMenuItem
+          Caption = 'Listagem Simples de Almoxarifados'
+          OnClick = ListagemdeAlmoxarifados1Click
+        end
+        object ListagemdeLotes1: TMenuItem
+          Caption = 'Listagem de Lotes'
+          OnClick = ListagemdeLotes1Click
+        end
       end
     end
     object Configuraes1: TMenuItem

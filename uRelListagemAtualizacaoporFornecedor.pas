@@ -28,6 +28,7 @@ type
     procedure btSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btRelatorioClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     procedure Visualizar;
     { Private declarations }
@@ -65,6 +66,13 @@ end;
 procedure TfrmRelListagemAtualizacaoporFornecedor.btSairClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TfrmRelListagemAtualizacaoporFornecedor.FormKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    Close;
 end;
 
 procedure TfrmRelListagemAtualizacaoporFornecedor.FormShow(Sender: TObject);

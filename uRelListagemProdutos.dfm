@@ -132,9 +132,6 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
           Value = 100.000000000000000000
         end>
       TabOrder = 2
-      ExplicitLeft = 0
-      ExplicitTop = 311
-      ExplicitWidth = 534
       object Panel1: TPanel
         Left = 1
         Top = 1
@@ -142,7 +139,6 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
         Height = 58
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 266
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
           Left = 144
@@ -684,8 +680,6 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
         Height = 58
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 267
-        ExplicitWidth = 266
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
@@ -823,14 +817,14 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
         52)
       object edProduto: TButtonedEdit
         Left = 8
-        Top = 21
+        Top = 22
         Width = 145
         Height = 27
         Images = DMUtil.ImageList1
         RightButton.ImageIndex = 0
         RightButton.Visible = True
         TabOrder = 0
-        TextHint = 'Selecione o Fornecedor...'
+        TextHint = 'Selecione o Produto...'
         OnChange = edProdutoChange
         OnKeyDown = edProdutoKeyDown
         OnRightButtonClick = edProdutoRightButtonClick

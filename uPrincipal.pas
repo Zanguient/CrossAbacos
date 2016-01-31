@@ -33,6 +33,10 @@ type
     ListagemdeProdutos1: TMenuItem;
     ListagemdeFornecedores1: TMenuItem;
     ListagemdeAtualizaoporFornecedor1: TMenuItem;
+    HistricodeAtualizaoporSKU1: TMenuItem;
+    ListagemSimplesdeFornecedor1: TMenuItem;
+    ListagemdeAlmoxarifados1: TMenuItem;
+    ListagemdeLotes1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -51,6 +55,10 @@ type
     procedure ListagemdeFornecedores1Click(Sender: TObject);
     procedure ConfigGerais1Click(Sender: TObject);
     procedure ListagemdeAtualizaoporFornecedor1Click(Sender: TObject);
+    procedure HistricodeAtualizaoporSKU1Click(Sender: TObject);
+    procedure ListagemSimplesdeFornecedor1Click(Sender: TObject);
+    procedure ListagemdeAlmoxarifados1Click(Sender: TObject);
+    procedure ListagemdeLotes1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -83,7 +91,10 @@ uses
   uRelListagemProdutos,
   uRelListagemFornecedor,
   uConfiguracoesSistema,
-  uRelListagemAtualizacaoporFornecedor;
+  uRelListagemAtualizacaoporFornecedor,
+  uRelHistoricoporSKU,
+  uRelatorios,
+  uRelListagemdeLotes;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -149,6 +160,17 @@ begin
 
 end;
 
+procedure TFrmPrincipal.HistricodeAtualizaoporSKU1Click(Sender: TObject);
+begin
+  if frmRelHistoricoporSKU = nil then
+    frmRelHistoricoporSKU   := TfrmRelHistoricoporSKU.Create(nil);
+  try
+    frmRelHistoricoporSKU.ShowModal;
+  finally
+    FreeAndNil(frmRelHistoricoporSKU);
+  end;
+end;
+
 procedure TFrmPrincipal.Importacoes2Click(Sender: TObject);
 begin
   if frmImportacao = nil then
@@ -178,6 +200,11 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.ListagemdeAlmoxarifados1Click(Sender: TObject);
+begin
+  RelatorioListagemAlmoxarifados;
+end;
+
 procedure TFrmPrincipal.ListagemdeAtualizaoporFornecedor1Click(Sender: TObject);
 begin
   try
@@ -200,6 +227,17 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.ListagemdeLotes1Click(Sender: TObject);
+begin
+  try
+    if frmRelListagemdeLotes = nil then
+      frmRelListagemdeLotes := TfrmRelListagemdeLotes.Create(Self);
+    frmRelListagemdeLotes.ShowModal;
+  finally
+    FreeAndNil(frmRelListagemdeLotes);
+  end;
+end;
+
 procedure TFrmPrincipal.ListagemdeProdutos1Click(Sender: TObject);
 begin
   if not Assigned(frmRelListagemProdutos) then
@@ -209,6 +247,11 @@ begin
   finally
     FreeAndNil(frmRelListagemProdutos);
   end;
+end;
+
+procedure TFrmPrincipal.ListagemSimplesdeFornecedor1Click(Sender: TObject);
+begin
+  RelatorioListagemFornecedores;
 end;
 
 procedure TFrmPrincipal.Margem1Click(Sender: TObject);

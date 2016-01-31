@@ -10,8 +10,10 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -29,9 +31,6 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitLeft = -21
-    ExplicitWidth = 468
-    ExplicitHeight = 128
     object gbSelecionaPeriodo: TGroupBox
       AlignWithMargins = True
       Left = 3
@@ -47,8 +46,6 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 462
-      ExplicitHeight = 56
       object Label1: TLabel
         Left = 35
         Top = 41
@@ -113,8 +110,6 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
           Value = 100.000000000000000000
         end>
       TabOrder = 1
-      ExplicitTop = 65
-      ExplicitWidth = 462
       object Panel1: TPanel
         Left = 1
         Top = 1
@@ -122,7 +117,6 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
         Height = 58
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 230
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
           Left = 100
@@ -664,8 +658,6 @@ object frmRelListagemAtualizacaoporFornecedor: TfrmRelListagemAtualizacaoporForn
         Height = 58
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 231
-        ExplicitWidth = 230
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
