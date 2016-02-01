@@ -186,6 +186,14 @@
             <Form>frmRelHistoricoporSKU</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uRelMatch.pas">
+            <Form>frmRelMatch</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uRelListagemdeLotes.pas">
+            <Form>frmRelListagemdeLotes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

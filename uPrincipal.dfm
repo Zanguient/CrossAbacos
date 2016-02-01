@@ -122,6 +122,10 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Hist'#243'rico de Custo por SKU'
           OnClick = HistricodeCustoporSKU1Click
         end
+        object Match1: TMenuItem
+          Caption = 'Match'
+          OnClick = Match1Click
+        end
       end
     end
     object Configuraes1: TMenuItem

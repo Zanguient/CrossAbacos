@@ -47,7 +47,9 @@ uses
   uRelRatingporFornecedor in 'uRelRatingporFornecedor.pas' {frmRatingporFornecedor},
   uRelatorios in 'Units\uRelatorios.pas',
   uRelHistoricodeCustoporSKU in 'uRelHistoricodeCustoporSKU.pas' {frmRelHistoricodeCustoporSKU},
-  uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU};
+  uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU},
+  uRelMatch in 'uRelMatch.pas' {frmRelMatch},
+  uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes};
 
 {$R *.res}
 
@@ -59,6 +61,8 @@ begin
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
   Application.CreateForm(TfrmRelHistoricoporSKU, frmRelHistoricoporSKU);
+  Application.CreateForm(TfrmRelMatch, frmRelMatch);
+  Application.CreateForm(TfrmRelListagemdeLotes, frmRelListagemdeLotes);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

@@ -39,6 +39,7 @@ type
     ListagemdeLotes1: TMenuItem;
     RatingporFornecedor1: TMenuItem;
     HistricodeCustoporSKU1: TMenuItem;
+    Match1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -63,6 +64,7 @@ type
     procedure ListagemdeLotes1Click(Sender: TObject);
     procedure RatingporFornecedor1Click(Sender: TObject);
     procedure HistricodeCustoporSKU1Click(Sender: TObject);
+    procedure Match1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -99,7 +101,9 @@ uses
   uRelHistoricoporSKU,
   uRelatorios,
   uRelListagemdeLotes,
-  uRelRatingporFornecedor, uRelHistoricodeCustoporSKU;
+  uRelRatingporFornecedor,
+  uRelHistoricodeCustoporSKU,
+  uRelMatch;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -278,6 +282,17 @@ begin
     FrmCadastroMargem.ShowModal;
   finally
     FreeAndNil(FrmCadastroMargem);
+  end;
+end;
+
+procedure TFrmPrincipal.Match1Click(Sender: TObject);
+begin
+  try
+    if frmRelMatch = nil then
+      frmRelMatch := TfrmRelMatch.Create(Self);
+    frmRelMatch.ShowModal;
+  finally
+    FreeAndNil(frmRelMatch);
   end;
 end;
 
