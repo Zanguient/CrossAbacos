@@ -62,6 +62,7 @@ type
     procedure ListagemdeAlmoxarifados1Click(Sender: TObject);
     procedure ListagemdeLotes1Click(Sender: TObject);
     procedure RatingporFornecedor1Click(Sender: TObject);
+    procedure HistricodeCustoporSKU1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -98,7 +99,7 @@ uses
   uRelHistoricoporSKU,
   uRelatorios,
   uRelListagemdeLotes,
-  uRelRatingporFornecedor;
+  uRelRatingporFornecedor, uRelHistoricodeCustoporSKU;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -172,6 +173,17 @@ begin
     frmRelHistoricoporSKU.ShowModal;
   finally
     FreeAndNil(frmRelHistoricoporSKU);
+  end;
+end;
+
+procedure TFrmPrincipal.HistricodeCustoporSKU1Click(Sender: TObject);
+begin
+  if frmRelHistoricodeCustoporSKU = nil then
+    frmRelHistoricodeCustoporSKU   := TfrmRelHistoricodeCustoporSKU.Create(nil);
+  try
+    frmRelHistoricodeCustoporSKU.ShowModal;
+  finally
+    FreeAndNil(frmRelHistoricodeCustoporSKU);
   end;
 end;
 

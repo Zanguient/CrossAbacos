@@ -48,8 +48,6 @@ object frmRelHistoricoporSKU: TfrmRelHistoricoporSKU
         Value = 100.000000000000000000
       end>
     TabOrder = 2
-    ExplicitTop = 138
-    ExplicitWidth = 441
     object Panel1: TPanel
       Left = 1
       Top = 1
@@ -57,7 +55,6 @@ object frmRelHistoricoporSKU: TfrmRelHistoricoporSKU
       Height = 58
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 219
       object btRelatorio: TSpeedButton
         AlignWithMargins = True
         Left = 156
@@ -599,8 +596,6 @@ object frmRelHistoricoporSKU: TfrmRelHistoricoporSKU
       Height = 58
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 220
-      ExplicitWidth = 220
       object btSair: TSpeedButton
         AlignWithMargins = True
         Left = 4
@@ -735,7 +730,6 @@ object frmRelHistoricoporSKU: TfrmRelHistoricoporSKU
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitHeight = 107
     object Label1: TLabel
       Left = 8
       Top = 25

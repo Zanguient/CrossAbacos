@@ -45,7 +45,9 @@ uses
   uConfiguracoesSistema in 'uConfiguracoesSistema.pas' {frmConfiguracoesSistema},
   uRelListagemAtualizacaoporFornecedor in 'uRelListagemAtualizacaoporFornecedor.pas' {frmRelListagemAtualizacaoporFornecedor},
   uRelRatingporFornecedor in 'uRelRatingporFornecedor.pas' {frmRatingporFornecedor},
-  uRelatorios in 'Units\uRelatorios.pas';
+  uRelatorios in 'Units\uRelatorios.pas',
+  uRelHistoricodeCustoporSKU in 'uRelHistoricodeCustoporSKU.pas' {frmRelHistoricodeCustoporSKU},
+  uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU};
 
 {$R *.res}
 
@@ -56,6 +58,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TfrmRelHistoricoporSKU, frmRelHistoricoporSKU);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

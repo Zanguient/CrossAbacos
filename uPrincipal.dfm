@@ -120,6 +120,7 @@ object FrmPrincipal: TFrmPrincipal
         end
         object HistricodeCustoporSKU1: TMenuItem
           Caption = 'Hist'#243'rico de Custo por SKU'
+          OnClick = HistricodeCustoporSKU1Click
         end
       end
     end

@@ -1,14 +1,15 @@
-unit uRelHistoricoporSKU;
+unit uRelHistoricodeCustoporSKU;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,
-  Vcl.ExtCtrls, FireDAC.Comp.Client, Data.DB;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ExtCtrls, Vcl.ComCtrls,
+  Vcl.StdCtrls, Data.DB, FireDAC.Comp.Client;
 
 type
-  TfrmRelHistoricoporSKU = class(TForm)
+  TfrmRelHistoricodeCustoporSKU = class(TForm)
+    pnPrincipal: TPanel;
     GridPanel1: TGridPanel;
     Panel1: TPanel;
     btRelatorio: TSpeedButton;
@@ -23,35 +24,35 @@ type
     edProduto: TButtonedEdit;
     edNomeProduto: TEdit;
     procedure btSairClick(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btRelatorioClick(Sender: TObject);
     procedure edProdutoChange(Sender: TObject);
     procedure edProdutoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure edProdutoRightButtonClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure btRelatorioClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edProdutoRightButtonClick(Sender: TObject);
   private
-    procedure SelecionaProduto;
     procedure Visualizar;
+    procedure SelecionaProduto;
     { Private declarations }
   public
     { Public declarations }
   end;
 
 var
-  frmRelHistoricoporSKU: TfrmRelHistoricoporSKU;
+  frmRelHistoricodeCustoporSKU: TfrmRelHistoricodeCustoporSKU;
 
 implementation
 
 uses
-  uBeanProduto,
   uFWConnection,
+  uMensagem,
   uDMUtil,
-  uMensagem;
+  uBeanProduto;
 
 {$R *.dfm}
 
-procedure TfrmRelHistoricoporSKU.btRelatorioClick(Sender: TObject);
+procedure TfrmRelHistoricodeCustoporSKU.btRelatorioClick(Sender: TObject);
 begin
   if btRelatorio.Tag = 0 then begin
     btRelatorio.Tag   := 1;
@@ -63,43 +64,43 @@ begin
   end;
 end;
 
-procedure TfrmRelHistoricoporSKU.btSairClick(Sender: TObject);
+procedure TfrmRelHistoricodeCustoporSKU.btSairClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmRelHistoricoporSKU.edProdutoChange(Sender: TObject);
+procedure TfrmRelHistoricodeCustoporSKU.edProdutoChange(Sender: TObject);
 begin
   edNomeProduto.Clear;
 end;
 
-procedure TfrmRelHistoricoporSKU.edProdutoKeyDown(Sender: TObject;
+procedure TfrmRelHistoricodeCustoporSKU.edProdutoKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_RETURN then
     SelecionaProduto;
 end;
 
-procedure TfrmRelHistoricoporSKU.edProdutoRightButtonClick(Sender: TObject);
+procedure TfrmRelHistoricodeCustoporSKU.edProdutoRightButtonClick(
+  Sender: TObject);
 begin
   SelecionaProduto;
 end;
 
-procedure TfrmRelHistoricoporSKU.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmRelHistoricodeCustoporSKU.FormKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     Close;
 end;
 
-procedure TfrmRelHistoricoporSKU.FormShow(Sender: TObject);
+procedure TfrmRelHistoricodeCustoporSKU.FormShow(Sender: TObject);
 begin
-  edProduto.Clear;
   edDataInicial.Date  := Date;
   edDataFinal.Date    := Date;
 end;
 
-procedure TfrmRelHistoricoporSKU.SelecionaProduto;
+procedure TfrmRelHistoricodeCustoporSKU.SelecionaProduto;
 var
   FWC : TFWConnection;
   P   : TPRODUTO;
@@ -116,10 +117,9 @@ begin
     FreeAndNil(P);
     FreeAndNil(FWC);
   end;
-
 end;
 
-procedure TfrmRelHistoricoporSKU.Visualizar;
+procedure TfrmRelHistoricodeCustoporSKU.Visualizar;
 Var
   FWC : TFWConnection;
   SQL : TFDQuery;
@@ -138,22 +138,20 @@ begin
       SQL.SQL.Add('SELECT');
       SQL.SQL.Add('	P.SKU,');
       SQL.SQL.Add('	P.NOME AS NOMEPRODUTO,');
-      SQL.SQL.Add('	P.MARCA,');
-      SQL.SQL.Add('	P.FAMILIA AS CATEGORIA,');
       SQL.SQL.Add('	L.ID AS LOTE,');
-      SQL.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATA,');
+      SQL.SQL.Add('	L.DATA_HORA AS DATALOTE,');
+      SQL.SQL.Add('	F.NOME AS NOMEFORNECEDOR,');
       SQL.SQL.Add('	IMPI.CUSTO,');
-      SQL.SQL.Add('	IMPI.QUANTIDADE AS SALDO,');
-      SQL.SQL.Add('	F.NOME AS NOMEFORNECEDOR');
-      SQL.SQL.Add('FROM LOTE L');
-      SQL.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
-      SQL.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
+      SQL.SQL.Add('	IMPI.QUANTIDADE AS SALDO');
+      SQL.SQL.Add('FROM PRODUTO P');
+      SQL.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (P.ID = IMPI.ID_PRODUTO)');
+      SQL.SQL.Add('INNER JOIN IMPORTACAO IMP ON (IMPI.ID_IMPORTACAO = IMP.ID)');
+      SQL.SQL.Add('INNER JOIN LOTE L ON (IMP.ID_LOTE = L.ID)');
       SQL.SQL.Add('INNER JOIN FORNECEDOR F ON (IMP.ID_FORNECEDOR = F.ID)');
-      SQL.SQL.Add('INNER JOIN PRODUTO P ON (IMPI.ID_PRODUTO = P.ID)');
       SQL.SQL.Add('WHERE 1 = 1');
-      SQL.SQL.Add('AND ((:IDPRODUTO = -1) OR (P.ID = :IDPRODUTO))');
       SQL.SQL.Add('AND CAST(L.DATA_HORA AS DATE) BETWEEN :DATAI AND :DATAF');
-      SQL.SQL.Add('ORDER BY P.SKU, L.ID DESC, IMPI.CUSTO');
+      SQL.SQL.Add('AND ((:IDPRODUTO = -1) OR (P.ID = :IDPRODUTO))');
+      SQL.SQL.Add('ORDER BY 1,3 DESC,5');
 
       SQL.ParamByName('IDPRODUTO').DataType := ftInteger;
       SQL.ParamByName('DATAI').DataType := ftDate;
@@ -172,7 +170,7 @@ begin
       SQL.FetchAll;
 
       DMUtil.frxDBDataset1.DataSet := SQL;
-      DMUtil.ImprimirRelatorio('frHistoricoporSKU.fr3');
+      DMUtil.ImprimirRelatorio('frHistoricodeCustoporSKU.fr3');
       DisplayMsgFinaliza;
 
     except
