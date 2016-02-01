@@ -9,7 +9,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  Vcl.Samples.Gauges;
+  Vcl.Samples.Gauges, System.StrUtils;
 
 type
   TfrmInativaProdutoFornecedor = class(TForm)
@@ -78,6 +78,7 @@ type
     procedure edProdutoExit(Sender: TObject);
     procedure edFornecedorChange(Sender: TObject);
     procedure edProdutoChange(Sender: TObject);
+    procedure dgProdutosTitleClick(Column: TColumn);
   private
     { Private declarations }
     procedure selecionaFornecedor;
@@ -85,6 +86,7 @@ type
     procedure pesquisar;
     procedure ativar(Status : Boolean);
     procedure filtrar;
+    procedure AtivarInativarTodos;
   public
     { Public declarations }
   end;
@@ -143,6 +145,33 @@ begin
     FreeAndNil(PF);
     FreeAndNil(CON);
     csProdutos.EnableControls;
+  end;
+end;
+
+procedure TfrmInativaProdutoFornecedor.AtivarInativarTodos;
+Var
+  Aux : Boolean;
+begin
+  if not csProdutos.IsEmpty then begin
+
+    Aux := not csProdutosSELECIONAR.Value;
+
+    DisplayMsg(MSG_WAIT, IfThen(Aux, 'Marcando Itens!', 'Desmarcando Itens!'));
+
+    csProdutos.DisableControls;
+
+    try
+      csProdutos.First;
+      while not csProdutos.Eof do begin
+        csProdutos.Edit;
+        csProdutosSELECIONAR.Value  := Aux;
+        csProdutos.Post;
+        csProdutos.Next;
+      end;
+    finally
+      csProdutos.EnableControls;
+      DisplayMsgFinaliza
+    end;
   end;
 end;
 
@@ -245,6 +274,12 @@ begin
   end;
 end;
 
+procedure TfrmInativaProdutoFornecedor.dgProdutosTitleClick(Column: TColumn);
+begin
+  if UpperCase(Column.FieldName) = 'SELECIONAR' then
+    AtivarInativarTodos;
+end;
+
 procedure TfrmInativaProdutoFornecedor.dsProdutosDataChange(Sender: TObject;
   Field: TField);
 begin
@@ -254,8 +289,8 @@ end;
 procedure TfrmInativaProdutoFornecedor.edFiltroKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
-  if Key = VK_RETURN then filtrar;
-
+  if Key = VK_RETURN then
+    filtrar;
 end;
 
 procedure TfrmInativaProdutoFornecedor.edFornecedorChange(Sender: TObject);

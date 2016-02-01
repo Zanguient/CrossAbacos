@@ -126,6 +126,10 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Match'
           OnClick = Match1Click
         end
+        object SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem
+          Caption = 'SKU x SubGrupo Abacos x SubGrupo Cross'
+          OnClick = SKUxSubGrupoAbacosxSubGrupoCross1Click
+        end
       end
     end
     object Configuraes1: TMenuItem

@@ -40,6 +40,7 @@ type
     RatingporFornecedor1: TMenuItem;
     HistricodeCustoporSKU1: TMenuItem;
     Match1: TMenuItem;
+    SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -65,6 +66,7 @@ type
     procedure RatingporFornecedor1Click(Sender: TObject);
     procedure HistricodeCustoporSKU1Click(Sender: TObject);
     procedure Match1Click(Sender: TObject);
+    procedure SKUxSubGrupoAbacosxSubGrupoCross1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -357,6 +359,11 @@ begin
   finally
     FreeAndNil(FrmRedefinirSenha);
   end;
+end;
+
+procedure TFrmPrincipal.SKUxSubGrupoAbacosxSubGrupoCross1Click(Sender: TObject);
+begin
+  DivergenciaSubGrupoAbacosCross;
 end;
 
 procedure TFrmPrincipal.Usuario1Click(Sender: TObject);

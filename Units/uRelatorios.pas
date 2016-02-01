@@ -7,6 +7,7 @@ uses
 
   procedure RelatorioListagemFornecedores;
   procedure RelatorioListagemAlmoxarifados;
+  procedure DivergenciaSubGrupoAbacosCross;
 
 implementation
 
@@ -90,6 +91,50 @@ begin
 
       DMUtil.frxDBDataset1.DataSet := SQL;
       DMUtil.ImprimirRelatorio('frListagemSimplesAlmoxarifado.fr3');
+      DisplayMsgFinaliza;
+
+    except
+      on E : Exception do begin
+        DisplayMsg(MSG_WAR, 'Ocorreram erros ao buscar dados!', '', E.Message);
+      end;
+    end;
+  finally
+    FreeAndNil(SQL);
+    FreeAndNil(FWC);
+  end;
+end;
+
+procedure DivergenciaSubGrupoAbacosCross;
+Var
+  FWC : TFWConnection;
+  SQL : TFDQuery;
+begin
+
+  DisplayMsg(MSG_WAIT, 'Buscando dados...');
+
+  FWC := TFWConnection.Create;
+  SQL := TFDQuery.Create(nil);
+
+  try
+    try
+
+      SQL.Close;
+      SQL.SQL.Clear;
+      SQL.SQL.Add('SELECT');
+      SQL.SQL.Add('	P.SKU,');
+      SQL.SQL.Add('	P.SUB_GRUPO,');
+      SQL.SQL.Add('	F.NOME AS NOMEFORNECEDOR');
+      SQL.SQL.Add('FROM PRODUTO P');
+      SQL.SQL.Add('INNER JOIN FORNECEDOR F ON (P.ID_FORNECEDORNOVO = F.ID)');
+      SQL.SQL.Add('WHERE P.SUB_GRUPO <> F.NOME');
+      SQL.SQL.Add('ORDER BY P.SKU, P.SUB_GRUPO');
+      SQL.Connection                    := FWC.FDConnection;
+      SQL.Prepare;
+      SQL.Open;
+      SQL.FetchAll;
+
+      DMUtil.frxDBDataset1.DataSet := SQL;
+      DMUtil.ImprimirRelatorio('frSubGrupos.fr3');
       DisplayMsgFinaliza;
 
     except
