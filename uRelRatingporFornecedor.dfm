@@ -4,7 +4,7 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
   Caption = 'Relat'#243'rio de Rating por Fornecedor'
   ClientHeight = 141
   ClientWidth = 574
-  Color = clBtnFace
+  Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -14,6 +14,7 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
   OldCreateOrder = False
   Position = poDesktopCenter
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnPrincipal: TPanel
@@ -23,15 +24,15 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
     Height = 141
     Align = alClient
     BevelOuter = bvNone
+    Color = clWhite
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
+    ParentBackground = False
     ParentFont = False
     TabOrder = 0
-    ExplicitWidth = 468
-    ExplicitHeight = 128
     object gbSelecionaFornecedor: TGroupBox
       AlignWithMargins = True
       Left = 3
@@ -47,8 +48,6 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 462
-      ExplicitHeight = 56
       DesignSize = (
         568
         69)
@@ -62,6 +61,9 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
         RightButton.Visible = True
         TabOrder = 0
         TextHint = 'Selecione o Fornecedor...'
+        OnChange = edFornecedorChange
+        OnKeyDown = edFornecedorKeyDown
+        OnRightButtonClick = edFornecedorRightButtonClick
       end
       object edNomeFornecedor: TEdit
         AlignWithMargins = True
@@ -78,7 +80,6 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitWidth = 287
       end
     end
     object GridPanel1: TGridPanel
@@ -112,8 +113,6 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
           Value = 100.000000000000000000
         end>
       TabOrder = 1
-      ExplicitTop = 65
-      ExplicitWidth = 462
       object Panel1: TPanel
         Left = 1
         Top = 1
@@ -121,7 +120,6 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
         Height = 58
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 230
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
           Left = 164
@@ -652,7 +650,9 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
           NumGlyphs = 4
           ParentFont = False
-          ExplicitLeft = 114
+          OnClick = btRelatorioClick
+          ExplicitLeft = 166
+          ExplicitTop = -1
         end
       end
       object Panel2: TPanel
@@ -662,8 +662,6 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
         Height = 58
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 231
-        ExplicitWidth = 230
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
@@ -780,6 +778,28 @@ object frmRatingporFornecedor: TfrmRatingporFornecedor
           OnClick = btSairClick
         end
       end
+    end
+  end
+  object csPesquisa: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 435
+    Top = 67
+    object csPesquisaCODIGO: TIntegerField
+      FieldName = 'CODIGO'
+    end
+    object csPesquisaFORNECEDOR: TStringField
+      FieldName = 'FORNECEDOR'
+      Size = 100
+    end
+    object csPesquisaGANHA: TIntegerField
+      FieldName = 'GANHA'
+    end
+    object csPesquisaPERDE: TIntegerField
+      FieldName = 'PERDE'
+    end
+    object csPesquisaUNICO: TIntegerField
+      FieldName = 'UNICO'
     end
   end
 end
