@@ -165,6 +165,11 @@ begin
     QRConsulta.SQL.Text := Copy(QRConsulta.SQL.Text, 1, Length(QRConsulta.SQL.Text) - 4);
     QRConsulta.SQL.Add(' FROM '+Copy(FTabelaPai.ClassName, 2, Length(FTabelaPai.ClassName)));
 
+    for I := 0 to Pred(Count) do begin
+      if List[I]^.Name = 'STATUS' then
+        QRConsulta.SQL.Add('WHERE STATUS = TRUE');
+    end;
+
     QRConsulta.Connection := FDC.FDConnection;
     QRConsulta.Prepare;
     QRConsulta.Open();

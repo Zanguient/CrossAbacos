@@ -182,7 +182,8 @@ begin
         SQL.SQL.Add('LEFT JOIN PRODUTO P ON PF.ID_PRODUTO = P.ID AND P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR AND PF.STATUS');
         SQL.SQL.Add('WHERE PF.ID_FORNECEDOR = :FORNECEDOR');
         SQL.SQL.Add('AND PF.STATUS');
-        SQL.SQL.Add('AND PF.ID_PRODUTO NOT IN (' + Produtos + ')');
+        if Produtos <> '' then
+          SQL.SQL.Add('AND PF.ID_PRODUTO NOT IN (' + Produtos + ')');
         SQL.SQL.Add('AND P.ID IS NULL');
         SQL.ParamByName('FORNECEDOR').DataType  := ftInteger;
         SQL.Connection                          := CON.FDConnection;
@@ -200,7 +201,8 @@ begin
         SQL1.SQL.Add('LEFT JOIN PRODUTO P ON PF.ID_PRODUTO = P.ID AND P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR');
         SQL1.SQL.Add('WHERE PF.ID_FORNECEDOR = :FORNECEDOR');
         SQL1.SQL.Add('AND PF.STATUS');
-        SQL1.SQL.Add('AND PF.ID_PRODUTO NOT IN (' + Produtos + ')');
+        if Produtos <> '' then
+          SQL1.SQL.Add('AND PF.ID_PRODUTO NOT IN (' + Produtos + ')');
         SQL1.SQL.Add('AND NOT P.ID IS NULL');
         SQL1.ParamByName('FORNECEDOR').DataType  := ftInteger;
         SQL1.Connection                          := CON.FDConnection;
