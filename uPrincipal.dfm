@@ -39,14 +39,6 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Usu'#225'rio'
         OnClick = Usuario1Click
       end
-      object Margem1: TMenuItem
-        Caption = 'Margem'
-        OnClick = Margem1Click
-      end
-      object Familia1: TMenuItem
-        Caption = 'Familia'
-        OnClick = Familia1Click
-      end
       object Fornecedor1: TMenuItem
         Caption = 'Fornecedor'
         OnClick = Fornecedor1Click

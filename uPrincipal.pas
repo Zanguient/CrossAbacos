@@ -15,12 +15,10 @@ type
     Relatrios1: TMenuItem;
     Configuraes1: TMenuItem;
     Usuario1: TMenuItem;
-    Margem1: TMenuItem;
     ConfigGerais1: TMenuItem;
     miSair: TMenuItem;
     IMFundo: TImage;
     RedefinirSenha: TMenuItem;
-    Familia1: TMenuItem;
     Importacoes2: TMenuItem;
     Movimentaes1: TMenuItem;
     ConsultaMatch1: TMenuItem;
@@ -46,8 +44,6 @@ type
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure RedefinirSenhaClick(Sender: TObject);
-    procedure Margem1Click(Sender: TObject);
-    procedure Familia1Click(Sender: TObject);
     procedure Importacoes2Click(Sender: TObject);
     procedure GerarLote1Click(Sender: TObject);
     procedure ConsultaMatch1Click(Sender: TObject);
@@ -89,8 +85,6 @@ uses
   uCadastroUsuario,
   uBeanUsuario,
   uRedefinirSenha,
-  uCadastroMargem,
-  uCadastroFamilia,
   uImportacao,
   uConsultaMatch,
   uImportacaoArquivoFornecedor,
@@ -117,17 +111,6 @@ begin
   if USUARIO.CODIGO > 0 then begin
     DefinePermissaoMenu(MainMenu1);
     miSair.Visible          := True;
-  end;
-end;
-
-procedure TFrmPrincipal.Familia1Click(Sender: TObject);
-begin
-  try
-    if FrmCadastroFamilia = nil then
-      FrmCadastroFamilia := TFrmCadastroFamilia.Create(Self);
-    FrmCadastroFamilia.ShowModal;
-  finally
-    FreeAndNil(FrmCadastroFamilia);
   end;
 end;
 
@@ -288,17 +271,6 @@ end;
 procedure TFrmPrincipal.ListagemSimplesdeFornecedor1Click(Sender: TObject);
 begin
   RelatorioListagemFornecedores;
-end;
-
-procedure TFrmPrincipal.Margem1Click(Sender: TObject);
-begin
-  try
-    if FrmCadastroMargem = nil then
-      FrmCadastroMargem := TFrmCadastroMargem.Create(Self);
-    FrmCadastroMargem.ShowModal;
-  finally
-    FreeAndNil(FrmCadastroMargem);
-  end;
 end;
 
 procedure TFrmPrincipal.Match1Click(Sender: TObject);
