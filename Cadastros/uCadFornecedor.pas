@@ -12,18 +12,11 @@ type
     pnVisualizacao: TPanel;
     gdPesquisa: TDBGrid;
     pnBotoesVisualizacao: TPanel;
-    btFechar: TSpeedButton;
-    btAlterar: TSpeedButton;
-    pnAjusteBotoes1: TPanel;
     pnPequisa: TPanel;
     btPesquisar: TSpeedButton;
     edPesquisa: TEdit;
     Panel2: TPanel;
     pnEdicao: TPanel;
-    pnBotoesEdicao: TPanel;
-    btGravar: TSpeedButton;
-    btCancelar: TSpeedButton;
-    pnAjusteBotoes2: TPanel;
     Panel1: TPanel;
     Panel3: TPanel;
     GridPanel1: TGridPanel;
@@ -43,6 +36,16 @@ type
     csPesquisaESTOQUEMINIMO: TIntegerField;
     csPesquisaESTOQUEMAXIMO: TIntegerField;
     cbAtivo: TCheckBox;
+    gpBotoesEdicao: TGridPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    btGravar: TSpeedButton;
+    btCancelar: TSpeedButton;
+    GridPanel2: TGridPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    btFechar: TSpeedButton;
+    btAlterar: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -51,6 +54,7 @@ type
     procedure btFecharClick(Sender: TObject);
     procedure btCancelarClick(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
+    procedure csPesquisaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
   private
     procedure Cancelar;
     procedure InvertePaineis;
@@ -213,6 +217,22 @@ begin
   end;
 end;
 
+procedure TfrmCadFornecedor.csPesquisaFilterRecord(DataSet: TDataSet;
+  var Accept: Boolean);
+Var
+  I : Integer;
+begin
+  Accept := False;
+  for I := 0 to DataSet.Fields.Count - 1 do begin
+    if not DataSet.Fields[I].IsNull then begin
+      if Pos(AnsiLowerCase(edPesquisa.Text),AnsiLowerCase(DataSet.Fields[I].AsVariant)) > 0 then begin
+        Accept := True;
+        Break;
+      end;
+    end;
+  end;
+end;
+
 procedure TfrmCadFornecedor.Filtrar;
 begin
   csPesquisa.Filtered := False;
@@ -281,10 +301,10 @@ begin
   pnVisualizacao.Visible        := not pnVisualizacao.Visible;
   pnBotoesVisualizacao.Visible  := pnVisualizacao.Visible;
   pnEdicao.Visible              := not pnEdicao.Visible;
-  pnBotoesEdicao.Visible        := pnEdicao.Visible;
+  gpBotoesEdicao.Visible        := pnEdicao.Visible;
   if pnEdicao.Visible then begin
-    if edNome.CanFocus then
-      edNome.SetFocus;
+    if edEstoqueMinimo.CanFocus then
+      edEstoqueMinimo.SetFocus;
   end;
 end;
 
