@@ -49,7 +49,8 @@ uses
   uRelHistoricodeCustoporSKU in 'uRelHistoricodeCustoporSKU.pas' {frmRelHistoricodeCustoporSKU},
   uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU},
   uRelMatch in 'uRelMatch.pas' {frmRelMatch},
-  uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes};
+  uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes},
+  uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor};
 
 {$R *.res}
 
@@ -60,9 +61,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(TfrmRelHistoricoporSKU, frmRelHistoricoporSKU);
-  Application.CreateForm(TfrmRelMatch, frmRelMatch);
-  Application.CreateForm(TfrmRelListagemdeLotes, frmRelListagemdeLotes);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

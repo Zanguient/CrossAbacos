@@ -30,7 +30,12 @@ create table if not exists fornecedor (
   nome varchar(100) not null,
   cnpj varchar(14) not null,
   id_almoxarifado int not null,
-  prazo_entrega integer;
+  prazo_entrega integer,
+  status boolean DEFAULT true,
+  
+  estoqueminimo integer DEFAULT 0,
+  
+  estoquemaximo integer DEFAULT 0,
   primary key (id),
   constraint fk_fornecedor_almoxarifado 
   foreign key (id_almoxarifado)

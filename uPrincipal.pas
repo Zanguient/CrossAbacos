@@ -41,6 +41,7 @@ type
     HistricodeCustoporSKU1: TMenuItem;
     Match1: TMenuItem;
     SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem;
+    Fornecedor1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -67,6 +68,7 @@ type
     procedure HistricodeCustoporSKU1Click(Sender: TObject);
     procedure Match1Click(Sender: TObject);
     procedure SKUxSubGrupoAbacosxSubGrupoCross1Click(Sender: TObject);
+    procedure Fornecedor1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -105,7 +107,8 @@ uses
   uRelListagemdeLotes,
   uRelRatingporFornecedor,
   uRelHistoricodeCustoporSKU,
-  uRelMatch;
+  uRelMatch,
+  uCadFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -152,6 +155,17 @@ begin
   CriarComandoSequenciaMenu(MainMenu1);
 
   Caption := 'Sistema CrossAbacos - Usuário: ' + IntToStr(USUARIO.CODIGO) + ' - ' + USUARIO.NOME;
+end;
+
+procedure TFrmPrincipal.Fornecedor1Click(Sender: TObject);
+begin
+  if frmCadFornecedor = nil then
+    frmCadFornecedor := TfrmCadFornecedor.Create(nil);
+  try
+    frmCadFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmCadFornecedor);
+  end;
 end;
 
 procedure TFrmPrincipal.GerarLote1Click(Sender: TObject);

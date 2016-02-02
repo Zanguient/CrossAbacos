@@ -1,11 +1,11 @@
-object FrmCadastroUsuario: TFrmCadastroUsuario
+object frmCadFornecedor: TfrmCadFornecedor
   Left = 0
   Top = 0
   BorderIcons = []
   BorderStyle = bsNone
-  Caption = 'Cadastro de Usu'#225'rio'
-  ClientHeight = 477
-  ClientWidth = 796
+  Caption = 'Cadastro de Fornecedor'
+  ClientHeight = 488
+  ClientWidth = 769
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,23 +16,22 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
   OldCreateOrder = True
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnVisualizacao: TPanel
     Left = 0
     Top = 0
-    Width = 796
-    Height = 477
+    Width = 769
+    Height = 488
     Align = alClient
     TabOrder = 0
     object gdPesquisa: TDBGrid
       AlignWithMargins = True
       Left = 4
       Top = 92
-      Width = 788
-      Height = 315
+      Width = 761
+      Height = 326
       Align = alClient
       DataSource = dsPesquisa
       DrawingStyle = gdsGradient
@@ -60,22 +59,38 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
           Expanded = False
           FieldName = 'NOME'
           Title.Caption = 'Nome'
-          Width = 175
           Visible = True
         end
         item
+          Alignment = taCenter
           Expanded = False
-          FieldName = 'EMAIL'
-          Title.Caption = 'Email'
-          Width = 156
+          FieldName = 'STATUS'
+          Title.Alignment = taCenter
+          Title.Caption = 'Ativo'
+          Visible = True
+        end
+        item
+          Alignment = taCenter
+          Expanded = False
+          FieldName = 'ESTOQUEMINIMO'
+          Title.Alignment = taCenter
+          Title.Caption = 'Estoque M'#237'nimo'
+          Visible = True
+        end
+        item
+          Alignment = taCenter
+          Expanded = False
+          FieldName = 'ESTOQUEMAXIMO'
+          Title.Alignment = taCenter
+          Title.Caption = 'Estoque M'#225'ximo'
           Visible = True
         end>
     end
     object pnBotoesVisualizacao: TPanel
       AlignWithMargins = True
       Left = 4
-      Top = 413
-      Width = 788
+      Top = 424
+      Width = 761
       Height = 60
       Align = alBottom
       Color = clWhite
@@ -83,7 +98,7 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       TabOrder = 1
       object btFechar: TSpeedButton
         AlignWithMargins = True
-        Left = 560
+        Left = 348
         Top = 4
         Width = 100
         Height = 52
@@ -150,78 +165,9 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
         ExplicitLeft = 554
         ExplicitHeight = 53
       end
-      object btExcluir: TSpeedButton
-        AlignWithMargins = True
-        Left = 454
-        Top = 4
-        Width = 100
-        Height = 52
-        Align = alLeft
-        Caption = '&EXCLUIR'
-        Glyph.Data = {
-          F6060000424DF606000000000000360000002800000018000000180000000100
-          180000000000C0060000C40E0000C40E00000000000000000000FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0100AF0301CD0000CA0000CA0000
-          C90000C90000C80000C80000C80000C60000C60000C40000C40000C40000C300
-          00C20000C20100C00100BF0200BE0300BD0200BC0200BD0000AD0C0CD96288FF
-          274CFF2A4CFF294AFF2748FF2342FF223FFF1F3DFF1E3BFF1C36FF1A33FF1930
-          FF172DFF1528FF1424FF1220FF111BFF1018FF0F14FF0E12FF0D0DFF0909FF05
-          00CD1D1CE35E84FF2A4DFF2C4FFF2749FF2749FF2645FF2443FF233EFF203BFF
-          1D39FF1C37FF1B33FF1830FF172DFF152AFF1426FF1323FF111EFF101BFF0F17
-          FF0E14FF0E12FF0200DB534FF086A3FF3057FF2C50FF2C4FFF2B4EFF2A49FF27
-          49FF2645FF2542FF233EFF203BFF1C39FF1D37FF1B36FF1830FF172DFF152AFF
-          1426FF1323FF111EFF101BFF1019FF0300E54D4AF5A2BAFF7994FF5F7EFF456A
-          FF3257FF294EFF284CFF2847FF2547FF2545FF2441FF2340FF203BFF1C39FF1D
-          37FF1B36FF1830FF172EFF152BFF1426FF1323FF1221FF0200EE4E4BFAA0BAFF
-          7594FF7897FF7995FF7594FF6B8BFF6080FF4A6CFF4467FF3356FF3453FF2041
-          FF203DFF1E3BFF1B36FF1934FF1832FF1630FF132BFF1229FF1226FF1025FF00
-          00F74F4CFF9FB9FF7292FF7494FF7594FF7493FF7491FF6E8FFF6F8EFF6D8CFF
-          6C8BFF6B89FF6B87FF6786FF6683FF647FFF637DFF6079FF5F78FF5D75FF5A72
-          FF556EFF5771FF3F3EFF5755FFB4CCFF9EB8FFA0B9FFA0B9FFA0B9FF9FB7FF9F
-          B7FF9AB5FF9BB4FF98B3FF97B1FF94ADFF93ABFF92AAFF91A8FF8FA6FF8EA6FF
-          8C9FFF8A9FFF889EFF889DFF86A0FF514EFF463EFF5D5BFF5B58FF5B58FF5B58
-          FF5B58FF5B58FF5B58FF5C58FF5C58FF5C58FF5B58FF5B58FF5B58FF5B58FF5A
-          58FF5A58FF5A58FF5B58FF5B56FF5B56FF5A56FF5C58FF463EFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        OnClick = btExcluirClick
-        ExplicitLeft = 448
-        ExplicitHeight = 53
-      end
       object btAlterar: TSpeedButton
         AlignWithMargins = True
-        Left = 348
+        Left = 242
         Top = 4
         Width = 100
         Height = 52
@@ -288,75 +234,6 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
         ExplicitLeft = 342
         ExplicitHeight = 53
       end
-      object btNovo: TSpeedButton
-        AlignWithMargins = True
-        Left = 242
-        Top = 4
-        Width = 100
-        Height = 52
-        Align = alLeft
-        Caption = '&NOVO'
-        Glyph.Data = {
-          F6060000424DF606000000000000360000002800000018000000180000000100
-          180000000000C0060000C40E0000C40E00000000000000000000FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE8C4B0C4652EC6662FC86830CA69
-          30CC6B31CE6C31EDC8B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC2632EF7C183
-          F5A543F6A440F7A641F8A842F6A645D06E32FFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFC2632EFAC889E58539E78A3DE98E40EF9844F9AA49D06E32FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFC2632EFAC889E07C38E3823DE68841ED9546F9AB4BD0
-          6E32FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC1632EFAC889E07C39E3833DE689
-          42ED9547F9AB4CCF6D32FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC1622EFAC889
-          E07C39E3833DE68942ED9547F9AB4CCE6D31FFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFC1622EFAC889E07C38E3823DE68841ED9546F9AB4BCD6C31FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFC0612DFAC889DF7B37E2803CE58640EC9344F9AA49CC
-          6B31FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE1BFAEB25729
-          C3682DC4692DC66B2EC76C2FC96E2FCB6F30CC7031FAC889DE7936E17E3AE484
-          3EEB9142F8A946D67A37D87B38D97C38DA7D39DA7E3ADB7E39DB7E39D16F32EE
-          C9B2AF5529F4C18AF1A44FF2A24AF2A146F19B3AF19C39F29D3AF39E3BF8B96C
-          DD7634DF7B38E2813CE98D40F8A843F8A946F9AB49F9AB4CFAAC4DFAAC4EFAAC
-          4DF9AB4BF6A647CF6D32AF5428F8C890D97639DA7739DB793ADD7A3ADC7733DC
-          742DDE772FE07B32DC7332DE7836E07D39E4843DE98E40EB9143EC9445ED9647
-          EE9748EE9849EE9748ED9647F8A945CD6C31AE5328F8C890D16632D26833D36A
-          34D56D36D66F37D87037D86F32D86D2EDA7030DC7533DE7936E07D39E2813CE4
-          853FE68841E78A43E78B44E88C44E78B43E68942F7A742CB6A30AD5328F8C890
-          D16532D26733D36934D46B35D66E37D77038D9733ADA773CDB773ADC7738DD78
-          37DE7937E07C39E17F3BE3823DE4843EE4853FE4853FE4853FE3833EF6A642C9
-          6930AC5228F8C890DC875AD77747D87948D97B49DA7D4ADB7F4BDD814CDE844E
-          DA773CDC7A3EDD7D40DF7F41E08143E18141E28342E28443E38544E38543E386
-          45E38645F6A94AC7672FAB5127F3C18AF8C890F8C890F8C890F8C990F9C990F9
-          C98FF9C98FF9CA90D9743ADA773CDC793EE38642F8BE76FACB90FACB8FFACB8F
-          FACB8FFACC90FACB8FFACB8FF7C589C5652FDFBDAEAC5228AE5328AF5529B156
-          29B25729B4582AB5592AB75A2BF9C98FD87239D9743ADA763CE18340F4A74BC0
-          612DC0622DC1622EC2632EC2632EC3642EC3642EC3642EE8C5B0FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB5592AF9C98FD67038D77139D973
-          3AE0813FF3A64BBE602DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB4582AF9C990
-          D56D37D66F38D77038DE7E3DF3A54BBC5E2CFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFB35729F8C990D36B36D56C36D66E37DD7C3CF3A44BBA5D2CFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFB15629F8C890D36934D36A35D46B36DC7A3BF2A34BB8
-          5C2BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAF5529F8C890D16733D26834D369
-          34DB783AF2A34BB65A2BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB25B2FF8C990
-          E1905EDB7F4ADB7F4AE18B4FF3AC5DB4582AFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFB1592EF4C28CF8C890F8C990F8C990F8C890F4C18AB25729FFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFDFBDAEAB5227AD5328AE5328AE5428AF5529B05529E2
-          BFAEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-        OnClick = btNovoClick
-        ExplicitLeft = 236
-        ExplicitHeight = 53
-      end
       object pnAjusteBotoes1: TPanel
         AlignWithMargins = True
         Left = 4
@@ -371,7 +248,7 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
     object pnPequisa: TPanel
       Left = 1
       Top = 49
-      Width = 794
+      Width = 767
       Height = 40
       Align = alTop
       BevelOuter = bvNone
@@ -386,7 +263,7 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       TabOrder = 2
       object btPesquisar: TSpeedButton
         AlignWithMargins = True
-        Left = 691
+        Left = 664
         Top = 3
         Width = 100
         Height = 34
@@ -455,7 +332,7 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 682
+        Width = 655
         Height = 34
         Align = alClient
         AutoSize = False
@@ -474,11 +351,11 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       AlignWithMargins = True
       Left = 4
       Top = 4
-      Width = 788
+      Width = 761
       Height = 42
       Align = alTop
       BevelOuter = bvNone
-      Caption = 'Lista de Usu'#225'rios'
+      Caption = 'Lista de Fornecedores'
       Color = clSkyBlue
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -493,15 +370,15 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
   object pnEdicao: TPanel
     Left = 0
     Top = 0
-    Width = 796
-    Height = 477
+    Width = 769
+    Height = 488
     Align = alClient
     TabOrder = 1
     Visible = False
     object pnBotoesEdicao: TPanel
       Left = 1
-      Top = 416
-      Width = 794
+      Top = 427
+      Width = 767
       Height = 60
       Align = alBottom
       Color = clWhite
@@ -1071,8 +948,8 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 794
-      Height = 415
+      Width = 767
+      Height = 426
       Align = alClient
       BorderStyle = bsSingle
       Color = clWhite
@@ -1081,10 +958,10 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       object Panel3: TPanel
         Left = 1
         Top = 1
-        Width = 788
+        Width = 761
         Height = 42
         Align = alTop
-        Caption = 'Cadastro de Usu'#225'rio'
+        Caption = 'Cadastro de Fornecedores'
         Color = clSkyBlue
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -1098,8 +975,8 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       object GridPanel1: TGridPanel
         Left = 1
         Top = 43
-        Width = 788
-        Height = 367
+        Width = 761
+        Height = 378
         Align = alClient
         ColumnCollection = <
           item
@@ -1118,12 +995,6 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             Column = 1
             Control = pnUsuarioDireita
             Row = 0
-          end
-          item
-            Column = 0
-            ColumnSpan = 2
-            Control = gdMenus
-            Row = 1
           end>
         RowCollection = <
           item
@@ -1139,26 +1010,13 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
         object pnUsuarioEsquerda: TPanel
           Left = 1
           Top = 1
-          Width = 393
-          Height = 113
+          Width = 379
+          Height = 116
           Align = alClient
           TabOrder = 0
           DesignSize = (
-            393
-            113)
-          object Label1: TLabel
-            Left = 4
-            Top = 59
-            Width = 105
-            Height = 19
-            Caption = 'Usu'#225'rio/Email:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-          end
+            379
+            116)
           object Label2: TLabel
             Left = 4
             Top = 3
@@ -1172,26 +1030,13 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             Font.Style = []
             ParentFont = False
           end
-          object edEmail: TEdit
-            Left = 5
-            Top = 83
-            Width = 382
-            Height = 27
-            Anchors = [akLeft, akTop, akRight]
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 1
-          end
           object edNome: TEdit
             Left = 4
             Top = 26
-            Width = 383
+            Width = 369
             Height = 27
             Anchors = [akLeft, akTop, akRight]
+            Enabled = False
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -1200,23 +1045,37 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             ParentFont = False
             TabOrder = 0
           end
+          object cbAtivo: TCheckBox
+            Left = 96
+            Top = 75
+            Width = 277
+            Height = 17
+            Caption = 'Ativo'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 1
+          end
         end
         object pnUsuarioDireita: TPanel
-          Left = 394
+          Left = 380
           Top = 1
-          Width = 393
-          Height = 113
+          Width = 380
+          Height = 116
           Align = alClient
           TabOrder = 1
           DesignSize = (
-            393
-            113)
+            380
+            116)
           object Label3: TLabel
             Left = 6
             Top = 3
-            Width = 43
+            Width = 113
             Height = 19
-            Caption = 'Senha'
+            Caption = 'Estoque M'#237'nimo'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -1227,9 +1086,9 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
           object Label4: TLabel
             Left = 6
             Top = 59
-            Width = 159
+            Width = 116
             Height = 19
-            Caption = 'Confirma'#231#227'o de Senha'
+            Caption = 'Estoque M'#225'ximo'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -1237,10 +1096,10 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             Font.Style = []
             ParentFont = False
           end
-          object edConfirmarSenha: TEdit
+          object edEstoqueMaximo: TEdit
             Left = 6
             Top = 83
-            Width = 379
+            Width = 366
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Font.Charset = DEFAULT_CHARSET
@@ -1252,10 +1111,10 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             PasswordChar = '*'
             TabOrder = 1
           end
-          object edSenha: TEdit
+          object edEstoqueMinimo: TEdit
             Left = 6
             Top = 26
-            Width = 379
+            Width = 366
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Font.Charset = DEFAULT_CHARSET
@@ -1268,57 +1127,14 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
             TabOrder = 0
           end
         end
-        object gdMenus: TDBGrid
-          Left = 1
-          Top = 114
-          Width = 786
-          Height = 251
-          Align = alClient
-          Anchors = []
-          DataSource = dsMenus
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-          ParentFont = False
-          TabOrder = 2
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -20
-          TitleFont.Name = 'Tahoma'
-          TitleFont.Style = []
-          OnCellClick = gdMenusCellClick
-          OnDrawColumnCell = gdMenusDrawColumnCell
-          Columns = <
-            item
-              Expanded = False
-              FieldName = 'PERMITIR'
-              Width = 80
-              Visible = True
-            end
-            item
-              Expanded = False
-              FieldName = 'CAPTION'
-              Width = 600
-              Visible = True
-            end>
-        end
       end
     end
-  end
-  object dsPesquisa: TDataSource
-    DataSet = csPesquisa
-    Left = 128
-    Top = 112
   end
   object csPesquisa: TClientDataSet
     Aggregates = <>
     Params = <>
-    OnFilterRecord = csPesquisaFilterRecord
-    Left = 184
-    Top = 112
+    Left = 264
+    Top = 176
     object csPesquisaCODIGO: TIntegerField
       FieldName = 'CODIGO'
     end
@@ -1326,40 +1142,19 @@ object FrmCadastroUsuario: TFrmCadastroUsuario
       FieldName = 'NOME'
       Size = 60
     end
-    object csPesquisaEMAIL: TStringField
-      FieldName = 'EMAIL'
-      Size = 60
+    object csPesquisaSTATUS: TBooleanField
+      FieldName = 'STATUS'
     end
-    object csPesquisaSENHA: TStringField
-      FieldName = 'SENHA'
-      Size = 100
+    object csPesquisaESTOQUEMINIMO: TIntegerField
+      FieldName = 'ESTOQUEMINIMO'
     end
-    object csPesquisaPERMITIRCADUSUARIO: TBooleanField
-      FieldName = 'PERMITIRCADUSUARIO'
+    object csPesquisaESTOQUEMAXIMO: TIntegerField
+      FieldName = 'ESTOQUEMAXIMO'
     end
   end
-  object csMenus: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 154
-    Top = 220
-    object csMenusPERMITIR: TBooleanField
-      DisplayLabel = 'Permitir'
-      FieldName = 'PERMITIR'
-    end
-    object csMenusMENU: TStringField
-      FieldName = 'MENU'
-      Size = 100
-    end
-    object csMenusCAPTION: TStringField
-      DisplayLabel = 'Menu'
-      FieldName = 'CAPTION'
-      Size = 100
-    end
-  end
-  object dsMenus: TDataSource
-    DataSet = csMenus
-    Left = 250
-    Top = 228
+  object dsPesquisa: TDataSource
+    DataSet = csPesquisa
+    Left = 208
+    Top = 176
   end
 end
