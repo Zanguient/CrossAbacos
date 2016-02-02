@@ -40,6 +40,7 @@ type
     Match1: TMenuItem;
     SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem;
     Fornecedor1: TMenuItem;
+    RatingDetalhadoPorFornecedor1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -65,6 +66,7 @@ type
     procedure Match1Click(Sender: TObject);
     procedure SKUxSubGrupoAbacosxSubGrupoCross1Click(Sender: TObject);
     procedure Fornecedor1Click(Sender: TObject);
+    procedure RatingDetalhadoPorFornecedor1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -102,7 +104,8 @@ uses
   uRelRatingporFornecedor,
   uRelHistoricodeCustoporSKU,
   uRelMatch,
-  uCadFornecedor;
+  uCadFornecedor,
+  uRelRatingDetalhadoporFornecedor;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -323,6 +326,17 @@ begin
 
   if (ResultMsgModal = mrYes) then
     Close;
+end;
+
+procedure TFrmPrincipal.RatingDetalhadoPorFornecedor1Click(Sender: TObject);
+begin
+  if not Assigned(frmRelRatingDetalhadoporFornecedor) then
+    frmRelRatingDetalhadoporFornecedor := TfrmRelRatingDetalhadoporFornecedor.Create(nil);
+  try
+    frmRelRatingDetalhadoporFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRelRatingDetalhadoporFornecedor);
+  end;
 end;
 
 procedure TFrmPrincipal.RatingporFornecedor1Click(Sender: TObject);

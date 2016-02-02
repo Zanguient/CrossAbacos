@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42399,9322101157" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
+<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42402,6108023264" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
   <Datasets>
     <item DataSet="frxDBDataset1" DataSetName="frxDBDataset1"/>
   </Datasets>
@@ -22,22 +22,22 @@
         </Formats>
       </TfrxMemoView>
     </TfrxReportTitle>
-    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,8976377952756" Left="0" Top="207,87415" Width="718,1107" ColumnWidth="0" ColumnGap="0" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" RowCount="0">
-      <TfrxMemoView Name="frxDBDataset1nomefornecedor" Align="baWidth" Left="0" Top="0" Width="476,22093622" Height="18,89765" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="times New Roman" Font.Style="0" ParentFont="False" Text="[frxDBDataset1.&#34;id&#34;] - [frxDBDataset1.&#34;nomealmoxarifado&#34;]">
+    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="18,8976378" Left="0" Top="207,87415" Width="718,1107" ColumnWidth="0" ColumnGap="0" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" RowCount="0">
+      <TfrxMemoView Name="frxDBDataset1nomefornecedor" Align="baWidth" Left="0" Top="0" Width="476,22093622" Height="18,89765" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="0" ParentFont="False" Text="[frxDBDataset1.&#34;id&#34;] - [frxDBDataset1.&#34;nomealmoxarifado&#34;]">
         <Formats>
           <item/>
           <item/>
         </Formats>
       </TfrxMemoView>
-      <TfrxMemoView Name="frxDBDataset1nomealmoxarifado" Align="baRight" Left="476,22093622" Top="0" Width="241,88976378" Height="18,89765" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="times New Roman" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="[frxDBDataset1.&#34;codigo_e10&#34;]"/>
+      <TfrxMemoView Name="frxDBDataset1nomealmoxarifado" Align="baRight" Left="476,22093622" Top="0" Width="241,88976378" Height="18,89765" DataSet="frxDBDataset1" DataSetName="frxDBDataset1" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="0" HAlign="haCenter" ParentFont="False" Text="[frxDBDataset1.&#34;codigo_e10&#34;]"/>
     </TfrxMasterData>
     <TfrxPageFooter Name="PageFooter1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="22,67718" Left="0" Top="287,24428" Width="718,1107">
       <TfrxMemoView Name="Memo1" Left="487,55937" Top="0" Width="230,55133" Height="18,89765" HAlign="haRight" Text="Página [Page#] de [TotalPages#]"/>
     </TfrxPageFooter>
     <TfrxHeader Name="Header1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Height="45,35433071" Left="0" Top="139,84261" Width="718,1107" Stretched="True">
       <TfrxMemoView Name="Memo7" Align="baWidth" Left="0" Top="0" Width="718,1107" Height="22,67718" Font.Charset="1" Font.Color="-16777208" Font.Height="-19" Font.Name="times New Roman" Font.Style="1" Frame.Typ="12" HAlign="haCenter" ParentFont="False" Text="Listagem Simples de Almoxarifados"/>
-      <TfrxMemoView Name="Memo6" Align="baWidth" Left="0" Top="26,45671" Width="476,22093622" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="times New Roman" Font.Style="1" ParentFont="False" Text="Almoxarifado"/>
-      <TfrxMemoView Name="Memo10" Align="baRight" Left="476,22093622" Top="26,45671" Width="241,88976378" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" Text="Código Estrela 10"/>
+      <TfrxMemoView Name="Memo6" Align="baWidth" Left="0" Top="26,45671" Width="476,22093622" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="1" ParentFont="False" Text="Almoxarifado"/>
+      <TfrxMemoView Name="Memo10" Align="baRight" Left="476,22093622" Top="26,45671" Width="241,88976378" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" Text="Código Estrela 10"/>
     </TfrxHeader>
   </TfrxReportPage>
 </TfrxReport>

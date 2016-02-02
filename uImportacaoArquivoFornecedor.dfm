@@ -864,6 +864,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
       OnDrawColumnCell = dgProdutosDrawColumnCell
+      OnTitleClick = dgProdutosTitleClick
       Columns = <
         item
           Expanded = False
@@ -920,7 +921,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800D80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA

@@ -50,7 +50,8 @@ uses
   uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU},
   uRelMatch in 'uRelMatch.pas' {frmRelMatch},
   uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes},
-  uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor};
+  uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor},
+  uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor};
 
 {$R *.res}
 

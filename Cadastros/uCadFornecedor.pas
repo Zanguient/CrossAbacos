@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
-  Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient;
+  Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, Vcl.ImgList;
 
 type
   TfrmCadFornecedor = class(TForm)
@@ -46,6 +46,7 @@ type
     Panel7: TPanel;
     btFechar: TSpeedButton;
     btAlterar: TSpeedButton;
+    ImageList: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -55,6 +56,8 @@ type
     procedure btCancelarClick(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
     procedure csPesquisaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure gdPesquisaDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     procedure Cancelar;
     procedure InvertePaineis;
@@ -266,15 +269,19 @@ begin
       end;
     end;
     VK_UP : begin
-      if not csPesquisa.IsEmpty then begin
-        if csPesquisa.RecNo > 1 then
-          csPesquisa.Prior;
+      if edPesquisa.Focused then begin
+        if not csPesquisa.IsEmpty then begin
+          if csPesquisa.RecNo > 1 then
+            csPesquisa.Prior;
+        end;
       end;
     end;
     VK_DOWN : begin
-      if not csPesquisa.IsEmpty then begin
-        if csPesquisa.RecNo < csPesquisa.RecordCount then
-          csPesquisa.Next;
+      if edPesquisa.Focused then begin
+        if not csPesquisa.IsEmpty then begin
+          if csPesquisa.RecNo < csPesquisa.RecordCount then
+            csPesquisa.Next;
+        end;
       end;
     end else begin
       if not edPesquisa.Focused then begin
@@ -294,6 +301,29 @@ begin
 
   if edPesquisa.CanFocus then
     edPesquisa.SetFocus;
+end;
+
+procedure TfrmCadFornecedor.gdPesquisaDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  if csPesquisa.IsEmpty then Exit;
+
+  if (gdSelected in State) or (gdFocused in State) then begin
+    gdPesquisa.Canvas.Font.Color   := clWhite;
+    gdPesquisa.Canvas.Brush.Color  := clBlue;
+    gdPesquisa.Canvas.Font.Style   := [];
+  end;
+
+  gdPesquisa.DefaultDrawDataCell( Rect, gdPesquisa.Columns[DataCol].Field, State);
+
+  if Column.FieldName = csPesquisaSTATUS.FieldName then begin
+    gdPesquisa.Canvas.FillRect(Rect);
+    if csPesquisaSTATUS.Value then // Cadastro está ativo
+      ImageList.Draw(gdPesquisa.Canvas, (Rect.Left + (Rect.Width div 2) - 1), Rect.Top + 2, 1)
+    else
+      ImageList.Draw(gdPesquisa.Canvas, (Rect.Left + (Rect.Width div 2) - 1), Rect.Top + 2, 0);
+  end;
+
 end;
 
 procedure TfrmCadFornecedor.InvertePaineis;

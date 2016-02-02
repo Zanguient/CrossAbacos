@@ -126,6 +126,10 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'SKU x SubGrupo Abacos x SubGrupo Cross'
           OnClick = SKUxSubGrupoAbacosxSubGrupoCross1Click
         end
+        object RatingDetalhadoPorFornecedor1: TMenuItem
+          Caption = 'Rating Detalhado Por Fornecedor'
+          OnClick = RatingDetalhadoPorFornecedor1Click
+        end
       end
     end
     object Configuraes1: TMenuItem

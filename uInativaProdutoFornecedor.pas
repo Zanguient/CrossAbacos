@@ -31,7 +31,6 @@ type
     btAtivar: TSpeedButton;
     btInativar: TSpeedButton;
     pnPrincipal: TPanel;
-    ImageList1: TImageList;
     csProdutos: TClientDataSet;
     dsProdutos: TDataSource;
     csProdutosPRODUTO: TIntegerField;

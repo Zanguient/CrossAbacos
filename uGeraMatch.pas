@@ -365,6 +365,8 @@ begin
       SQL.Params[0].Value      := idLote; //Passa o ID do Lote
       SQL.Open;
       SQL.FetchAll;
+      SQL.Offline;
+      SQL.DisableControls;
 
       if not SQL.IsEmpty then begin
 

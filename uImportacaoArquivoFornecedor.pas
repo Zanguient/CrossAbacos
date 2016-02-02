@@ -76,6 +76,7 @@ type
     procedure btLimparClick(Sender: TObject);
     procedure btExportClick(Sender: TObject);
     procedure edFornecedorChange(Sender: TObject);
+    procedure dgProdutosTitleClick(Column: TColumn);
   private
     { Private declarations }
   public
@@ -235,8 +236,10 @@ begin
               else begin
                 if csProdutosSKU.Value = '' then
                   btImportar.Tag                    := 1;
-                if csProdutosCUSTO.Value = 0 then
+                if (csProdutosCUSTO.Value = 0) or (csProdutosDISPONIVEL.Value = 0) then begin
                   csProdutosDISPONIVEL.Value        := 0;
+                  csProdutosCUSTO.Value             := 0;
+                end;
                 csProdutos.Post;
               end;
               Break;
@@ -245,6 +248,37 @@ begin
         end;
         pgProdutos.Progress                         := I;
       end;
+
+      CON   := TFWConnection.Create;
+      FORN  := TFORNECEDOR.Create(CON);
+      pgProdutos.Progress                     := 0;
+      pgProdutos.MaxValue                     := csProdutos.RecordCount;
+      try
+
+        FORN.SelectList('id = ' + edFornecedor.Text);
+
+        csProdutos.First;
+        while not csProdutos.Eof do begin
+          if (csProdutosSTATUS.Value = 1) and (csProdutosDISPONIVEL.Value > 0) then begin
+            if csProdutosDISPONIVEL.Value < TFORNECEDOR(FORN.Itens[0]).ESTOQUEMINIMO.Value then begin
+              csProdutos.Edit;
+              csProdutosDISPONIVEL.Value     := 0;
+              csProdutosCUSTO.Value          := 0;
+              csProdutos.Post;
+            end else if csProdutosDISPONIVEL.Value > TFORNECEDOR(FORN.Itens[0]).ESTOQUEMAXIMO.Value then begin
+              csProdutos.Edit;
+              csProdutosDISPONIVEL.Value     := TFORNECEDOR(FORN.Itens[0]).ESTOQUEMAXIMO.Value;
+              csProdutos.Post;
+            end;
+          end;
+          pgProdutos.Progress                := csProdutos.RecNo;
+          csProdutos.Next;
+        end;
+      finally
+        FreeAndNil(FORN);
+        FreeAndNil(CON);
+      end;
+
       bloqueioSalvar(2);
     except
       on E : Exception do begin
@@ -383,6 +417,7 @@ begin
   CON                                               := TFWConnection.Create;
   PRODFOR                                           := TPRODUTOFORNECEDOR.Create(CON);
   PROD                                              := TPRODUTO.Create(CON);
+  csProdutos.DisableControls;
   try
     PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text + ' AND STATUS = True');
     pgProdutos.MaxValue                             := PRODFOR.Count;
@@ -402,11 +437,13 @@ begin
       csProdutosDISPONIVEL.Value                    := 0;
       csProdutos.Post;
       pgProdutos.Progress                           := I;
+      Application.ProcessMessages;
     end;
 
     pgProdutos.Progress                             := 0;
 
   finally
+    csProdutos.EnableControls;
     FreeAndNil(PRODFOR);
     FreeAndNil(PROD);
     FreeAndNil(CON);
@@ -464,6 +501,11 @@ begin
   else
     dgProdutos.Canvas.Font.Color := clRed;
   dgProdutos.DefaultDrawDataCell(Rect, dgProdutos.Columns[DataCol].Field, State);
+end;
+
+procedure TfrmImportacaoArquivoFornecedor.dgProdutosTitleClick(Column: TColumn);
+begin
+   csProdutos.IndexFieldNames := Column.FieldName;
 end;
 
 procedure TfrmImportacaoArquivoFornecedor.dsProdutosDataChange(Sender: TObject;
