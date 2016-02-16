@@ -41,6 +41,7 @@ type
     SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem;
     Fornecedor1: TMenuItem;
     RatingDetalhadoPorFornecedor1: TMenuItem;
+    ConsultadeProdutos1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -67,6 +68,7 @@ type
     procedure SKUxSubGrupoAbacosxSubGrupoCross1Click(Sender: TObject);
     procedure Fornecedor1Click(Sender: TObject);
     procedure RatingDetalhadoPorFornecedor1Click(Sender: TObject);
+    procedure ConsultadeProdutos1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -105,7 +107,8 @@ uses
   uRelHistoricodeCustoporSKU,
   uRelMatch,
   uCadFornecedor,
-  uRelRatingDetalhadoporFornecedor;
+  uRelRatingDetalhadoporFornecedor,
+  uConsultaProduto;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -306,6 +309,17 @@ begin
     frmInativaProdutoFornecedor.ShowModal;
   finally
     FreeAndNil(frmInativaProdutoFornecedor);
+  end;
+end;
+
+procedure TFrmPrincipal.ConsultadeProdutos1Click(Sender: TObject);
+begin
+  if frmConsultaProdutos = nil then
+    frmConsultaProdutos   := TfrmConsultaProdutos.Create(nil);
+  try
+    frmConsultaProdutos.ShowModal;
+  finally
+    FreeAndNil(frmConsultaProdutos);
   end;
 end;
 

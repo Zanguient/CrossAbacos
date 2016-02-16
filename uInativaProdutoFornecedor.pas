@@ -100,13 +100,18 @@ uses uFuncoes, uBeanProduto, uBeanFornecedor, uBeanProdutoFornecedor, uDMUtil,
 
 procedure TfrmInativaProdutoFornecedor.ativar(Status : Boolean);
 var
-  CON      : TFWConnection;
-  PF       : TPRODUTOFORNECEDOR;
-  Motivo   : String;
+  CON         : TFWConnection;
+  PF,
+  PF2         : TPRODUTOFORNECEDOR;
+  P           : TPRODUTO;
+  Motivo      : String;
+  ForaEstoque : Boolean;
 begin
   csProdutos.DisableControls;
   CON                     := TFWConnection.Create;
   PF                      := TPRODUTOFORNECEDOR.Create(CON);
+  PF2                     := TPRODUTOFORNECEDOR.Create(CON);
+  P                       := TPRODUTO.Create(CON);
   DisplayMsg(MSG_WAIT, 'Atualizando produtos!');
   try
     if not Status then begin
@@ -130,8 +135,26 @@ begin
           PF.MOTIVO.Value       := '';
           if not Status then
             PF.MOTIVO.Value     := Motivo;
-
           PF.Update;
+
+          if not Status then begin
+            ForaEstoque         := False;
+            P.SelectList('id = ' + csProdutosPRODUTO.AsString);
+            if P.Count > 0 then
+              ForaEstoque       := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value = TPRODUTOFORNECEDOR(PF.Itens[0]).ID_FORNECEDOR.Value;
+            if not ForaEstoque then begin
+              PF2.SelectList('id_produto = ' + csProdutosPRODUTO.AsString + ' and status');
+              ForaEstoque       := PF2.Count = 0;
+            end;
+            if ForaEstoque then begin
+              if (P.Count > 0) then begin
+                P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
+                P.ID_FORNECEDORANTERIOR.Value := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value;
+                P.ID_FORNECEDORNOVO.Value     := 0;
+                P.Update;
+              end;
+            end;
+          end;
         end;
       end;
       csProdutos.Next;
@@ -142,6 +165,8 @@ begin
   finally
     DisplayMsgFinaliza;
     FreeAndNil(PF);
+    FreeAndNil(PF2);
+    FreeAndNil(P);
     FreeAndNil(CON);
     csProdutos.EnableControls;
   end;
