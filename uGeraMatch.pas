@@ -294,7 +294,6 @@ Var
   P             : TPRODUTO;
   PF            : TPRODUTOFORNECEDOR;
   SQL           : TFDQuery;
-  SQLULTIMOLOTE : TFDQuery;
   idLote        : Integer;
 begin
 
@@ -304,7 +303,6 @@ begin
   P             := TPRODUTO.Create(FWC);
   PF            := TPRODUTOFORNECEDOR.Create(FWC);
   SQL           := TFDQuery.Create(nil);
-  SQLULTIMOLOTE := TFDQuery.Create(nil);
 
   try
     try
@@ -330,25 +328,14 @@ begin
         Exit;
       end;
 
-      //SQL DO ÚLTIMO LOTE
-      SQLULTIMOLOTE.Close;
-      SQLULTIMOLOTE.SQL.Clear;
-      SQLULTIMOLOTE.SQL.Add('SELECT');
-      SQLULTIMOLOTE.SQL.Add('COALESCE(MAX(L.ID),0) AS ULTIMOLOTE');
-      SQLULTIMOLOTE.SQL.Add('FROM LOTE L INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
-      SQLULTIMOLOTE.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
-      SQLULTIMOLOTE.SQL.Add('WHERE IMPI.STATUS = 1 AND L.ID < :IDLOTE AND IMPI.ID_PRODUTO = :IDPRODUTO');
-      SQLULTIMOLOTE.Params[0].DataType := ftInteger;
-      SQLULTIMOLOTE.Params[1].DataType := ftInteger;
-      SQLULTIMOLOTE.Connection  := FWC.FDConnection;
-
       //SQL BUSCA PRODUTOS
       SQL.Close;
       SQL.SQL.Clear;
       SQL.SQL.Add('SELECT');
       SQL.SQL.Add('P.ID,');
       SQL.SQL.Add('P.CUSTO,');
-      SQL.SQL.Add('P.ID_FORNECEDORNOVO AS ID_FORNECEDOR');
+      SQL.SQL.Add('P.ID_FORNECEDORNOVO AS ID_FORNECEDOR,');
+      SQL.SQL.Add('P.ID_ULTIMOLOTE');
       SQL.SQL.Add('FROM PRODUTO P');
       SQL.SQL.Add('WHERE P.ID IN (SELECT IMPI.ID_PRODUTO FROM IMPORTACAO IMP INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO AND IMP.ID_LOTE = :IDLOTE))');
       SQL.Params[0].DataType   := ftInteger;
@@ -386,17 +373,8 @@ begin
           MI.ID_FORNECEDORANTERIOR.Value  := SQL.Fields[2].Value; //id_fornecedoranterior
           MI.CUSTONOVO.Value              := SQL.Fields[1].Value; //custonovo
           MI.ID_FORNECEDORNOVO.Value      := SQL.Fields[2].Value; //id_fornecedornovo
+          MI.ID_ULTIMOLOTE.Value          := SQL.Fields[3].Value; //id_ultimolote
           MI.ATUALIZADO.Value             := False;
-          MI.ID_ULTIMOLOTE.Value          := 0;
-
-          //Verifica ultimo lote para o Produto
-          SQLULTIMOLOTE.Close;
-          SQLULTIMOLOTE.Prepare;
-          SQLULTIMOLOTE.Params[0].Value := idLote; //Passa o IDLOTE
-          SQLULTIMOLOTE.Params[1].Value := SQL.Fields[0].Value; //Passa o IDPRODUTO
-          SQLULTIMOLOTE.Open;
-          if not SQLULTIMOLOTE.IsEmpty then
-            MI.ID_ULTIMOLOTE.Value   := SQLULTIMOLOTE.Fields[0].Value; //id_ultimolote
 
           //Verifica o Fornecedor com Custo Menor
           PF.SelectList('ID_PRODUTO = ' + SQL.Fields[0].AsString + ' AND CUSTO > 0 AND QUANTIDADE > 0 AND STATUS = True', 'CUSTO ASC');
@@ -457,7 +435,6 @@ begin
     end;
   finally
     BarradeProgresso.Progress := 0;
-    FreeAndNil(SQLULTIMOLOTE);
     FreeAndNil(SQL);
     FreeAndNil(MI);
     FreeAndNil(M);

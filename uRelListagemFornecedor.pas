@@ -163,8 +163,8 @@ begin
       SQL2.Close;
       SQL2.SQL.Clear;
       SQL2.SQL.Add('SELECT');
-      SQL2.SQL.Add('COUNT(II.QUANTIDADE),');
-      SQL2.SQL.Add('AVG(II.CUSTO)');
+      SQL2.SQL.Add('COUNT(COALESCE(II.QUANTIDADE,0)),');
+      SQL2.SQL.Add('COALESCE(AVG(II.CUSTO),0)');
       SQL2.SQL.Add('FROM IMPORTACAO_ITENS II');
       SQL2.SQL.Add('WHERE II.STATUS = 1');
       SQL2.SQL.Add('AND II.QUANTIDADE > 0 AND II.CUSTO > 0');
@@ -174,7 +174,7 @@ begin
       SQL2.Prepare;
 
       if edNomeFornecedor.Text = '' then
-        F.SelectList('','ID')
+        F.SelectList('status','ID')
       else
         F.SelectList('ID = ' + edFornecedor.Text,'ID');
 

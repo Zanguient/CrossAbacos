@@ -124,7 +124,7 @@ begin
       SQL.FetchAll;
 
       if Not SQL.IsEmpty then begin
-        F.SelectList('', 'ID');
+        F.SelectList('status', 'ID');
         if F.Count > 0 then begin
           SQL.First;
           while not SQL.Eof do begin

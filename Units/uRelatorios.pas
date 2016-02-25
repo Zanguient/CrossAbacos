@@ -40,6 +40,7 @@ begin
       SQL.SQL.Add('	A.NOME AS NOMEALMOXARIFADO');
       SQL.SQL.Add('FROM FORNECEDOR F');
       SQL.SQL.Add('INNER JOIN ALMOXARIFADO A ON (F.ID_ALMOXARIFADO = A.ID)');
+      SQL.SQL.Add('WHERE F.STATUS');
       SQL.SQL.Add('ORDER BY F.ID');
       SQL.Connection                    := FWC.FDConnection;
       SQL.Prepare;

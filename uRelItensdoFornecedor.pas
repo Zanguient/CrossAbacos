@@ -144,7 +144,7 @@ begin
       Consulta.SQL.Add('FROM PRODUTOFORNECEDOR PF');
       Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = PF.ID_PRODUTO)');
       Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = PF.ID_FORNECEDOR)');
-      Consulta.SQL.Add('WHERE 1 = 1');
+      Consulta.SQL.Add('WHERE F.STATUS');
       if StrToIntDef(edFornecedor.Text,0) > 0 then
         Consulta.SQL.Add('AND F.ID = ' + edFornecedor.Text);
       case rgSaldo.ItemIndex of
