@@ -59,7 +59,7 @@ begin
   USU := TUSUARIO.Create(FWC);
   try
     try
-      USU.SelectList('CODIGO = ' + IntToStr(USUARIO.CODIGO));
+      USU.SelectList('ID = ' + IntToStr(USUARIO.CODIGO));
       if USU.Count > 0 then begin
 
         if Trim(Criptografa(TUSUARIO(USU.Itens[0]).SENHA.Value, 'D')) = Trim(edSenhaAtual.Text) then begin
