@@ -27,6 +27,7 @@ uses
   function SoNumeros(Texto: String): String;
   function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
   function StrZero(Zeros : string; Quant : Integer): string;
+  function carregaArrayClassificacao : Boolean;
 
 implementation
 
@@ -394,4 +395,49 @@ begin
    Result := StringOfChar('0', Quant)+Result;
 end;
 
+function carregaArrayClassificacao : Boolean;
+begin
+  Result     := False;
+  SetLength(CLASSIFICACAO,0);
+
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[0].Descricao :=  'ICMS TRIBUTADO 12% - PIS/COFINS TRIBUTADO';
+  CLASSIFICACAO[0].Codigo    := 1;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[1].Descricao :=  'ICMS TRIBUTADO 18% - PIS/COFINS TRIBUTADO';
+  CLASSIFICACAO[1].Codigo    := 6;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[2].Descricao :=  'ICMS SUBST. TRIB.  - PIS/COFINS TRIBUTADO';
+  CLASSIFICACAO[2].Codigo    := 7;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[3].Descricao :=  'ICMS SUBST. TRIB. - PIS/COFINS ALIQUOTA 0';
+  CLASSIFICACAO[3].Codigo    := 8;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[4].Descricao :=  'ICMS SUBS. TRIB. - PIS/COFINS INC. MONOFASICA';
+  CLASSIFICACAO[4].Codigo    := 9;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[5].Descricao :=  'ENERGIA ELETRICA';
+  CLASSIFICACAO[5].Codigo    := 10;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[6].Descricao :=  'TELEFONE';
+  CLASSIFICACAO[6].Codigo    := 11;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[7].Descricao :=  'MATERIAL DE USO E CONSUMO';
+  CLASSIFICACAO[7].Codigo    := 12;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[8].Descricao :=  'IMOBILIZADO';
+  CLASSIFICACAO[8].Codigo    := 13;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[9].Descricao :=  'MERC IMPORTADA  ICMS TRIB - PIS COFINS TRIB';
+  CLASSIFICACAO[9].Codigo    := 15;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[10].Descricao:=  'VENDA IMPORT ICMS TRIB - PIS E COFINS MONOFASICO';
+  CLASSIFICACAO[10].Codigo   := 16;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[11].Descricao:=  'VENDA IMPORT ICMS ST - PIS E COFINS TRIB';
+  CLASSIFICACAO[11].Codigo   := 17;
+  SetLength(CLASSIFICACAO,Length(CLASSIFICACAO) + 1);
+  CLASSIFICACAO[12].Descricao:=  'VENDA IMPOR ICMS ST - PIS COFINS MONOFASICO';
+  CLASSIFICACAO[12].Codigo   := 18;
+end;
 end.

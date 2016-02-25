@@ -33,6 +33,10 @@ type
   TCONFIGURACOESLOCAIS = record
     DirRelatorios : string;
   end;
+  TCLASSIFICACAO = record
+    Codigo : Integer;
+    Descricao : String;
+  end;
 
 Const
   DirArqConf: String = 'C:\CrossAbacos\CrossAbacos.ini';
@@ -41,12 +45,13 @@ Const
   Alfabeto: String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 Var
-  LOGIN       : TDADOSLOGIN;
-  CONEXAO     : TDADOSCONEXAO;
-  USUARIO     : TDADOSUSUARIO;
-  CONFIG_LOCAL: TCONFIGURACOESLOCAIS;
-  MENUS       : array of TMENU;
-  DESIGNREL   : Boolean;
+  LOGIN         : TDADOSLOGIN;
+  CONEXAO       : TDADOSCONEXAO;
+  USUARIO       : TDADOSUSUARIO;
+  CONFIG_LOCAL  : TCONFIGURACOESLOCAIS;
+  MENUS         : array of TMENU;
+  CLASSIFICACAO : array of TCLASSIFICACAO;
+  DESIGNREL     : Boolean;
 
 implementation
 

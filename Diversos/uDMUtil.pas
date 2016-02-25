@@ -52,7 +52,7 @@ begin
   CarregarConexaoBD;
 
   RelParams    := TStringList.Create;
-
+  carregaArrayClassificacao;
 end;
 
 procedure TDMUtil.DataModuleDestroy(Sender: TObject);

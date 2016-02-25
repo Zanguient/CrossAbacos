@@ -593,7 +593,7 @@ begin
       PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
       PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
       PROD.UN.excelTitulo                                                     := 'UN';
-      PROD.CODIGO_CF.excelTitulo                                              := 'Código Classificacao Fical';
+//      PROD.CODIGO_CF.excelTitulo                                              := 'Código Classificacao Fical';
       PROD.ESTOQUE_MINIMO.excelTitulo                                         := 'Em';
 
       PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
@@ -631,7 +631,7 @@ begin
                                                                                'Dias de garantia, ' + sLineBreak +
                                                                                'Origem da mercadoria' + sLineBreak +
                                                                                'UN'  + sLineBreak +
-                                                                               'Código Classificacao Fical'  + sLineBreak +
+//                                                                               'Código Classificacao Fical'  + sLineBreak +
                                                                                'Em');
 
 
@@ -653,7 +653,18 @@ begin
             end;
           end;
           if (PROD.SKU.Value <> '') and (Copy(PROD.SKU.Value, 1, 4) <> '345.') then begin
+            PROD.CODIGO_CF.Value     := 0;
+            if PROD.CF.Value <> '' then begin
+              for J := 0 to High(CLASSIFICACAO) do begin
+                if Pos(PROD.CF.Value, CLASSIFICACAO[J].Descricao) > 0 then begin
+                  PROD.CODIGO_CF.Value := CLASSIFICACAO[J].Codigo;
+                  Break;
+                end;
+              end;
+            end;
+
             PROD.SelectList('upper(sku) = ' + QuotedStr(AnsiUpperCase(PROD.SKU.asString)));
+
             if PROD.Count > 0 then begin
               PROD.ID.Value                                                      := TPRODUTO(PROD.Itens[0]).ID.Value;
               PROD.Update;

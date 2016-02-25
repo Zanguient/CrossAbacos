@@ -51,7 +51,8 @@ uses
   uRelMatch in 'uRelMatch.pas' {frmRelMatch},
   uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes},
   uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor},
-  uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor};
+  uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor},
+  uConsultaProduto in 'uConsultaProduto.pas' {frmConsultaProdutos};
 
 {$R *.res}
 
