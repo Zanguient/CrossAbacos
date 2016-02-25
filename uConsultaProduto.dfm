@@ -13,6 +13,7 @@ object frmConsultaProdutos: TfrmConsultaProdutos
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poMainFormCenter
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
@@ -37,7 +38,7 @@ object frmConsultaProdutos: TfrmConsultaProdutos
       TabOrder = 0
       object Label1: TLabel
         Left = 3
-        Top = 5
+        Top = 2
         Width = 81
         Height = 16
         Caption = 'Digite o Filtro:'
@@ -49,9 +50,10 @@ object frmConsultaProdutos: TfrmConsultaProdutos
         ParentFont = False
       end
       object edFiltro: TEdit
-        Left = 0
-        Top = 22
-        Width = 688
+        AlignWithMargins = True
+        Left = 3
+        Top = 19
+        Width = 682
         Height = 27
         Align = alBottom
         Font.Charset = DEFAULT_CHARSET
@@ -62,6 +64,9 @@ object frmConsultaProdutos: TfrmConsultaProdutos
         ParentFont = False
         TabOrder = 0
         OnKeyDown = edFiltroKeyDown
+        ExplicitLeft = 0
+        ExplicitTop = 22
+        ExplicitWidth = 688
       end
     end
     object dgConsulta: TDBGrid
