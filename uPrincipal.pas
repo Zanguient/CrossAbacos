@@ -42,6 +42,8 @@ type
     Fornecedor1: TMenuItem;
     RatingDetalhadoPorFornecedor1: TMenuItem;
     ConsultadeProdutos1: TMenuItem;
+    Arquivo1: TMenuItem;
+    Produtos1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -69,6 +71,7 @@ type
     procedure Fornecedor1Click(Sender: TObject);
     procedure RatingDetalhadoPorFornecedor1Click(Sender: TObject);
     procedure ConsultadeProdutos1Click(Sender: TObject);
+    procedure Produtos1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -108,7 +111,8 @@ uses
   uRelMatch,
   uCadFornecedor,
   uRelRatingDetalhadoporFornecedor,
-  uConsultaProduto;
+  uConsultaProduto,
+  uArquivoProdutos;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -340,6 +344,17 @@ begin
 
   if (ResultMsgModal = mrYes) then
     Close;
+end;
+
+procedure TFrmPrincipal.Produtos1Click(Sender: TObject);
+begin
+  try
+    if FrmArquivoProdutos = nil then
+      FrmArquivoProdutos := TFrmArquivoProdutos.Create(Self);
+    FrmArquivoProdutos.ShowModal;
+  finally
+    FreeAndNil(FrmArquivoProdutos);
+  end;
 end;
 
 procedure TFrmPrincipal.RatingDetalhadoPorFornecedor1Click(Sender: TObject);

@@ -136,6 +136,13 @@ object FrmPrincipal: TFrmPrincipal
         end
       end
     end
+    object Arquivo1: TMenuItem
+      Caption = 'Arquivo'
+      object Produtos1: TMenuItem
+        Caption = 'Produtos'
+        OnClick = Produtos1Click
+      end
+    end
     object Configuraes1: TMenuItem
       Caption = 'Configura'#231#245'es'
       object ConfigGerais1: TMenuItem
