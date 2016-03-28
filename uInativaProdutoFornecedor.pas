@@ -150,7 +150,9 @@ begin
               if (P.Count > 0) then begin
                 P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
                 P.ID_FORNECEDORANTERIOR.Value := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value;
+                P.CUSTOANTERIOR.Value         := TPRODUTO(P.Itens[0]).CUSTO.Value;
                 P.ID_FORNECEDORNOVO.Value     := 0;
+                P.CUSTO.Value                 := 0;
                 P.Update;
               end;
             end;
