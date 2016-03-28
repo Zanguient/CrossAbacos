@@ -28,6 +28,8 @@ uses
   function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
   function StrZero(Zeros : string; Quant : Integer): string;
   function carregaArrayClassificacao : Boolean;
+  function FormataCNPJ(CNPJ : String) : String;
+  function AjustaTamnhoCNPJ(CNPJ : String) : String;
 
 implementation
 
@@ -440,4 +442,29 @@ begin
   CLASSIFICACAO[12].Descricao:=  'VENDA IMPOR ICMS ST - PIS COFINS MONOFASICO';
   CLASSIFICACAO[12].Codigo   := 18;
 end;
+
+function FormataCNPJ(CNPJ : String) : String;
+Var
+  Aux : String;
+begin
+  Aux := SoNumeros(CNPJ);
+
+  while Length(Aux) < 14 do
+    Aux := '0' + Aux;
+
+  Result := Copy(Aux,1,2) + '.' + Copy(Aux,3,3) + '.' + Copy(Aux,6,3) + '/' + Copy(Aux,9,4) + '-' + Copy(Aux,13,2);
+end;
+
+function AjustaTamnhoCNPJ(CNPJ : String) : String;
+Var
+  Aux : String;
+begin
+  Aux := SoNumeros(CNPJ);
+
+  while Length(Aux) < 14 do
+    Aux := '0' + Aux;
+
+  Result := Aux;
+end;
+
 end.

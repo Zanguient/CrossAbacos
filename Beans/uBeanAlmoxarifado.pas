@@ -30,7 +30,15 @@ procedure TALMOXARIFADO.InitInstance;
 begin
   inherited;
   ID.isPK   := True;
+
   NOME.Size := 100;
+
+  NOME.isSearchField      := True;
+
+  NOME.displayLabel       := 'Almoxarifado';
+
+  NOME.displayWidth       := 100;
+
 end;
 
 procedure TALMOXARIFADO.SetCODIGO_E10(const Value: TFieldInteger);

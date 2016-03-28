@@ -65,8 +65,15 @@ var
   frmImportacao: TfrmImportacao;
 
 implementation
-uses uBeanProduto, uFWConnection, uMensagem, uBeanAlmoxarifado,
-     uBeanProdutoFornecedor, uBeanFornecedor, uConstantes;
+uses
+  uBeanProduto,
+  uFWConnection,
+  uMensagem,
+  uBeanAlmoxarifado,
+  uBeanProdutoFornecedor,
+  uBeanFornecedor,
+  uConstantes,
+  uFuncoes;
 
 {$R *.dfm}
 
@@ -270,7 +277,11 @@ begin
 
       for J := 0 to Pred(Count) do begin
         if (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(FORN, List[J]^.Name)).excelIndice <= 0) then begin
-          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas:' + sLineBreak + 'ID_Forn, ' + sLineBreak + 'Nome,' + sLineBreak + 'ID_Almoxerifado');
+          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas:' + sLineBreak +
+                                                                               'ID_Forn, ' + sLineBreak +
+                                                                               'Nome,' + sLineBreak +
+                                                                               'ID_Almoxerifado' + sLineBreak +
+                                                                               'PrazoEntregaDias');
           Exit;
         end;
       end;
@@ -294,6 +305,9 @@ begin
             ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
             if ALM.Count > 0 then begin
               FORN.ID_ALMOXARIFADO.Value                                       := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
+
+              //Add by Sergio on 24.03.16 -> a Pedido do benhur
+              FORN.CNPJ.Value := AjustaTamnhoCNPJ(FORN.CNPJ.Value);
 
               FORN.SelectList('cnpj = ' + FORN.CNPJ.asSQL);
               if FORN.Count > 0 then begin

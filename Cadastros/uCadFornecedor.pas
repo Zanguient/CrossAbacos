@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
-  Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, Vcl.ImgList;
+  Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, Vcl.ImgList,
+  FireDAC.Comp.Client;
 
 type
   TfrmCadFornecedor = class(TForm)
@@ -47,6 +48,15 @@ type
     btFechar: TSpeedButton;
     btAlterar: TSpeedButton;
     ImageList: TImageList;
+    csPesquisaCNPJ: TStringField;
+    csPesquisaID_ALMOXARIFADO: TIntegerField;
+    csPesquisaNOMEALMOXARIFADO: TStringField;
+    edPrazoEntrega: TEdit;
+    Label1: TLabel;
+    csPesquisaPRAZO_ENTREGA: TIntegerField;
+    edAlmoxarifado: TButtonedEdit;
+    Label5: TLabel;
+    lbAlmoxarifado: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -58,6 +68,10 @@ type
     procedure csPesquisaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure gdPesquisaDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure edAlmoxarifadoChange(Sender: TObject);
+    procedure edAlmoxarifadoKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edAlmoxarifadoRightButtonClick(Sender: TObject);
   private
     procedure Cancelar;
     procedure InvertePaineis;
@@ -78,7 +92,9 @@ uses
   uFuncoes,
   uFWConnection,
   uBeanFornecedor,
-  uMensagem;
+  uMensagem,
+  uBeanAlmoxarifado,
+  uDMUtil;
 
 {$R *.dfm}
 
@@ -88,6 +104,9 @@ begin
     edNome.Clear;
     edEstoqueMinimo.Clear;
     edEstoqueMaximo.Clear;
+    edPrazoEntrega.Clear;
+    edAlmoxarifado.Text := '0';
+    lbAlmoxarifado.Caption  := 'Geral';
     cbAtivo.Checked := True;
     btGravar.Tag    := 0;
   end else begin
@@ -95,6 +114,9 @@ begin
     cbAtivo.Checked             := csPesquisaSTATUS.Value;
     edEstoqueMinimo.Text        := csPesquisaESTOQUEMINIMO.AsString;
     edEstoqueMaximo.Text        := csPesquisaESTOQUEMAXIMO.AsString;
+    edPrazoEntrega.Text         := csPesquisaPRAZO_ENTREGA.AsString;
+    edAlmoxarifado.Text         := csPesquisaID_ALMOXARIFADO.AsString;
+    lbAlmoxarifado.Caption      := csPesquisaNOMEALMOXARIFADO.AsString;
     btGravar.Tag                := csPesquisaCODIGO.Value;
   end;
 
@@ -145,9 +167,11 @@ begin
         Exit;
       end;
 
-      F.STATUS.Value        := cbAtivo.Checked;
-      F.ESTOQUEMINIMO.Value := StrToIntDef(edEstoqueMinimo.Text, 0);
-      F.ESTOQUEMAXIMO.Value := StrToIntDef(edEstoqueMaximo.Text, 0);
+      F.STATUS.Value          := cbAtivo.Checked;
+      F.ESTOQUEMINIMO.Value   := StrToIntDef(edEstoqueMinimo.Text, 0);
+      F.ESTOQUEMAXIMO.Value   := StrToIntDef(edEstoqueMaximo.Text, 0);
+      F.PRAZO_ENTREGA.Value   := StrToIntDef(edPrazoEntrega.Text, 0);
+      F.ID_ALMOXARIFADO.Value := StrToIntDef(edAlmoxarifado.Text, 0);
 
       if (Sender as TSpeedButton).Tag > 0 then begin
         F.ID.Value                    := (Sender as TSpeedButton).Tag;
@@ -184,27 +208,54 @@ end;
 procedure TfrmCadFornecedor.CarregaDados;
 Var
   FWC : TFWConnection;
-  F   : TFORNECEDOR;
+  SQL : TFDQuery;
   I   : Integer;
 begin
 
   try
     FWC := TFWConnection.Create;
-    F   := TFORNECEDOR.Create(FWC);
+    SQL := TFDQuery.Create(nil);
     try
 
       csPesquisa.EmptyDataSet;
 
-      F.SelectList();
-      if F.Count > 0 then begin
-        for I := 0 to F.Count -1 do begin
+      //SQL BUSCA FORNECEDORES
+      SQL.Close;
+      SQL.SQL.Clear;
+      SQL.SQL.Add('SELECT');
+      SQL.SQL.Add('	F.ID AS IDFORNECEDOR,');
+      SQL.SQL.Add('	F.NOME AS NOMEFORNECEDOR,');
+      SQL.SQL.Add('	F.CNPJ AS CNPJFORNECEDOR,');
+      SQL.SQL.Add('	F.STATUS AS STATUSFORNECEDOR,');
+      SQL.SQL.Add('	F.ESTOQUEMINIMO AS ESTOQUEMINIMO,');
+      SQL.SQL.Add('	F.ESTOQUEMAXIMO AS ESTOQUEMAXIMO,');
+      SQL.SQL.Add('	F.PRAZO_ENTREGA AS PRAZO_ENTREGA,');
+      SQL.SQL.Add('	F.ID_ALMOXARIFADO,');
+      SQL.SQL.Add('	A.NOME AS NOMEALMOXARIFADO');
+      SQL.SQL.Add('FROM FORNECEDOR F');
+      SQL.SQL.Add('INNER JOIN ALMOXARIFADO A ON (A.ID = F.ID_ALMOXARIFADO)');
+      SQL.SQL.Add('WHERE 1 = 1');
+
+      SQL.Connection  := FWC.FDConnection;
+      SQL.Prepare;
+      SQL.Open;
+      SQL.FetchAll;
+
+      if not SQL.IsEmpty then begin
+        SQL.First;
+        while not SQL.Eof do begin
           csPesquisa.Append;
-          csPesquisaCODIGO.Value        := TFORNECEDOR(F.Itens[I]).ID.Value;
-          csPesquisaNOME.Value          := TFORNECEDOR(F.Itens[I]).NOME.Value;
-          csPesquisaSTATUS.Value        := TFORNECEDOR(F.Itens[I]).STATUS.Value;
-          csPesquisaESTOQUEMINIMO.Value := TFORNECEDOR(F.Itens[I]).ESTOQUEMINIMO.Value;
-          csPesquisaESTOQUEMAXIMO.Value := TFORNECEDOR(F.Itens[I]).ESTOQUEMAXIMO.Value;
+          csPesquisaCODIGO.Value            := SQL.FieldByName('IDFORNECEDOR').Value;
+          csPesquisaNOME.Value              := SQL.FieldByName('NOMEFORNECEDOR').Value;
+          csPesquisaCNPJ.Value              := FormataCNPJ(SQL.FieldByName('CNPJFORNECEDOR').Value);
+          csPesquisaSTATUS.Value            := SQL.FieldByName('STATUSFORNECEDOR').Value;
+          csPesquisaESTOQUEMINIMO.Value     := SQL.FieldByName('ESTOQUEMINIMO').Value;
+          csPesquisaESTOQUEMAXIMO.Value     := SQL.FieldByName('ESTOQUEMAXIMO').Value;
+          csPesquisaPRAZO_ENTREGA.Value     := SQL.FieldByName('PRAZO_ENTREGA').Value;
+          csPesquisaID_ALMOXARIFADO.Value   := SQL.FieldByName('ID_ALMOXARIFADO').Value;
+          csPesquisaNOMEALMOXARIFADO.Value  := SQL.FieldByName('NOMEALMOXARIFADO').Value;
           csPesquisa.Post;
+          SQL.Next;
         end;
       end;
 
@@ -215,7 +266,7 @@ begin
     end;
 
   finally
-    FreeAndNil(F);
+    FreeAndNil(SQL);
     FreeAndNil(FWC);
   end;
 end;
@@ -233,6 +284,41 @@ begin
         Break;
       end;
     end;
+  end;
+end;
+
+procedure TfrmCadFornecedor.edAlmoxarifadoChange(Sender: TObject);
+begin
+  lbAlmoxarifado.Caption  := EmptyStr;
+end;
+
+procedure TfrmCadFornecedor.edAlmoxarifadoKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if key = VK_RETURN then
+    edAlmoxarifadoRightButtonClick(nil);
+end;
+
+procedure TfrmCadFornecedor.edAlmoxarifadoRightButtonClick(Sender: TObject);
+var
+  ALM : TALMOXARIFADO;
+  CON : TFWConnection;
+begin
+  CON := TFWConnection.Create;
+  ALM := TALMOXARIFADO.Create(CON);
+
+  lbAlmoxarifado.Caption := EmptyStr;
+
+  try
+    edAlmoxarifado.Text   := IntToStr(DMUtil.Selecionar(ALM, edAlmoxarifado.Text));
+
+    ALM.SelectList('ID = ' + edAlmoxarifado.Text);
+
+    if ALM.Count > 0 then
+      lbAlmoxarifado.Caption := TALMOXARIFADO(ALM.Itens[0]).NOME.asString;
+  finally
+    FreeAndNil(ALM);
+    FreeAndNil(CON);
   end;
 end;
 

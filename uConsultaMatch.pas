@@ -511,7 +511,7 @@ Begin
       end;
     end;
 
-    DirArquivo := DirArquivo + '\Fornecedor.'+ StrZero(IntToStr(HourOf(Now)),2) + '.' + StrZero(IntToStr(MinuteOf(Now)),0) +'.xlsx';
+    DirArquivo := DirArquivo + '\Fornecedor.'+ StrZero(IntToStr(HourOf(Now)),2) + '.' + StrZero(IntToStr(MinuteOf(Now)),0) +'.xls';
     if FileExists(DirArquivo) then begin
       DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
                             'Deseja Sobreescrever?');
@@ -534,11 +534,11 @@ Begin
         cds_MatchItens.DisableControls;
 
         PLANILHA := CreateOleObject('Excel.Application');
-        PLANILHA.Caption := 'FORNECEDOR';
+        PLANILHA.Caption := 'PRODUTOS';
         PLANILHA.Visible := False;
         PLANILHA.WorkBooks.add(1);
-        PLANILHA.Workbooks[1].WorkSheets[1].Name := 'FORNECEDOR';
-        Sheet := PLANILHA.Workbooks[1].WorkSheets['FORNECEDOR'];
+        PLANILHA.Workbooks[1].WorkSheets[1].Name := 'PRODUTOS';
+        Sheet := PLANILHA.Workbooks[1].WorkSheets['PRODUTOS'];
         Sheet.Range['A1','BN1'].Font.Bold  := True;
         Sheet.Range['A1','BN1'].Font.Color := clBlue;
 
