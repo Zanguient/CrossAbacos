@@ -67,8 +67,6 @@ object FrmArquivoProdutos: TFrmArquivoProdutos
         Value = 100.000000000000000000
       end>
     TabOrder = 0
-    ExplicitTop = 246
-    ExplicitWidth = 480
     object Panel1: TPanel
       Left = 1
       Top = 1
@@ -76,7 +74,6 @@ object FrmArquivoProdutos: TFrmArquivoProdutos
       Height = 58
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 239
       object btExportar: TSpeedButton
         AlignWithMargins = True
         Left = 86
@@ -202,8 +199,6 @@ object FrmArquivoProdutos: TFrmArquivoProdutos
       Height = 58
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 240
-      ExplicitWidth = 239
       object btSair: TSpeedButton
         AlignWithMargins = True
         Left = 4
@@ -343,7 +338,5 @@ object FrmArquivoProdutos: TFrmArquivoProdutos
       'Todos')
     ParentFont = False
     TabOrder = 1
-    ExplicitTop = 61
-    ExplicitWidth = 480
   end
 end

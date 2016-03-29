@@ -45,6 +45,7 @@ begin
     btExportar.Tag := 1;
     try
       ExportarProdutos;
+      Close;
     finally
       btExportar.Tag := 0;
     end;
@@ -153,7 +154,6 @@ Begin
 
         PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
 
-        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
       end else
         DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Produtos, Verifique!');
 
