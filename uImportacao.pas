@@ -299,26 +299,29 @@ begin
           end;
           if FORN.CNPJ.isNull then begin
             mnImportaFornecedor.Lines.Add('Linha vazia!');
-            pbImportaFornecedor.Progress                                       := pbImportaFornecedor.MaxValue;
+            pbImportaFornecedor.Progress                      := pbImportaFornecedor.MaxValue;
             Break;
           end else begin
             ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
             if ALM.Count > 0 then begin
-              FORN.ID_ALMOXARIFADO.Value                                       := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
+              FORN.ID_ALMOXARIFADO.Value                      := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
 
               //Add by Sergio on 24.03.16 -> a Pedido do benhur
               FORN.CNPJ.Value := AjustaTamnhoCNPJ(FORN.CNPJ.Value);
 
               FORN.SelectList('cnpj = ' + FORN.CNPJ.asSQL);
               if FORN.Count > 0 then begin
-                FORN.ID.Value                                                  := TFORNECEDOR(FORN.Itens[0]).ID.Value;
+                FORN.ID.Value                                 := TFORNECEDOR(FORN.Itens[0]).ID.Value;
                 FORN.Update;
 
                 SetLength(arrUpdate, Length(arrUpdate) + 1);
-                arrUpdate[High(arrUpdate)]                                     := ALM.ID.Value;
+                arrUpdate[High(arrUpdate)]                    := ALM.ID.Value;
 
                 mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
               end else begin
+                FORN.STATUS.Value                             := True;
+                FORN.ESTOQUEMINIMO.Value                      := 1;
+                FORN.ESTOQUEMAXIMO.Value                      := 200;
                 FORN.Insert;
 
                 SetLength(arrInsert, Length(arrInsert) + 1);
