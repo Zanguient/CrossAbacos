@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus, Vcl.ExtCtrls, Math,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, ShellAPI;
 
 type
   TFrmPrincipal = class(TForm)
@@ -44,6 +44,7 @@ type
     ConsultadeProdutos1: TMenuItem;
     Arquivo1: TMenuItem;
     Produtos1: TMenuItem;
+    BackupdoBancodeDados1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -72,6 +73,7 @@ type
     procedure RatingDetalhadoPorFornecedor1Click(Sender: TObject);
     procedure ConsultadeProdutos1Click(Sender: TObject);
     procedure Produtos1Click(Sender: TObject);
+    procedure BackupdoBancodeDados1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -292,6 +294,27 @@ begin
   finally
     FreeAndNil(frmRelMatch);
   end;
+end;
+
+procedure TFrmPrincipal.BackupdoBancodeDados1Click(Sender: TObject);
+var
+  DirBkp : String;
+begin
+  DisplayMsg(MSG_WAIT, 'Realizando Backup');
+
+  DirBkp := ExtractFilePath(Application.ExeName) +  'backups\';
+
+ if not DirectoryExists(DirBkp) then
+   CreateDir(DirBkp);
+
+ if not FileExists(ExtractFilePath(Application.ExeName) + 'pg_dump.exe') then begin
+   DisplayMsg(MSG_INF, 'Executavel do Backup (PG_Dump.exe) não encontrado na pasta do executável!' + sLineBreak + 'Para continuar o executável é necessário!');
+   Exit;
+ end;
+
+ ShellExecute(0, 'OPEN', pchar( ExtractFilePath(Application.ExeName) + 'pg_dump.exe'), pchar(' --host ' + CONEXAO.Server + ' --port 5432 --username ' + CONEXAO.User_Name + ' --format custom --file "' + CONEXAO.Database + '_' + FormatDateTime('yyyymmdd_hhmm', Now) + '.backup" ' + CONEXAO.Database), pchar(DirBkp), SW_SHOWNORMAL);
+
+ DisplayMsgFinaliza;
 end;
 
 procedure TFrmPrincipal.ConfigGerais1Click(Sender: TObject);

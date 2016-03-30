@@ -153,6 +153,10 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Redefinir Senha'
         OnClick = RedefinirSenhaClick
       end
+      object BackupdoBancodeDados1: TMenuItem
+        Caption = 'Backup do Banco de Dados'
+        OnClick = BackupdoBancodeDados1Click
+      end
     end
     object miSair: TMenuItem
       Caption = 'Sair'
