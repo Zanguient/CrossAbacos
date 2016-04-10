@@ -247,7 +247,7 @@ begin
           csPesquisa.Append;
           csPesquisaCODIGO.Value            := SQL.FieldByName('IDFORNECEDOR').Value;
           csPesquisaNOME.Value              := SQL.FieldByName('NOMEFORNECEDOR').Value;
-          csPesquisaCNPJ.Value              := FormataCNPJ(SQL.FieldByName('CNPJFORNECEDOR').Value);
+          csPesquisaCNPJ.Value              := SQL.FieldByName('CNPJFORNECEDOR').Value;
           csPesquisaSTATUS.Value            := SQL.FieldByName('STATUSFORNECEDOR').Value;
           csPesquisaESTOQUEMINIMO.Value     := SQL.FieldByName('ESTOQUEMINIMO').Value;
           csPesquisaESTOQUEMAXIMO.Value     := SQL.FieldByName('ESTOQUEMAXIMO').Value;
