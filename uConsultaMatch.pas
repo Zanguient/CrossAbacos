@@ -69,6 +69,7 @@ type
     pbExportaFornecedor: TGauge;
     cds_MatchItensQUANTIDADE: TIntegerField;
     cds_MatchItensID_FORNECEDORNOVO: TIntegerField;
+    cds_MatchItensSTATUS: TBooleanField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -350,13 +351,15 @@ begin
         SQL.SQL.Add('	CAST(L.DATA_HORA AS DATE) AS DATAULTIMOLOTE,');
         SQL.SQL.Add('	MI.ATUALIZADO AS MATCH,');
         SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE,');
-        SQL.SQL.Add('	FN.ID AS ID_FORNECEDORNOVO');
+        SQL.SQL.Add('	FN.ID AS ID_FORNECEDORNOVO,');
+        SQL.SQL.Add('	PF.STATUS');
         SQL.SQL.Add('FROM MATCH M');
         SQL.SQL.Add('INNER JOIN MATCH_ITENS MI ON (M.ID = MI.ID_MATCH)');
         SQL.SQL.Add('INNER JOIN PRODUTO P ON (MI.ID_PRODUTO = P.ID)');
         SQL.SQL.Add('INNER JOIN FORNECEDOR FA ON (MI.ID_FORNECEDORANTERIOR = FA.ID)');
         SQL.SQL.Add('INNER JOIN FORNECEDOR FN ON (MI.ID_FORNECEDORNOVO = FN.ID)');
         SQL.SQL.Add('INNER JOIN LOTE L ON (MI.ID_ULTIMOLOTE = L.ID)');
+        SQL.SQL.Add('INNER JOIN PRODUTOFORNECEDOR PF ON (MI.ID_PRODUTO = PF.ID_PRODUTO) AND (MI.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR)');
         SQL.SQL.Add('WHERE 1 = 1');
         SQL.SQL.Add('AND M.ID = :IDMATCH');
         SQL.ParamByName('IDMATCH').DataType   := ftInteger;
@@ -399,6 +402,7 @@ begin
             cds_MatchItensESTANOMATCH.Value          := True;
             cds_MatchItensQUANTIDADE.Value           := SQL.Fields[10].Value;
             cds_MatchItensID_FORNECEDORNOVO.Value    := SQL.Fields[11].Value;
+            cds_MatchItensSTATUS.Value               := SQL.Fields[12].Value;
             cds_MatchItens.Post;
 
             if Length(Trim(ProdnoLote)) = 0 then
@@ -617,59 +621,61 @@ Begin
 
           if P.Count > 0 then begin
 
-            arrData[Linha,1]  := TPRODUTO(P.Itens[0]).SKU.Value; //CodigoProduto
-            arrData[Linha,2]  := ''; //CodigoProdutoPai
-            arrData[Linha,3]  := ''; //Codigobarras
-            arrData[Linha,4]  := ''; //CodigoFabricante
-            arrData[Linha,5]  := 'P'; //TipoProduto
-            arrData[Linha,6]  := TPRODUTO(P.Itens[0]).NOME.Value; //NomeProduto
-            arrData[Linha,7]  := ''; //Descricao
-            arrData[Linha,8]  := ''; //DescricaoNotaFiscal
-            arrData[Linha,9]  := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
-            arrData[Linha,10] := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
-            arrData[Linha,11] := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
-            arrData[Linha,12] := 'Normal'; //Grupo
+            arrData[Linha,1]    := TPRODUTO(P.Itens[0]).SKU.Value; //CodigoProduto
+            arrData[Linha,2]    := ''; //CodigoProdutoPai
+            arrData[Linha,3]    := ''; //Codigobarras
+            arrData[Linha,4]    := ''; //CodigoFabricante
+            arrData[Linha,5]    := 'P'; //TipoProduto
+            arrData[Linha,6]    := TPRODUTO(P.Itens[0]).NOME.Value; //NomeProduto
+            arrData[Linha,7]    := ''; //Descricao
+            arrData[Linha,8]    := ''; //DescricaoNotaFiscal
+            arrData[Linha,9]    := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
+            arrData[Linha,10]   := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
+            arrData[Linha,11]   := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
+            arrData[Linha,12]   := 'Normal'; //Grupo
             PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and status = True');
             if PF.Count > 0 then
               arrData[Linha,12] := 'Estoque Virtual'; //Grupo
-            arrData[Linha,13] := cds_MatchItensFORNECEDORNOVO.Value; //SubGrupo
-            arrData[Linha,14] := StringReplace(TPRODUTO(P.Itens[0]).PESO.asString, ',', '.', [rfReplaceAll]); //Peso
-            arrData[Linha,15] := ''; //Comprimento
-            arrData[Linha,16] := ''; //Largura
-            arrData[Linha,17] := ''; //Espessura
-            arrData[Linha,18] := TPRODUTO(P.Itens[0]).QUANTIDADE_EMBALAGEM.Value; //QtdePorEmbalagem
-            arrData[Linha,19] := TPRODUTO(P.Itens[0]).ESTOQUE_MINIMO.Value; //QtdeMinimaEstoque
-            arrData[Linha,20] := TPRODUTO(P.Itens[0]).ESTOQUE_MAXIMO.Value; //QtdeMaximaEstoque
-            arrData[Linha,21] := TPRODUTO(P.Itens[0]).UNIDADE_MEDIDA.Value; //UnidadeMedidaNome
-            arrData[Linha,22] := TPRODUTO(P.Itens[0]).UN.Value; //UnidadeMedidaAbrev
-            arrData[Linha,23] := TPRODUTO(P.Itens[0]).CODIGO_CF.Value; //CodigoCategoriaFiscal
-            arrData[Linha,24] := SoNumeros(TPRODUTO(P.Itens[0]).NCM.Value); //ClassificacaoFiscal
-            arrData[Linha,25] := ''; //DescritorSimples1
-            arrData[Linha,26] := ''; //DescritorSimples2
-            arrData[Linha,27] := ''; //DescritorSimples3
-            arrData[Linha,28] := ''; //DescritorPreDefinido1
-            arrData[Linha,29] := ''; //DescritorPreDefinido2
-            arrData[Linha,30] := ''; //DescritorPreDefinido3
-            arrData[Linha,31] := ''; //DescricaoComplementar1
-            arrData[Linha,32] := ''; //DescricaoComplementar2
-            arrData[Linha,33] := ''; //DescricaoComplementar3
-            arrData[Linha,34] := ''; //DescricaoComplementar4
-            arrData[Linha,35] := ''; //DescricaoComplementar5
-            arrData[Linha,36] := ''; //DescricaoComplementar6
-            arrData[Linha,37] := ''; //DescricaoComplementar7
-            arrData[Linha,38] := ''; //DescricaoComplementar8
-            arrData[Linha,39] := ''; //DescricaoComplementar9
-            arrData[Linha,40] := ''; //DescricaoComplementar10
-            arrData[Linha,41] := ''; //PrecoTabela1
-            arrData[Linha,42] := ''; //PrecoPromocao1
-            arrData[Linha,43] := ''; //InicioPromocao1
-            arrData[Linha,44] := ''; //TerminoPromocao1
-            arrData[Linha,45] := ''; //PrecoTabela2
-            arrData[Linha,46] := ''; //PrecoPromocao2
-            arrData[Linha,47] := ''; //InicioPromocao2
-            arrData[Linha,48] := ''; //TerminoPromocao2
-            arrData[Linha,49] := TPRODUTO(P.Itens[0]).DIAS_GARANTIA.Value; //DiasGarantia
-            arrData[Linha,50] := TPRODUTO(P.Itens[0]).PRAZO_ENTREGA.Value; //PrazoEntregaDias
+            arrData[Linha,13]   := 'Fora de Estoque Virtual';
+            if cds_MatchItensSTATUS.Value then
+              arrData[Linha,13] := cds_MatchItensFORNECEDORNOVO.Value; //SubGrupo
+            arrData[Linha,14]   := StringReplace(TPRODUTO(P.Itens[0]).PESO.asString, ',', '.', [rfReplaceAll]); //Peso
+            arrData[Linha,15]   := ''; //Comprimento
+            arrData[Linha,16]   := ''; //Largura
+            arrData[Linha,17]   := ''; //Espessura
+            arrData[Linha,18]   := TPRODUTO(P.Itens[0]).QUANTIDADE_EMBALAGEM.Value; //QtdePorEmbalagem
+            arrData[Linha,19]   := TPRODUTO(P.Itens[0]).ESTOQUE_MINIMO.Value; //QtdeMinimaEstoque
+            arrData[Linha,20]   := TPRODUTO(P.Itens[0]).ESTOQUE_MAXIMO.Value; //QtdeMaximaEstoque
+            arrData[Linha,21]   := TPRODUTO(P.Itens[0]).UNIDADE_MEDIDA.Value; //UnidadeMedidaNome
+            arrData[Linha,22]   := TPRODUTO(P.Itens[0]).UN.Value; //UnidadeMedidaAbrev
+            arrData[Linha,23]   := TPRODUTO(P.Itens[0]).CODIGO_CF.Value; //CodigoCategoriaFiscal
+            arrData[Linha,24]   := SoNumeros(TPRODUTO(P.Itens[0]).NCM.Value); //ClassificacaoFiscal
+            arrData[Linha,25]   := ''; //DescritorSimples1
+            arrData[Linha,26]   := ''; //DescritorSimples2
+            arrData[Linha,27]   := ''; //DescritorSimples3
+            arrData[Linha,28]   := ''; //DescritorPreDefinido1
+            arrData[Linha,29]   := ''; //DescritorPreDefinido2
+            arrData[Linha,30]   := ''; //DescritorPreDefinido3
+            arrData[Linha,31]   := ''; //DescricaoComplementar1
+            arrData[Linha,32]   := ''; //DescricaoComplementar2
+            arrData[Linha,33]   := ''; //DescricaoComplementar3
+            arrData[Linha,34]   := ''; //DescricaoComplementar4
+            arrData[Linha,35]   := ''; //DescricaoComplementar5
+            arrData[Linha,36]   := ''; //DescricaoComplementar6
+            arrData[Linha,37]   := ''; //DescricaoComplementar7
+            arrData[Linha,38]   := ''; //DescricaoComplementar8
+            arrData[Linha,39]   := ''; //DescricaoComplementar9
+            arrData[Linha,40]   := ''; //DescricaoComplementar10
+            arrData[Linha,41]   := ''; //PrecoTabela1
+            arrData[Linha,42]   := ''; //PrecoPromocao1
+            arrData[Linha,43]   := ''; //InicioPromocao1
+            arrData[Linha,44]   := ''; //TerminoPromocao1
+            arrData[Linha,45]   := ''; //PrecoTabela2
+            arrData[Linha,46]   := ''; //PrecoPromocao2
+            arrData[Linha,47]   := ''; //InicioPromocao2
+            arrData[Linha,48]   := ''; //TerminoPromocao2
+            arrData[Linha,49]   := TPRODUTO(P.Itens[0]).DIAS_GARANTIA.Value; //DiasGarantia
+            arrData[Linha,50]   := TPRODUTO(P.Itens[0]).PRAZO_ENTREGA.Value; //PrazoEntregaDias
             if cds_MatchItensID_FORNECEDORNOVO.Value > 0 then begin
               F.SelectList('id = ' + cds_MatchItensID_FORNECEDORNOVO.AsString);
               if F.Count > 0 then
@@ -705,7 +711,7 @@ Begin
         Range.Value         := arrData;
 
         PLANILHA.Columns.AutoFit;
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo,18);
 
         DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', DirArquivo);
 

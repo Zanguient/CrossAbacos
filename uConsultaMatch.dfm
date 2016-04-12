@@ -2130,5 +2130,8 @@ object frmConsultaMatch: TfrmConsultaMatch
     object cds_MatchItensID_FORNECEDORNOVO: TIntegerField
       FieldName = 'ID_FORNECEDORNOVO'
     end
+    object cds_MatchItensSTATUS: TBooleanField
+      FieldName = 'STATUS'
+    end
   end
 end

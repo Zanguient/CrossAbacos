@@ -236,7 +236,7 @@ Begin
 
         PLANILHA.Columns.AutoFit;
 
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo,18);
 
         DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
       end else

@@ -12,7 +12,7 @@ object FrmArquivoProdutos: TFrmArquivoProdutos
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poMainFormCenter
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
