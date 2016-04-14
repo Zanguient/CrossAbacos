@@ -77,7 +77,7 @@ Begin
     end;
   end;
 
-  DirArquivo := DirArquivo + '\Produtos.xlsx';
+  DirArquivo := DirArquivo + '\Produtos.xls';
 
   if FileExists(DirArquivo) then begin
     DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
@@ -152,7 +152,7 @@ Begin
 
         PLANILHA.Columns.AutoFit;
 
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo);
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo, 18);
 
       end else
         DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Produtos, Verifique!');

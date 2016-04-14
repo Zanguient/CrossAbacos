@@ -157,7 +157,7 @@ Begin
     end;
   end;
 
-  DirArquivo := DirArquivo + '\Estoque.xlsx';
+  DirArquivo := DirArquivo + '\Estoque.xls';
 
   if FileExists(DirArquivo) then begin
     DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
@@ -236,7 +236,7 @@ Begin
 
         PLANILHA.Columns.AutoFit;
 
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo,18);
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo, 18);
 
         DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
       end else

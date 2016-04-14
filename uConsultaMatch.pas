@@ -711,7 +711,7 @@ Begin
         Range.Value         := arrData;
 
         PLANILHA.Columns.AutoFit;
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo,18);
+        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo, 18);
 
         DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', DirArquivo);
 
