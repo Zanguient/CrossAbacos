@@ -104,6 +104,7 @@ Begin
       Consulta.SQL.Add('INNER JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO AND P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR)');
       Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (PF.ID_FORNECEDOR = F.ID)');
       Consulta.SQL.Add('WHERE 1 = 1');
+      Consulta.SQL.Add('AND PF.STATUS');
 
       case rgSaldoDisponivel.ItemIndex of
         0 : Consulta.SQL.Add('AND PF.QUANTIDADE > 0');//Com Saldo
