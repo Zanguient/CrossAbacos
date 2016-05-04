@@ -229,3 +229,17 @@ CREATE TABLE usuario_permissao
       ON UPDATE CASCADE ON DELETE CASCADE
 
 );
+
+////////////////////////////////////////////////////
+///////Daqui em diante SQL da precificação//////////
+////////////////////////////////////////////////////
+
+CREATE TABLE IF NOT EXISTS familia (
+  id serial NOT NULL,
+  descricao varchar(100) not null,
+  margem numeric(18,2) not null,
+  autorizadopor varchar(100) not null,
+  dataautorizado timestamp without time zone NOT NULL,  
+  CONSTRAINT pk_familia_id PRIMARY KEY (id));
+
+
