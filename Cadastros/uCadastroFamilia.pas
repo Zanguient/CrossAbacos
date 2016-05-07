@@ -6,71 +6,66 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Vcl.StdCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Mask,
-  Vcl.DBCtrls;
+  Vcl.DBCtrls, System.TypInfo, System.Win.ComObj, Vcl.Samples.Gauges;
 
 type
   TFrmCadastroFamilia = class(TForm)
     pnVisualizacao: TPanel;
     gdPesquisa: TDBGrid;
     pnBotoesVisualizacao: TPanel;
-    btFechar: TSpeedButton;
-    btAlterar: TSpeedButton;
-    btNovo: TSpeedButton;
-    btExcluir: TSpeedButton;
-    pnAjusteBotoes1: TPanel;
     pnPequisa: TPanel;
     btPesquisar: TSpeedButton;
     edPesquisa: TEdit;
     Panel2: TPanel;
-    dsPesquisa: TDataSource;
-    csPesquisa: TClientDataSet;
-    csPesquisaCODIGO: TIntegerField;
-    csPesquisaDESCRICAO: TStringField;
     pnEdicao: TPanel;
     pnBotoesEdicao: TPanel;
-    btGravar: TSpeedButton;
-    btCancelar: TSpeedButton;
-    pnAjusteBotoes2: TPanel;
+    ds_Familias: TDataSource;
+    cds_Familias: TClientDataSet;
+    cds_FamiliasID: TIntegerField;
+    cds_FamiliasDESCRICAO: TStringField;
+    cds_FamiliasMARGEM: TCurrencyField;
+    cds_FamiliasAUTORIZADOPOR: TStringField;
+    cds_FamiliasDATAAUTORIZADO: TDateTimeField;
+    gpBotoes: TGridPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
+    btExcluir: TSpeedButton;
+    btFechar: TSpeedButton;
+    btAlterar: TSpeedButton;
+    btNovo: TSpeedButton;
     Panel1: TPanel;
     Panel3: TPanel;
-    csPesquisaCODIGOABACOS: TIntegerField;
-    csPesquisaCODIGOMARGEM: TIntegerField;
-    csPesquisaCROSSMINIMA: TCurrencyField;
-    csPesquisaCROSSMAXIMA: TCurrencyField;
-    csPesquisaFISICOMINIMA: TCurrencyField;
-    csPesquisaFISICOMAXIMA: TCurrencyField;
-    csPesquisaPERSONALIZADAMINIMA: TCurrencyField;
-    csPesquisaPERSONALIZADAMAXIMA: TCurrencyField;
-    Panel4: TPanel;
-    edDescricao: TDBEdit;
-    Label7: TLabel;
-    Panel5: TPanel;
-    edCodigoMargem: TDBEdit;
+    GridPanel1: TGridPanel;
+    pnUsuarioEsquerda: TPanel;
     Label1: TLabel;
-    dsMargens: TDataSource;
-    csMargens: TClientDataSet;
-    csMargensCODIGO: TIntegerField;
-    csMargensDESCRICAO: TStringField;
-    csMargensCROSSMINIMA: TCurrencyField;
-    csMargensCROSSMAXIMA: TCurrencyField;
-    csMargensFISICOMINIMA: TCurrencyField;
-    csMargensFISICOMAXIMA: TCurrencyField;
-    csMargensPERSONALIZADAMINIMA: TCurrencyField;
-    csMargensPERSONALIZADAMAXIMA: TCurrencyField;
-    Panel6: TPanel;
-    gdMargens: TDBGrid;
-    Panel7: TPanel;
     Label2: TLabel;
+    edAutorizadoPor: TEdit;
+    edDescricao: TEdit;
+    pnUsuarioDireita: TPanel;
+    Label3: TLabel;
+    edMargem: TEdit;
+    btAtualizar: TSpeedButton;
+    btExportar: TSpeedButton;
+    OpenDialog1: TOpenDialog;
+    pbAtualiza: TGauge;
+    GridPanel2: TGridPanel;
+    Panel4: TPanel;
+    btCancelar: TSpeedButton;
+    Panel5: TPanel;
+    btGravar: TSpeedButton;
     procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure csPesquisaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
-    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btGravarClick(Sender: TObject);
     procedure btCancelarClick(Sender: TObject);
     procedure btAlterarClick(Sender: TObject);
-    procedure gdMargensDblClick(Sender: TObject);
+    procedure btNovoClick(Sender: TObject);
+    procedure btExcluirClick(Sender: TObject);
+    procedure gdPesquisaTitleClick(Column: TColumn);
+    procedure btExportarClick(Sender: TObject);
+    procedure btAtualizarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -78,6 +73,8 @@ type
     procedure InvertePaineis;
     procedure Cancelar;
     procedure Filtrar;
+    procedure AtualizarEdits(Limpar : Boolean);
+    procedure Atualizar;
   end;
 
 var
@@ -86,29 +83,215 @@ var
 implementation
 
 uses
+  uDomains,
   uConstantes,
   uFWConnection,
   uBeanFamilia,
-  uBeanMargem,
   uMensagem,
   uFuncoes;
 
 {$R *.dfm}
 
+procedure TFrmCadastroFamilia.AtualizarEdits(Limpar: Boolean);
+begin
+  if Limpar then begin
+    edDescricao.Clear;
+    edAutorizadoPor.Clear;
+    edMargem.Clear;
+    btGravar.Tag  := 0;
+  end else begin
+    edDescricao.Text      := cds_FamiliasDESCRICAO.Value;
+    edMargem.Text         := cds_FamiliasMARGEM.AsString;
+    edAutorizadoPor.Text  := cds_FamiliasAUTORIZADOPOR.Value;
+    btGravar.Tag          := cds_FamiliasID.Value;
+  end;
+end;
+
+procedure TFrmCadastroFamilia.Atualizar;
+const
+  xlCellTypeLastCell = $0000000B;
+Var
+  FWC     : TFWConnection;
+  F       : TFAMILIA;
+  List    : TPropList;
+  Arquivo : String;
+  Excel   : OleVariant;
+  arrData,
+  Valor   : Variant;
+  vrow,
+  vcol,
+  Count,
+  I,
+  J       : Integer;
+begin
+  if OpenDialog1.Execute then begin
+    if Pos(ExtractFileExt(OpenDialog1.FileName), '|.xls|.xlsx|') > 0 then begin
+      Arquivo := OpenDialog1.FileName;
+
+      if not FileExists(Arquivo) then begin
+        DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+        Exit;
+      end;
+
+      // Cria Excel- OLE Object
+      Excel                     := CreateOleObject('Excel.Application');
+      FWC                       := TFWConnection.Create;
+      F                         := TFAMILIA.Create(FWC);
+      pbAtualiza.Visible        := True;
+      pbAtualiza.Progress       := 0;
+
+      DisplayMsg(MSG_WAIT, 'Buscando dados do arquivo Excel!');
+      try
+        FWC.StartTransaction;
+        try
+          // Esconde Excel
+          Excel.Visible  := False;
+          // Abre o Workbook
+          Excel.Workbooks.Open(Arquivo);
+
+          Excel.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+          vrow                                  := Excel.ActiveCell.Row;
+          vcol                                  := Excel.ActiveCell.Column;
+          pbAtualiza.MaxValue                   := vrow;
+          arrData                               := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
+
+          F.DESCRICAO.excelTitulo               := 'Descrição';
+          F.MARGEM.excelTitulo                  := '(%) Margem';
+
+          F.buscaIndicesExcel(Arquivo, Excel);
+
+          Count                                           := GetPropList(F.ClassInfo, tkProperties, @List, False);
+          for I := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(F, List[I]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(F, List[I]^.Name)).excelIndice <= 0) then begin
+              DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Segue colunas necessárias: ' + sLineBreak +
+                                                                                    'Descrição, ' + sLineBreak +
+                                                                                    '(%) Margem');
+              Exit;
+            end;
+          end;
+
+          for I := 2 to vrow do begin
+            for J := 0 to Pred(Count) do begin
+              if (TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).excelIndice > 0) then begin
+                Valor                                   := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).excelIndice]);
+                if Valor <> '' then
+                  TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).asVariant := Valor;
+              end;
+            end;
+
+            F.AUTORIZADOPOR.Value   := USUARIO.NOME;
+            F.DATAAUTORIZADO.Value  := Now;
+
+            F.SelectList('DESCRICAO = ' + F.DESCRICAO.asSQL);
+            if F.Count > 0 then begin
+              F.ID.Value    := TFAMILIA(F.Itens[0]).ID.Value;
+              F.Update;
+            end else
+              F.Insert;
+            pbAtualiza.Progress     := I;
+            Application.ProcessMessages;
+          end;
+
+          FWC.Commit;
+
+          DisplayMsg(MSG_OK, 'Famílias atualizadas com Sucesso!');
+
+        except
+          on E : Exception do begin
+            FWC.Rollback;
+            DisplayMsg(MSG_ERR, 'Erro ao atualizar Famílias!', '', E.Message);
+            Exit;
+          end;
+        end;
+      finally
+        arrData := Unassigned;
+        pbAtualiza.Visible  := False;
+        pbAtualiza.Progress := 0;
+        if not VarIsEmpty(Excel) then begin
+          Excel.Quit;
+          Excel := Unassigned;
+        end;
+        FreeAndNil(F);
+        FreeAndNil(FWC);
+      end;
+    end;
+  end;
+end;
+
 procedure TFrmCadastroFamilia.btAlterarClick(Sender: TObject);
 begin
-  if not csPesquisa.IsEmpty then begin
-    csPesquisa.Edit;
-    if csPesquisaCODIGOMARGEM.Value > 0 then
-      csMargens.Locate('CODIGO', csPesquisaCODIGOMARGEM.Value, []);
+  if not cds_Familias.IsEmpty then begin
+    AtualizarEdits(False);
     InvertePaineis;
-    AutoSizeDBGrid(gdMargens);
+  end;
+end;
+
+procedure TFrmCadastroFamilia.btAtualizarClick(Sender: TObject);
+begin
+  if btAtualizar.Tag = 0 then begin
+    btAtualizar.Tag := 1;
+    try
+      Atualizar;
+      CarregaDados;
+    finally
+      btAtualizar.Tag := 0;
+    end;
   end;
 end;
 
 procedure TFrmCadastroFamilia.btCancelarClick(Sender: TObject);
 begin
   Cancelar;
+end;
+
+procedure TFrmCadastroFamilia.btExcluirClick(Sender: TObject);
+Var
+  FWC : TFWConnection;
+  F   : TFAMILIA;
+begin
+  if not cds_Familias.IsEmpty then begin
+
+    DisplayMsg(MSG_CONF, 'Excluir a Família Selecionada?');
+
+    if ResultMsgModal = mrYes then begin
+
+      try
+
+        FWC := TFWConnection.Create;
+        F := TFAMILIA.Create(FWC);
+        try
+
+          F.ID.Value := cds_FamiliasID.Value;
+          F.Delete;
+
+          FWC.Commit;
+
+          cds_Familias.Delete;
+
+        except
+          on E : Exception do begin
+            FWC.Rollback;
+            DisplayMsg(MSG_ERR, 'Erro ao Excluir Família, Verifique!', '', E.Message);
+          end;
+        end;
+      finally
+        FreeAndNil(F);
+        FreeAndNil(FWC);
+      end;
+    end;
+  end;
+end;
+
+procedure TFrmCadastroFamilia.btExportarClick(Sender: TObject);
+begin
+  if btExportar.Tag = 0 then begin
+    btExportar.Tag := 1;
+    try
+      ExpXLS(cds_Familias, Caption + '.xlsx');
+    finally
+      btExportar.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TFrmCadastroFamilia.btFecharClick(Sender: TObject);
@@ -122,25 +305,45 @@ Var
   F   : TFAMILIA;
 begin
 
-  //Para Atualizar os Dados no ClientDataset
-  Perform(WM_NEXTDLGCTL,0,0);
-
   FWC := TFWConnection.Create;
   F   := TFAMILIA.Create(FWC);
 
   try
     try
-      if csPesquisa.State in [dsEdit] then begin
 
-        F.CODIGO.Value        := csPesquisaCODIGO.Value;
-        F.CODIGOMARGEM.Value  := csPesquisaCODIGOMARGEM.Value;
-        F.Update;
-
-        FWC.Commit;
-
-        csPesquisa.Post;
-        InvertePaineis;
+      if Length(Trim(edDescricao.Text)) = 0 then begin
+        DisplayMsg(MSG_WAR, 'Descrição não informada, Verifique!');
+        if edDescricao.CanFocus then
+          edDescricao.SetFocus;
+        Exit;
       end;
+
+      if StrToCurrDef(edMargem.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Margem inválida, Verifique!');
+        if edMargem.CanFocus then
+          edMargem.SetFocus;
+        Exit;
+      end;
+
+      F.DESCRICAO.Value     := edDescricao.Text;
+      F.MARGEM.Value        := StrToCurrDef(edMargem.Text,0.00);
+      F.AUTORIZADOPOR.Value := edAutorizadoPor.Text;
+      F.DATAAUTORIZADO.Value:= Date;
+
+      if (Sender as TSpeedButton).Tag > 0 then begin
+        F.ID.Value          := (Sender as TSpeedButton).Tag;
+        F.Update;
+      end else begin
+        F.ID.isNull := True;
+        F.Insert;
+      end;
+
+      FWC.Commit;
+
+      InvertePaineis;
+
+      CarregaDados;
+
     Except
       on E : Exception do begin
         FWC.Rollback;
@@ -153,74 +356,52 @@ begin
   end;
 end;
 
+procedure TFrmCadastroFamilia.btNovoClick(Sender: TObject);
+begin
+  AtualizarEdits(True);
+  InvertePaineis;
+end;
+
 procedure TFrmCadastroFamilia.Cancelar;
 begin
-  if csPesquisa.State in [dsInsert, dsEdit] then
-    csPesquisa.Cancel;
+  if cds_Familias.State in [dsInsert, dsEdit] then
+    cds_Familias.Cancel;
   InvertePaineis;
 end;
 
 procedure TFrmCadastroFamilia.CarregaDados;
 Var
-  FWC : TFWConnection;
-  F   : TFAMILIA;
-  M   : TMARGEM;
-  I   : Integer;
+  FWC     : TFWConnection;
+  F       : TFAMILIA;
+  I,
+  Codigo  : Integer;
 begin
 
   try
     FWC := TFWConnection.Create;
     F  := TFAMILIA.Create(FWC);
-    M  := TMARGEM.Create(FWC);
+    cds_Familias.DisableControls;
     try
 
-      csPesquisa.EmptyDataSet;
+      Codigo := cds_FamiliasID.Value;
 
-      F.SelectList('', 'CODIGO');
+      cds_Familias.EmptyDataSet;
+
+      F.SelectList('', 'ID');
       if F.Count > 0 then begin
         for I := 0 to F.Count -1 do begin
-          csPesquisa.Append;
-          csPesquisaCODIGO.Value              := TFAMILIA(F.Itens[I]).CODIGO.Value;
-          csPesquisaDESCRICAO.Value           := TFAMILIA(F.Itens[I]).DESCRICAO.Value;
-          csPesquisaCODIGOABACOS.Value        := TFAMILIA(F.Itens[I]).CODIGOABACOS.Value;
-          csPesquisaCODIGOMARGEM.Value        := TFAMILIA(F.Itens[I]).CODIGOMARGEM.Value;
-          csPesquisaCROSSMINIMA.Value         := 0.00;
-          csPesquisaCROSSMAXIMA.Value         := 0.00;
-          csPesquisaFISICOMINIMA.Value        := 0.00;
-          csPesquisaFISICOMAXIMA.Value        := 0.00;
-          csPesquisaPERSONALIZADAMINIMA.Value := 0.00;
-          csPesquisaPERSONALIZADAMAXIMA.Value := 0.00;
-
-          M.SelectList('CODIGO = ' + TFAMILIA(F.Itens[0]).CODIGOMARGEM.asString);
-          if M.Count > 0 then begin
-            csPesquisaCROSSMINIMA.Value         := TMARGEM(M.Itens[0]).MARGEMCROSSMINIMA.Value;
-            csPesquisaCROSSMAXIMA.Value         := TMARGEM(M.Itens[0]).MARGEMCROSSMAXIMA.Value;
-            csPesquisaFISICOMINIMA.Value        := TMARGEM(M.Itens[0]).MARGEMFISICOMINIMA.Value;
-            csPesquisaFISICOMAXIMA.Value        := TMARGEM(M.Itens[0]).MARGEMFISICOMAXIMA.Value;
-            csPesquisaPERSONALIZADAMINIMA.Value := TMARGEM(M.Itens[0]).MARGEMPERSONALIZADAMINIMA.Value;
-            csPesquisaPERSONALIZADAMAXIMA.Value := TMARGEM(M.Itens[0]).MARGEMPERSONALIZADAMAXIMA.Value;
-          end;
-          csPesquisa.Post;
+          cds_Familias.Append;
+          cds_FamiliasID.Value                := TFAMILIA(F.Itens[I]).ID.Value;
+          cds_FamiliasDESCRICAO.Value         := TFAMILIA(F.Itens[I]).DESCRICAO.Value;
+          cds_FamiliasMARGEM.Value            := TFAMILIA(F.Itens[I]).MARGEM.Value;
+          cds_FamiliasAUTORIZADOPOR.Value     := TFAMILIA(F.Itens[I]).AUTORIZADOPOR.Value;
+          cds_FamiliasDATAAUTORIZADO.Value    := TFAMILIA(F.Itens[I]).DATAAUTORIZADO.Value;
+          cds_Familias.Post;
         end;
       end;
 
-      csMargens.EmptyDataSet;
-
-      M.SelectList('', 'CODIGO');
-      if M.Count > 0 then begin
-        for I := 0 to M.Count -1 do begin
-          csMargens.Append;
-          csMargensCODIGO.Value               := TMARGEM(M.Itens[I]).CODIGO.Value;
-          csMargensDESCRICAO.Value            := TMARGEM(M.Itens[I]).DESCRICAO.Value;
-          csMargensCROSSMINIMA.Value          := TMARGEM(M.Itens[I]).MARGEMCROSSMINIMA.Value;
-          csMargensCROSSMAXIMA.Value          := TMARGEM(M.Itens[I]).MARGEMCROSSMAXIMA.Value;
-          csMargensFISICOMINIMA.Value         := TMARGEM(M.Itens[I]).MARGEMFISICOMINIMA.Value;
-          csMargensFISICOMAXIMA.Value         := TMARGEM(M.Itens[I]).MARGEMFISICOMAXIMA.Value;
-          csMargensPERSONALIZADAMINIMA.Value  := TMARGEM(M.Itens[I]).MARGEMPERSONALIZADAMINIMA.Value;
-          csMargensPERSONALIZADAMAXIMA.Value  := TMARGEM(M.Itens[I]).MARGEMPERSONALIZADAMAXIMA.Value;
-          csMargens.Post;
-        end;
-      end;
+      if Codigo > 0 then
+        cds_Familias.Locate('ID', Codigo, []);
 
     except
       on E : Exception do begin
@@ -229,8 +410,8 @@ begin
     end;
 
   finally
+    cds_Familias.EnableControls;
     FreeAndNil(F);
-    FreeAndNil(M);
     FreeAndNil(FWC);
   end;
 end;
@@ -253,18 +434,13 @@ end;
 
 procedure TFrmCadastroFamilia.Filtrar;
 begin
-  csPesquisa.Filtered := False;
-  csPesquisa.Filtered := Length(edPesquisa.Text) > 0;
+  cds_Familias.Filtered := False;
+  cds_Familias.Filtered := Length(edPesquisa.Text) > 0;
 end;
 
 procedure TFrmCadastroFamilia.FormCreate(Sender: TObject);
 begin
-  Self.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.ClientWidth  := Application.MainForm.ClientWidth;
-  Self.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.Width        := Application.MainForm.ClientWidth;
-  Self.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
-  Self.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+  AjustaForm(Self);
 end;
 
 procedure TFrmCadastroFamilia.FormKeyDown(Sender: TObject; var Key: Word;
@@ -290,50 +466,31 @@ begin
       end;
       VK_F5 : CarregaDados;
       VK_UP : begin
-        if not csPesquisa.IsEmpty then begin
-          if csPesquisa.RecNo > 1 then
-            csPesquisa.Prior;
+        if not cds_Familias.IsEmpty then begin
+          if cds_Familias.RecNo > 1 then
+            cds_Familias.Prior;
         end;
       end;
       VK_DOWN : begin
-        if not csPesquisa.IsEmpty then begin
-          if csPesquisa.RecNo < csPesquisa.RecordCount then
-            csPesquisa.Next;
-        end;
-      end else begin
-        if not edPesquisa.Focused then begin
-          if edPesquisa.CanFocus then begin
-            edPesquisa.SetFocus;
-          end;
+        if not cds_Familias.IsEmpty then begin
+          if cds_Familias.RecNo < cds_Familias.RecordCount then
+            cds_Familias.Next;
         end;
       end;
     end;
   end;
 end;
 
-procedure TFrmCadastroFamilia.FormResize(Sender: TObject);
-begin
-  pnAjusteBotoes1.Width := ((pnBotoesVisualizacao.ClientWidth div 2) - (btAlterar.Left ));
-  pnAjusteBotoes2.Width := ((pnBotoesVisualizacao.ClientWidth div 2) - btGravar.Width) - 3;
-end;
-
 procedure TFrmCadastroFamilia.FormShow(Sender: TObject);
 begin
-  csPesquisa.CreateDataSet;
-  csMargens.CreateDataSet;
+  cds_Familias.CreateDataSet;
   CarregaDados;
   AutoSizeDBGrid(gdPesquisa);
 end;
 
-procedure TFrmCadastroFamilia.gdMargensDblClick(Sender: TObject);
+procedure TFrmCadastroFamilia.gdPesquisaTitleClick(Column: TColumn);
 begin
-  csPesquisaCODIGOMARGEM.Value        := csMargensCODIGO.Value;
-  csPesquisaCROSSMINIMA.Value         := csMargensCROSSMINIMA.Value;
-  csPesquisaCROSSMAXIMA.Value         := csMargensCROSSMAXIMA.Value;
-  csPesquisaFISICOMINIMA.Value        := csMargensFISICOMINIMA.Value;
-  csPesquisaFISICOMAXIMA.Value        := csMargensFISICOMAXIMA.Value;
-  csPesquisaPERSONALIZADAMINIMA.Value := csMargensPERSONALIZADAMINIMA.Value;
-  csPesquisaPERSONALIZADAMAXIMA.Value := csMargensPERSONALIZADAMAXIMA.Value;
+  OrdenarGrid(Column);
 end;
 
 procedure TFrmCadastroFamilia.InvertePaineis;

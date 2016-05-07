@@ -2,28 +2,29 @@ unit uBeanFamilia;
 
 interface
 
-uses
-  uDomains,
-  uFWPersistence;
+uses uFWPersistence, uDomains;
 
 type
   TFAMILIA = class(TFWPersistence)
   private
+    FAUTORIZADOPOR: TFieldString;
+    FMARGEM: TFieldCurrency;
+    FDATAAUTORIZADO: TFieldDateTime;
     FDESCRICAO: TFieldString;
-    FCODIGO: TFieldInteger;
-    FCODIGOMARGEM: TFieldInteger;
-    FCODIGOABACOS: TFieldInteger;
-    procedure SetCODIGO(const Value: TFieldInteger);
-    procedure SetCODIGOMARGEM(const Value: TFieldInteger);
+    FID: TFieldInteger;
+    procedure SetAUTORIZADOPOR(const Value: TFieldString);
+    procedure SetDATAAUTORIZADO(const Value: TFieldDateTime);
     procedure SetDESCRICAO(const Value: TFieldString);
-    procedure SetCODIGOABACOS(const Value: TFieldInteger);
+    procedure SetID(const Value: TFieldInteger);
+    procedure SetMARGEM(const Value: TFieldCurrency);
   protected
     procedure InitInstance; override;
   published
-    property CODIGO       : TFieldInteger   read  FCODIGO       write SetCODIGO;
-    property CODIGOABACOS : TFieldInteger   read  FCODIGOABACOS write SetCODIGOABACOS;
-    property DESCRICAO    : TFieldString    read  FDESCRICAO    write SetDESCRICAO;
-    property CODIGOMARGEM : TFieldInteger   read  FCODIGOMARGEM write SetCODIGOMARGEM;
+    property ID             : TFieldInteger read FID write SetID;
+    property DESCRICAO      : TFieldString read FDESCRICAO write SetDESCRICAO;
+    property MARGEM         : TFieldCurrency read FMARGEM write SetMARGEM;
+    property AUTORIZADOPOR  : TFieldString read FAUTORIZADOPOR write SetAUTORIZADOPOR;
+    property DATAAUTORIZADO : TFieldDateTime read FDATAAUTORIZADO write SetDATAAUTORIZADO;
   end;
 
 implementation
@@ -34,31 +35,40 @@ procedure TFAMILIA.InitInstance;
 begin
   inherited;
 
-  FCODIGO.isPK          := True;
+  FID.isPK                  := True;
 
-  FDESCRICAO.isNotNull  := True;
+  FDESCRICAO.isNotNull      := True;
+  FMARGEM.isNotNull         := True;
+  FAUTORIZADOPOR.isNotNull  := True;
+  FDATAAUTORIZADO.isNotNull := True;
 
-  FDESCRICAO.Size       := 100;
+  FDESCRICAO.Size           := 100;
+  FAUTORIZADOPOR.Size       := 100;
 end;
 
-procedure TFAMILIA.SetCODIGO(const Value: TFieldInteger);
+procedure TFAMILIA.SetAUTORIZADOPOR(const Value: TFieldString);
 begin
-  FCODIGO := Value;
+  FAUTORIZADOPOR := Value;
 end;
 
-procedure TFAMILIA.SetCODIGOABACOS(const Value: TFieldInteger);
+procedure TFAMILIA.SetDATAAUTORIZADO(const Value: TFieldDateTime);
 begin
-  FCODIGOABACOS := Value;
-end;
-
-procedure TFAMILIA.SetCODIGOMARGEM(const Value: TFieldInteger);
-begin
-  FCODIGOMARGEM := Value;
+  FDATAAUTORIZADO := Value;
 end;
 
 procedure TFAMILIA.SetDESCRICAO(const Value: TFieldString);
 begin
   FDESCRICAO := Value;
+end;
+
+procedure TFAMILIA.SetID(const Value: TFieldInteger);
+begin
+  FID := Value;
+end;
+
+procedure TFAMILIA.SetMARGEM(const Value: TFieldCurrency);
+begin
+  FMARGEM := Value;
 end;
 
 end.

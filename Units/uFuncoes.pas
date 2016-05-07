@@ -12,7 +12,11 @@ uses
   DateUtils,
   Winapi.Windows,
   Vcl.Menus,
-  Vcl.Forms;
+  Vcl.Forms,
+  Datasnap.DBClient,
+  Data.DB,
+  Vcl.Graphics,
+  System.Win.ComObj;
 
   procedure CarregarConfigLocal;
   procedure CarregaArrayMenus(Menu : TMainMenu);
@@ -21,9 +25,11 @@ uses
   procedure AutoSizeDBGrid(const DBGrid: TDBGrid);
   procedure GerarLoteImportacao;
   procedure AjustaForm(Form : TForm);
+  procedure OrdenarGrid(Column: TColumn);
+  procedure ExpXLS(DataSet: TDataSet; NomeArq: string);
   function ValidaUsuario(Email, Senha : String) : Boolean;
   function MD5(Texto : String): String;
-  Function Criptografa(Texto : String; Tipo : String) : String;
+  function Criptografa(Texto : String; Tipo : String) : String;
   function SoNumeros(Texto: String): String;
   function CalculaPercentualDiferenca(ValorAnterior, ValorNovo : Currency) : Currency;
   function StrZero(Zeros : string; Quant : Integer): string;
@@ -179,6 +185,111 @@ begin
   Form.Width        := Application.MainForm.ClientWidth;
   Form.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
   Form.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+end;
+
+procedure OrdenarGrid(Column: TColumn);
+var
+  Indice    : string;
+  Existe    : Boolean;
+  I         : Integer;
+  CDS_idx   : TClientDataSet;
+  DB_GRID   : TDBGrid;
+  C         : TColumn;
+begin
+
+  if Column.Grid.DataSource.DataSet is TClientDataSet then begin
+
+    CDS_idx := TClientDataSet(Column.Grid.DataSource.DataSet);
+
+    if CDS_idx.IndexFieldNames = Column.FieldName then begin
+
+      Indice := AnsiUpperCase(Column.FieldName+'_INV');
+
+      Existe  := False;
+      For I := 0 to Pred(CDS_idx.IndexDefs.Count) do begin
+        if AnsiUpperCase(CDS_idx.IndexDefs[I].Name) = Indice then begin
+          Existe := True;
+          Break;
+        end;
+      end;
+
+      if not Existe then
+        with CDS_idx.IndexDefs.AddIndexDef do begin
+          Name := indice;
+          Fields := Column.FieldName;
+          Options := [ixDescending];
+        end;
+      CDS_idx.IndexName := Indice;
+    end else
+      CDS_idx.IndexFieldNames := Column.FieldName;
+
+    if Column.Grid is TDBGrid then begin
+      DB_GRID := TDBGrid(Column.Grid);
+      for I := 0 to DB_GRID.Columns.Count - 1 do begin
+        C := DB_GRID.Columns[I];
+        if Column <> C then begin
+          if C.Title.Font.Color <> clWindowText then
+            C.Title.Font.Color := clWindowText;
+        end;
+      end;
+      Column.Title.Font.Color := clBlue;
+    end;
+  end;
+end;
+
+procedure ExpXLS(DataSet: TDataSet; NomeArq: string);
+var
+  ExcApp: OleVariant;
+  I,
+  L : Integer;
+  VarNomeArq : String;
+begin
+
+  DataSet.DisableControls;
+
+  try
+
+    if DataSet.IsEmpty then
+      Exit;
+
+    VarNomeArq := DirArquivosExcel + FormatDateTime('yyyymmdd', Date) + '\' + NomeArq;
+
+    if not DirectoryExists(ExtractFilePath(VarNomeArq)) then
+      ForceDirectories(ExtractFilePath(VarNomeArq));
+
+    if FileExists(VarNomeArq) then
+      DeleteFile(PChar(VarNomeArq));
+
+    ExcApp := CreateOleObject('Excel.Application');
+    ExcApp.Visible := True;
+    ExcApp.WorkBooks.Add;
+    DataSet.First;
+    L := 1;
+    DataSet.First;
+    while not DataSet.Eof do begin
+      if L = 1 then begin
+        for I := 0 to DataSet.Fields.Count - 1 do begin
+          if DataSet.Fields[i].Visible then begin
+            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Bold  := True;
+            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Color := clBlue;
+            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1]            := DataSet.Fields[I].DisplayName;
+          end;
+        end;
+        L := L + 1;
+      end;
+
+      for I := 0 to DataSet.Fields.Count - 1 do
+        if DataSet.Fields[i].Visible then
+          ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1] := DataSet.Fields[i].DisplayText;
+
+      DataSet.Next;
+      L := L + 1;
+    end;
+    ExcApp.Columns.AutoFit;
+    ExcApp.WorkBooks[1].SaveAs(VarNomeArq);
+  finally
+    DataSet.EnableControls;
+  end;
 end;
 
 function ValidaUsuario(Email, Senha : String) : Boolean;

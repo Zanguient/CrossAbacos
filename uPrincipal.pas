@@ -45,6 +45,7 @@ type
     Arquivo1: TMenuItem;
     Produtos1: TMenuItem;
     BackupdoBancodeDados1: TMenuItem;
+    Famlia1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -74,6 +75,7 @@ type
     procedure ConsultadeProdutos1Click(Sender: TObject);
     procedure Produtos1Click(Sender: TObject);
     procedure BackupdoBancodeDados1Click(Sender: TObject);
+    procedure Famlia1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -114,7 +116,8 @@ uses
   uCadFornecedor,
   uRelRatingDetalhadoporFornecedor,
   uConsultaProduto,
-  uArquivoProdutos;
+  uArquivoProdutos,
+  uCadastroFamilia;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -123,6 +126,17 @@ begin
   if USUARIO.CODIGO > 0 then begin
     DefinePermissaoMenu(MainMenu1);
     miSair.Visible          := True;
+  end;
+end;
+
+procedure TFrmPrincipal.Famlia1Click(Sender: TObject);
+begin
+  if FrmCadastroFamilia = nil then
+    FrmCadastroFamilia := TFrmCadastroFamilia.Create(nil);
+  try
+    FrmCadastroFamilia.ShowModal;
+  finally
+    FreeAndNil(FrmCadastroFamilia);
   end;
 end;
 
