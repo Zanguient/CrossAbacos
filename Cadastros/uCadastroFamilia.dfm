@@ -27,8 +27,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
     Align = alClient
     TabOrder = 1
     Visible = False
-    ExplicitWidth = 725
-    ExplicitHeight = 501
     object pnBotoesEdicao: TPanel
       AlignWithMargins = True
       Left = 4
@@ -47,8 +45,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
       TabOrder = 0
       TabStop = True
       Visible = False
-      ExplicitTop = 437
-      ExplicitWidth = 717
       object GridPanel2: TGridPanel
         AlignWithMargins = True
         Left = 4
@@ -83,27 +79,20 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             SizeStyle = ssAuto
           end>
         TabOrder = 0
-        ExplicitLeft = 110
-        ExplicitTop = 3
-        ExplicitWidth = 739
         object Panel4: TPanel
-          Left = 421
+          Left = 422
           Top = 0
-          Width = 422
-          Height = 50
+          Width = 423
+          Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitLeft = 280
-          ExplicitTop = 8
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object btCancelar: TSpeedButton
             AlignWithMargins = True
             Left = 3
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alLeft
             Caption = '&Cancelar'
             Font.Charset = DEFAULT_CHARSET
@@ -501,26 +490,23 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             NumGlyphs = 4
             ParentFont = False
             OnClick = btCancelarClick
+            ExplicitHeight = 44
           end
         end
         object Panel5: TPanel
           Left = 0
           Top = 0
-          Width = 421
-          Height = 50
+          Width = 422
+          Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 280
-          ExplicitTop = 8
-          ExplicitWidth = 185
-          ExplicitHeight = 41
           object btGravar: TSpeedButton
             AlignWithMargins = True
-            Left = 318
+            Left = 319
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alRight
             Caption = '&Gravar'
             Font.Charset = DEFAULT_CHARSET
@@ -678,7 +664,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
       Color = clWhite
       ParentBackground = False
       TabOrder = 1
-      ExplicitHeight = 360
       object Panel3: TPanel
         Left = 1
         Top = 1
@@ -695,7 +680,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
         ParentBackground = False
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 717
       end
       object GridPanel1: TGridPanel
         Left = 1
@@ -726,8 +710,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Value = 100.000000000000000000
           end>
         TabOrder = 1
-        ExplicitWidth = 717
-        ExplicitHeight = 385
         object pnUsuarioEsquerda: TPanel
           Left = 1
           Top = 1
@@ -735,8 +717,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           Height = 386
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 357
-          ExplicitHeight = 383
           DesignSize = (
             425
             386)
@@ -779,7 +759,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            ExplicitWidth = 346
           end
           object edDescricao: TEdit
             Left = 4
@@ -794,7 +773,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 347
           end
         end
         object pnUsuarioDireita: TPanel
@@ -804,9 +782,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           Height = 386
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 358
-          ExplicitWidth = 358
-          ExplicitHeight = 383
           DesignSize = (
             426
             386)
@@ -836,7 +811,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 345
           end
         end
       end
@@ -849,8 +823,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
     Height = 504
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 725
-    ExplicitHeight = 501
     object gdPesquisa: TDBGrid
       AlignWithMargins = True
       Left = 4
@@ -901,8 +873,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
       Color = clWhite
       ParentBackground = False
       TabOrder = 1
-      ExplicitTop = 437
-      ExplicitWidth = 717
       object gpBotoes: TGridPanel
         AlignWithMargins = True
         Left = 4
@@ -934,24 +904,20 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Value = 100.000000000000000000
           end>
         TabOrder = 0
-        ExplicitWidth = 709
         object Panel8: TPanel
           Left = 0
           Top = 0
-          Width = 421
-          Height = 50
+          Width = 422
+          Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitLeft = 1
-          ExplicitTop = 1
-          ExplicitWidth = 353
           object btAlterar: TSpeedButton
             AlignWithMargins = True
-            Left = 318
+            Left = 319
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alRight
             Caption = '&Alterar'
             Glyph.Data = {
@@ -1018,10 +984,10 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           end
           object btNovo: TSpeedButton
             AlignWithMargins = True
-            Left = 212
+            Left = 213
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alRight
             Caption = '&Novo'
             Glyph.Data = {
@@ -1091,7 +1057,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Left = 3
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alLeft
             Caption = 'At&ualizar'
             Glyph.Data = {
@@ -1196,12 +1162,13 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             OnClick = btAtualizarClick
             ExplicitLeft = 11
             ExplicitTop = 6
+            ExplicitHeight = 44
           end
           object pbAtualiza: TGauge
             Left = 106
             Top = 0
             Width = 52
-            Height = 50
+            Height = 52
             Align = alLeft
             BorderStyle = bsNone
             ForeColor = clLime
@@ -1209,25 +1176,22 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Progress = 0
             Visible = False
             ExplicitLeft = 200
-            ExplicitHeight = 52
           end
         end
         object Panel9: TPanel
-          Left = 421
+          Left = 422
           Top = 0
-          Width = 422
-          Height = 50
+          Width = 423
+          Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 425
-          ExplicitTop = -1
           object btExcluir: TSpeedButton
             AlignWithMargins = True
             Left = 3
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alLeft
             Caption = '&Excluir'
             Glyph.Data = {
@@ -1297,7 +1261,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Left = 109
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alLeft
             Caption = '&Fechar'
             Glyph.Data = {
@@ -1364,10 +1328,10 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           end
           object btExportar: TSpeedButton
             AlignWithMargins = True
-            Left = 319
+            Left = 320
             Top = 3
             Width = 100
-            Height = 44
+            Height = 46
             Align = alRight
             Caption = 'E&xportar'
             Glyph.Data = {
@@ -1472,6 +1436,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             OnClick = btExportarClick
             ExplicitLeft = 321
             ExplicitTop = -2
+            ExplicitHeight = 44
           end
         end
       end
@@ -1492,7 +1457,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
       ParentBackground = False
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 723
       object btPesquisar: TSpeedButton
         AlignWithMargins = True
         Left = 756
@@ -1577,7 +1541,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitWidth = 611
       end
     end
     object Panel2: TPanel
@@ -1598,7 +1561,6 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
       ParentBackground = False
       ParentFont = False
       TabOrder = 3
-      ExplicitWidth = 717
     end
   end
   object ds_Familias: TDataSource

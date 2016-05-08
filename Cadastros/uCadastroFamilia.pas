@@ -448,12 +448,7 @@ procedure TFrmCadastroFamilia.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if pnVisualizacao.Visible then begin
     case Key of
-      VK_ESCAPE : begin
-        if pnVisualizacao.Visible then
-          Close
-        else
-          Cancelar;
-      end;
+      VK_ESCAPE : Close;
       VK_RETURN : begin
         if edPesquisa.Focused then begin
           Filtrar;
@@ -477,6 +472,10 @@ begin
             cds_Familias.Next;
         end;
       end;
+    end;
+  end else begin
+    case Key of
+      VK_ESCAPE : Cancelar;
     end;
   end;
 end;
