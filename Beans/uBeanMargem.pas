@@ -9,33 +9,45 @@ uses
 type
   TMARGEM = class(TFWPersistence)
   private
-    FCODIGO: TFieldInteger;
-    FMARGEMPERSONALIZADAMINIMA: TFieldCurrency;
-    FMARGEMFISICOMAXIMA: TFieldCurrency;
-    FMARGEMCROSSMAXIMA: TFieldCurrency;
-    FMARGEMFISICOMINIMA: TFieldCurrency;
-    FMARGEMCROSSMINIMA: TFieldCurrency;
-    FMARGEMPERSONALIZADAMAXIMA: TFieldCurrency;
-    FDESCRICAO: TFieldString;
-    procedure SetCODIGO(const Value: TFieldInteger);
-    procedure SetMARGEMCROSSMAXIMA(const Value: TFieldCurrency);
-    procedure SetMARGEMCROSSMINIMA(const Value: TFieldCurrency);
-    procedure SetMARGEMFISICOMAXIMA(const Value: TFieldCurrency);
-    procedure SetMARGEMFISICOMINIMA(const Value: TFieldCurrency);
-    procedure SetMARGEMPERSONALIZADAMAXIMA(const Value: TFieldCurrency);
-    procedure SetMARGEMPERSONALIZADAMINIMA(const Value: TFieldCurrency);
-    procedure SetDESCRICAO(const Value: TFieldString);
+    FAUTORIZADOPOR: TFieldString;
+    FID_PRODUTO: TFieldInteger;
+    FMARGEMANALISTA: TFieldCurrency;
+    FPRECOPROMOCIONAL: TFieldCurrency;
+    FDATAAUTORIZADO: TFieldDateTime;
+    FID: TFieldInteger;
+    FPRECOPONTA: TFieldCurrency;
+    FVALPRECOPROMOCIONAL: TFieldDateTime;
+    FPERCENTUALOUTROS: TFieldCurrency;
+    FPERCENTUALFRETE: TFieldCurrency;
+    FPERCENTUALVPC: TFieldCurrency;
+    FMARGEMSKU: TFieldCurrency;
+    procedure SetAUTORIZADOPOR(const Value: TFieldString);
+    procedure SetDATAAUTORIZADO(const Value: TFieldDateTime);
+    procedure SetID(const Value: TFieldInteger);
+    procedure SetID_PRODUTO(const Value: TFieldInteger);
+    procedure SetMARGEMANALISTA(const Value: TFieldCurrency);
+    procedure SetMARGEMSKU(const Value: TFieldCurrency);
+    procedure SetPERCENTUALFRETE(const Value: TFieldCurrency);
+    procedure SetPERCENTUALOUTROS(const Value: TFieldCurrency);
+    procedure SetPERCENTUALVPC(const Value: TFieldCurrency);
+    procedure SetPRECOPONTA(const Value: TFieldCurrency);
+    procedure SetPRECOPROMOCIONAL(const Value: TFieldCurrency);
+    procedure SetVALPRECOPROMOCIONAL(const Value: TFieldDateTime);
   protected
     procedure InitInstance; override;
   published
-    property CODIGO                     : TFieldInteger   read FCODIGO                      write SetCODIGO;
-    property DESCRICAO                  : TFieldString    read FDESCRICAO                   write SetDESCRICAO;
-    property MARGEMCROSSMINIMA          : TFieldCurrency  read FMARGEMCROSSMINIMA           write SetMARGEMCROSSMINIMA;
-    property MARGEMCROSSMAXIMA          : TFieldCurrency  read FMARGEMCROSSMAXIMA           write SetMARGEMCROSSMAXIMA;
-    property MARGEMFISICOMINIMA         : TFieldCurrency  read FMARGEMFISICOMINIMA          write SetMARGEMFISICOMINIMA;
-    property MARGEMFISICOMAXIMA         : TFieldCurrency  read FMARGEMFISICOMAXIMA          write SetMARGEMFISICOMAXIMA;
-    property MARGEMPERSONALIZADAMINIMA  : TFieldCurrency  read FMARGEMPERSONALIZADAMINIMA   write SetMARGEMPERSONALIZADAMINIMA;
-    property MARGEMPERSONALIZADAMAXIMA  : TFieldCurrency  read FMARGEMPERSONALIZADAMAXIMA   write SetMARGEMPERSONALIZADAMAXIMA;
+    property ID 				          : TFieldInteger   read FID                  write SetID;
+    property ID_PRODUTO			      : TFieldInteger   read FID_PRODUTO          write SetID_PRODUTO;
+    property MARGEMSKU			      : TFieldCurrency  read FMARGEMSKU           write SetMARGEMSKU;
+    property PRECOPONTA			      : TFieldCurrency  read FPRECOPONTA          write SetPRECOPONTA;
+    property PRECOPROMOCIONAL	    : TFieldCurrency  read FPRECOPROMOCIONAL    write SetPRECOPROMOCIONAL;
+    property VALPRECOPROMOCIONAL  : TFieldDateTime  read FVALPRECOPROMOCIONAL write SetVALPRECOPROMOCIONAL;
+    property MARGEMANALISTA		    : TFieldCurrency  read FMARGEMANALISTA      write SetMARGEMANALISTA;
+    property PERCENTUALVPC		    : TFieldCurrency  read FPERCENTUALVPC       write SetPERCENTUALVPC;
+    property PERCENTUALFRETE	    : TFieldCurrency  read FPERCENTUALFRETE     write SetPERCENTUALFRETE;
+    property PERCENTUALOUTROS	    : TFieldCurrency  read FPERCENTUALOUTROS    write SetPERCENTUALOUTROS;
+    property AUTORIZADOPOR		    : TFieldString    read FAUTORIZADOPOR       write SetAUTORIZADOPOR;
+    property DATAAUTORIZADO		    : TFieldDateTime  read FDATAAUTORIZADO      write SetDATAAUTORIZADO;
   end;
 
 implementation
@@ -45,54 +57,82 @@ implementation
 procedure TMARGEM.InitInstance;
 begin
   inherited;
-  CODIGO.isPK         := True;
 
-  DESCRICAO.isNotNull := True;
+  FID.isPK                        := True;
 
-  DESCRICAO.Size      := 100;
+  FID_PRODUTO.isNotNull           := True;
+  FMARGEMSKU.isNotNull            := True;
+  FPRECOPONTA.isNotNull           := True;
+  FPRECOPROMOCIONAL.isNotNull     := True;
+  FVALPRECOPROMOCIONAL.isNotNull  := True;
+  FMARGEMANALISTA.isNotNull       := True;
+  FPERCENTUALVPC.isNotNull        := True;
+  FPERCENTUALFRETE.isNotNull      := True;
+  FPERCENTUALOUTROS.isNotNull     := True;
+  FAUTORIZADOPOR.isNotNull        := True;
+  FDATAAUTORIZADO.isNotNull       := True;
 
+  FAUTORIZADOPOR.Size             := 100;
 end;
 
-procedure TMARGEM.SetCODIGO(const Value: TFieldInteger);
+procedure TMARGEM.SetAUTORIZADOPOR(const Value: TFieldString);
 begin
-  FCODIGO := Value;
+  FAUTORIZADOPOR := Value;
 end;
 
-procedure TMARGEM.SetDESCRICAO(const Value: TFieldString);
+procedure TMARGEM.SetDATAAUTORIZADO(const Value: TFieldDateTime);
 begin
-  FDESCRICAO := Value;
+  FDATAAUTORIZADO := Value;
 end;
 
-procedure TMARGEM.SetMARGEMCROSSMAXIMA(const Value: TFieldCurrency);
+procedure TMARGEM.SetID(const Value: TFieldInteger);
 begin
-  FMARGEMCROSSMAXIMA := Value;
+  FID := Value;
 end;
 
-procedure TMARGEM.SetMARGEMCROSSMINIMA(const Value: TFieldCurrency);
+procedure TMARGEM.SetID_PRODUTO(const Value: TFieldInteger);
 begin
-  FMARGEMCROSSMINIMA := Value;
+  FID_PRODUTO := Value;
 end;
 
-procedure TMARGEM.SetMARGEMFISICOMAXIMA(const Value: TFieldCurrency);
+procedure TMARGEM.SetMARGEMANALISTA(const Value: TFieldCurrency);
 begin
-  FMARGEMFISICOMAXIMA := Value;
+  FMARGEMANALISTA := Value;
 end;
 
-procedure TMARGEM.SetMARGEMFISICOMINIMA(const Value: TFieldCurrency);
+procedure TMARGEM.SetMARGEMSKU(const Value: TFieldCurrency);
 begin
-  FMARGEMFISICOMINIMA := Value;
+  FMARGEMSKU := Value;
 end;
 
-procedure TMARGEM.SetMARGEMPERSONALIZADAMAXIMA(
-  const Value: TFieldCurrency);
+procedure TMARGEM.SetPERCENTUALFRETE(const Value: TFieldCurrency);
 begin
-  FMARGEMPERSONALIZADAMAXIMA := Value;
+  FPERCENTUALFRETE := Value;
 end;
 
-procedure TMARGEM.SetMARGEMPERSONALIZADAMINIMA(
-  const Value: TFieldCurrency);
+procedure TMARGEM.SetPERCENTUALOUTROS(const Value: TFieldCurrency);
 begin
-  FMARGEMPERSONALIZADAMINIMA := Value;
+  FPERCENTUALOUTROS := Value;
+end;
+
+procedure TMARGEM.SetPERCENTUALVPC(const Value: TFieldCurrency);
+begin
+  FPERCENTUALVPC := Value;
+end;
+
+procedure TMARGEM.SetPRECOPONTA(const Value: TFieldCurrency);
+begin
+  FPRECOPONTA := Value;
+end;
+
+procedure TMARGEM.SetPRECOPROMOCIONAL(const Value: TFieldCurrency);
+begin
+  FPRECOPROMOCIONAL := Value;
+end;
+
+procedure TMARGEM.SetVALPRECOPROMOCIONAL(const Value: TFieldDateTime);
+begin
+  FVALPRECOPROMOCIONAL := Value;
 end;
 
 end.

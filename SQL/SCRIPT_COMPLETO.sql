@@ -242,4 +242,20 @@ CREATE TABLE IF NOT EXISTS familia (
   dataautorizado timestamp without time zone NOT NULL,  
   CONSTRAINT pk_familia_id PRIMARY KEY (id));
 
-
+CREATE TABLE IF NOT EXISTS margem (
+  id serial NOT NULL,
+  id_produto int not null unique,
+  margemsku numeric(18,2) not null,
+  precoponta numeric(18,2) not null,
+  precopromocional numeric(18,2) not null,
+  valprecopromocional timestamp without time zone NOT NULL, 
+  margemanalista numeric(18,2) not null,
+  percentualvpc numeric(18,2) not null,
+  percentualfrete numeric(18,2) not null,
+  percentualoutros numeric(18,2) not null,
+  autorizadopor varchar(100) not null,
+  dataautorizado timestamp without time zone NOT NULL,  
+  CONSTRAINT pk_margem_id PRIMARY KEY (id),
+  CONSTRAINT fk_margem_produto FOREIGN KEY (id_produto)
+      REFERENCES produto (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT);

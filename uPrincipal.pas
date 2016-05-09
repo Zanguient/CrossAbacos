@@ -46,6 +46,7 @@ type
     Produtos1: TMenuItem;
     BackupdoBancodeDados1: TMenuItem;
     Famlia1: TMenuItem;
+    Margem1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -76,6 +77,7 @@ type
     procedure Produtos1Click(Sender: TObject);
     procedure BackupdoBancodeDados1Click(Sender: TObject);
     procedure Famlia1Click(Sender: TObject);
+    procedure Margem1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -117,7 +119,8 @@ uses
   uRelRatingDetalhadoporFornecedor,
   uConsultaProduto,
   uArquivoProdutos,
-  uCadastroFamilia;
+  uCadastroFamilia,
+  uCadastroMargem;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -297,6 +300,17 @@ end;
 procedure TFrmPrincipal.ListagemSimplesdeFornecedor1Click(Sender: TObject);
 begin
   RelatorioListagemFornecedores;
+end;
+
+procedure TFrmPrincipal.Margem1Click(Sender: TObject);
+begin
+  if FrmCadastroMargem = nil then
+    FrmCadastroMargem := TFrmCadastroMargem.Create(nil);
+  try
+    FrmCadastroMargem.ShowModal;
+  finally
+    FreeAndNil(FrmCadastroMargem);
+  end;
 end;
 
 procedure TFrmPrincipal.Match1Click(Sender: TObject);

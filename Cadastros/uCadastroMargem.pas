@@ -4,69 +4,97 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Data.DB,
-  Datasnap.DBClient, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,
-  Vcl.Mask, Vcl.DBCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Mask,
+  Vcl.DBCtrls, System.TypInfo, System.Win.ComObj, Vcl.Samples.Gauges,
+  FireDAC.Comp.Client, Vcl.ComCtrls;
 
 type
   TFrmCadastroMargem = class(TForm)
     pnVisualizacao: TPanel;
     gdPesquisa: TDBGrid;
     pnBotoesVisualizacao: TPanel;
-    btFechar: TSpeedButton;
-    btAlterar: TSpeedButton;
-    pnAjusteBotoes1: TPanel;
     pnPequisa: TPanel;
     btPesquisar: TSpeedButton;
     edPesquisa: TEdit;
     Panel2: TPanel;
-    dsPesquisa: TDataSource;
-    csPesquisa: TClientDataSet;
-    csPesquisaCODIGO: TIntegerField;
     pnEdicao: TPanel;
     pnBotoesEdicao: TPanel;
-    btGravar: TSpeedButton;
-    btCancelar: TSpeedButton;
-    pnAjusteBotoes2: TPanel;
+    ds_Margens: TDataSource;
+    cds_Margens: TClientDataSet;
+    gpBotoes: TGridPanel;
+    Panel8: TPanel;
+    Panel9: TPanel;
+    btExcluir: TSpeedButton;
+    btFechar: TSpeedButton;
+    btAlterar: TSpeedButton;
+    btNovo: TSpeedButton;
     Panel1: TPanel;
     Panel3: TPanel;
-    csPesquisaCROSSMINIMA: TCurrencyField;
-    csPesquisaCROSSMAXIMA: TCurrencyField;
-    csPesquisaFISICOMINIMA: TCurrencyField;
-    csPesquisaFISICOMAXIMA: TCurrencyField;
-    csPesquisaPERSONALIZADAMINIMA: TCurrencyField;
-    csPesquisaPERSONALIZADAMAXIMA: TCurrencyField;
-    btNovo: TSpeedButton;
-    btExcluir: TSpeedButton;
-    gbEstoqueFisico: TGroupBox;
-    gbEstoqueVirtual: TGroupBox;
-    gbEstoquePersonalizado: TGroupBox;
-    edFisicoMinima: TDBEdit;
-    edFisicoMaxima: TDBEdit;
-    edVirtualMinima: TDBEdit;
-    edVirtualMaxima: TDBEdit;
-    edPersonalizadoMinima: TDBEdit;
-    edPersonalizadoMaxima: TDBEdit;
-    Label1: TLabel;
+    GridPanel1: TGridPanel;
+    pnUsuarioEsquerda: TPanel;
     Label2: TLabel;
-    Label3: TLabel;
+    edNomeProduto: TEdit;
+    pnUsuarioDireita: TPanel;
+    btAtualizar: TSpeedButton;
+    btExportar: TSpeedButton;
+    OpenDialog1: TOpenDialog;
+    pbAtualiza: TGauge;
+    GridPanel2: TGridPanel;
+    Panel4: TPanel;
+    btCancelar: TSpeedButton;
+    Panel5: TPanel;
+    btGravar: TSpeedButton;
+    cds_MargensID: TIntegerField;
+    cds_MargensID_PRODUTO: TIntegerField;
+    cds_MargensSKU: TStringField;
+    cds_MargensNOME_PRODUTO: TStringField;
+    cds_MargensMARGEMSKU: TCurrencyField;
+    cds_MargensPRECOPONTA: TCurrencyField;
+    cds_MargensPRECOPROMOCIONAL: TCurrencyField;
+    cds_MargensVALPRECOPROMOCIONAL: TDateTimeField;
+    cds_MargensMARGEMANALISTA: TCurrencyField;
+    cds_MargensPERCENTUALVPC: TCurrencyField;
+    cds_MargensPERCENTUALFRETE: TCurrencyField;
+    cds_MargensPERCENTUALOUTROS: TCurrencyField;
+    cds_MargensAUTORIZADOPOR: TStringField;
+    cds_MargensDATAAUTORIZADO: TDateTimeField;
+    cbFiltroMargens: TComboBox;
+    cds_MargensSTATUS: TStringField;
+    edSKU: TEdit;
     Label4: TLabel;
+    edPercentualVPC: TEdit;
+    Label9: TLabel;
+    Label3: TLabel;
+    edMargemSKU: TEdit;
+    edPrecoPonta: TEdit;
     Label5: TLabel;
+    edPrecoPromocional: TEdit;
     Label6: TLabel;
-    csPesquisaDESCRICAO: TStringField;
     Label7: TLabel;
-    edDescricao: TDBEdit;
+    edAutorizadoPor: TEdit;
+    Label1: TLabel;
+    edPercentualFrete: TEdit;
+    Label10: TLabel;
+    edPercentualOutros: TEdit;
+    Label11: TLabel;
+    edMargemAnalista: TEdit;
+    Label8: TLabel;
+    edValidadePromocional: TDateTimePicker;
+    procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure btFecharClick(Sender: TObject);
     procedure csPesquisaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure FormShow(Sender: TObject);
+    procedure btGravarClick(Sender: TObject);
+    procedure btCancelarClick(Sender: TObject);
     procedure btAlterarClick(Sender: TObject);
     procedure btNovoClick(Sender: TObject);
     procedure btExcluirClick(Sender: TObject);
-    procedure btCancelarClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FormResize(Sender: TObject);
-    procedure btGravarClick(Sender: TObject);
+    procedure gdPesquisaTitleClick(Column: TColumn);
+    procedure btExportarClick(Sender: TObject);
+    procedure btAtualizarClick(Sender: TObject);
+    procedure cbFiltroMargensChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -74,6 +102,8 @@ type
     procedure InvertePaineis;
     procedure Cancelar;
     procedure Filtrar;
+    procedure AtualizarEdits(Limpar : Boolean);
+    procedure Atualizar;
   end;
 
 var
@@ -82,18 +112,178 @@ var
 implementation
 
 uses
-  uFuncoes,
-  uBeanMargem,
+  uDomains,
+  uConstantes,
   uFWConnection,
-  uMensagem;
+  uBeanMargem,
+  uMensagem,
+  uFuncoes;
 
 {$R *.dfm}
 
+procedure TFrmCadastroMargem.AtualizarEdits(Limpar: Boolean);
+begin
+  if Limpar then begin
+    edSKU.Tag                   := cds_MargensID_PRODUTO.Value;
+    edSKU.Text                  := cds_MargensSKU.Value;
+    edNomeProduto.Text          := cds_MargensNOME_PRODUTO.Value;
+    edMargemSKU.Clear;
+    edPrecoPonta.Clear;
+    edPrecoPromocional.Clear;
+    edValidadePromocional.Date  := Date;
+    edMargemAnalista.Clear;
+    edPercentualVPC.Clear;
+    edPercentualFrete.Clear;
+    edPercentualOutros.Clear;
+    edAutorizadoPor.Clear;
+    btGravar.Tag  := 0;
+  end else begin
+    edSKU.Tag                   := cds_MargensID_PRODUTO.Value;
+    edSKU.Text                  := cds_MargensSKU.Value;
+    edNomeProduto.Text          := cds_MargensNOME_PRODUTO.Value;
+    edMargemSKU.Text            := cds_MargensMARGEMSKU.AsString;
+    edPrecoPonta.Text           := cds_MargensPRECOPONTA.AsString;
+    edPrecoPromocional.Text     := cds_MargensPRECOPROMOCIONAL.AsString;
+    edValidadePromocional.Date  := cds_MargensVALPRECOPROMOCIONAL.Value;
+    edMargemAnalista.Text       := cds_MargensMARGEMANALISTA.AsString;
+    edPercentualVPC.Text        := cds_MargensPERCENTUALVPC.AsString;
+    edPercentualFrete.Text      := cds_MargensPERCENTUALFRETE.AsString;
+    edPercentualOutros.Text     := cds_MargensPERCENTUALOUTROS.AsString;
+    edAutorizadoPor.Text        := cds_MargensAUTORIZADOPOR.AsString;
+    btGravar.Tag                := cds_MargensID.Value;
+  end;
+end;
+
+procedure TFrmCadastroMargem.Atualizar;
+const
+  xlCellTypeLastCell = $0000000B;
+Var
+  FWC     : TFWConnection;
+  M       : TMARGEM;
+  List    : TPropList;
+  Arquivo : String;
+  Excel   : OleVariant;
+  arrData,
+  Valor   : Variant;
+  vrow,
+  vcol,
+  Count,
+  I,
+  J       : Integer;
+begin
+  if OpenDialog1.Execute then begin
+    if Pos(ExtractFileExt(OpenDialog1.FileName), '|.xls|.xlsx|') > 0 then begin
+      Arquivo := OpenDialog1.FileName;
+
+      if not FileExists(Arquivo) then begin
+        DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+        Exit;
+      end;
+
+      // Cria Excel- OLE Object
+      Excel                     := CreateOleObject('Excel.Application');
+      FWC                       := TFWConnection.Create;
+      M                         := TMARGEM.Create(FWC);
+      pbAtualiza.Visible        := True;
+      pbAtualiza.Progress       := 0;
+
+      DisplayMsg(MSG_WAIT, 'Buscando dados do arquivo Excel!');
+      try
+        FWC.StartTransaction;
+        try
+          // Esconde Excel
+          Excel.Visible  := False;
+          // Abre o Workbook
+          Excel.Workbooks.Open(Arquivo);
+
+          Excel.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+          vrow                                  := Excel.ActiveCell.Row;
+          vcol                                  := Excel.ActiveCell.Column;
+          pbAtualiza.MaxValue                   := vrow;
+          arrData                               := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
+
+          //M.DESCRICAO.excelTitulo               := 'Descrição';
+          //M.MARGEM.excelTitulo                  := '(%) Margem';
+
+          M.buscaIndicesExcel(Arquivo, Excel);
+
+          Count                                           := GetPropList(M.ClassInfo, tkProperties, @List, False);
+          for I := 0 to Pred(Count) do begin
+            if (TFieldTypeDomain(GetObjectProp(M, List[I]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(M, List[I]^.Name)).excelIndice <= 0) then begin
+              DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Segue colunas necessárias: ' + sLineBreak +
+                                                                                    'Descrição, ' + sLineBreak +
+                                                                                    '(%) Margem');
+              Exit;
+            end;
+          end;
+
+          for I := 2 to vrow do begin
+            for J := 0 to Pred(Count) do begin
+              if (TFieldTypeDomain(GetObjectProp(M, List[J]^.Name)).excelIndice > 0) then begin
+                Valor                                   := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(M, List[J]^.Name)).excelIndice]);
+                if Valor <> '' then
+                  TFieldTypeDomain(GetObjectProp(M, List[J]^.Name)).asVariant := Valor;
+              end;
+            end;
+
+            M.AUTORIZADOPOR.Value   := USUARIO.NOME;
+            M.DATAAUTORIZADO.Value  := Now;
+
+            //M.SelectList('DESCRICAO = ' + M.DESCRICAO.asSQL);
+            if M.Count > 0 then begin
+              M.ID.Value    := TMARGEM(M.Itens[0]).ID.Value;
+              M.Update;
+            end else
+              M.Insert;
+            pbAtualiza.Progress     := I;
+            Application.ProcessMessages;
+          end;
+
+          FWC.Commit;
+
+          DisplayMsg(MSG_OK, 'Margens atualizadas com Sucesso!');
+
+        except
+          on E : Exception do begin
+            FWC.Rollback;
+            DisplayMsg(MSG_ERR, 'Erro ao atualizar Margens!', '', E.Message);
+            Exit;
+          end;
+        end;
+      finally
+        arrData := Unassigned;
+        pbAtualiza.Visible  := False;
+        pbAtualiza.Progress := 0;
+        if not VarIsEmpty(Excel) then begin
+          Excel.Quit;
+          Excel := Unassigned;
+        end;
+        FreeAndNil(M);
+        FreeAndNil(FWC);
+      end;
+    end;
+  end;
+end;
+
 procedure TFrmCadastroMargem.btAlterarClick(Sender: TObject);
 begin
-  if not csPesquisa.IsEmpty then begin
-    csPesquisa.Edit;
+  if not cds_Margens.IsEmpty then begin
+    AtualizarEdits(False);
     InvertePaineis;
+  end else
+    DisplayMsg(MSG_WAR, 'Produto não Selecionado, Verifique!')
+end;
+
+procedure TFrmCadastroMargem.btAtualizarClick(Sender: TObject);
+begin
+  if btAtualizar.Tag = 0 then begin
+    btAtualizar.Tag := 1;
+    try
+      Atualizar;
+      CarregaDados;
+    finally
+      btAtualizar.Tag := 0;
+    end;
   end;
 end;
 
@@ -104,10 +294,10 @@ end;
 
 procedure TFrmCadastroMargem.btExcluirClick(Sender: TObject);
 Var
-  FWC     : TFWConnection;
-  MARGEM  : TMARGEM;
+  FWC : TFWConnection;
+  M   : TMARGEM;
 begin
-  if not csPesquisa.IsEmpty then begin
+  if not cds_Margens.IsEmpty then begin
 
     DisplayMsg(MSG_CONF, 'Excluir a Margem Selecionada?');
 
@@ -115,30 +305,41 @@ begin
 
       try
 
-        FWC     := TFWConnection.Create;
-        MARGEM  := TMARGEM.Create(FWC);
+        FWC := TFWConnection.Create;
+        M := TMargem.Create(FWC);
         try
 
-          MARGEM.CODIGO.Value := csPesquisaCODIGO.Value;
-          MARGEM.Delete;
+          M.ID.Value := cds_MargensID.Value;
+          M.Delete;
 
           FWC.Commit;
 
-          csPesquisa.Delete;
+          cds_Margens.Delete;
 
         except
           on E : Exception do begin
             FWC.Rollback;
-            DisplayMsg(MSG_ERR, 'Erro ao Excluir Usuário, Verifique!', '', E.Message);
+            DisplayMsg(MSG_ERR, 'Erro ao Excluir Margem, Verifique!', '', E.Message);
           end;
         end;
       finally
-        FreeAndNil(MARGEM);
+        FreeAndNil(M);
         FreeAndNil(FWC);
       end;
     end;
   end;
+end;
 
+procedure TFrmCadastroMargem.btExportarClick(Sender: TObject);
+begin
+  if btExportar.Tag = 0 then begin
+    btExportar.Tag := 1;
+    try
+      ExpXLS(cds_Margens, Caption + '.xlsx');
+    finally
+      btExportar.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TFrmCadastroMargem.btFecharClick(Sender: TObject);
@@ -148,42 +349,91 @@ end;
 
 procedure TFrmCadastroMargem.btGravarClick(Sender: TObject);
 Var
-  FWC     : TFWConnection;
-  MARGEM  : TMARGEM;
+  FWC : TFWConnection;
+  M   : TMARGEM;
 begin
 
-  //Para Atualizar os Dados no ClientDataset
-  Perform(WM_NEXTDLGCTL,0,0);
-
-  FWC     := TFWConnection.Create;
-  MARGEM  := TMARGEM.Create(FWC);
+  FWC := TFWConnection.Create;
+  M   := TMargem.Create(FWC);
 
   try
     try
-      if csPesquisa.State in [dsInsert, dsEdit] then begin
 
-        MARGEM.DESCRICAO.Value                  := csPesquisaDESCRICAO.Value;
-        MARGEM.MARGEMCROSSMINIMA.Value          := csPesquisaCROSSMINIMA.Value;
-        MARGEM.MARGEMCROSSMAXIMA.Value          := csPesquisaCROSSMAXIMA.Value;
-        MARGEM.MARGEMFISICOMINIMA.Value         := csPesquisaFISICOMINIMA.Value;
-        MARGEM.MARGEMFISICOMAXIMA.Value         := csPesquisaFISICOMAXIMA.Value;
-        MARGEM.MARGEMPERSONALIZADAMINIMA.Value  := csPesquisaPERSONALIZADAMINIMA.Value;
-        MARGEM.MARGEMPERSONALIZADAMAXIMA.Value  := csPesquisaPERSONALIZADAMAXIMA.Value;
-
-        if csPesquisa.State = dsInsert then begin
-          MARGEM.CODIGO.isNull                    := True;
-          MARGEM.Insert;
-          csPesquisaCODIGO.Value                  := MARGEM.CODIGO.Value;
-        end else begin
-          MARGEM.CODIGO.Value                     := csPesquisaCODIGO.Value;
-          MARGEM.Update;
-        end;
-
-        FWC.Commit;
-
-        csPesquisa.Post;
-        InvertePaineis;
+      if StrToCurrDef(edMargemSKU.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Margem SKU inválida, Verifique!');
+        if edMargemSKU.CanFocus then
+          edMargemSKU.SetFocus;
+        Exit;
       end;
+
+      if StrToCurrDef(edPrecoPonta.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Preço Ponta inválido, Verifique!');
+        if edPrecoPonta.CanFocus then
+          edPrecoPonta.SetFocus;
+        Exit;
+      end;
+
+      if StrToCurrDef(edPrecoPromocional.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Preço Promocional inválido, Verifique!');
+        if edPrecoPromocional.CanFocus then
+          edPrecoPromocional.SetFocus;
+        Exit;
+      end;
+
+      if StrToCurrDef(edMargemAnalista.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Margem Analista inválida, Verifique!');
+        if edMargemAnalista.CanFocus then
+          edMargemAnalista.SetFocus;
+        Exit;
+      end;
+
+      if StrToCurrDef(edPercentualVPC.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Percentual VPC inválido, Verifique!');
+        if edPercentualVPC.CanFocus then
+          edPercentualVPC.SetFocus;
+        Exit;
+      end;
+
+      if StrToCurrDef(edPercentualFrete.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Percentual Frete inválido, Verifique!');
+        if edPercentualFrete.CanFocus then
+          edPercentualFrete.SetFocus;
+        Exit;
+      end;
+
+      if StrToCurrDef(edPercentualOutros.Text,-1) = -1 then begin
+        DisplayMsg(MSG_WAR, 'Percentual Outros inválido, Verifique!');
+        if edPercentualOutros.CanFocus then
+          edPercentualOutros.SetFocus;
+        Exit;
+      end;
+
+      M.MARGEMSKU.Value             := StrToCurr(edMargemSKU.Text);
+      M.PRECOPONTA.Value            := StrToCurr(edPrecoPonta.Text);
+      M.PRECOPROMOCIONAL.Value      := StrToCurr(edPrecoPromocional.Text);
+      M.VALPRECOPROMOCIONAL.Value   := edValidadePromocional.DateTime;
+      M.MARGEMANALISTA.Value        := StrToCurr(edMargemAnalista.Text);
+      M.PERCENTUALVPC.Value         := StrToCurr(edPercentualVPC.Text);
+      M.PERCENTUALFRETE.Value       := StrToCurr(edPercentualFrete.Text);
+      M.PERCENTUALOUTROS.Value      := StrToCurr(edPercentualOutros.Text);
+      M.AUTORIZADOPOR.Value         := edAutorizadoPor.Text;
+      M.DATAAUTORIZADO.Value        := Date;
+
+      if (Sender as TSpeedButton).Tag > 0 then begin
+        M.ID.Value          := (Sender as TSpeedButton).Tag;
+        M.Update;
+      end else begin
+        M.ID.isNull         := True;
+        M.ID_PRODUTO.Value  := edSKU.Tag;
+        M.Insert;
+      end;
+
+      FWC.Commit;
+
+      InvertePaineis;
+
+      CarregaDados;
+
     Except
       on E : Exception do begin
         FWC.Rollback;
@@ -191,53 +441,111 @@ begin
       end;
     end;
   finally
-    FreeAndNil(MARGEM);
+    FreeAndNil(M);
     FreeAndNil(FWC);
   end;
 end;
 
 procedure TFrmCadastroMargem.btNovoClick(Sender: TObject);
 begin
-  csPesquisa.Append;
-  InvertePaineis;
+  if not cds_Margens.IsEmpty then begin
+    AtualizarEdits(True);
+    InvertePaineis;
+  end else
+    DisplayMsg(MSG_WAR, 'Produto não Selecionado, Verifique!')
 end;
 
 procedure TFrmCadastroMargem.Cancelar;
 begin
-  if csPesquisa.State in [dsInsert, dsEdit] then
-    csPesquisa.Cancel;
+  if cds_Margens.State in [dsInsert, dsEdit] then
+    cds_Margens.Cancel;
   InvertePaineis;
 end;
 
 procedure TFrmCadastroMargem.CarregaDados;
 Var
-  FWC : TFWConnection;
-  MF  : TMARGEM;
-  I   : Integer;
+  FWC     : TFWConnection;
+  SQL     : TFDQuery;
+  I,
+  Codigo  : Integer;
 begin
 
+  FWC := TFWConnection.Create;
+  SQL := TFDQuery.Create(nil);
+
   try
-    FWC := TFWConnection.Create;
-    MF  := TMARGEM.Create(FWC);
+
+    DisplayMsg(MSG_WAIT, 'Aguarde Carregando Dados...');
+
+    cds_Margens.DisableControls;
     try
 
-      csPesquisa.EmptyDataSet;
+      Codigo := cds_MargensID.Value;
 
-      MF.SelectList('', 'CODIGO');
-      if MF.Count > 0 then begin
-        for I := 0 to MF.Count -1 do begin
-          csPesquisa.Append;
-          csPesquisaCODIGO.Value              := TMARGEM(MF.Itens[I]).CODIGO.Value;
-          csPesquisaDESCRICAO.Value           := TMARGEM(MF.Itens[I]).DESCRICAO.Value;
-          csPesquisaCROSSMINIMA.Value         := TMARGEM(MF.Itens[I]).MARGEMCROSSMINIMA.Value;
-          csPesquisaCROSSMAXIMA.Value         := TMARGEM(MF.Itens[I]).MARGEMCROSSMAXIMA.Value;
-          csPesquisaFISICOMINIMA.Value        := TMARGEM(MF.Itens[I]).MARGEMFISICOMINIMA.Value;
-          csPesquisaFISICOMAXIMA.Value        := TMARGEM(MF.Itens[I]).MARGEMFISICOMAXIMA.Value;
-          csPesquisaPERSONALIZADAMINIMA.Value := TMARGEM(MF.Itens[I]).MARGEMPERSONALIZADAMINIMA.Value;
-          csPesquisaPERSONALIZADAMAXIMA.Value := TMARGEM(MF.Itens[I]).MARGEMPERSONALIZADAMAXIMA.Value;
-          csPesquisa.Post;
+      cds_Margens.EmptyDataSet;
+
+      //SQL BUSCA MARGENS
+      SQL.Close;
+      SQL.SQL.Clear;
+      SQL.SQL.Add('SELECT');
+      SQL.SQL.Add('	P.ID AS ID_PRODUTO,');
+      SQL.SQL.Add('	P.SKU,');
+      SQL.SQL.Add('	P.NOME AS NOMEPRODUTO,');
+      SQL.SQL.Add('	COALESCE(M.ID,0) AS ID,');
+      SQL.SQL.Add('	COALESCE(M.MARGEMSKU,0.00) AS MARGEMSKU,');
+      SQL.SQL.Add('	COALESCE(M.PRECOPONTA,0.00) AS PRECOPONTA,');
+      SQL.SQL.Add('	COALESCE(M.PRECOPROMOCIONAL,0.00) AS PRECOPROMOCIONAL,');
+      SQL.SQL.Add('	COALESCE(M.VALPRECOPROMOCIONAL,CURRENT_TIMESTAMP) AS VALPRECOPROMOCIONAL,');
+      SQL.SQL.Add('	COALESCE(M.MARGEMANALISTA,0.00) AS MARGEMANALISTA,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUALVPC,0.00) AS PERCENTUALVPC,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUALFRETE,0.00) AS PERCENTUALFRETE,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUALOUTROS,0.00) AS PERCENTUALOUTROS,');
+      SQL.SQL.Add('	COALESCE(M.AUTORIZADOPOR,'''') AS AUTORIZADOPOR,');
+      SQL.SQL.Add('	COALESCE(M.DATAAUTORIZADO,CURRENT_TIMESTAMP) AS DATAAUTORIZADO');
+      SQL.SQL.Add('FROM PRODUTO P LEFT JOIN MARGEM M ON (P.ID = M.ID_PRODUTO)');
+      SQL.SQL.Add('WHERE 1 = 1');
+      case cbFiltroMargens.ItemIndex of
+        0 : SQL.SQL.Add('AND COALESCE(M.ID,0) > 0');
+        1 : SQL.SQL.Add('AND COALESCE(M.ID,0) = 0');
+      end;
+      SQL.SQL.Add('ORDER BY P.ID');
+
+      SQL.Connection  := FWC.FDConnection;
+      SQL.Prepare;
+      SQL.Open;
+      SQL.FetchAll;
+
+      SQL.Offline;
+
+      if not SQL.IsEmpty then begin
+        SQL.First;
+        while not SQL.Eof do begin
+          cds_Margens.Append;
+          cds_MargensID.Value                   := SQL.FieldByName('ID').Value;
+          cds_MargensID_PRODUTO.Value           := SQL.FieldByName('ID_PRODUTO').Value;
+          cds_MargensSKU.Value                  := SQL.FieldByName('SKU').Value;
+          cds_MargensNOME_PRODUTO.Value         := SQL.FieldByName('NOMEPRODUTO').Value;
+          cds_MargensMARGEMSKU.Value            := SQL.FieldByName('MARGEMSKU').Value;
+          cds_MargensPRECOPONTA.Value           := SQL.FieldByName('PRECOPONTA').Value;
+          cds_MargensPRECOPROMOCIONAL.Value     := SQL.FieldByName('PRECOPROMOCIONAL').Value;
+          cds_MargensVALPRECOPROMOCIONAL.Value  := SQL.FieldByName('VALPRECOPROMOCIONAL').Value;
+          cds_MargensMARGEMANALISTA.Value       := SQL.FieldByName('MARGEMANALISTA').Value;
+          cds_MargensPERCENTUALVPC.Value        := SQL.FieldByName('PERCENTUALVPC').Value;
+          cds_MargensPERCENTUALFRETE.Value      := SQL.FieldByName('PERCENTUALFRETE').Value;
+          cds_MargensPERCENTUALOUTROS.Value     := SQL.FieldByName('PERCENTUALOUTROS').Value;
+          cds_MargensAUTORIZADOPOR.Value        := SQL.FieldByName('AUTORIZADOPOR').Value;
+          cds_MargensDATAAUTORIZADO.Value       := SQL.FieldByName('DATAAUTORIZADO').Value;
+          if cds_MargensID.Value > 0 then
+            cds_MargensSTATUS.Value             := 'Com Margem'
+          else
+            cds_MargensSTATUS.Value             := 'Sem Margem';
+          cds_Margens.Post;
+          SQL.Next;
         end;
       end;
+
+      if Codigo > 0 then
+        cds_Margens.Locate('ID', Codigo, []);
 
     except
       on E : Exception do begin
@@ -246,9 +554,16 @@ begin
     end;
 
   finally
-    FreeAndNil(MF);
+    DisplayMsgFinaliza;
+    cds_Margens.EnableControls;
+    FreeAndNil(SQL);
     FreeAndNil(FWC);
   end;
+end;
+
+procedure TFrmCadastroMargem.cbFiltroMargensChange(Sender: TObject);
+begin
+  CarregaDados;
 end;
 
 procedure TFrmCadastroMargem.csPesquisaFilterRecord(DataSet: TDataSet;
@@ -269,24 +584,18 @@ end;
 
 procedure TFrmCadastroMargem.Filtrar;
 begin
-  csPesquisa.Filtered := False;
-  csPesquisa.Filtered := Length(edPesquisa.Text) > 0;
+  cds_Margens.Filtered := False;
+  cds_Margens.Filtered := Length(edPesquisa.Text) > 0;
 end;
 
 procedure TFrmCadastroMargem.FormCreate(Sender: TObject);
 begin
-  Self.ClientHeight := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.ClientWidth  := Application.MainForm.ClientWidth;
-  Self.Height       := Application.MainForm.ClientHeight - 2; //Cabeçalho form principal
-  Self.Width        := Application.MainForm.ClientWidth;
-  Self.Top          := Application.MainForm.Top   + Application.MainForm.BorderWidth + 47;
-  Self.Left         := Application.MainForm.Left  + Application.MainForm.BorderWidth + 3;
+  AjustaForm(Self);
 end;
 
 procedure TFrmCadastroMargem.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-
   if pnVisualizacao.Visible then begin
     case Key of
       VK_ESCAPE : Close;
@@ -302,51 +611,35 @@ begin
       end;
       VK_F5 : CarregaDados;
       VK_UP : begin
-        if not csPesquisa.IsEmpty then begin
-          if csPesquisa.RecNo > 1 then
-            csPesquisa.Prior;
+        if not cds_Margens.IsEmpty then begin
+          if cds_Margens.RecNo > 1 then
+            cds_Margens.Prior;
         end;
       end;
       VK_DOWN : begin
-        if not csPesquisa.IsEmpty then begin
-          if csPesquisa.RecNo < csPesquisa.RecordCount then
-            csPesquisa.Next;
-        end;
-      end else begin
-        if not edPesquisa.Focused then begin
-          if edPesquisa.CanFocus then begin
-            edPesquisa.SetFocus;
-          end;
+        if not cds_Margens.IsEmpty then begin
+          if cds_Margens.RecNo < cds_Margens.RecordCount then
+            cds_Margens.Next;
         end;
       end;
+    end;
+  end else begin
+    case Key of
+      VK_ESCAPE : Cancelar;
     end;
   end;
 end;
 
-procedure TFrmCadastroMargem.FormResize(Sender: TObject);
-Var
-  I : Integer;
-begin
-  pnAjusteBotoes1.Width := ((pnBotoesVisualizacao.ClientWidth div 2) - (btExcluir.Left - btNovo.Left));
-  pnAjusteBotoes2.Width := ((pnBotoesVisualizacao.ClientWidth div 2) - btGravar.Width) - 3;
-
-  {I := pnBotoesVisualizacao.ClientWidth div 7;
-  gbEstoqueFisico.Left  := I * 1;
-  gbEstoqueVirtual.Left := I * 3;
-  gbEstoquePersonalizado.Left := I * 5;
-
-  I := (Self.ClientHeight div 2) - gbEstoqueFisico.Height div 2;
-  gbEstoqueFisico.Top         := I;
-  gbEstoqueVirtual.Top        := I;
-  gbEstoquePersonalizado.Top  := I;}
-
-end;
-
 procedure TFrmCadastroMargem.FormShow(Sender: TObject);
 begin
-  csPesquisa.CreateDataSet;
+  cds_Margens.CreateDataSet;
   CarregaDados;
   AutoSizeDBGrid(gdPesquisa);
+end;
+
+procedure TFrmCadastroMargem.gdPesquisaTitleClick(Column: TColumn);
+begin
+  OrdenarGrid(Column);
 end;
 
 procedure TFrmCadastroMargem.InvertePaineis;
@@ -356,8 +649,8 @@ begin
   pnEdicao.Visible              := not pnEdicao.Visible;
   pnBotoesEdicao.Visible        := pnEdicao.Visible;
   if pnEdicao.Visible then begin
-    if edDescricao.CanFocus then
-      edDescricao.SetFocus;
+    if edMargemSKU.CanFocus then
+      edMargemSKU.SetFocus;
   end;
 end;
 
