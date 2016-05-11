@@ -36,6 +36,7 @@ uses
   function carregaArrayClassificacao : Boolean;
   function FormataCNPJ(CNPJ : String) : String;
   function AjustaTamnhoCNPJ(CNPJ : String) : String;
+  function ExcluirCaracteresdeNumeric(Valor : Variant) : String;
 
 implementation
 
@@ -47,7 +48,7 @@ Uses
   uBeanUsuario_Permissao,
   uDomains,
   uMensagem,
-  uBeanLoteImportacao;
+  uBeanLoteImportacao, System.Variants;
 
 procedure CarregarConfigLocal;
 Var
@@ -576,6 +577,23 @@ begin
     Aux := '0' + Aux;
 
   Result := Aux;
+end;
+
+function ExcluirCaracteresdeNumeric(Valor : Variant) : String;
+var
+  I : Integer;
+begin
+
+  Result := Valor;
+  I := 1;
+
+  while I <= Length(Result) do begin
+    if not (Result[I] in ['0'..'9', ',']) then begin
+      Delete(Result,I,1);
+      Continue;
+    end;
+    Inc(I);
+  end;
 end;
 
 end.

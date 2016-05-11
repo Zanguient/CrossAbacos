@@ -27,8 +27,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
     Align = alClient
     TabOrder = 1
     Visible = False
-    ExplicitWidth = 861
-    ExplicitHeight = 504
     object pnBotoesEdicao: TPanel
       AlignWithMargins = True
       Left = 4
@@ -47,8 +45,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       TabOrder = 0
       TabStop = True
       Visible = False
-      ExplicitTop = 440
-      ExplicitWidth = 853
       object GridPanel2: TGridPanel
         AlignWithMargins = True
         Left = 4
@@ -83,7 +79,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             SizeStyle = ssAuto
           end>
         TabOrder = 0
-        ExplicitWidth = 845
         object Panel4: TPanel
           Left = 424
           Top = 0
@@ -92,8 +87,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitLeft = 422
-          ExplicitWidth = 423
           object btCancelar: TSpeedButton
             AlignWithMargins = True
             Left = 3
@@ -508,7 +501,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 422
           object btGravar: TSpeedButton
             AlignWithMargins = True
             Left = 321
@@ -672,8 +664,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       Color = clWhite
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 859
-      ExplicitHeight = 436
       object Panel3: TPanel
         Left = 1
         Top = 1
@@ -690,7 +680,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
         ParentBackground = False
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 853
       end
       object GridPanel1: TGridPanel
         Left = 1
@@ -721,8 +710,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Value = 100.000000000000000000
           end>
         TabOrder = 1
-        ExplicitWidth = 853
-        ExplicitHeight = 388
         object pnUsuarioEsquerda: TPanel
           Left = 1
           Top = 1
@@ -730,8 +717,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Height = 355
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 425
-          ExplicitHeight = 386
           DesignSize = (
             427
             355)
@@ -827,7 +812,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            ExplicitWidth = 413
           end
           object edSKU: TEdit
             Left = 4
@@ -843,7 +827,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             TabOrder = 0
-            ExplicitWidth = 413
           end
           object edMargemSKU: TEdit
             Left = 4
@@ -858,7 +841,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             TabOrder = 2
-            ExplicitWidth = 413
           end
           object edPrecoPonta: TEdit
             Left = 4
@@ -873,7 +855,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             TabOrder = 3
-            ExplicitWidth = 413
           end
           object edPrecoPromocional: TEdit
             Left = 4
@@ -888,7 +869,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             TabOrder = 4
-            ExplicitWidth = 413
           end
           object edValidadePromocional: TDateTimePicker
             Left = 4
@@ -913,9 +893,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Height = 355
           Align = alClient
           TabOrder = 1
-          ExplicitLeft = 426
-          ExplicitWidth = 426
-          ExplicitHeight = 386
           DesignSize = (
             427
             355)
@@ -1065,8 +1042,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
     Height = 473
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 861
-    ExplicitHeight = 504
     object gdPesquisa: TDBGrid
       AlignWithMargins = True
       Left = 4
@@ -1179,8 +1154,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       Color = clWhite
       ParentBackground = False
       TabOrder = 1
-      ExplicitTop = 440
-      ExplicitWidth = 853
       object gpBotoes: TGridPanel
         AlignWithMargins = True
         Left = 4
@@ -1212,7 +1185,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Value = 100.000000000000000000
           end>
         TabOrder = 0
-        ExplicitWidth = 845
         object Panel8: TPanel
           Left = 0
           Top = 0
@@ -1221,7 +1193,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 422
           object btAlterar: TSpeedButton
             AlignWithMargins = True
             Left = 321
@@ -1496,8 +1467,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitLeft = 422
-          ExplicitWidth = 423
           object btExcluir: TSpeedButton
             AlignWithMargins = True
             Left = 3
@@ -1768,7 +1737,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       ParentBackground = False
       ParentFont = False
       TabOrder = 2
-      ExplicitWidth = 859
       object btPesquisar: TSpeedButton
         AlignWithMargins = True
         Left = 759
@@ -1853,8 +1821,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
-        ExplicitLeft = 160
-        ExplicitWidth = 590
       end
       object cbFiltroMargens: TComboBox
         AlignWithMargins = True
@@ -1898,7 +1864,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       ParentBackground = False
       ParentFont = False
       TabOrder = 3
-      ExplicitWidth = 853
     end
   end
   object ds_Margens: TDataSource

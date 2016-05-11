@@ -155,8 +155,8 @@ begin
           pbAtualiza.MaxValue                   := vrow;
           arrData                               := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
 
-          F.DESCRICAO.excelTitulo               := 'Descrição';
-          F.MARGEM.excelTitulo                  := '(%) Margem';
+          F.DESCRICAO.excelTitulo               := 'Departamento';
+          F.MARGEM.excelTitulo                  := 'Margem';
 
           F.buscaIndicesExcel(Arquivo, Excel);
 
@@ -164,8 +164,8 @@ begin
           for I := 0 to Pred(Count) do begin
             if (TFieldTypeDomain(GetObjectProp(F, List[I]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(F, List[I]^.Name)).excelIndice <= 0) then begin
               DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Segue colunas necessárias: ' + sLineBreak +
-                                                                                    'Descrição, ' + sLineBreak +
-                                                                                    '(%) Margem');
+                                                                                    'Departamento, ' + sLineBreak +
+                                                                                    'Margem');
               Exit;
             end;
           end;
@@ -174,8 +174,12 @@ begin
             for J := 0 to Pred(Count) do begin
               if (TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).excelIndice > 0) then begin
                 Valor                                   := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).excelIndice]);
-                if Valor <> '' then
-                  TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).asVariant := Valor;
+                if Valor <> '' then begin
+                  if (TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)) is TFieldCurrency) then
+                    TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).asVariant := ExcluirCaracteresdeNumeric(Valor)
+                  else
+                    TFieldTypeDomain(GetObjectProp(F, List[J]^.Name)).asVariant := Valor;
+                end;
               end;
             end;
 
@@ -387,7 +391,7 @@ begin
 
       cds_Familias.EmptyDataSet;
 
-      F.SelectList('', 'ID');
+      F.SelectList('ID > 0', 'ID');
       if F.Count > 0 then begin
         for I := 0 to F.Count -1 do begin
           cds_Familias.Append;

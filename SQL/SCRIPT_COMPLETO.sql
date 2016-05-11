@@ -242,6 +242,10 @@ CREATE TABLE IF NOT EXISTS familia (
   dataautorizado timestamp without time zone NOT NULL,  
   CONSTRAINT pk_familia_id PRIMARY KEY (id));
 
+INSERT INTO familia(
+            id, descricao, margem, autorizadopor, dataautorizado)
+    VALUES (0, 'Sem Família', 0, '', CURRENT_TIMESTAMP);
+
 CREATE TABLE IF NOT EXISTS margem (
   id serial NOT NULL,
   id_produto int not null unique,

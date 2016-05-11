@@ -1587,6 +1587,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
     object cds_FamiliasMARGEM: TCurrencyField
       DisplayLabel = '(%) Margem'
       FieldName = 'MARGEM'
+      DisplayFormat = '#,##0.00%'
       currency = False
     end
     object cds_FamiliasAUTORIZADOPOR: TStringField
