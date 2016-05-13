@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Vcl.StdCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Mask,
   Vcl.DBCtrls, System.TypInfo, System.Win.ComObj, Vcl.Samples.Gauges,
-  FireDAC.Comp.Client, Vcl.ComCtrls;
+  FireDAC.Comp.Client, Vcl.ComCtrls, JvToolEdit, JvExMask, JvBaseEdits;
 
 type
   TFrmCadastroMargem = class(TForm)
@@ -63,24 +63,24 @@ type
     cds_MargensSTATUS: TStringField;
     edSKU: TEdit;
     Label4: TLabel;
-    edPercentualVPC: TEdit;
     Label9: TLabel;
     Label3: TLabel;
-    edMargemSKU: TEdit;
-    edPrecoPonta: TEdit;
     Label5: TLabel;
-    edPrecoPromocional: TEdit;
     Label6: TLabel;
     Label7: TLabel;
     edAutorizadoPor: TEdit;
     Label1: TLabel;
-    edPercentualFrete: TEdit;
     Label10: TLabel;
-    edPercentualOutros: TEdit;
     Label11: TLabel;
-    edMargemAnalista: TEdit;
     Label8: TLabel;
-    edValidadePromocional: TDateTimePicker;
+    edMargemSKU: TJvCalcEdit;
+    edPrecoPonta: TJvCalcEdit;
+    edPrecoPromocional: TJvCalcEdit;
+    edMargemAnalista: TJvCalcEdit;
+    edPercentualVPC: TJvCalcEdit;
+    edPercentualFrete: TJvCalcEdit;
+    edPercentualOutros: TJvCalcEdit;
+    edValidadePromocional: TJvDateEdit;
     procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -142,14 +142,14 @@ begin
     edSKU.Tag                   := cds_MargensID_PRODUTO.Value;
     edSKU.Text                  := cds_MargensSKU.Value;
     edNomeProduto.Text          := cds_MargensNOME_PRODUTO.Value;
-    edMargemSKU.Text            := cds_MargensMARGEMSKU.AsString;
-    edPrecoPonta.Text           := cds_MargensPRECOPONTA.AsString;
-    edPrecoPromocional.Text     := cds_MargensPRECOPROMOCIONAL.AsString;
+    edMargemSKU.Value           := cds_MargensMARGEMSKU.Value;
+    edPrecoPonta.Value          := cds_MargensPRECOPONTA.Value;
+    edPrecoPromocional.Value    := cds_MargensPRECOPROMOCIONAL.Value;
     edValidadePromocional.Date  := cds_MargensVALPRECOPROMOCIONAL.Value;
-    edMargemAnalista.Text       := cds_MargensMARGEMANALISTA.AsString;
-    edPercentualVPC.Text        := cds_MargensPERCENTUALVPC.AsString;
-    edPercentualFrete.Text      := cds_MargensPERCENTUALFRETE.AsString;
-    edPercentualOutros.Text     := cds_MargensPERCENTUALOUTROS.AsString;
+    edMargemAnalista.Value      := cds_MargensMARGEMANALISTA.Value;
+    edPercentualVPC.Value       := cds_MargensPERCENTUALVPC.Value;
+    edPercentualFrete.Value     := cds_MargensPERCENTUALFRETE.Value;
+    edPercentualOutros.Value    := cds_MargensPERCENTUALOUTROS.Value;
     edAutorizadoPor.Text        := cds_MargensAUTORIZADOPOR.AsString;
     btGravar.Tag                := cds_MargensID.Value;
   end;
@@ -508,63 +508,14 @@ begin
   try
     try
 
-      if StrToCurrDef(edMargemSKU.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Margem SKU inválida, Verifique!');
-        if edMargemSKU.CanFocus then
-          edMargemSKU.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edPrecoPonta.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Preço Ponta inválido, Verifique!');
-        if edPrecoPonta.CanFocus then
-          edPrecoPonta.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edPrecoPromocional.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Preço Promocional inválido, Verifique!');
-        if edPrecoPromocional.CanFocus then
-          edPrecoPromocional.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edMargemAnalista.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Margem Analista inválida, Verifique!');
-        if edMargemAnalista.CanFocus then
-          edMargemAnalista.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edPercentualVPC.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Percentual VPC inválido, Verifique!');
-        if edPercentualVPC.CanFocus then
-          edPercentualVPC.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edPercentualFrete.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Percentual Frete inválido, Verifique!');
-        if edPercentualFrete.CanFocus then
-          edPercentualFrete.SetFocus;
-        Exit;
-      end;
-
-      if StrToCurrDef(edPercentualOutros.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Percentual Outros inválido, Verifique!');
-        if edPercentualOutros.CanFocus then
-          edPercentualOutros.SetFocus;
-        Exit;
-      end;
-
-      M.MARGEMSKU.Value             := StrToCurr(edMargemSKU.Text);
-      M.PRECOPONTA.Value            := StrToCurr(edPrecoPonta.Text);
-      M.PRECOPROMOCIONAL.Value      := StrToCurr(edPrecoPromocional.Text);
-      M.VALPRECOPROMOCIONAL.Value   := edValidadePromocional.DateTime;
-      M.MARGEMANALISTA.Value        := StrToCurr(edMargemAnalista.Text);
-      M.PERCENTUALVPC.Value         := StrToCurr(edPercentualVPC.Text);
-      M.PERCENTUALFRETE.Value       := StrToCurr(edPercentualFrete.Text);
-      M.PERCENTUALOUTROS.Value      := StrToCurr(edPercentualOutros.Text);
+      M.MARGEMSKU.Value             := edMargemSKU.Value;
+      M.PRECOPONTA.Value            := edPrecoPonta.Value;
+      M.PRECOPROMOCIONAL.Value      := edPrecoPromocional.Value;
+      M.VALPRECOPROMOCIONAL.Value   := edValidadePromocional.Date;
+      M.MARGEMANALISTA.Value        := edMargemAnalista.Value;
+      M.PERCENTUALVPC.Value         := edPercentualVPC.Value;
+      M.PERCENTUALFRETE.Value       := edPercentualFrete.Value;
+      M.PERCENTUALOUTROS.Value      := edPercentualOutros.Value;
       M.AUTORIZADOPOR.Value         := edAutorizadoPor.Text;
       M.DATAAUTORIZADO.Value        := Date;
 

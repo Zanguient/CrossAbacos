@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Vcl.StdCtrls, Vcl.Buttons, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Mask,
-  Vcl.DBCtrls, System.TypInfo, System.Win.ComObj, Vcl.Samples.Gauges;
+  Vcl.DBCtrls, System.TypInfo, System.Win.ComObj, Vcl.Samples.Gauges, JvExMask,
+  JvToolEdit, JvBaseEdits;
 
 type
   TFrmCadastroFamilia = class(TForm)
@@ -43,7 +44,6 @@ type
     edDescricao: TEdit;
     pnUsuarioDireita: TPanel;
     Label3: TLabel;
-    edMargem: TEdit;
     btAtualizar: TSpeedButton;
     btExportar: TSpeedButton;
     OpenDialog1: TOpenDialog;
@@ -53,6 +53,7 @@ type
     btCancelar: TSpeedButton;
     Panel5: TPanel;
     btGravar: TSpeedButton;
+    edMargem: TJvCalcEdit;
     procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -101,7 +102,7 @@ begin
     btGravar.Tag  := 0;
   end else begin
     edDescricao.Text      := cds_FamiliasDESCRICAO.Value;
-    edMargem.Text         := cds_FamiliasMARGEM.AsString;
+    edMargem.Value        := cds_FamiliasMARGEM.Value;
     edAutorizadoPor.Text  := cds_FamiliasAUTORIZADOPOR.Value;
     btGravar.Tag          := cds_FamiliasID.Value;
   end;
@@ -322,15 +323,8 @@ begin
         Exit;
       end;
 
-      if StrToCurrDef(edMargem.Text,-1) = -1 then begin
-        DisplayMsg(MSG_WAR, 'Margem inválida, Verifique!');
-        if edMargem.CanFocus then
-          edMargem.SetFocus;
-        Exit;
-      end;
-
       F.DESCRICAO.Value     := edDescricao.Text;
-      F.MARGEM.Value        := StrToCurrDef(edMargem.Text,0.00);
+      F.MARGEM.Value        := edMargem.Value;
       F.AUTORIZADOPOR.Value := edAutorizadoPor.Text;
       F.DATAAUTORIZADO.Value:= Date;
 

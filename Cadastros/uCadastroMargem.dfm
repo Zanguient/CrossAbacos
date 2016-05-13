@@ -828,61 +828,69 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ParentFont = False
             TabOrder = 0
           end
-          object edMargemSKU: TEdit
+          object edMargemSKU: TJvCalcEdit
             Left = 4
             Top = 142
             Width = 415
             Height = 27
-            Anchors = [akLeft, akTop, akRight]
+            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
             TabOrder = 2
+            DecimalPlacesAlwaysShown = True
           end
-          object edPrecoPonta: TEdit
+          object edPrecoPonta: TJvCalcEdit
             Left = 4
             Top = 200
             Width = 415
             Height = 27
-            Anchors = [akLeft, akTop, akRight]
+            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
             TabOrder = 3
+            DecimalPlacesAlwaysShown = True
           end
-          object edPrecoPromocional: TEdit
-            Left = 4
+          object edPrecoPromocional: TJvCalcEdit
+            Left = 6
             Top = 258
             Width = 415
             Height = 27
-            Anchors = [akLeft, akTop, akRight]
+            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
             TabOrder = 4
+            DecimalPlacesAlwaysShown = True
           end
-          object edValidadePromocional: TDateTimePicker
+          object edValidadePromocional: TJvDateEdit
             Left = 4
-            Top = 315
+            Top = 316
             Width = 203
             Height = 27
-            Date = 42498.934261458340000000
-            Time = 42498.934261458340000000
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
+            ShowNullDate = False
             TabOrder = 5
           end
         end
@@ -961,20 +969,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
           end
-          object edPercentualVPC: TEdit
-            Left = 6
-            Top = 84
-            Width = 414
-            Height = 27
-            Anchors = [akLeft, akTop, akRight]
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 1
-          end
           object edAutorizadoPor: TEdit
             Left = 6
             Top = 258
@@ -987,49 +981,75 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 4
+            TabOrder = 0
           end
-          object edPercentualFrete: TEdit
-            Left = 6
-            Top = 142
-            Width = 414
-            Height = 27
-            Anchors = [akLeft, akTop, akRight]
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 2
-          end
-          object edPercentualOutros: TEdit
-            Left = 6
-            Top = 200
-            Width = 414
-            Height = 27
-            Anchors = [akLeft, akTop, akRight]
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-            TabOrder = 3
-          end
-          object edMargemAnalista: TEdit
+          object edMargemAnalista: TJvCalcEdit
             Left = 6
             Top = 26
-            Width = 414
+            Width = 415
             Height = 27
-            Anchors = [akLeft, akTop, akRight]
+            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 1
+            DecimalPlacesAlwaysShown = True
+          end
+          object edPercentualVPC: TJvCalcEdit
+            Left = 6
+            Top = 84
+            Width = 415
+            Height = 27
+            DisplayFormat = ',0.00'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
+            ParentFont = False
+            TabOrder = 2
+            DecimalPlacesAlwaysShown = True
+          end
+          object edPercentualFrete: TJvCalcEdit
+            Left = 6
+            Top = 142
+            Width = 415
+            Height = 27
+            DisplayFormat = ',0.00'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
+            ParentFont = False
+            TabOrder = 3
+            DecimalPlacesAlwaysShown = True
+          end
+          object edPercentualOutros: TJvCalcEdit
+            Left = 6
+            Top = 200
+            Width = 415
+            Height = 27
+            DisplayFormat = ',0.00'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
+            ParentFont = False
+            TabOrder = 4
+            DecimalPlacesAlwaysShown = True
           end
         end
       end

@@ -722,7 +722,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             386)
           object Label1: TLabel
             Left = 4
-            Top = 59
+            Top = 61
             Width = 106
             Height = 19
             Caption = 'Autorizado Por'
@@ -748,7 +748,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           end
           object edAutorizadoPor: TEdit
             Left = 5
-            Top = 83
+            Top = 86
             Width = 414
             Height = 27
             Anchors = [akLeft, akTop, akRight]
@@ -762,7 +762,7 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
           end
           object edDescricao: TEdit
             Left = 4
-            Top = 26
+            Top = 28
             Width = 415
             Height = 27
             Anchors = [akLeft, akTop, akRight]
@@ -798,19 +798,22 @@ object FrmCadastroFamilia: TFrmCadastroFamilia
             Font.Style = []
             ParentFont = False
           end
-          object edMargem: TEdit
+          object edMargem: TJvCalcEdit
             Left = 6
-            Top = 26
-            Width = 413
+            Top = 28
+            Width = 411
             Height = 27
-            Anchors = [akLeft, akTop, akRight]
+            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
             TabOrder = 0
+            DecimalPlacesAlwaysShown = True
           end
         end
       end
