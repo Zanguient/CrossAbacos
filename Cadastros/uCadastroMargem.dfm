@@ -4,8 +4,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
   ActiveControl = edPesquisa
   BorderStyle = bsNone
   Caption = 'Cadastro Margem'
-  ClientHeight = 473
-  ClientWidth = 864
+  ClientHeight = 548
+  ClientWidth = 931
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,16 +22,16 @@ object FrmCadastroMargem: TFrmCadastroMargem
   object pnEdicao: TPanel
     Left = 0
     Top = 0
-    Width = 864
-    Height = 473
+    Width = 931
+    Height = 548
     Align = alClient
     TabOrder = 1
     Visible = False
     object pnBotoesEdicao: TPanel
       AlignWithMargins = True
       Left = 4
-      Top = 409
-      Width = 856
+      Top = 484
+      Width = 923
       Height = 60
       Align = alBottom
       Color = clWhite
@@ -49,7 +49,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
         AlignWithMargins = True
         Left = 4
         Top = 4
-        Width = 848
+        Width = 915
         Height = 52
         Align = alClient
         BevelOuter = bvNone
@@ -80,9 +80,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end>
         TabOrder = 0
         object Panel4: TPanel
-          Left = 424
+          Left = 457
           Top = 0
-          Width = 424
+          Width = 458
           Height = 52
           Align = alClient
           BevelOuter = bvNone
@@ -496,14 +496,14 @@ object FrmCadastroMargem: TFrmCadastroMargem
         object Panel5: TPanel
           Left = 0
           Top = 0
-          Width = 424
+          Width = 457
           Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           object btGravar: TSpeedButton
             AlignWithMargins = True
-            Left = 321
+            Left = 354
             Top = 3
             Width = 100
             Height = 46
@@ -647,9 +647,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
               61FF8C5F61FF8C5F61FFE4DADAFFFFFFFFFFFFFFFFFFFFFFFFFF}
             ParentFont = False
             OnClick = btGravarClick
-            ExplicitLeft = 12
-            ExplicitTop = 8
-            ExplicitHeight = 36
+            ExplicitTop = -1
           end
         end
       end
@@ -657,8 +655,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 862
-      Height = 405
+      Width = 929
+      Height = 480
       Align = alClient
       BorderStyle = bsSingle
       Color = clWhite
@@ -667,7 +665,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
       object Panel3: TPanel
         Left = 1
         Top = 1
-        Width = 856
+        Width = 923
         Height = 42
         Align = alTop
         Caption = 'Cadastro de Margens'
@@ -684,8 +682,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
       object GridPanel1: TGridPanel
         Left = 1
         Top = 43
-        Width = 856
-        Height = 357
+        Width = 923
+        Height = 432
         Align = alClient
         ColumnCollection = <
           item
@@ -713,16 +711,16 @@ object FrmCadastroMargem: TFrmCadastroMargem
         object pnUsuarioEsquerda: TPanel
           Left = 1
           Top = 1
-          Width = 427
-          Height = 355
+          Width = 460
+          Height = 430
           Align = alClient
           TabOrder = 0
           DesignSize = (
-            427
-            355)
+            460
+            430)
           object Label2: TLabel
             Left = 4
-            Top = 59
+            Top = 53
             Width = 109
             Height = 19
             Caption = 'Nome Produto:'
@@ -735,7 +733,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label4: TLabel
             Left = 4
-            Top = 3
+            Top = 1
             Width = 35
             Height = 19
             Caption = 'SKU:'
@@ -748,10 +746,10 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label3: TLabel
             Left = 4
-            Top = 117
-            Width = 97
+            Top = 105
+            Width = 124
             Height = 19
-            Caption = 'Margem SKU:'
+            Caption = 'Margem Analista:'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -761,7 +759,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label5: TLabel
             Left = 4
-            Top = 175
+            Top = 157
             Width = 90
             Height = 19
             Caption = 'Pre'#231'o Ponta:'
@@ -774,25 +772,103 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label6: TLabel
             Left = 4
-            Top = 233
-            Width = 138
+            Top = 209
+            Width = 121
             Height = 19
-            Caption = 'Pre'#231'o Promocional:'
+            Caption = 'Pre'#231'o Promo'#231#227'o:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clRed
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
           end
           object Label7: TLabel
-            Left = 4
-            Top = 291
-            Width = 203
+            Left = 249
+            Top = 209
+            Width = 166
             Height = 19
-            Caption = 'Validade Pre'#231'o Promocional:'
+            Caption = 'Valid. Pre'#231'o Promo'#231#227'o:'
             Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
+            Font.Color = clRed
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label12: TLabel
+            Left = 249
+            Top = 258
+            Width = 181
+            Height = 19
+            Caption = 'Data do Pre'#231'o Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clRed
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label13: TLabel
+            Left = 4
+            Top = 258
+            Width = 213
+            Height = 19
+            Caption = 'Respons'#225'vel Pre'#231'o Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clRed
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label14: TLabel
+            Left = 4
+            Top = 310
+            Width = 139
+            Height = 19
+            Caption = 'Margem Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label15: TLabel
+            Left = 249
+            Top = 310
+            Width = 184
+            Height = 19
+            Caption = 'Valid. Margem Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label16: TLabel
+            Left = 249
+            Top = 362
+            Width = 198
+            Height = 19
+            Caption = 'Data da Margem Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object Label17: TLabel
+            Left = 4
+            Top = 362
+            Width = 231
+            Height = 19
+            Caption = 'Respons'#225'vel Margem Promo'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlue
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
@@ -800,8 +876,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object edNomeProduto: TEdit
             Left = 4
-            Top = 84
-            Width = 415
+            Top = 75
+            Width = 448
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Enabled = False
@@ -815,8 +891,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object edSKU: TEdit
             Left = 4
-            Top = 26
-            Width = 415
+            Top = 23
+            Width = 448
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Enabled = False
@@ -828,10 +904,10 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ParentFont = False
             TabOrder = 0
           end
-          object edMargemSKU: TJvCalcEdit
+          object edMargemAnalista: TJvCalcEdit
             Left = 4
-            Top = 142
-            Width = 415
+            Top = 127
+            Width = 448
             Height = 27
             DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
@@ -847,8 +923,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object edPrecoPonta: TJvCalcEdit
             Left = 4
-            Top = 200
-            Width = 415
+            Top = 179
+            Width = 448
             Height = 27
             DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
@@ -862,10 +938,10 @@ object FrmCadastroMargem: TFrmCadastroMargem
             TabOrder = 3
             DecimalPlacesAlwaysShown = True
           end
-          object edPrecoPromocional: TJvCalcEdit
-            Left = 6
-            Top = 258
-            Width = 415
+          object edPrecoPromocao: TJvCalcEdit
+            Left = 4
+            Top = 228
+            Width = 239
             Height = 27
             DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
@@ -879,9 +955,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
             TabOrder = 4
             DecimalPlacesAlwaysShown = True
           end
-          object edValidadePromocional: TJvDateEdit
-            Left = 4
-            Top = 316
+          object edValidPrecoPromocao: TJvDateEdit
+            Left = 249
+            Top = 228
             Width = 203
             Height = 27
             Font.Charset = DEFAULT_CHARSET
@@ -893,20 +969,107 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ShowNullDate = False
             TabOrder = 5
           end
+          object edDataPrecoPromocao: TJvDateEdit
+            Left = 249
+            Top = 280
+            Width = 203
+            Height = 27
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ShowNullDate = False
+            TabOrder = 7
+          end
+          object edRespPrecoPromocao: TEdit
+            Left = 4
+            Top = 280
+            Width = 239
+            Height = 27
+            Anchors = [akLeft, akTop, akRight]
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 6
+          end
+          object edMargemPromocao: TJvCalcEdit
+            Left = 4
+            Top = 332
+            Width = 239
+            Height = 27
+            DisplayFormat = ',0.00'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
+            ParentFont = False
+            TabOrder = 8
+            DecimalPlacesAlwaysShown = True
+          end
+          object edValidMargemPromocao: TJvDateEdit
+            Left = 249
+            Top = 332
+            Width = 203
+            Height = 27
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ShowNullDate = False
+            TabOrder = 9
+          end
+          object edDataMargemPromocao: TJvDateEdit
+            Left = 249
+            Top = 384
+            Width = 203
+            Height = 27
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ShowNullDate = False
+            TabOrder = 11
+          end
+          object edRespMargemPromocao: TEdit
+            Left = 4
+            Top = 384
+            Width = 239
+            Height = 27
+            Anchors = [akLeft, akTop, akRight]
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            TabOrder = 10
+          end
         end
         object pnUsuarioDireita: TPanel
-          Left = 428
+          Left = 461
           Top = 1
-          Width = 427
-          Height = 355
+          Width = 461
+          Height = 430
           Align = alClient
           TabOrder = 1
           DesignSize = (
-            427
-            355)
+            461
+            430)
           object Label9: TLabel
-            Left = 7
-            Top = 59
+            Left = 6
+            Top = 1
             Width = 68
             Height = 19
             Caption = '(%) VPC:'
@@ -918,8 +1081,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ParentFont = False
           end
           object Label1: TLabel
-            Left = 7
-            Top = 233
+            Left = 6
+            Top = 209
             Width = 112
             Height = 19
             Caption = 'Autorizado Por:'
@@ -931,8 +1094,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ParentFont = False
           end
           object Label10: TLabel
-            Left = 7
-            Top = 117
+            Left = 6
+            Top = 53
             Width = 74
             Height = 19
             Caption = '(%) Frete:'
@@ -944,8 +1107,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ParentFont = False
           end
           object Label11: TLabel
-            Left = 7
-            Top = 175
+            Left = 6
+            Top = 105
             Width = 87
             Height = 19
             Caption = '(%) Outros:'
@@ -956,12 +1119,25 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
           end
+          object Label18: TLabel
+            Left = 6
+            Top = 157
+            Width = 148
+            Height = 19
+            Caption = 'Data de Autoriza'#231#227'o:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
           object Label8: TLabel
             Left = 6
-            Top = 1
-            Width = 124
+            Top = 258
+            Width = 103
             Height = 19
-            Caption = 'Margem Analista:'
+            Caption = 'Solicitado Por:'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -971,8 +1147,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object edAutorizadoPor: TEdit
             Left = 6
-            Top = 258
-            Width = 415
+            Top = 228
+            Width = 449
             Height = 27
             Anchors = [akLeft, akTop, akRight]
             Font.Charset = DEFAULT_CHARSET
@@ -981,12 +1157,29 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 4
           end
-          object edMargemAnalista: TJvCalcEdit
+          object edPercentualVPC: TJvCalcEdit
+            Left = 5
+            Top = 23
+            Width = 449
+            Height = 27
+            DisplayFormat = ',0.00'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -16
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            FormatOnEditing = True
+            Anchors = [akLeft, akTop, akRight]
+            ParentFont = False
+            TabOrder = 0
+            DecimalPlacesAlwaysShown = True
+          end
+          object edPercentualFrete: TJvCalcEdit
             Left = 6
-            Top = 26
-            Width = 415
+            Top = 75
+            Width = 449
             Height = 27
             DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
@@ -1000,10 +1193,10 @@ object FrmCadastroMargem: TFrmCadastroMargem
             TabOrder = 1
             DecimalPlacesAlwaysShown = True
           end
-          object edPercentualVPC: TJvCalcEdit
+          object edPercentualOutros: TJvCalcEdit
             Left = 6
-            Top = 84
-            Width = 415
+            Top = 127
+            Width = 449
             Height = 27
             DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
@@ -1017,39 +1210,33 @@ object FrmCadastroMargem: TFrmCadastroMargem
             TabOrder = 2
             DecimalPlacesAlwaysShown = True
           end
-          object edPercentualFrete: TJvCalcEdit
+          object edDataAutorizacao: TJvDateEdit
             Left = 6
-            Top = 142
-            Width = 415
+            Top = 179
+            Width = 187
             Height = 27
-            DisplayFormat = ',0.00'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
-            FormatOnEditing = True
-            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
+            ShowNullDate = False
             TabOrder = 3
-            DecimalPlacesAlwaysShown = True
           end
-          object edPercentualOutros: TJvCalcEdit
+          object edSolicitadoPor: TEdit
             Left = 6
-            Top = 200
-            Width = 415
+            Top = 280
+            Width = 449
             Height = 27
-            DisplayFormat = ',0.00'
+            Anchors = [akLeft, akTop, akRight]
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
             Font.Name = 'Tahoma'
             Font.Style = []
-            FormatOnEditing = True
-            Anchors = [akLeft, akTop, akRight]
             ParentFont = False
-            TabOrder = 4
-            DecimalPlacesAlwaysShown = True
+            TabOrder = 5
           end
         end
       end
@@ -1058,16 +1245,16 @@ object FrmCadastroMargem: TFrmCadastroMargem
   object pnVisualizacao: TPanel
     Left = 0
     Top = 0
-    Width = 864
-    Height = 473
+    Width = 931
+    Height = 548
     Align = alClient
     TabOrder = 0
     object gdPesquisa: TDBGrid
       AlignWithMargins = True
       Left = 4
       Top = 92
-      Width = 856
-      Height = 311
+      Width = 923
+      Height = 386
       Align = alClient
       DataSource = ds_Margens
       DrawingStyle = gdsGradient
@@ -1088,6 +1275,11 @@ object FrmCadastroMargem: TFrmCadastroMargem
       Columns = <
         item
           Expanded = False
+          FieldName = 'ID'
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'SKU'
           Width = 150
           Visible = True
@@ -1106,60 +1298,67 @@ object FrmCadastroMargem: TFrmCadastroMargem
         end
         item
           Expanded = False
-          FieldName = 'MARGEMSKU'
+          FieldName = 'MARGEM_ANALISTA'
           Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PRECOPONTA'
+          FieldName = 'PRECO_PONTA'
           Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PRECOPROMOCIONAL'
+          FieldName = 'PRECO_PROMOCIONAL'
           Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'VALPRECOPROMOCIONAL'
+          FieldName = 'VAL_PRECO_PROMOCIONAL'
           Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'MARGEMANALISTA'
+          FieldName = 'MARGEM_PROMOCIONAL'
+          Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PERCENTUALVPC'
-          Width = 111
+          FieldName = 'VAL_MARGEM_PROMOCIONAL'
+          Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PERCENTUALFRETE'
-          Width = 117
+          FieldName = 'PERCENTUAL_VPC'
+          Width = 150
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PERCENTUAL_FRETE'
+          Width = 150
           Visible = True
         end
         item
           Expanded = False
           FieldName = 'PERCENTUALOUTROS'
-          Width = 130
+          Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'AUTORIZADOPOR'
+          FieldName = 'AUTORIZADO_POR'
           Width = 250
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'DATAAUTORIZADO'
+          FieldName = 'DATA_AUTORIZACAO'
           Width = 150
           Visible = True
         end>
@@ -1167,8 +1366,8 @@ object FrmCadastroMargem: TFrmCadastroMargem
     object pnBotoesVisualizacao: TPanel
       AlignWithMargins = True
       Left = 4
-      Top = 409
-      Width = 856
+      Top = 484
+      Width = 923
       Height = 60
       Align = alBottom
       Color = clWhite
@@ -1178,7 +1377,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
         AlignWithMargins = True
         Left = 4
         Top = 4
-        Width = 848
+        Width = 915
         Height = 52
         Align = alClient
         BevelOuter = bvNone
@@ -1208,14 +1407,14 @@ object FrmCadastroMargem: TFrmCadastroMargem
         object Panel8: TPanel
           Left = 0
           Top = 0
-          Width = 424
+          Width = 457
           Height = 52
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
           object btAlterar: TSpeedButton
             AlignWithMargins = True
-            Left = 321
+            Left = 354
             Top = 3
             Width = 100
             Height = 46
@@ -1279,76 +1478,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
               FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
               FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
             OnClick = btAlterarClick
-            ExplicitLeft = 12
-            ExplicitTop = 8
-            ExplicitHeight = 42
-          end
-          object btNovo: TSpeedButton
-            AlignWithMargins = True
-            Left = 215
-            Top = 3
-            Width = 100
-            Height = 46
-            Align = alRight
-            Caption = '&Novo'
-            Glyph.Data = {
-              F6060000424DF606000000000000360000002800000018000000180000000100
-              180000000000C0060000C40E0000C40E00000000000000000000FFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE8C4B0C4652EC6662FC86830CA69
-              30CC6B31CE6C31EDC8B2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC2632EF7C183
-              F5A543F6A440F7A641F8A842F6A645D06E32FFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFC2632EFAC889E58539E78A3DE98E40EF9844F9AA49D06E32FFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFC2632EFAC889E07C38E3823DE68841ED9546F9AB4BD0
-              6E32FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC1632EFAC889E07C39E3833DE689
-              42ED9547F9AB4CCF6D32FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC1622EFAC889
-              E07C39E3833DE68942ED9547F9AB4CCE6D31FFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFC1622EFAC889E07C38E3823DE68841ED9546F9AB4BCD6C31FFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFC0612DFAC889DF7B37E2803CE58640EC9344F9AA49CC
-              6B31FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE1BFAEB25729
-              C3682DC4692DC66B2EC76C2FC96E2FCB6F30CC7031FAC889DE7936E17E3AE484
-              3EEB9142F8A946D67A37D87B38D97C38DA7D39DA7E3ADB7E39DB7E39D16F32EE
-              C9B2AF5529F4C18AF1A44FF2A24AF2A146F19B3AF19C39F29D3AF39E3BF8B96C
-              DD7634DF7B38E2813CE98D40F8A843F8A946F9AB49F9AB4CFAAC4DFAAC4EFAAC
-              4DF9AB4BF6A647CF6D32AF5428F8C890D97639DA7739DB793ADD7A3ADC7733DC
-              742DDE772FE07B32DC7332DE7836E07D39E4843DE98E40EB9143EC9445ED9647
-              EE9748EE9849EE9748ED9647F8A945CD6C31AE5328F8C890D16632D26833D36A
-              34D56D36D66F37D87037D86F32D86D2EDA7030DC7533DE7936E07D39E2813CE4
-              853FE68841E78A43E78B44E88C44E78B43E68942F7A742CB6A30AD5328F8C890
-              D16532D26733D36934D46B35D66E37D77038D9733ADA773CDB773ADC7738DD78
-              37DE7937E07C39E17F3BE3823DE4843EE4853FE4853FE4853FE3833EF6A642C9
-              6930AC5228F8C890DC875AD77747D87948D97B49DA7D4ADB7F4BDD814CDE844E
-              DA773CDC7A3EDD7D40DF7F41E08143E18141E28342E28443E38544E38543E386
-              45E38645F6A94AC7672FAB5127F3C18AF8C890F8C890F8C890F8C990F9C990F9
-              C98FF9C98FF9CA90D9743ADA773CDC793EE38642F8BE76FACB90FACB8FFACB8F
-              FACB8FFACC90FACB8FFACB8FF7C589C5652FDFBDAEAC5228AE5328AF5529B156
-              29B25729B4582AB5592AB75A2BF9C98FD87239D9743ADA763CE18340F4A74BC0
-              612DC0622DC1622EC2632EC2632EC3642EC3642EC3642EE8C5B0FFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB5592AF9C98FD67038D77139D973
-              3AE0813FF3A64BBE602DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB4582AF9C990
-              D56D37D66F38D77038DE7E3DF3A54BBC5E2CFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFB35729F8C990D36B36D56C36D66E37DD7C3CF3A44BBA5D2CFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFB15629F8C890D36934D36A35D46B36DC7A3BF2A34BB8
-              5C2BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAF5529F8C890D16733D26834D369
-              34DB783AF2A34BB65A2BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB25B2FF8C990
-              E1905EDB7F4ADB7F4AE18B4FF3AC5DB4582AFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFB1592EF4C28CF8C890F8C990F8C990F8C890F4C18AB25729FFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFDFBDAEAB5227AD5328AE5328AE5428AF5529B05529E2
-              BFAEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-            OnClick = btNovoClick
             ExplicitLeft = 12
             ExplicitTop = 8
             ExplicitHeight = 42
@@ -1480,9 +1609,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
         end
         object Panel9: TPanel
-          Left = 424
+          Left = 457
           Top = 0
-          Width = 424
+          Width = 458
           Height = 52
           Align = alClient
           BevelOuter = bvNone
@@ -1629,7 +1758,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object btExportar: TSpeedButton
             AlignWithMargins = True
-            Left = 321
+            Left = 355
             Top = 3
             Width = 100
             Height = 46
@@ -1735,6 +1864,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
               3106823457A875FBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
               FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
             OnClick = btExportarClick
+            ExplicitLeft = 321
             ExplicitTop = -2
             ExplicitHeight = 44
           end
@@ -1744,7 +1874,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
     object pnPequisa: TPanel
       Left = 1
       Top = 49
-      Width = 862
+      Width = 929
       Height = 40
       Align = alTop
       BevelOuter = bvNone
@@ -1759,7 +1889,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
       TabOrder = 2
       object btPesquisar: TSpeedButton
         AlignWithMargins = True
-        Left = 759
+        Left = 826
         Top = 3
         Width = 100
         Height = 34
@@ -1828,7 +1958,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
         AlignWithMargins = True
         Left = 183
         Top = 3
-        Width = 570
+        Width = 637
         Height = 34
         Align = alClient
         AutoSize = False
@@ -1870,7 +2000,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
       AlignWithMargins = True
       Left = 4
       Top = 4
-      Width = 856
+      Width = 923
       Height = 42
       Align = alTop
       BevelOuter = bvNone
@@ -1906,6 +2036,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
       FieldName = 'ID_PRODUTO'
     end
     object cds_MargensSKU: TStringField
+      DisplayWidth = 150
       FieldName = 'SKU'
       Size = 100
     end
@@ -1914,54 +2045,59 @@ object FrmCadastroMargem: TFrmCadastroMargem
       FieldName = 'NOME_PRODUTO'
       Size = 255
     end
-    object cds_MargensMARGEMSKU: TCurrencyField
-      DisplayLabel = 'Margem SKU'
-      FieldName = 'MARGEMSKU'
+    object cds_MargensMARGEM_ANALISTA: TCurrencyField
+      DisplayLabel = 'Margem Analista'
+      FieldName = 'MARGEM_ANALISTA'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPRECOPONTA: TCurrencyField
+    object cds_MargensPRECO_PONTA: TCurrencyField
       DisplayLabel = 'Pre'#231'o Ponta'
-      FieldName = 'PRECOPONTA'
+      FieldName = 'PRECO_PONTA'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPRECOPROMOCIONAL: TCurrencyField
+    object cds_MargensPRECO_PROMOCIONAL: TCurrencyField
       DisplayLabel = 'Pre'#231'o Promocional'
-      FieldName = 'PRECOPROMOCIONAL'
+      FieldName = 'PRECO_PROMOCIONAL'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensVALPRECOPROMOCIONAL: TDateTimeField
+    object cds_MargensVAL_PRECO_PROMOCIONAL: TDateTimeField
       DisplayLabel = 'Validade Pre'#231'o Promocional'
-      FieldName = 'VALPRECOPROMOCIONAL'
+      FieldName = 'VAL_PRECO_PROMOCIONAL'
       DisplayFormat = 'DD/MM/YYYY'
     end
-    object cds_MargensMARGEMANALISTA: TCurrencyField
-      DisplayLabel = 'Margem Analista'
-      FieldName = 'MARGEMANALISTA'
+    object cds_MargensMARGEM_PROMOCIONAL: TCurrencyField
+      DisplayLabel = 'Margem Promocional'
+      FieldName = 'MARGEM_PROMOCIONAL'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPERCENTUALVPC: TCurrencyField
+    object cds_MargensVAL_MARGEM_PROMOCIONAL: TDateTimeField
+      DisplayLabel = 'Validade Margem Promocional'
+      FieldName = 'VAL_MARGEM_PROMOCIONAL'
+      DisplayFormat = 'DD/MM/YYYY'
+    end
+    object cds_MargensPERCENTUAL_VPC: TCurrencyField
       DisplayLabel = '(%) VPC'
-      FieldName = 'PERCENTUALVPC'
+      FieldName = 'PERCENTUAL_VPC'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPERCENTUALFRETE: TCurrencyField
+    object cds_MargensPERCENTUAL_FRETE: TCurrencyField
       DisplayLabel = '(%) Frete'
-      FieldName = 'PERCENTUALFRETE'
+      FieldName = 'PERCENTUAL_FRETE'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPERCENTUALOUTROS: TCurrencyField
+    object cds_MargensPERCENTUAL_OUTROS: TCurrencyField
       DisplayLabel = '(%) Outros'
       FieldName = 'PERCENTUALOUTROS'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensAUTORIZADOPOR: TStringField
+    object cds_MargensAUTORIZADO_POR: TStringField
       DisplayLabel = 'Autorizado Por'
-      FieldName = 'AUTORIZADOPOR'
+      FieldName = 'AUTORIZADO_POR'
       Size = 100
     end
-    object cds_MargensDATAAUTORIZADO: TDateTimeField
+    object cds_MargensDATA_AUTORIZACAO: TDateTimeField
       DisplayLabel = 'Data Autoriza'#231#227'o'
-      FieldName = 'DATAAUTORIZADO'
+      FieldName = 'DATA_AUTORIZACAO'
       DisplayFormat = 'DD/MM/YYYY'
     end
     object cds_MargensSTATUS: TStringField

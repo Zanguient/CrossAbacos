@@ -8,7 +8,8 @@ uses
   Vcl.StdCtrls, comObj, TypInfo, uDomains, Vcl.Imaging.jpeg, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Samples.Gauges;
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Samples.Gauges,
+  System.StrUtils;
 type
   TfrmImportacao = class(TForm)
     GridPanel1: TGridPanel;
@@ -56,6 +57,7 @@ type
     procedure btImportarProdutoFornecedorClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    procedure AtualizarProdutos;
     { Private declarations }
   public
     { Public declarations }
@@ -73,9 +75,460 @@ uses
   uBeanProdutoFornecedor,
   uBeanFornecedor,
   uConstantes,
-  uFuncoes;
+  uFuncoes,
+  uBeanFamilia;
 
 {$R *.dfm}
+
+procedure TfrmImportacao.AtualizarProdutos;
+type
+  TArrayFamilias = record
+    ID          : Integer;
+    DESCRICAO   : string;
+  end;
+
+type
+  TArrayProdutos = record
+    ID_PRODUTO : Integer;
+    SKU : string;
+    CODIGO_BARRAS : Integer;
+    NOME : string;
+    CUSTOANTERIOR : Currency;
+    SALDO : Currency;
+    DISPONIVEL : Currency;
+    ICMS : Currency;
+    CF : string;
+    PRODUTO_PAI : String;
+    MARCA : String;
+    CLASSE : String;
+    UNIDADE_MEDIDA : String;
+    GRUPO : String;
+    SUB_GRUPO : String;
+    PRECO_VENDA : Currency;
+    PROMOCAO_IPI : Currency;
+    PESO : Currency;
+    NCM : String;
+    ESTOQUE_MINIMO : Integer;
+    ESTOQUE_MAXIMO : Integer;
+    PRAZO_ENTREGA : Integer;
+    QUANTIDADE_EMBALAGEM : Integer;
+    C : Currency;
+    L : Currency;
+    E : Currency;
+    UN: string;
+    CODIGO_CF : Integer;
+    DIAS_GARANTIA : Integer;
+    ORIGEM_MERCADORIA : String;
+    CUSTO : Currency;
+    ID_FORNECEDORANTERIOR : Integer;
+    ID_FORNECEDORNOVO : Integer;
+    CUSTO_ESTOQUE_FISICO : Currency;
+    QUANTIDADE_ESTOQUE_FISICO : Integer;
+    MEDIA_ALTERACAO : Currency;
+    FAMILIA : String;
+    ID_FAMILIA : Integer;
+  end;
+
+const
+  xlCellTypeLastCell = $0000000B;
+Var
+  FWC     : TFWConnection;
+  F       : TFAMILIA;
+  P       : TPRODUTO;
+  Arquivo,
+  Aux     : String;
+  Excel   : OleVariant;
+  arrData,
+  Valor   : Variant;
+  vrow,
+  vcol,
+  I,
+  J       : Integer;
+  ArqValido,
+  AchouColuna : Boolean;
+  arProdutos  : array of TArrayProdutos;
+  arFamilias  : array of TArrayFamilias;
+  Colunas     : array of String;
+  arrInsert,
+  arrUpdate   : array of Integer;
+  SQL                 : TFDQuery;
+  ListaProdutosInsert : String;
+begin
+
+  SetLength(arProdutos, 0);
+  SetLength(arFamilias, 0);
+  SetLength(arrInsert, 0);
+  SetLength(arrUpdate, 0);
+
+  Arquivo := edBuscaArquivoProdutos.Text;
+
+  if Pos(ExtractFileExt(Arquivo), '|.xls|.xlsx|') > 0 then begin
+
+    if not FileExists(Arquivo) then begin
+      DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
+      Exit;
+    end;
+
+    // Cria Excel- OLE Object
+    Excel                     := CreateOleObject('Excel.Application');
+    FWC                       := TFWConnection.Create;
+    F                         := TFAMILIA.Create(FWC);
+    P                         := TPRODUTO.Create(FWC);
+
+    try
+      FWC.StartTransaction;
+      try
+        mnImportaProdutos.Clear;
+        mnImportaProdutos.Lines.Add('Carregando dados, Aguarde!');
+        // Esconde Excel
+        Excel.Visible  := False;
+        // Abre o Workbook
+        Excel.Workbooks.Open(Arquivo);
+
+        Excel.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
+        vrow                                  := Excel.ActiveCell.Row;
+        vcol                                  := Excel.ActiveCell.Column;
+        pbImportaProdutos.MaxValue            := vrow;
+        arrData                               := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
+
+        DisplayMsg(MSG_WAIT, 'Validando arquivo!');
+
+        SetLength(Colunas, 28);
+        Colunas[0]     := 'SKU';
+        Colunas[1]     := 'CODIGO DE BARRAS';
+        Colunas[2]     := 'NOME';
+        Colunas[3]     := 'SALDO';
+        Colunas[4]     := 'DISP';
+        Colunas[5]     := 'ICMS';
+        Colunas[6]     := 'CF';
+        Colunas[7]     := 'PRODUTO PAI';
+        Colunas[8]     := 'MARCA';
+        Colunas[9]     := 'Família';
+        Colunas[10]    := 'Classe';
+        Colunas[11]    := 'Unidade de medida';
+        Colunas[12]    := 'Grupo';
+        Colunas[13]    := 'Sub-grupo';
+        Colunas[14]    := 'Preço de venda';
+        Colunas[15]    := 'Promoção + IPI';
+        Colunas[16]    := 'Peso';
+        Colunas[17]    := 'Clas Fisc';
+        Colunas[18]    := 'Estoque máximo';
+        Colunas[19]    := 'Prazo de entrega';
+        Colunas[20]    := 'Qtde. por embalagem';
+        Colunas[21]    := 'C';
+        Colunas[22]    := 'L';
+        Colunas[23]    := 'E';
+        Colunas[24]    := 'Dias de garantia';
+        Colunas[25]    := 'Origem da mercadoria';
+        Colunas[26]    := 'UN';
+        Colunas[27]    := 'Em';
+        Colunas[28]    := 'Custo';
+        Colunas[29]    := 'MA';
+
+
+        ArqValido := True;
+        for I := Low(Colunas) to High(Colunas) do begin
+          AchouColuna := False;
+          for J := 1 to vcol do begin
+            if AnsiUpperCase(Colunas[I]) = AnsiUpperCase(arrData[1, J]) then begin
+              AchouColuna := True;
+              Break;
+            end;
+          end;
+          if not AchouColuna then begin
+            ArqValido := False;
+            Break;
+          end;
+        end;
+
+        if not ArqValido then begin
+          Aux := 'Colunas.:';
+          for I := Low(Colunas) to High(Colunas) do begin
+            if Colunas[I] <> EmptyStr then
+              Aux := Aux + sLineBreak + Colunas[I];
+          end;
+
+          DisplayMsg(MSG_WAR, 'Arquivo Inválido, Verifique as Colunas!', '', Aux);
+          Exit;
+        end;
+
+        pbImportaProdutos.Progress  := 0;
+        pbImportaProdutos.MaxValue  := vrow;
+
+        DisplayMsg(MSG_WAIT, 'Capturando Produtos do arquivo!');
+
+        for I := 2 to vrow do begin
+          SetLength(arProdutos, Length(arProdutos) + 1);
+          arProdutos[High(arProdutos)].ID_PRODUTO := 0;
+          arProdutos[High(arProdutos)].ID_FAMILIA := 0;
+          for J := 1 to vcol do begin
+            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('SKU') then
+              arProdutos[High(arProdutos)].SKU  := arrData[I, J]
+            else
+              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CODIGO DE BARRAS') then
+                arProdutos[High(arProdutos)].CODIGO_BARRAS := StrToIntDef(arrData[I, J], 0)
+              else
+                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NOME') then
+                  arProdutos[High(arProdutos)].NOME := arrData[I, J]
+                else
+                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('SALDO') then
+                    arProdutos[High(arProdutos)].SALDO := StrToCurrDef(arrData[I, J], 0.00)
+                  else
+                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('DISP') then
+                      arProdutos[High(arProdutos)].DISPONIVEL := StrToCurrDef(arrData[I, J], 0.00)
+                    else
+                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ICMS') then
+                        arProdutos[High(arProdutos)].ICMS := StrToCurrDef(arrData[I, J], 0.00)
+                      else
+                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CF') then
+                          arProdutos[High(arProdutos)].CF := arrData[I, J]
+                        else
+                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('PRODUTO PAI') then
+                            arProdutos[High(arProdutos)].PRODUTO_PAI := arrData[I, J]
+                          else
+                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('MARCA') then
+                              arProdutos[High(arProdutos)].MARCA := arrData[I, J]
+                            else
+                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Família') then
+                                arProdutos[High(arProdutos)].FAMILIA := arrData[I, J]
+                              else
+                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Classe') then
+                                  arProdutos[High(arProdutos)].CLASSE := arrData[I, J]
+                                else
+                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Unidade de medida') then
+                                    arProdutos[High(arProdutos)].UNIDADE_MEDIDA := arrData[I, J]
+                                  else
+                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Grupo') then
+                                      arProdutos[High(arProdutos)].GRUPO := arrData[I, J]
+                                    else
+                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Sub-grupo') then
+                                        arProdutos[High(arProdutos)].SUB_GRUPO := arrData[I, J]
+                                      else
+                                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Preço de venda') then
+                                          arProdutos[High(arProdutos)].PRECO_VENDA := StrToCurrDef(arrData[I, J], 0.00)
+                                        else
+                                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Promoção + IPI') then
+                                            arProdutos[High(arProdutos)].PROMOCAO_IPI := StrToCurrDef(arrData[I, J], 0.00)
+                                          else
+                                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Peso') then
+                                              arProdutos[High(arProdutos)].PESO := StrToCurrDef(arrData[I, J], 0.00)
+                                            else
+                                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Clas Fisc') then
+                                                arProdutos[High(arProdutos)].NCM := arrData[I, J]
+                                              else
+                                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Em') then
+                                                  arProdutos[High(arProdutos)].ESTOQUE_MINIMO := StrToIntDef(arrData[I, J], 0)
+                                                else
+                                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Estoque máximo') then
+                                                    arProdutos[High(arProdutos)].ESTOQUE_MAXIMO := StrToIntDef(arrData[I, J], 0)
+                                                  else
+                                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Prazo de entrega') then
+                                                      arProdutos[High(arProdutos)].PRAZO_ENTREGA := StrToIntDef(arrData[I, J], 0)
+                                                    else
+                                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Qtde. por embalagem') then
+                                                        arProdutos[High(arProdutos)].QUANTIDADE_EMBALAGEM := StrToIntDef(arrData[I, J], 0)
+                                                      else
+                                                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('C') then
+                                                          arProdutos[High(arProdutos)].C := StrToCurrDef(arrData[I, J], 0)
+                                                        else
+                                                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('L') then
+                                                            arProdutos[High(arProdutos)].L := StrToCurrDef(arrData[I, J], 0)
+                                                          else
+                                                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('E') then
+                                                              arProdutos[High(arProdutos)].E := StrToCurrDef(arrData[I, J], 0)
+                                                            else
+                                                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Dias de garantia') then
+                                                                arProdutos[High(arProdutos)].DIAS_GARANTIA := StrToIntDef(arrData[I, J], 0)
+                                                              else
+                                                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Origem da mercadoria') then
+                                                                  arProdutos[High(arProdutos)].ORIGEM_MERCADORIA := arrData[I, J]
+                                                                else
+                                                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('UN') then
+                                                                    arProdutos[High(arProdutos)].UN := arrData[I, J]
+                                                                  else
+                                                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Custo') then
+                                                                      arProdutos[High(arProdutos)].CUSTO_ESTOQUE_FISICO := StrToCurrDef(arrData[I, J], 0)
+                                                                    else
+                                                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('MA') then
+                                                                        arProdutos[High(arProdutos)].MEDIA_ALTERACAO := StrToCurrDef(arrData[I, J], 0);
+          end;
+        end;
+
+        Aux := EmptyStr;
+
+        if Length(arProdutos) > 0 then begin
+          //Alimenta o Array para identificação
+          F.SelectList('ID > 0');
+          if F.Count > 0 then begin
+            for I := 0 to F.Count - 1 do begin
+              SetLength(arFamilias, Length(arFamilias) + 1);
+              arFamilias[High(arFamilias)].ID         := TFAMILIA(F.Itens[I]).ID.Value;
+              arFamilias[High(arFamilias)].DESCRICAO  := TFAMILIA(F.Itens[I]).DESCRICAO.Value;
+            end;
+          end;
+
+          DisplayMsg(MSG_WAIT, 'Identificando Famílias!');
+
+          pbImportaProdutos.Progress  := 0;
+          pbImportaProdutos.MaxValue  := High(arProdutos);
+
+          for I := Low(arProdutos) to High(arProdutos) do begin
+            for J := Low(arFamilias) to High(arFamilias) do begin
+              if AnsiUpperCase(arProdutos[I].FAMILIA) = AnsiUpperCase(arFamilias[J].DESCRICAO) then begin
+                arProdutos[I].ID_FAMILIA := arFamilias[J].ID;
+                Break;
+              end;
+            end;
+
+            if arProdutos[I].ID_FAMILIA = 0 then begin
+              if Aux = EmptyStr then
+                Aux := 'Família.: ' + arProdutos[I].FAMILIA
+              else
+                Aux := Aux + sLineBreak + 'Família.: ' + arProdutos[I].FAMILIA;
+            end;
+
+            pbImportaProdutos.Progress := I;
+          end;
+        end;
+
+        if Aux = EmptyStr then begin
+
+          DisplayMsg(MSG_WAIT, 'Identificando SKUs!');
+
+          pbImportaProdutos.Progress  := 0;
+          pbImportaProdutos.MaxValue  := High(arProdutos);
+
+          for I := Low(arProdutos) to High(arProdutos) do begin
+            //Consulta o produto no BD
+            if arProdutos[I].SKU <> EmptyStr then begin
+              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
+                P.SelectList('SKU = ' + QuotedStr(arProdutos[I].SKU));
+                if P.Count = 1 then
+                  arProdutos[I].ID_PRODUTO := TPRODUTO(P.Itens[0]).ID.Value;
+              end;
+            end;
+
+            pbImportaProdutos.Progress := I;
+          end;
+
+          DisplayMsg(MSG_WAIT, 'Gravando Produtos no Banco de Dados!');
+
+          pbImportaProdutos.Progress  := 0;
+          pbImportaProdutos.MaxValue  := High(arProdutos);
+
+          //Começa a Gravação dos Dados no BD
+          for I := Low(arProdutos) to High(arProdutos) do begin
+            if arProdutos[I].SKU <> EmptyStr then begin
+              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
+                P.ClearFields;
+                P.CODIGO_BARRAS.Value             := arProdutos[I].CODIGO_BARRAS;
+                P.NOME.Value                      := arProdutos[I].NOME;
+                P.SALDO.Value                     := arProdutos[I].SALDO;
+                P.DISPONIVEL.Value                := arProdutos[I].DISPONIVEL;
+                P.ICMS.Value                      := arProdutos[I].ICMS;
+                P.CF.Value                        := arProdutos[I].CF;
+                P.PRODUTO_PAI.Value               := arProdutos[I].PRODUTO_PAI;
+                P.MARCA.Value                     := arProdutos[I].MARCA;
+                P.CLASSE.Value                    := arProdutos[I].CLASSE;
+                P.UNIDADE_MEDIDA.Value            := arProdutos[I].UNIDADE_MEDIDA;
+                P.GRUPO.Value                     := arProdutos[I].GRUPO;
+                P.SUB_GRUPO.Value                 := arProdutos[I].SUB_GRUPO;
+                P.PRECO_VENDA.Value               := arProdutos[I].PRECO_VENDA;
+                P.PROMOCAO_IPI.Value              := arProdutos[I].PROMOCAO_IPI;
+                P.PESO.Value                      := arProdutos[I].PESO;
+                P.NCM.Value                       := arProdutos[I].NCM;
+                P.ESTOQUE_MINIMO.Value            := arProdutos[I].ESTOQUE_MINIMO;
+                P.ESTOQUE_MAXIMO.Value            := arProdutos[I].ESTOQUE_MAXIMO;
+                P.PRAZO_ENTREGA.Value             := arProdutos[I].PRAZO_ENTREGA;
+                P.QUANTIDADE_EMBALAGEM.Value      := arProdutos[I].QUANTIDADE_EMBALAGEM;
+                P.C.Value                         := arProdutos[I].C;
+                P.L.Value                         := arProdutos[I].L;
+                P.E.Value                         := arProdutos[I].E;
+                P.UN.Value                        := arProdutos[I].UN;
+                P.CODIGO_CF.Value                 := RetornaCodigo_CF(P.CF.Value);
+                P.DIAS_GARANTIA.Value             := arProdutos[I].DIAS_GARANTIA;
+                P.ORIGEM_MERCADORIA.Value         := arProdutos[I].ORIGEM_MERCADORIA;
+                P.CUSTO_ESTOQUE_FISICO.Value      := arProdutos[I].CUSTO_ESTOQUE_FISICO;
+                P.QUANTIDADE_ESTOQUE_FISICO.Value := arProdutos[I].QUANTIDADE_ESTOQUE_FISICO;
+                P.MEDIA_ALTERACAO.Value           := arProdutos[I].MEDIA_ALTERACAO;
+                P.ID_FAMILIA.Value                := arProdutos[I].ID_FAMILIA;
+
+                if arProdutos[I].ID_PRODUTO = 0 then begin
+                  P.ID.isNotNull                  := True;
+                  P.SKU.Value                     := arProdutos[I].SKU;
+                  P.CUSTOANTERIOR.Value           := 0.00;
+                  P.CUSTO.Value                   := 0.00;
+                  P.ID_FORNECEDORANTERIOR.Value   := 0;
+                  P.ID_FORNECEDORNOVO.Value       := 0;
+                  P.ID_ULTIMOLOTE.Value           := 0;
+                  P.Insert;
+
+                  SetLength(arrInsert, Length(arrInsert) + 1);
+                  arrInsert[High(arrInsert)]      := P.ID.Value;
+
+                  mnImportaProdutos.Lines.Add('SKU: ' + P.SKU.Value + ' - inserido com sucesso!');
+
+                end else begin
+                  P.ID.Value                      := arProdutos[I].ID_PRODUTO;
+                  P.Update;
+
+                  SetLength(arrUpdate, Length(arrUpdate) + 1);
+                  arrUpdate[High(arrUpdate)]      := P.ID.Value;
+
+                  mnImportaProdutos.Lines.Add('SKU: ' + P.SKU.Value + ' - alterado com sucesso!');
+                end;
+              end;
+            end;
+
+            pbImportaProdutos.Progress  := I;
+          end;
+
+          if Length(arrInsert) > 0 then begin
+            SQL               := TFDQuery.Create(nil);
+            try
+              SQL.Connection  := FWC.FDConnection;
+
+              SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
+              SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORANTERIOR = ID_FORNECEDORNOVO WHERE ID IN (' + ListaProdutosInsert + ')');
+            finally
+              FreeAndNil(SQL);
+            end;
+          end;
+
+          FWC.Commit;
+
+          if Length(arrInsert) > 0 then
+            mnImportaProdutos.Lines.Add('Total de produtos inseridos: ' + IntToStr(Length(arrInsert)));
+          if Length(arrUpdate) > 0 then
+            mnImportaProdutos.Lines.Add('Total de produtos alterados: ' + IntToStr(Length(arrUpdate)));
+
+          DisplayMsg(MSG_OK, 'Produtos Atualizadas com Sucesso!');
+          pbImportaProdutos.Progress                                               := 0;
+
+        end else begin
+          DisplayMsg(MSG_WAR, 'Referências não encontradas, Verifique!', '', Aux);
+          Exit;
+        end;
+      except
+        on E : Exception do begin
+          FWC.Rollback;
+          DisplayMsg(MSG_ERR, 'Erro ao atualizar Produtos!' + sLineBreak + 'Linha = ' + IntToStr(I) + sLineBreak + ' Coluna = ' + IntToStr(J), '', E.Message);
+          Exit;
+        end;
+      end;
+    finally
+      arrData                     := Unassigned;
+      pbImportaProdutos.Progress  := 0;
+      if not VarIsEmpty(Excel) then begin
+        Excel.Quit;
+        Excel := Unassigned;
+      end;
+      FreeAndNil(F);
+      FreeAndNil(P);
+      FreeAndNil(FWC);
+    end;
+  end;
+end;
 
 procedure TfrmImportacao.btImportaAlmoxarifadoClick(Sender: TObject);
 const
@@ -535,227 +988,13 @@ begin
 end;
 
 procedure TfrmImportacao.btImportarProdutosClick(Sender: TObject);
-const
-  xlCellTypeLastCell = $0000000B;
-var
-  XLSAplicacao, AbaXLS, Range: OLEVariant;
-  vrow, vcol, i, j, Count: Integer;
-  CON                 : TFWConnection;
-  PROD                : TPRODUTO;
-  List                : TPropList;
-  Valor,
-  arrData             : Variant;
-  arrInsert,
-  arrUpdate           : array of Integer;
-  SQL                 : TFDQuery;
-  ListaProdutosInsert : String;
 begin
-  if not FileExists(edBuscaArquivoProdutos.Text) then begin
-    DisplayMsg(MSG_WAR, 'Arquivo selecionado não existe! Verifique!');
-    Exit;
-  end;
-   // Cria Excel- OLE Object
-  XLSAplicacao                                                                := CreateOleObject('Excel.Application');
-  btImportarProdutos.Enabled                                                  := False;
-
-  SetLength(arrInsert, 0);
-  SetLength(arrUpdate, 0);
-  try
-    mnImportaProdutos.Clear;
-    mnImportaProdutos.Lines.Add('Carregando dados, Aguarde!');
-    // Esconde Excel
-    XLSAplicacao.Visible                                                      := False;
-    // Abre o Workbook
-    XLSAplicacao.Workbooks.Open(edBuscaArquivoProdutos.Text);
-
-    AbaXLS                                                                    := XLSAplicacao.Workbooks[ExtractFileName(edBuscaArquivoProdutos.Text)].WorkSheets[1];
-    AbaXLS.select;
-
-    XLSAplicacao.ActiveSheet.Cells.SpecialCells(xlCellTypeLastCell, EmptyParam).Activate;
-    //ROW
-    vrow                                                                      := XLSAplicacao.ActiveCell.Row;
-    vcol                                                                      := XLSAplicacao.ActiveCell.Column;
-    arrData                                                                   := VarArrayCreate([1, vrow, 1, vcol], varVariant);
-    Range                                                                     := XLSAplicacao.WorkSheets[1].Range[XLSAplicacao.WorkSheets[1].Cells[1, 1], XLSAplicacao.WorkSheets[1].Cells[vrow, vcol].Address];
-    arrData                                                                   := Range.value;
-    pbImportaProdutos.MaxValue                                                := vrow;
-    //COLLUM
-    CON                                                                       := TFWConnection.Create;
-    PROD                                                                      := TPRODUTO.Create(CON);
+  if btImportarProdutos.Tag = 0 then begin
+    btImportarProdutos.Tag := 1;
     try
-      PROD.SKU.excelTitulo                                                    := 'SKU';
-      PROD.CODIGO_BARRAS.excelTitulo                                          := 'CODIGO DE BARRAS';
-      PROD.NOME.excelTitulo                                                   := 'NOME';
-      PROD.SALDO.excelTitulo                                                  := 'SALDO';
-      PROD.DISPONIVEL.excelTitulo                                             := 'DISP';
-      PROD.ICMS.excelTitulo                                                   := 'ICMS';
-      PROD.CF.excelTitulo                                                     := 'CF';
-      PROD.PRODUTO_PAI.excelTitulo                                            := 'PRODUTO PAI';
-      PROD.MARCA.excelTitulo                                                  := 'MARCA';
-      PROD.FAMILIA.excelTitulo                                                := 'Família';
-      PROD.CLASSE.excelTitulo                                                 := 'Classe';
-      PROD.UNIDADE_MEDIDA.excelTitulo                                         := 'Unidade de medida';
-      PROD.GRUPO.excelTitulo                                                  := 'Grupo';
-      PROD.SUB_GRUPO.excelTitulo                                              := 'Sub-grupo';
-      PROD.PRECO_VENDA.excelTitulo                                            := 'Preço de venda';
-      PROD.PROMOCAO_IPI.excelTitulo                                           := 'Promoção + IPI';
-      PROD.PESO.excelTitulo                                                   := 'Peso';
-      PROD.NCM.excelTitulo                                                    := 'Clas Fisc';
-      PROD.ESTOQUE_MAXIMO.excelTitulo                                         := 'Estoque máximo';
-      PROD.PRAZO_ENTREGA.excelTitulo                                          := 'Prazo de entrega';
-      PROD.QUANTIDADE_EMBALAGEM.excelTitulo                                   := 'Qtde. por embalagem';
-      PROD.C.excelTitulo                                                      := 'C';
-      PROD.L.excelTitulo                                                      := 'L';
-      PROD.E.excelTitulo                                                      := 'E';
-      PROD.DIAS_GARANTIA.excelTitulo                                          := 'Dias de garantia';
-      PROD.ORIGEM_MERCADORIA.excelTitulo                                      := 'Origem da mercadoria';
-      PROD.UN.excelTitulo                                                     := 'UN';
-//      PROD.CODIGO_CF.excelTitulo                                              := 'Código Classificacao Fical';
-      PROD.ESTOQUE_MINIMO.excelTitulo                                         := 'Em';
-
-      PROD.buscaIndicesExcel(edBuscaArquivoProdutos.Text, XLSAplicacao);
-      PROD.ID.excelIndice                                                     := -1;
-
-      Count                                                                   := GetPropList(PROD.ClassInfo, tkProperties, @List, False);
-      for J := 0 to Pred(Count) do begin
-        if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelTitulo <> '') and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice <= 0) and (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).isNotNull) then begin
-          DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas: ' + sLineBreak + 'SKU, ' + sLineBreak +
-                                                                               'CODIGO DE BARRAS, ' + sLineBreak +
-                                                                               'NOME, ' + sLineBreak +
-                                                                               'SALDO, ' + sLineBreak +
-                                                                               'DISP, ' + sLineBreak +
-                                                                               'ICMS, ' + sLineBreak +
-                                                                               'CF, ' + sLineBreak +
-                                                                               'PRODUTO PAI, ' + sLineBreak +
-                                                                               'MARCA, ' + sLineBreak +
-                                                                               'Família, ' + sLineBreak +
-                                                                               'Classe, ' + sLineBreak +
-                                                                               'Unidade de medida, ' + sLineBreak +
-                                                                               'Grupo, ' + sLineBreak +
-                                                                               'Sub-grupo, ' + sLineBreak +
-                                                                               'Preço de venda, ' + sLineBreak +
-                                                                               'Promoção + IPI, ' + sLineBreak +
-                                                                               'Código Classificacao Fical, ' + sLineBreak +
-                                                                               'UN, ' + sLineBreak +
-                                                                               'Peso, ' + sLineBreak +
-                                                                               'Clas Fisc, ' + sLineBreak +
-                                                                               'Estoque máximo, ' + sLineBreak +
-                                                                               'Prazo de entrega, ' + sLineBreak +
-                                                                               'Qtde. por embalagem, ' + sLineBreak +
-                                                                               'C, ' + sLineBreak +
-                                                                               'L, ' + sLineBreak +
-                                                                               'E, ' + sLineBreak +
-                                                                               'Dias de garantia, ' + sLineBreak +
-                                                                               'Origem da mercadoria' + sLineBreak +
-                                                                               'UN'  + sLineBreak +
-//                                                                               'Código Classificacao Fical'  + sLineBreak +
-                                                                               'Em');
-
-
-
-
-          Exit;
-        end;
-      end;
-
-      CON.StartTransaction;
-      try
-        for I := 2 to vrow do begin
-          PROD.ClearFields;
-          for J := 0 to Pred(Count) do begin
-            if (TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice > 0) then begin
-              Valor := Trim(arrData[I, TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).excelIndice]);
-              if Valor <> '' then
-                TFieldTypeDomain(GetObjectProp(PROD, List[J]^.Name)).asVariant   := Valor;
-            end;
-          end;
-          if (PROD.SKU.Value <> '') and (Copy(PROD.SKU.Value, 1, 4) <> '345.') then begin
-            PROD.CODIGO_CF.Value     := 0;
-            if PROD.CF.Value <> '' then begin
-              for J := 0 to High(CLASSIFICACAO) do begin
-                if Pos(PROD.CF.Value, CLASSIFICACAO[J].Descricao) > 0 then begin
-                  PROD.CODIGO_CF.Value := CLASSIFICACAO[J].Codigo;
-                  Break;
-                end;
-              end;
-            end;
-
-            PROD.SelectList('upper(sku) = ' + QuotedStr(AnsiUpperCase(PROD.SKU.asString)));
-
-            if PROD.Count > 0 then begin
-              PROD.ID.Value                                                      := TPRODUTO(PROD.Itens[0]).ID.Value;
-              PROD.Update;
-
-              SetLength(arrUpdate, Length(arrUpdate) + 1);
-              arrUpdate[High(arrUpdate)]                                         := PROD.ID.Value;
-
-              mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - alterado com sucesso!');
-            end else begin
-              PROD.CUSTOANTERIOR.Value                                           := 0.00;
-              PROD.CUSTO.Value                                                   := 0.00;
-              PROD.ID_FORNECEDORANTERIOR.Value                                   := 0;
-              PROD.ID_FORNECEDORNOVO.Value                                       := 0;
-              PROD.ID_ULTIMOLOTE.Value                                           := 0;
-              PROD.Insert;
-
-              SetLength(arrInsert, Length(arrInsert) + 1);
-              arrInsert[High(arrInsert)]                                         := PROD.ID.Value;
-
-              mnImportaProdutos.Lines.Add('SKU: ' + PROD.SKU.Value + ' - inserido com sucesso!');
-            end;
-          end;
-          pbImportaProdutos.Progress                                             := I;
-          Application.ProcessMessages;
-        end;
-        if Length(arrInsert) > 0 then begin
-          ListaProdutosInsert                                                    := '';
-          for I := 0 to High(arrInsert) do begin
-            if I = 0 then
-              ListaProdutosInsert                                                := IntToStr(arrInsert[I])
-            else
-              ListaProdutosInsert                                                := ListaProdutosInsert + ', ' + IntToStr(arrInsert[I])
-          end;
-
-          SQL                                                                    := TFDQuery.Create(nil);
-          try
-            SQL.Connection                                                       := CON.FDConnection;
-
-            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
-            SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORANTERIOR = ID_FORNECEDORNOVO WHERE ID IN (' + ListaProdutosInsert + ')');
-          finally
-            FreeAndNil(SQL);
-          end;
-        end;
-        CON.Commit;
-
-        if Length(arrInsert) > 0 then
-          mnImportaProdutos.Lines.Add('Total de produtos inseridos: ' + IntToStr(Length(arrInsert)));
-        if Length(arrUpdate) > 0 then
-          mnImportaProdutos.Lines.Add('Total de produtos alterados: ' + IntToStr(Length(arrUpdate)));
-
-        DisplayMsg(MSG_OK, 'Importação realizada com sucesso!');
-        pbImportaProdutos.Progress                                               := 0;
-
-      except
-        on E : Exception do begin
-          CON.Rollback;
-          btImportarProdutos.Enabled                                          := True;
-          DisplayMsg(MSG_WAR, 'Erro ao importar os produtos!', '', E.Message);
-          Exit;
-        end;
-      end;
+      AtualizarProdutos;
     finally
-      FreeAndNil(PROD);
-      FreeAndNil(CON);
-    end;
-
-  finally
-    // Fecha o Microsoft Excel
-    btImportarProdutos.Enabled     := True;
-    if not VarIsEmpty(XLSAplicacao) then begin
-      XLSAplicacao.Quit;
-      XLSAplicacao := Unassigned;
-      AbaXLS := Unassigned;
+      btImportarProdutos.Tag := 0;
     end;
   end;
 end;

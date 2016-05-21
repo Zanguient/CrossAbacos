@@ -37,6 +37,7 @@ uses
   function FormataCNPJ(CNPJ : String) : String;
   function AjustaTamnhoCNPJ(CNPJ : String) : String;
   function ExcluirCaracteresdeNumeric(Valor : Variant) : String;
+  function RetornaCodigo_CF(CF : String) : Integer;
 
 implementation
 
@@ -594,6 +595,24 @@ begin
     end;
     Inc(I);
   end;
+end;
+
+function RetornaCodigo_CF(CF : String) : Integer;
+Var
+  I : Integer;
+begin
+
+  Result := 0;
+
+  if Length(Trim(CF)) > 0 then begin
+    for I := Low(CLASSIFICACAO) to High(CLASSIFICACAO) do begin
+      if Pos(CF, CLASSIFICACAO[I].Descricao) > 0 then begin
+        Result := CLASSIFICACAO[I].Codigo;
+        Break;
+      end;
+    end;
+  end;
+
 end;
 
 end.

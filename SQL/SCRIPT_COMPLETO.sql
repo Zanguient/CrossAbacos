@@ -247,19 +247,43 @@ INSERT INTO familia(
     VALUES (0, 'Sem Família', 0, '', CURRENT_TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS margem (
-  id serial NOT NULL,
+  id serial not null,
   id_produto int not null unique,
-  margemsku numeric(18,2) not null,
-  precoponta numeric(18,2) not null,
-  precopromocional numeric(18,2) not null,
-  valprecopromocional timestamp without time zone NOT NULL, 
-  margemanalista numeric(18,2) not null,
-  percentualvpc numeric(18,2) not null,
-  percentualfrete numeric(18,2) not null,
-  percentualoutros numeric(18,2) not null,
-  autorizadopor varchar(100) not null,
-  dataautorizado timestamp without time zone NOT NULL,  
+  margem_analista numeric(18,2) not null,
+  preco_ponta numeric(18,2) not null,
+  margem_promocional numeric(18,2) not null,  
+  val_margem_promocional date not null,
+  resp_margem_promocional varchar(100) not null,
+  data_margem_promocional date not null,
+  preco_promocional numeric(18,2) not null,
+  val_preco_promocional date not null,
+  resp_preco_promocional varchar(100) not null,
+  data_preco_promocional date not null,
+  percentual_vpc numeric(18,2) not null,
+  percentual_frete numeric(18,2) not null,
+  percentual_outros numeric(18,2) not null,
+  data_autorizacao date not null,
+  autorizado_por varchar(100) not null,
+  solicitado_por varchar(100) not null,
   CONSTRAINT pk_margem_id PRIMARY KEY (id),
   CONSTRAINT fk_margem_produto FOREIGN KEY (id_produto)
       REFERENCES produto (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE RESTRICT);
+
+alter table produto 
+	add custo_estoque_fisico numeric(18,2),
+	add quantidade_estoque_fisico integer,
+	add media_alteracao numeric(18,2),
+	add id_familia integer;
+
+	////////////////////////////////////////////////////
+	///////Importar as Famílias/////////////////////////
+	////////////////////////////////////////////////////
+
+update produto set id_familia = (select coalesce(f.id,0) from familia f where f.descricao = familia limit 1);
+
+alter table produto drop if exists familia;
+
+alter table produto add constraint fk_familia_produto foreign key (id_familia)
+      references familia (id) match simple
+      on update cascade on delete restrict;

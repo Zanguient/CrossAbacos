@@ -352,14 +352,15 @@ begin
         SQL.SQL.Add('	MI.ATUALIZADO AS MATCH,');
         SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE,');
         SQL.SQL.Add('	FN.ID AS ID_FORNECEDORNOVO,');
-        SQL.SQL.Add('	PF.STATUS');
+        SQL.SQL.Add('	COALESCE(PF.STATUS, True) AS STATUS');
         SQL.SQL.Add('FROM MATCH M');
         SQL.SQL.Add('INNER JOIN MATCH_ITENS MI ON (M.ID = MI.ID_MATCH)');
         SQL.SQL.Add('INNER JOIN PRODUTO P ON (MI.ID_PRODUTO = P.ID)');
         SQL.SQL.Add('INNER JOIN FORNECEDOR FA ON (MI.ID_FORNECEDORANTERIOR = FA.ID)');
         SQL.SQL.Add('INNER JOIN FORNECEDOR FN ON (MI.ID_FORNECEDORNOVO = FN.ID)');
         SQL.SQL.Add('INNER JOIN LOTE L ON (MI.ID_ULTIMOLOTE = L.ID)');
-        SQL.SQL.Add('INNER JOIN PRODUTOFORNECEDOR PF ON (MI.ID_PRODUTO = PF.ID_PRODUTO) AND (MI.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR)');
+        //Change by Sergio on 21.05.16 -> de inner para Left Senão produtos que foram para Fornecedor novo 0(Zero) não aparecem, porque o sku não está vinculado ao Zero
+        SQL.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON (MI.ID_PRODUTO = PF.ID_PRODUTO) AND (MI.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR)');
         SQL.SQL.Add('WHERE 1 = 1');
         SQL.SQL.Add('AND M.ID = :IDMATCH');
         SQL.ParamByName('IDMATCH').DataType   := ftInteger;
@@ -376,8 +377,6 @@ begin
         end else if rgFiltroAtualizacao.ItemIndex = 2 then begin
           SQL.SQL.Add('AND MI.ID_FORNECEDORANTERIOR <> MI.ID_FORNECEDORNOVO');
         end;
-
-
 
         SQL.Connection           := FWC.FDConnection;
         SQL.Prepare;
@@ -631,7 +630,7 @@ Begin
             arrData[Linha,8]    := ''; //DescricaoNotaFiscal
             arrData[Linha,9]    := TPRODUTO(P.Itens[0]).CLASSE.Value; //Classe
             arrData[Linha,10]   := TPRODUTO(P.Itens[0]).MARCA.Value; //Marca
-            arrData[Linha,11]   := TPRODUTO(P.Itens[0]).FAMILIA.Value; //Familia
+            arrData[Linha,11]   := TPRODUTO(P.Itens[0]).ID_FAMILIA.Value; //Familia
             arrData[Linha,12]   := 'Normal'; //Grupo
             PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and status = True');
             if PF.Count > 0 then
@@ -795,12 +794,8 @@ begin
 end;
 
 procedure TfrmConsultaMatch.gdMatchItensTitleClick(Column: TColumn);
-Var
-  I : Integer;
 begin
-
-  //if (Column.Field.FieldKind <> fkCalculated) then
-    cds_MatchItens.IndexFieldNames := Column.FieldName;
+  OrdenarGrid(Column);
 end;
 
 procedure TfrmConsultaMatch.LimparTela;

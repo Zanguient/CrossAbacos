@@ -28,7 +28,6 @@ type
     btExcluir: TSpeedButton;
     btFechar: TSpeedButton;
     btAlterar: TSpeedButton;
-    btNovo: TSpeedButton;
     Panel1: TPanel;
     Panel3: TPanel;
     GridPanel1: TGridPanel;
@@ -49,16 +48,15 @@ type
     cds_MargensID_PRODUTO: TIntegerField;
     cds_MargensSKU: TStringField;
     cds_MargensNOME_PRODUTO: TStringField;
-    cds_MargensMARGEMSKU: TCurrencyField;
-    cds_MargensPRECOPONTA: TCurrencyField;
-    cds_MargensPRECOPROMOCIONAL: TCurrencyField;
-    cds_MargensVALPRECOPROMOCIONAL: TDateTimeField;
-    cds_MargensMARGEMANALISTA: TCurrencyField;
-    cds_MargensPERCENTUALVPC: TCurrencyField;
-    cds_MargensPERCENTUALFRETE: TCurrencyField;
-    cds_MargensPERCENTUALOUTROS: TCurrencyField;
-    cds_MargensAUTORIZADOPOR: TStringField;
-    cds_MargensDATAAUTORIZADO: TDateTimeField;
+    cds_MargensMARGEM_ANALISTA: TCurrencyField;
+    cds_MargensPRECO_PONTA: TCurrencyField;
+    cds_MargensPRECO_PROMOCIONAL: TCurrencyField;
+    cds_MargensVAL_PRECO_PROMOCIONAL: TDateTimeField;
+    cds_MargensPERCENTUAL_VPC: TCurrencyField;
+    cds_MargensPERCENTUAL_FRETE: TCurrencyField;
+    cds_MargensPERCENTUAL_OUTROS: TCurrencyField;
+    cds_MargensAUTORIZADO_POR: TStringField;
+    cds_MargensDATA_AUTORIZACAO: TDateTimeField;
     cbFiltroMargens: TComboBox;
     cds_MargensSTATUS: TStringField;
     edSKU: TEdit;
@@ -72,15 +70,31 @@ type
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
-    Label8: TLabel;
-    edMargemSKU: TJvCalcEdit;
-    edPrecoPonta: TJvCalcEdit;
-    edPrecoPromocional: TJvCalcEdit;
     edMargemAnalista: TJvCalcEdit;
+    edPrecoPonta: TJvCalcEdit;
+    edPrecoPromocao: TJvCalcEdit;
     edPercentualVPC: TJvCalcEdit;
     edPercentualFrete: TJvCalcEdit;
     edPercentualOutros: TJvCalcEdit;
-    edValidadePromocional: TJvDateEdit;
+    edValidPrecoPromocao: TJvDateEdit;
+    edDataPrecoPromocao: TJvDateEdit;
+    Label12: TLabel;
+    edRespPrecoPromocao: TEdit;
+    Label13: TLabel;
+    cds_MargensMARGEM_PROMOCIONAL: TCurrencyField;
+    cds_MargensVAL_MARGEM_PROMOCIONAL: TDateTimeField;
+    Label14: TLabel;
+    Label15: TLabel;
+    edMargemPromocao: TJvCalcEdit;
+    edValidMargemPromocao: TJvDateEdit;
+    edDataMargemPromocao: TJvDateEdit;
+    Label16: TLabel;
+    edRespMargemPromocao: TEdit;
+    Label17: TLabel;
+    edDataAutorizacao: TJvDateEdit;
+    Label18: TLabel;
+    edSolicitadoPor: TEdit;
+    Label8: TLabel;
     procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -125,13 +139,15 @@ uses
 procedure TFrmCadastroMargem.AtualizarEdits(Limpar: Boolean);
 begin
   if Limpar then begin
-    edSKU.Tag                   := cds_MargensID_PRODUTO.Value;
-    edSKU.Text                  := cds_MargensSKU.Value;
-    edNomeProduto.Text          := cds_MargensNOME_PRODUTO.Value;
-    edMargemSKU.Clear;
+    edSKU.Tag                     := cds_MargensID_PRODUTO.Value;
+    edSKU.Text                    := cds_MargensSKU.Value;
+    edNomeProduto.Text            := cds_MargensNOME_PRODUTO.Value;
+    edMargemAnalista.Clear;
     edPrecoPonta.Clear;
-    edPrecoPromocional.Clear;
-    edValidadePromocional.Date  := Date;
+    edPrecoPromocao.Clear;
+    edValidPrecoPromocao.Date     := Date;
+    edMargemPromocao.Clear;
+    edValidMargemPromocao.Date    := Date;
     edMargemAnalista.Clear;
     edPercentualVPC.Clear;
     edPercentualFrete.Clear;
@@ -139,19 +155,20 @@ begin
     edAutorizadoPor.Clear;
     btGravar.Tag  := 0;
   end else begin
-    edSKU.Tag                   := cds_MargensID_PRODUTO.Value;
-    edSKU.Text                  := cds_MargensSKU.Value;
-    edNomeProduto.Text          := cds_MargensNOME_PRODUTO.Value;
-    edMargemSKU.Value           := cds_MargensMARGEMSKU.Value;
-    edPrecoPonta.Value          := cds_MargensPRECOPONTA.Value;
-    edPrecoPromocional.Value    := cds_MargensPRECOPROMOCIONAL.Value;
-    edValidadePromocional.Date  := cds_MargensVALPRECOPROMOCIONAL.Value;
-    edMargemAnalista.Value      := cds_MargensMARGEMANALISTA.Value;
-    edPercentualVPC.Value       := cds_MargensPERCENTUALVPC.Value;
-    edPercentualFrete.Value     := cds_MargensPERCENTUALFRETE.Value;
-    edPercentualOutros.Value    := cds_MargensPERCENTUALOUTROS.Value;
-    edAutorizadoPor.Text        := cds_MargensAUTORIZADOPOR.AsString;
-    btGravar.Tag                := cds_MargensID.Value;
+    edSKU.Tag                     := cds_MargensID_PRODUTO.Value;
+    edSKU.Text                    := cds_MargensSKU.Value;
+    edNomeProduto.Text            := cds_MargensNOME_PRODUTO.Value;
+    edMargemAnalista.Value        := cds_MargensMARGEM_ANALISTA.Value;
+    edPrecoPonta.Value            := cds_MargensPRECO_PONTA.Value;
+    edPrecoPromocao.Value         := cds_MargensPRECO_PROMOCIONAL.Value;
+    edValidPrecoPromocao.Date     := cds_MargensVAL_PRECO_PROMOCIONAL.Value;
+    edMargemPromocao.Value        := cds_MargensPRECO_PROMOCIONAL.Value;
+    edValidMargemPromocao.Date    := cds_MargensVAL_PRECO_PROMOCIONAL.Value;
+    edPercentualVPC.Value         := cds_MargensPERCENTUAL_VPC.Value;
+    edPercentualFrete.Value       := cds_MargensPERCENTUAL_FRETE.Value;
+    edPercentualOutros.Value      := cds_MargensPERCENTUAL_OUTROS.Value;
+    edAutorizadoPor.Text          := cds_MargensAUTORIZADO_POR.AsString;
+    btGravar.Tag                  := cds_MargensID.Value;
   end;
 end;
 
@@ -161,19 +178,22 @@ type
   TArrayMargens = record
     ID_PRODUTO : Integer;
     SKU : string;
-    Margem_Sku : Currency;
+    Margem_Analista : Currency;
     Preco_Ponta : Currency;
     Margem_Promocional : Currency;
     Val_Margem_Promocional : TDate;
+	  Resp_Margem_Promocional	: String;
+	  Data_Informada_Margem: TDate;
     Preco_Promocional : Currency;
-    Val_Preco_Promocional: TDate;
-    Margem_Analista : Currency;
+    Val_Preco_Promocional : TDate;
+	  Resp_Promocao : String;
+	  Data_Informada_Promocao : TDate;
     Percentual_VPC : Currency;
     Percentual_Frete : Currency;
     Percentual_Outros : Currency;
+	  Data_Autorizacao : TDate;
+	  Autorizado_Por : String;
     Solicitado_Por : String;
-    Autorizado_Por : String;
-    Data_Autorizacao : TDate;
   end;
 
 const
@@ -233,21 +253,24 @@ begin
 
           DisplayMsg(MSG_WAIT, 'Validando arquivo!');
 
-          SetLength(Colunas, 14);
+          SetLength(Colunas, 17);
           Colunas[0]  := 'SKU';
-          Colunas[1]  := 'Margem Sku';
+          Colunas[1]  := 'Margem Analista';
           Colunas[2]  := 'Preco Ponta';
           Colunas[3]  := 'Margem Promocional';
           Colunas[4]  := 'Val Margem Promocional';
-          Colunas[5]  := 'Preco Promocional';
-          Colunas[6]  := 'Val Preco Promocional';
-          Colunas[7]  := 'Margem Analista';
-          Colunas[8]  := 'Percentual VPC';
-          Colunas[9]  := 'Percentual Frete';
-          Colunas[10] := 'Percentual Outros';
-          Colunas[11] := 'Solicitado Por';
-          Colunas[12] := 'Autorizado Por';
-          Colunas[13] := 'Data Autorizacao';
+          Colunas[5]  := 'Responsavel Margem Promocional';
+          Colunas[6]  := 'Data Informada Margem';
+          Colunas[7]  := 'Preco Promocional';
+          Colunas[8]  := 'Val Preço Promocional';
+          Colunas[9]  := 'Responsavel Promocao';
+          Colunas[10]  := 'Data Informada Promocao';
+          Colunas[11]  := 'Percentual VPC';
+          Colunas[12]  := 'Percentual Frete';
+          Colunas[13]  := 'Percentual Outros';
+          Colunas[14]  := 'Data Autorizacao';
+          Colunas[15]  := 'Autorizado Por';
+          Colunas[16]  := 'Quem Solicitou';
 
           ArqValido := True;
           for I := Low(Colunas) to High(Colunas) do begin
@@ -285,11 +308,11 @@ begin
               if arrData[1, J] = 'SKU' then
                 arMargens[High(arMargens)].SKU  := arrData[I, J]
               else
-                if arrData[1, J] = 'Margem Sku' then
-                  arMargens[High(arMargens)].Margem_Sku := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                if arrData[1, J] = 'Margem Analista' then
+                  arMargens[High(arMargens)].Margem_Analista := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
                 else
                   if arrData[1, J] = 'Preco Ponta' then
-                    arMargens[High(arMargens)].Preco_Ponta  := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                    arMargens[High(arMargens)].Preco_Ponta := arrData[I, J]
                   else
                     if arrData[1, J] = 'Margem Promocional' then
                       arMargens[High(arMargens)].Margem_Promocional := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
@@ -297,32 +320,41 @@ begin
                       if arrData[1, J] = 'Val Margem Promocional' then
                         arMargens[High(arMargens)].Val_Margem_Promocional := arrData[I, J]
                       else
-                        if arrData[1, J] = 'Preco Promocional' then
-                          arMargens[High(arMargens)].Preco_Promocional  := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                        if arrData[1, J] = 'Responsavel Margem Promocional' then
+                          arMargens[High(arMargens)].Resp_Margem_Promocional := arrData[I, J]
                         else
-                          if arrData[1, J] = 'Val Preco Promocional' then
-                            arMargens[High(arMargens)].Val_Preco_Promocional  := arrData[I, J]
+                          if arrData[1, J] = 'Data Informada Margem' then
+                            arMargens[High(arMargens)].Data_Informada_Margem  := arrData[I, J]
                           else
-                            if arrData[1, J] = 'Margem Analista' then
-                              arMargens[High(arMargens)].Margem_Analista := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                            if arrData[1, J] = 'Preco Promocional' then
+                              arMargens[High(arMargens)].Preco_Promocional := arrData[I, J]
                             else
-                              if arrData[1, J] = 'Percentual VPC' then
-                                arMargens[High(arMargens)].Percentual_VPC := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                              if arrData[1, J] = 'Val Preço Promocional' then
+                                arMargens[High(arMargens)].Val_Preco_Promocional := arrData[I, J]
                               else
-                                if arrData[1, J] = 'Percentual Frete' then
-                                  arMargens[High(arMargens)].Percentual_Frete := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                                if arrData[1, J] = 'Responsavel Promocao' then
+                                  arMargens[High(arMargens)].Resp_Promocao := arrData[I, J]
+                                else
+                                  if arrData[1, J] = 'Data Informada Promocao' then
+                                    arMargens[High(arMargens)].Data_Informada_Promocao := arrData[I, J]
                                   else
-                                    if arrData[1, J] = 'Percentual Outros' then
-                                      arMargens[High(arMargens)].Percentual_Outros  := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
+                                    if arrData[1, J] = 'Percentual VPC' then
+                                      arMargens[High(arMargens)].Percentual_VPC := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
                                     else
-                                      if arrData[1, J] = 'Solicitado Por' then
-                                        arMargens[High(arMargens)].Solicitado_Por := arrData[I, J]
+                                      if arrData[1, J] = 'Percentual Frete' then
+                                        arMargens[High(arMargens)].Percentual_Frete := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
                                       else
-                                        if arrData[1, J] = 'Autorizado Por' then
-                                          arMargens[High(arMargens)].Autorizado_Por := arrData[I, J]
+                                        if arrData[1, J] = 'Percentual Outros' then
+                                          arMargens[High(arMargens)].Percentual_Outros := StrToCurrDef(ExcluirCaracteresdeNumeric(arrData[I, J]), 0.00)
                                         else
                                           if arrData[1, J] = 'Data Autorizacao' then
-                                            arMargens[High(arMargens)].Data_Autorizacao := arrData[I, J];
+                                            arMargens[High(arMargens)].Data_Autorizacao := arrData[I, J]
+                                          else
+                                            if arrData[1, J] = 'Autorizado Por' then
+                                              arMargens[High(arMargens)].Autorizado_Por := arrData[I, J]
+                                            else
+                                              if arrData[1, J] = 'Quem Solicitou' then
+                                                arMargens[High(arMargens)].Solicitado_Por := arrData[I, J];
             end;
           end;
 
@@ -358,17 +390,23 @@ begin
             //Começa a Gravação dos Dados no BD
             for I := Low(arMargens) to High(arMargens) do begin
               if arMargens[I].ID_PRODUTO > 0 then begin
-                M.ID_PRODUTO.Value          := arMargens[I].ID_PRODUTO;
-                M.MARGEMSKU.Value           := arMargens[I].Margem_Sku;
-                M.PRECOPONTA.Value          := arMargens[I].Preco_Ponta;
-                M.PRECOPROMOCIONAL.Value    := arMargens[I].Preco_Promocional;
-                M.VALPRECOPROMOCIONAL.Value := arMargens[I].Val_Preco_Promocional;
-                M.MARGEMANALISTA.Value      := arMargens[I].Margem_Analista;
-                M.PERCENTUALVPC.Value       := arMargens[I].Percentual_VPC;
-                M.PERCENTUALFRETE.Value     := arMargens[I].Percentual_Frete;
-                M.PERCENTUALOUTROS.Value    := arMargens[I].Percentual_Outros;
-                M.AUTORIZADOPOR.Value       := arMargens[I].Autorizado_Por;
-                M.DATAAUTORIZADO.Value      := arMargens[I].Data_Autorizacao;
+                M.ID_PRODUTO.Value              := arMargens[I].ID_PRODUTO;
+                M.MARGEM_ANALISTA.Value         := arMargens[I].Margem_Analista;
+                M.PRECO_PONTA.Value             := arMargens[I].Preco_Ponta;
+                M.MARGEM_PROMOCIONAL.Value      := arMargens[I].Margem_Promocional;
+                M.VAL_MARGEM_PROMOCIONAL.Value  := arMargens[I].Val_Margem_Promocional;
+                M.RESP_MARGEM_PROMOCIONAL.Value := arMargens[I].Resp_Margem_Promocional;
+                M.DATA_MARGEM_PROMOCIONAL.Value := arMargens[I].Data_Informada_Margem;
+                M.PRECO_PROMOCIONAL.Value       := arMargens[I].Preco_Promocional;
+                M.VAL_PRECO_PROMOCIONAL.Value   := arMargens[I].Val_Preco_Promocional;
+                M.RESP_PRECO_PROMOCIONAL.Value  := arMargens[I].Resp_Promocao;
+                M.DATA_PRECO_PROMOCIONAL.Value  := arMargens[I].Data_Informada_Promocao;
+                M.PERCENTUAL_VPC.Value          := arMargens[I].Percentual_VPC;
+                M.PERCENTUAL_FRETE.Value        := arMargens[I].Percentual_Frete;
+                M.PERCENTUAL_OUTROS.Value       := arMargens[I].Percentual_Outros;
+                M.DATA_AUTORIZACAO.Value        := arMargens[I].Data_Autorizacao;
+                M.AUTORIZADO_POR.Value          := arMargens[I].Autorizado_Por;
+                M.SOLICITADO_POR.Value          := arMargens[I].Solicitado_Por;
 
                 M.SelectList('ID_PRODUTO = ' + M.ID_PRODUTO.asString);
                 if M.Count = 0 then begin
@@ -508,16 +546,24 @@ begin
   try
     try
 
-      M.MARGEMSKU.Value             := edMargemSKU.Value;
-      M.PRECOPONTA.Value            := edPrecoPonta.Value;
-      M.PRECOPROMOCIONAL.Value      := edPrecoPromocional.Value;
-      M.VALPRECOPROMOCIONAL.Value   := edValidadePromocional.Date;
-      M.MARGEMANALISTA.Value        := edMargemAnalista.Value;
-      M.PERCENTUALVPC.Value         := edPercentualVPC.Value;
-      M.PERCENTUALFRETE.Value       := edPercentualFrete.Value;
-      M.PERCENTUALOUTROS.Value      := edPercentualOutros.Value;
-      M.AUTORIZADOPOR.Value         := edAutorizadoPor.Text;
-      M.DATAAUTORIZADO.Value        := Date;
+      M.MARGEM_ANALISTA.Value           := edMargemAnalista.Value;
+      M.PRECO_PONTA.Value               := edPrecoPonta.Value;
+      //Preço
+      M.PRECO_PROMOCIONAL.Value         := edPrecoPromocao.Value;
+      M.VAL_PRECO_PROMOCIONAL.Value     := edValidPrecoPromocao.Date;
+      M.RESP_PRECO_PROMOCIONAL.Value    := edRespPrecoPromocao.Text;
+      M.DATA_PRECO_PROMOCIONAL.Value    := edDataPrecoPromocao.Date;
+      //Margem
+      M.MARGEM_PROMOCIONAL.Value        := edMargemPromocao.Value;
+      M.VAL_MARGEM_PROMOCIONAL.Value    := edValidMargemPromocao.Date;
+      M.RESP_MARGEM_PROMOCIONAL.Value   := edRespMargemPromocao.Text;
+      M.DATA_MARGEM_PROMOCIONAL.Value   := edDataMargemPromocao.Date;
+      M.PERCENTUAL_VPC.Value            := edPercentualVPC.Value;
+      M.PERCENTUAL_FRETE.Value          := edPercentualFrete.Value;
+      M.PERCENTUAL_OUTROS.Value         := edPercentualOutros.Value;
+      M.DATA_AUTORIZACAO.Value          := edDataAutorizacao.Date;
+      M.AUTORIZADO_POR.Value            := edAutorizadoPor.Text;
+      M.SOLICITADO_POR.Value            := edSolicitadoPor.Text;
 
       if (Sender as TSpeedButton).Tag > 0 then begin
         M.ID.Value          := (Sender as TSpeedButton).Tag;
@@ -592,16 +638,18 @@ begin
       SQL.SQL.Add('	P.SKU,');
       SQL.SQL.Add('	P.NOME AS NOMEPRODUTO,');
       SQL.SQL.Add('	COALESCE(M.ID,0) AS ID,');
-      SQL.SQL.Add('	COALESCE(M.MARGEMSKU,0.00) AS MARGEMSKU,');
-      SQL.SQL.Add('	COALESCE(M.PRECOPONTA,0.00) AS PRECOPONTA,');
-      SQL.SQL.Add('	COALESCE(M.PRECOPROMOCIONAL,0.00) AS PRECOPROMOCIONAL,');
-      SQL.SQL.Add('	M.VALPRECOPROMOCIONAL AS VALPRECOPROMOCIONAL,');
-      SQL.SQL.Add('	COALESCE(M.MARGEMANALISTA,0.00) AS MARGEMANALISTA,');
-      SQL.SQL.Add('	COALESCE(M.PERCENTUALVPC,0.00) AS PERCENTUALVPC,');
-      SQL.SQL.Add('	COALESCE(M.PERCENTUALFRETE,0.00) AS PERCENTUALFRETE,');
-      SQL.SQL.Add('	COALESCE(M.PERCENTUALOUTROS,0.00) AS PERCENTUALOUTROS,');
-      SQL.SQL.Add('	COALESCE(M.AUTORIZADOPOR,'''') AS AUTORIZADOPOR,');
-      SQL.SQL.Add('	M.DATAAUTORIZADO AS DATAAUTORIZADO');
+      SQL.SQL.Add('	COALESCE(M.MARGEM_ANALISTA,0.00) AS MARGEM_ANALISTA,');
+      SQL.SQL.Add('	COALESCE(M.PRECO_PONTA,0.00) AS PRECO_PONTA,');
+      SQL.SQL.Add('	COALESCE(M.PRECO_PROMOCIONAL,0.00) AS PRECO_PROMOCIONAL,');
+      SQL.SQL.Add('	M.VAL_PRECO_PROMOCIONAL AS VAL_PRECO_PROMOCIONAL,');
+      SQL.SQL.Add('	COALESCE(M.MARGEM_PROMOCIONAL,0.00) AS MARGEM_PROMOCIONAL,');
+      SQL.SQL.Add('	M.VAL_MARGEM_PROMOCIONAL AS VAL_MARGEM_PROMOCIONAL,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUAL_VPC,0.00) AS PERCENTUAL_VPC,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUAL_FRETE,0.00) AS PERCENTUAL_FRETE,');
+      SQL.SQL.Add('	COALESCE(M.PERCENTUAL_OUTROS,0.00) AS PERCENTUAL_OUTROS,');
+      SQL.SQL.Add('	COALESCE(M.AUTORIZADO_POR,'''') AS AUTORIZADO_POR,');
+      SQL.SQL.Add('	M.DATA_AUTORIZACAO AS DATA_AUTORIZACAO,');
+      SQL.SQL.Add('	COALESCE(M.SOLICITADO_POR,'''') AS SOLICITADO_POR');
       SQL.SQL.Add('FROM PRODUTO P LEFT JOIN MARGEM M ON (P.ID = M.ID_PRODUTO)');
       SQL.SQL.Add('WHERE 1 = 1');
       case cbFiltroMargens.ItemIndex of
@@ -625,18 +673,25 @@ begin
           cds_MargensID_PRODUTO.Value           := SQL.FieldByName('ID_PRODUTO').Value;
           cds_MargensSKU.Value                  := SQL.FieldByName('SKU').Value;
           cds_MargensNOME_PRODUTO.Value         := SQL.FieldByName('NOMEPRODUTO').Value;
-          cds_MargensMARGEMSKU.Value            := SQL.FieldByName('MARGEMSKU').Value;
-          cds_MargensPRECOPONTA.Value           := SQL.FieldByName('PRECOPONTA').Value;
-          cds_MargensPRECOPROMOCIONAL.Value     := SQL.FieldByName('PRECOPROMOCIONAL').Value;
-          if SQL.FieldByName('VALPRECOPROMOCIONAL').AsDateTime > 0 then
-            cds_MargensVALPRECOPROMOCIONAL.Value  := SQL.FieldByName('VALPRECOPROMOCIONAL').Value;
-          cds_MargensMARGEMANALISTA.Value       := SQL.FieldByName('MARGEMANALISTA').Value;
-          cds_MargensPERCENTUALVPC.Value        := SQL.FieldByName('PERCENTUALVPC').Value;
-          cds_MargensPERCENTUALFRETE.Value      := SQL.FieldByName('PERCENTUALFRETE').Value;
-          cds_MargensPERCENTUALOUTROS.Value     := SQL.FieldByName('PERCENTUALOUTROS').Value;
-          cds_MargensAUTORIZADOPOR.Value        := SQL.FieldByName('AUTORIZADOPOR').Value;
-          if SQL.FieldByName('DATAAUTORIZADO').AsDateTime > 0 then
-            cds_MargensDATAAUTORIZADO.Value       := SQL.FieldByName('DATAAUTORIZADO').Value;
+          cds_MargensMARGEM_ANALISTA.Value      := SQL.FieldByName('MARGEM_ANALISTA').Value;
+          cds_MargensPRECO_PONTA.Value          := SQL.FieldByName('PRECO_PONTA').Value;
+
+          //Preço Promocional
+          cds_MargensPRECO_PROMOCIONAL.Value     := SQL.FieldByName('PRECO_PROMOCIONAL').Value;
+          if SQL.FieldByName('VAL_PRECO_PROMOCIONAL').AsDateTime > 0 then
+            cds_MargensVAL_PRECO_PROMOCIONAL.Value  := SQL.FieldByName('VAL_PRECO_PROMOCIONAL').Value;
+
+          //Margem Promocional
+          cds_MargensMARGEM_PROMOCIONAL.Value     := SQL.FieldByName('MARGEM_PROMOCIONAL').Value;
+          if SQL.FieldByName('VAL_PRECO_PROMOCIONAL').AsDateTime > 0 then
+            cds_MargensVAL_MARGEM_PROMOCIONAL.Value  := SQL.FieldByName('VAL_PRECO_PROMOCIONAL').Value;
+
+          cds_MargensPERCENTUAL_VPC.Value       := SQL.FieldByName('PERCENTUAL_VPC').Value;
+          cds_MargensPERCENTUAL_FRETE.Value     := SQL.FieldByName('PERCENTUAL_FRETE').Value;
+          cds_MargensPERCENTUAL_OUTROS.Value    := SQL.FieldByName('PERCENTUAL_OUTROS').Value;
+          cds_MargensAUTORIZADO_POR.Value       := SQL.FieldByName('AUTORIZADO_POR').Value;
+          if SQL.FieldByName('DATA_AUTORIZACAO').AsDateTime > 0 then
+            cds_MargensDATA_AUTORIZACAO.Value   := SQL.FieldByName('DATA_AUTORIZACAO').Value;
           if cds_MargensID.Value > 0 then
             cds_MargensSTATUS.Value             := 'Com Margem'
           else
@@ -751,8 +806,8 @@ begin
   pnEdicao.Visible              := not pnEdicao.Visible;
   pnBotoesEdicao.Visible        := pnEdicao.Visible;
   if pnEdicao.Visible then begin
-    if edMargemSKU.CanFocus then
-      edMargemSKU.SetFocus;
+    if edMargemAnalista.CanFocus then
+      edMargemAnalista.SetFocus;
   end;
 end;
 
