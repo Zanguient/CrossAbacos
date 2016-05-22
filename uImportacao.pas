@@ -88,6 +88,12 @@ type
   end;
 
 type
+  TArrayListaProdutos = record
+    ID  : Integer;
+    SKU : string;
+  end;
+
+type
   TArrayProdutos = record
     ID_PRODUTO : Integer;
     SKU : string;
@@ -145,12 +151,13 @@ Var
   I,
   J       : Integer;
   ArqValido,
-  AchouColuna : Boolean;
-  arProdutos  : array of TArrayProdutos;
-  arFamilias  : array of TArrayFamilias;
-  Colunas     : array of String;
+  AchouColuna   : Boolean;
+  arProdutos    : array of TArrayProdutos;
+  arFamilias    : array of TArrayFamilias;
+  ListaProdutos : array of TArrayListaProdutos;
+  Colunas       : array of String;
   arrInsert,
-  arrUpdate   : array of Integer;
+  arrUpdate     : array of Integer;
   SQL                 : TFDQuery;
   ListaProdutosInsert : String;
 begin
@@ -159,6 +166,7 @@ begin
   SetLength(arFamilias, 0);
   SetLength(arrInsert, 0);
   SetLength(arrUpdate, 0);
+  SetLength(ListaProdutos, 0);
 
   Arquivo := edBuscaArquivoProdutos.Text;
 
@@ -191,9 +199,9 @@ begin
         pbImportaProdutos.MaxValue            := vrow;
         arrData                               := Excel.Range['A1', Excel.WorkSheets[1].Cells[vrow, vcol].Address].Value;
 
-        DisplayMsg(MSG_WAIT, 'Validando arquivo!');
+        mnImportaProdutos.Lines.Add('Validando arquivo!');
 
-        SetLength(Colunas, 28);
+        SetLength(Colunas, 30);
         Colunas[0]     := 'SKU';
         Colunas[1]     := 'CODIGO DE BARRAS';
         Colunas[2]     := 'NOME';
@@ -255,7 +263,7 @@ begin
         pbImportaProdutos.Progress  := 0;
         pbImportaProdutos.MaxValue  := vrow;
 
-        DisplayMsg(MSG_WAIT, 'Capturando Produtos do arquivo!');
+        mnImportaProdutos.Lines.Add('Capturando Produtos do arquivo!');
 
         for I := 2 to vrow do begin
           SetLength(arProdutos, Length(arProdutos) + 1);
@@ -352,11 +360,15 @@ begin
                                                                       if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('MA') then
                                                                         arProdutos[High(arProdutos)].MEDIA_ALTERACAO := StrToCurrDef(arrData[I, J], 0);
           end;
+          Application.ProcessMessages;
+          pbImportaProdutos.Progress  := I;
         end;
 
         Aux := EmptyStr;
 
         if Length(arProdutos) > 0 then begin
+
+          mnImportaProdutos.Lines.Add('Carregando Array de Famílias!');
           //Alimenta o Array para identificação
           F.SelectList('ID > 0');
           if F.Count > 0 then begin
@@ -367,51 +379,69 @@ begin
             end;
           end;
 
-          DisplayMsg(MSG_WAIT, 'Identificando Famílias!');
+          mnImportaProdutos.Lines.Add('Carregando Array de Produtos!');
 
+          SQL := TFDQuery.Create(nil);
+          try
+            SQL.Connection  := FWC.FDConnection;
+            SQL.SQL.Clear;
+            SQL.SQL.Add('SELECT ID, SKU FROM PRODUTO');
+            SQL.Open;
+            SQL.FetchAll;
+            if not SQL.IsEmpty then begin
+              SQL.First;
+              while not SQL.Eof do begin
+                SetLength(ListaProdutos, Length(ListaProdutos) + 1);
+                ListaProdutos[High(ListaProdutos)].ID   := SQL.Fields[0].AsInteger;
+                ListaProdutos[High(ListaProdutos)].SKU  := SQL.Fields[1].AsString;
+                SQL.Next;
+              end;
+            end;
+          finally
+            FreeAndNil(SQL);
+          end;
+
+          mnImportaProdutos.Lines.Add('Identificando Produtos e Famílias!');
+
+          //Identificando Produtos e Famílias
           pbImportaProdutos.Progress  := 0;
           pbImportaProdutos.MaxValue  := High(arProdutos);
 
           for I := Low(arProdutos) to High(arProdutos) do begin
-            for J := Low(arFamilias) to High(arFamilias) do begin
-              if AnsiUpperCase(arProdutos[I].FAMILIA) = AnsiUpperCase(arFamilias[J].DESCRICAO) then begin
-                arProdutos[I].ID_FAMILIA := arFamilias[J].ID;
-                Break;
+            if arProdutos[I].SKU <> EmptyStr then begin
+              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
+                //Identificando Famílias
+                for J := Low(arFamilias) to High(arFamilias) do begin
+                  if AnsiUpperCase(arProdutos[I].FAMILIA) = AnsiUpperCase(arFamilias[J].DESCRICAO) then begin
+                    arProdutos[I].ID_FAMILIA := arFamilias[J].ID;
+                    Break;
+                  end;
+                end;
+
+                if arProdutos[I].ID_FAMILIA = 0 then begin
+                  if Aux = EmptyStr then
+                    Aux := 'Família.: ' + arProdutos[I].FAMILIA
+                  else
+                    Aux := Aux + sLineBreak + 'Família.: ' + arProdutos[I].FAMILIA;
+                end;
+
+                //Identificando Produtos
+                for J := Low(ListaProdutos) to High(ListaProdutos) do begin
+                  if AnsiUpperCase(ListaProdutos[J].SKU) = AnsiUpperCase(arProdutos[I].SKU) then begin
+                    arProdutos[I].ID_PRODUTO := ListaProdutos[J].ID;
+                    Break;
+                  end;
+                end;
               end;
             end;
-
-            if arProdutos[I].ID_FAMILIA = 0 then begin
-              if Aux = EmptyStr then
-                Aux := 'Família.: ' + arProdutos[I].FAMILIA
-              else
-                Aux := Aux + sLineBreak + 'Família.: ' + arProdutos[I].FAMILIA;
-            end;
-
             pbImportaProdutos.Progress := I;
+            Application.ProcessMessages;
           end;
         end;
 
         if Aux = EmptyStr then begin
 
-          DisplayMsg(MSG_WAIT, 'Identificando SKUs!');
-
-          pbImportaProdutos.Progress  := 0;
-          pbImportaProdutos.MaxValue  := High(arProdutos);
-
-          for I := Low(arProdutos) to High(arProdutos) do begin
-            //Consulta o produto no BD
-            if arProdutos[I].SKU <> EmptyStr then begin
-              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
-                P.SelectList('SKU = ' + QuotedStr(arProdutos[I].SKU));
-                if P.Count = 1 then
-                  arProdutos[I].ID_PRODUTO := TPRODUTO(P.Itens[0]).ID.Value;
-              end;
-            end;
-
-            pbImportaProdutos.Progress := I;
-          end;
-
-          DisplayMsg(MSG_WAIT, 'Gravando Produtos no Banco de Dados!');
+          mnImportaProdutos.Lines.Add('Gravando Produtos no Banco de Dados!');
 
           pbImportaProdutos.Progress  := 0;
           pbImportaProdutos.MaxValue  := High(arProdutos);
@@ -466,7 +496,7 @@ begin
                   SetLength(arrInsert, Length(arrInsert) + 1);
                   arrInsert[High(arrInsert)]      := P.ID.Value;
 
-                  mnImportaProdutos.Lines.Add('SKU: ' + P.SKU.Value + ' - inserido com sucesso!');
+                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].SKU + ' - inserido com sucesso!');
 
                 end else begin
                   P.ID.Value                      := arProdutos[I].ID_PRODUTO;
@@ -475,23 +505,37 @@ begin
                   SetLength(arrUpdate, Length(arrUpdate) + 1);
                   arrUpdate[High(arrUpdate)]      := P.ID.Value;
 
-                  mnImportaProdutos.Lines.Add('SKU: ' + P.SKU.Value + ' - alterado com sucesso!');
+                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].SKU + ' - alterado com sucesso!');
                 end;
               end;
             end;
-
             pbImportaProdutos.Progress  := I;
+            Application.ProcessMessages;
           end;
 
           if Length(arrInsert) > 0 then begin
-            SQL               := TFDQuery.Create(nil);
-            try
-              SQL.Connection  := FWC.FDConnection;
 
-              SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
-              SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORANTERIOR = ID_FORNECEDORNOVO WHERE ID IN (' + ListaProdutosInsert + ')');
-            finally
-              FreeAndNil(SQL);
+            ListaProdutosInsert := EmptyStr;
+            for I := 0 to High(arrInsert) do begin
+              if I = 0 then
+                ListaProdutosInsert                                                := IntToStr(arrInsert[I])
+              else
+                ListaProdutosInsert                                                := ListaProdutosInsert + ',' + IntToStr(arrInsert[I])
+            end;
+
+            if Length(Trim(ListaProdutosInsert)) > 0 then begin
+
+              mnImportaProdutos.Lines.Add('Ajustando Fornecedores!');
+
+              SQL               := TFDQuery.Create(nil);
+              try
+                SQL.Connection  := FWC.FDConnection;
+
+                SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORNOVO = COALESCE((SELECT F.ID FROM FORNECEDOR F WHERE UPPER(F.NOME) = UPPER(SUB_GRUPO) LIMIT 1),0) WHERE ID IN (' + ListaProdutosInsert + ')');
+                SQL.ExecSQL('UPDATE PRODUTO SET ID_FORNECEDORANTERIOR = ID_FORNECEDORNOVO WHERE ID IN (' + ListaProdutosInsert + ')');
+              finally
+                FreeAndNil(SQL);
+              end;
             end;
           end;
 
@@ -503,6 +547,7 @@ begin
             mnImportaProdutos.Lines.Add('Total de produtos alterados: ' + IntToStr(Length(arrUpdate)));
 
           DisplayMsg(MSG_OK, 'Produtos Atualizadas com Sucesso!');
+
           pbImportaProdutos.Progress                                               := 0;
 
         end else begin
@@ -526,6 +571,7 @@ begin
       FreeAndNil(F);
       FreeAndNil(P);
       FreeAndNil(FWC);
+      mnImportaProdutos.Lines.Add('Processo de Importação Finalizado!');
     end;
   end;
 end;

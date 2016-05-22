@@ -464,6 +464,7 @@ begin
             cds_MatchItensID_FORNECEDORNOVO.Value    := SQL.Fields[11].Value;
             cds_MatchItensPERCENTUALDIFERENCA.Value  := CalculaPercentualDiferenca(cds_MatchItensCUSTOANTERIOR.AsCurrency, cds_MatchItensCUSTOATUAL.AsCurrency);
             cds_MatchItensESTANOMATCH.Value          := False;
+            cds_MatchItensSTATUS.Value               := True;
             cds_MatchItens.Post;
             SQL.Next
           end;
