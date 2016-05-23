@@ -130,7 +130,7 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Hist'#243'rico de Custo por SKU'
           OnClick = HistricodeCustoporSKU1Click
         end
-        object Match1: TMenuItem
+        object ResponsvelMatch1: TMenuItem
           Caption = 'Respons'#225'vel Match'
           OnClick = Match1Click
         end
@@ -141,6 +141,10 @@ object FrmPrincipal: TFrmPrincipal
         object RatingDetalhadoPorFornecedor1: TMenuItem
           Caption = 'Rating Detalhado Por Fornecedor'
           OnClick = RatingDetalhadoPorFornecedor1Click
+        end
+        object AlteraodeCusto1: TMenuItem
+          Caption = 'Altera'#231#227'o de Custo'
+          OnClick = AlteraodeCusto1Click
         end
       end
     end

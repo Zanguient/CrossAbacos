@@ -37,7 +37,6 @@ type
     ListagemdeLotes1: TMenuItem;
     RatingporFornecedor1: TMenuItem;
     HistricodeCustoporSKU1: TMenuItem;
-    Match1: TMenuItem;
     SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem;
     Fornecedor1: TMenuItem;
     RatingDetalhadoPorFornecedor1: TMenuItem;
@@ -47,6 +46,8 @@ type
     BackupdoBancodeDados1: TMenuItem;
     Famlia1: TMenuItem;
     Margem1: TMenuItem;
+    AlteraodeCusto1: TMenuItem;
+    ResponsvelMatch1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -78,6 +79,7 @@ type
     procedure BackupdoBancodeDados1Click(Sender: TObject);
     procedure Famlia1Click(Sender: TObject);
     procedure Margem1Click(Sender: TObject);
+    procedure AlteraodeCusto1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -120,7 +122,8 @@ uses
   uConsultaProduto,
   uArquivoProdutos,
   uCadastroFamilia,
-  uCadastroMargem;
+  uCadastroMargem,
+  uRelAlteracaoCusto;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -321,6 +324,17 @@ begin
     frmRelResponsavelMatch.ShowModal;
   finally
     FreeAndNil(frmRelResponsavelMatch);
+  end;
+end;
+
+procedure TFrmPrincipal.AlteraodeCusto1Click(Sender: TObject);
+begin
+  try
+    if frmRelAlteracaoCusto = nil then
+      frmRelAlteracaoCusto := TfrmRelAlteracaoCusto.Create(Self);
+    frmRelAlteracaoCusto.ShowModal;
+  finally
+    FreeAndNil(frmRelAlteracaoCusto);
   end;
 end;
 

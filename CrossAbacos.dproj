@@ -209,6 +209,10 @@
             <Form>FrmArquivoProdutos</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uRelAlteracaoCusto.pas">
+            <Form>frmRelAlteracaoCusto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -53,7 +53,8 @@ uses
   uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor},
   uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor},
   uConsultaProduto in 'uConsultaProduto.pas' {frmConsultaProdutos},
-  uArquivoProdutos in 'uArquivoProdutos.pas' {FrmArquivoProdutos};
+  uArquivoProdutos in 'uArquivoProdutos.pas' {FrmArquivoProdutos},
+  uRelAlteracaoCusto in 'uRelAlteracaoCusto.pas' {frmRelAlteracaoCusto};
 
 {$R *.res}
 
@@ -64,6 +65,7 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TfrmRelAlteracaoCusto, frmRelAlteracaoCusto);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);
