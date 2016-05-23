@@ -78,6 +78,7 @@ end;
 procedure TfrmSeleciona.dgSelecionaDblClick(Sender: TObject);
 begin
   Seleciona;
+  Close;
 end;
 
 procedure TfrmSeleciona.Filter;
@@ -134,6 +135,8 @@ begin
     btSelecionarClick(nil);
     PostMessage(Self.Handle, WM_CLOSE, 0, 0);
   end;
+
+  AutoSizeDBGrid(dgSeleciona);
 
 end;
 

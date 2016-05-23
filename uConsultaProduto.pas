@@ -23,6 +23,9 @@ type
     csConsultaMENORCUSTO: TCurrencyField;
     csConsultaFORNECEDOR: TStringField;
     csConsultaDATAULTIMAATUA: TDateTimeField;
+    csConsultaNOMEPRODUTO: TStringField;
+    csConsultaMARCA: TStringField;
+    csConsultaCATEGORIA: TStringField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure csConsultaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
@@ -67,12 +70,15 @@ begin
       SQL.SQL.Clear;
       SQL.SQL.Add('SELECT');
       SQL.SQL.Add('	P.SKU,');
+      SQL.SQL.Add('	P.NOME AS NOMEPRODUTO,');
+      SQL.SQL.Add('	P.MARCA,');
+      SQL.SQL.Add('	FM.DESCRICAO AS CATEGORIA,');
       SQL.SQL.Add('	COALESCE(PF.CUSTO,0) AS CUSTO,');
       SQL.SQL.Add('	F.ID AS FORN,');
       SQL.SQL.Add('	F.NOME,');
-      SQL.SQL.Add(' P.ID,');
       SQL.SQL.Add(' CAST(L.DATA_HORA AS DATE) AS DATA_HORA');
       SQL.SQL.Add('FROM PRODUTO P');
+      SQL.SQL.Add('INNER JOIN FAMILIA FM ON (P.ID_FAMILIA = FM.ID)');
       SQL.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON P.ID = PF.ID_PRODUTO AND P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR');
       SQL.SQL.Add('INNER JOIN FORNECEDOR F ON P.ID_FORNECEDORNOVO = F.ID');
       SQL.SQL.Add('INNER JOIN LOTE L ON P.ID_ULTIMOLOTE = L.ID');
@@ -86,9 +92,12 @@ begin
       while not SQL.Eof do begin
         csConsulta.Append;
         csConsultaSKU.Value              := SQL.Fields[0].Value;
-        csConsultaMENORCUSTO.Value       := SQL.Fields[1].Value;
-        csConsultaFORNECEDOR.Value       := SQL.Fields[2].AsString + ' - ' + SQL.Fields[3].AsString;
-        csConsultaDATAULTIMAATUA.Value   := SQL.Fields[5].Value;
+        csConsultaNOMEPRODUTO.Value      := SQL.Fields[1].Value;
+        csConsultaMARCA.Value            := SQL.Fields[2].Value;
+        csConsultaCATEGORIA.Value        := SQL.Fields[3].Value;
+        csConsultaMENORCUSTO.Value       := SQL.Fields[4].Value;
+        csConsultaFORNECEDOR.Value       := SQL.Fields[5].AsString + ' - ' + SQL.Fields[6].AsString;
+        csConsultaDATAULTIMAATUA.Value   := SQL.Fields[7].Value;
         csConsulta.Post;
 
         SQL.Next;
@@ -138,7 +147,7 @@ end;
 
 procedure TfrmConsultaProdutos.dgConsultaTitleClick(Column: TColumn);
 begin
-  csConsulta.IndexFieldNames := Column.FieldName;
+  OrdenarGrid(Column);
 end;
 
 procedure TfrmConsultaProdutos.edFiltroKeyDown(Sender: TObject; var Key: Word;

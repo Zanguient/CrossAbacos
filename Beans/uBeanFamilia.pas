@@ -44,6 +44,12 @@ begin
 
   FDESCRICAO.Size           := 100;
   FAUTORIZADOPOR.Size       := 100;
+
+  FDESCRICAO.isSearchField  := True;
+
+  FID.displayLabel          := 'Código';
+  FDESCRICAO.displayLabel   := 'Descrição';
+
 end;
 
 procedure TFAMILIA.SetAUTORIZADOPOR(const Value: TFieldString);

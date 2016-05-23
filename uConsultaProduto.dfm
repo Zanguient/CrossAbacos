@@ -64,9 +64,6 @@ object frmConsultaProdutos: TfrmConsultaProdutos
         ParentFont = False
         TabOrder = 0
         OnKeyDown = edFiltroKeyDown
-        ExplicitLeft = 0
-        ExplicitTop = 22
-        ExplicitWidth = 688
       end
     end
     object dgConsulta: TDBGrid
@@ -102,6 +99,24 @@ object frmConsultaProdutos: TfrmConsultaProdutos
         end
         item
           Expanded = False
+          FieldName = 'NOMEPRODUTO'
+          Width = 255
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'MARCA'
+          Width = 150
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CATEGORIA'
+          Width = 150
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'MENORCUSTO'
           Visible = True
         end
@@ -127,6 +142,21 @@ object frmConsultaProdutos: TfrmConsultaProdutos
     object csConsultaSKU: TStringField
       FieldName = 'SKU'
       Size = 60
+    end
+    object csConsultaNOMEPRODUTO: TStringField
+      DisplayLabel = 'Nome Produto'
+      FieldName = 'NOMEPRODUTO'
+      Size = 255
+    end
+    object csConsultaMARCA: TStringField
+      DisplayLabel = 'Marca'
+      FieldName = 'MARCA'
+      Size = 100
+    end
+    object csConsultaCATEGORIA: TStringField
+      DisplayLabel = 'Categoria'
+      FieldName = 'CATEGORIA'
+      Size = 100
     end
     object csConsultaMENORCUSTO: TCurrencyField
       DisplayLabel = 'Menor Custo'

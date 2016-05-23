@@ -12,6 +12,7 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object GridPanel1: TGridPanel
@@ -45,8 +46,6 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
         Value = 100.000000000000000000
       end>
     TabOrder = 2
-    ExplicitTop = 164
-    ExplicitWidth = 552
     object Panel1: TPanel
       Left = 1
       Top = 1
@@ -54,7 +53,6 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
       Height = 58
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 275
       object btRelatorio: TSpeedButton
         AlignWithMargins = True
         Left = 29
@@ -596,8 +594,6 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
       Height = 58
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 276
-      ExplicitWidth = 275
       object btSair: TSpeedButton
         AlignWithMargins = True
         Left = 4
@@ -732,8 +728,6 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    ExplicitWidth = 552
-    ExplicitHeight = 87
     object Label1: TLabel
       Left = 8
       Top = 25
@@ -782,8 +776,6 @@ object frmRelListagemdeLotes: TfrmRelListagemdeLotes
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    ExplicitTop = 96
-    ExplicitWidth = 552
     DesignSize = (
       299
       62)

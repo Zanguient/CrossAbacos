@@ -23,6 +23,7 @@ type
     edLote: TEdit;
     procedure btSairClick(Sender: TObject);
     procedure btRelatorioClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     procedure Visualizar;
     { Private declarations }
@@ -57,6 +58,12 @@ end;
 procedure TfrmRelListagemdeLotes.btSairClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TfrmRelListagemdeLotes.FormShow(Sender: TObject);
+begin
+  edDataInicial.Date  := Date;
+  edDataFinal.Date    := Date;
 end;
 
 procedure TfrmRelListagemdeLotes.Visualizar;

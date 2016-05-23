@@ -28,7 +28,8 @@ type
     gbMarca: TGroupBox;
     edMarca: TEdit;
     gbCategoria: TGroupBox;
-    edCategoria: TEdit;
+    edFamilia: TButtonedEdit;
+    edNomeFamilia: TEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btSairClick(Sender: TObject);
     procedure edFornecedorChange(Sender: TObject);
@@ -40,12 +41,17 @@ type
     procedure edProdutoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btRelatorioClick(Sender: TObject);
+    procedure edFamiliaChange(Sender: TObject);
+    procedure edFamiliaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edFamiliaRightButtonClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
     procedure SelecionaFornecedor;
     procedure SelecionaProduto;
+    procedure SelecionaFamilia;
     procedure Visualizar;
   end;
 
@@ -58,7 +64,8 @@ uses
   uFWConnection,
   uBeanFornecedor,
   uBeanProduto,
-  uMensagem;
+  uMensagem,
+  uBeanFamilia;
 {$R *.dfm}
 
 procedure TfrmRelListagemProdutos.btRelatorioClick(Sender: TObject);
@@ -76,6 +83,23 @@ end;
 procedure TfrmRelListagemProdutos.btSairClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TfrmRelListagemProdutos.edFamiliaChange(Sender: TObject);
+begin
+  edNomeFamilia.Clear;
+end;
+
+procedure TfrmRelListagemProdutos.edFamiliaKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    SelecionaFamilia;
+end;
+
+procedure TfrmRelListagemProdutos.edFamiliaRightButtonClick(Sender: TObject);
+begin
+  SelecionaFamilia;
 end;
 
 procedure TfrmRelListagemProdutos.edFornecedorChange(Sender: TObject);
@@ -157,6 +181,25 @@ begin
   end;
 end;
 
+procedure TfrmRelListagemProdutos.SelecionaFamilia;
+var
+  CON : TFWConnection;
+  F   : TFAMILIA;
+begin
+  CON    := TFWConnection.Create;
+  F      := TFAMILIA.Create(CON);
+  edNomeFamilia.Clear;
+  try
+    edFamilia.Text       := IntToStr(DMUtil.Selecionar(F, edFamilia.Text));
+    F.SelectList('id = ' + edFamilia.Text);
+    if F.Count > 0 then
+      edNomeFamilia.Text := TFAMILIA(F.Itens[0]).DESCRICAO.asString;
+  finally
+    FreeAndNil(F);
+    FreeAndNil(CON);
+  end;
+end;
+
 procedure TfrmRelListagemProdutos.Visualizar;
 var
   CON   : TFWConnection;
@@ -176,13 +219,14 @@ begin
       SQL.SQL.Add('	P.SKU,');
       SQL.SQL.Add('	P.NOME,');
       SQL.SQL.Add('	P.MARCA,');
-      SQL.SQL.Add('	P.FAMILIA,');
+      SQL.SQL.Add('	FM.DESCRICAO AS FAMILIA,');
       SQL.SQL.Add('	F.CNPJ,');
       SQL.SQL.Add('	F.NOME,');
       SQL.SQL.Add('	COALESCE(PF.QUANTIDADE,0) AS QUANTIDADE,');
       SQL.SQL.Add('	COALESCE(PF.CUSTO,0) AS CUSTO');
       SQL.SQL.Add('FROM PRODUTO P');
       SQL.SQL.Add('INNER JOIN FORNECEDOR F ON (P.ID_FORNECEDORNOVO = F.ID)');
+      SQL.SQL.Add('INNER JOIN FAMILIA FM ON (P.ID_FAMILIA = FM.ID)');
       SQL.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON (P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR) AND (P.ID = PF.ID_PRODUTO) AND (PF.STATUS)');
       SQL.SQL.Add('WHERE 1 = 1');
       if edNomeFornecedor.Text <> '' then
@@ -191,8 +235,8 @@ begin
         SQL.SQL.Add('AND P.ID = ' + edProduto.Text);
       if Trim(edMarca.Text) <> '' then
         SQL.SQL.Add('AND UPPER(P.MARCA) = ' + QuotedStr(AnsiUpperCase(Trim(edMarca.Text))));
-      if Trim(edCategoria.Text) <> '' then
-        SQL.SQL.Add('AND UPPER(P.FAMILIA) = ' + QuotedStr(AnsiUpperCase(Trim(edCategoria.Text))));
+      if Trim(edFamilia.Text) <> '' then
+        SQL.SQL.Add('AND P.ID_FAMILIA = ' + edFamilia.Text);
       case rgSaldo.ItemIndex of
         0 : SQL.SQL.Add('AND PF.QUANTIDADE > 0 AND PF.CUSTO > 0');
         1 : SQL.SQL.Add('AND NOT ((PF.QUANTIDADE > 0) AND (PF.CUSTO > 0))');

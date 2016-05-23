@@ -849,7 +849,7 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
     object gbMarca: TGroupBox
       AlignWithMargins = True
       Left = 3
-      Top = 119
+      Top = 177
       Width = 528
       Height = 52
       Align = alTop
@@ -861,6 +861,7 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
       Font.Style = []
       ParentFont = False
       TabOrder = 4
+      ExplicitTop = 119
       DesignSize = (
         528
         52)
@@ -884,7 +885,7 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
     object gbCategoria: TGroupBox
       AlignWithMargins = True
       Left = 3
-      Top = 177
+      Top = 119
       Width = 528
       Height = 52
       Align = alTop
@@ -896,24 +897,40 @@ object frmRelListagemProdutos: TfrmRelListagemProdutos
       Font.Style = []
       ParentFont = False
       TabOrder = 5
+      ExplicitLeft = 0
+      ExplicitTop = 115
       DesignSize = (
         528
         52)
-      object edCategoria: TEdit
-        AlignWithMargins = True
+      object edFamilia: TButtonedEdit
         Left = 8
         Top = 21
-        Width = 504
+        Width = 145
+        Height = 27
+        Images = DMUtil.ImageList1
+        RightButton.ImageIndex = 0
+        RightButton.Visible = True
+        TabOrder = 0
+        TextHint = 'Selecione a Fam'#237'lia...'
+        OnChange = edFamiliaChange
+        OnKeyDown = edFamiliaKeyDown
+        OnRightButtonClick = edFamiliaRightButtonClick
+      end
+      object edNomeFamilia: TEdit
+        AlignWithMargins = True
+        Left = 159
+        Top = 21
+        Width = 353
         Height = 27
         Anchors = [akLeft, akTop, akRight]
+        Enabled = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 0
-        TextHint = 'Digite a Categoria/Familia...'
+        TabOrder = 1
       end
     end
   end
