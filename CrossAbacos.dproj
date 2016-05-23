@@ -186,9 +186,8 @@
             <Form>frmRelHistoricoporSKU</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uRelResponsavelLote.pas">
-            <Form>frmRelResponsavelLote</Form>
-            <FormType>dfm</FormType>
+        <DCCReference Include="uRelResponsavelMatch.pas">
+            <Form>frmRelResponsavelMatch</Form>
         </DCCReference>
         <DCCReference Include="uRelListagemdeLotes.pas">
             <Form>frmRelListagemdeLotes</Form>

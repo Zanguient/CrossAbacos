@@ -48,7 +48,7 @@ uses
   uRelatorios in 'Units\uRelatorios.pas',
   uRelHistoricodeCustoporSKU in 'uRelHistoricodeCustoporSKU.pas' {frmRelHistoricodeCustoporSKU},
   uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU},
-  uRelResponsavelLote in 'uRelResponsavelLote.pas' {frmRelResponsavelLote},
+  uRelResponsavelMatch in 'uRelResponsavelMatch.pas' {frmRelResponsavelMatch},
   uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes},
   uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor},
   uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor},
