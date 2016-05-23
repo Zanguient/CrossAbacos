@@ -1,7 +1,7 @@
-object frmRelMatch: TfrmRelMatch
+object frmRelResponsavelMatch: TfrmRelResponsavelMatch
   Left = 0
   Top = 0
-  Caption = 'Relat'#243'rio de Match'
+  Caption = 'Relat'#243'rio de Respons'#225'vel pelo Match'
   ClientHeight = 220
   ClientWidth = 306
   Color = clBtnFace
@@ -48,9 +48,6 @@ object frmRelMatch: TfrmRelMatch
         Value = 100.000000000000000000
       end>
     TabOrder = 0
-    ExplicitLeft = -105
-    ExplicitTop = 141
-    ExplicitWidth = 552
     object Panel1: TPanel
       Left = 1
       Top = 1
@@ -58,7 +55,6 @@ object frmRelMatch: TfrmRelMatch
       Height = 58
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 275
       object btRelatorio: TSpeedButton
         AlignWithMargins = True
         Left = 30
@@ -600,8 +596,6 @@ object frmRelMatch: TfrmRelMatch
       Height = 58
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 276
-      ExplicitWidth = 275
       object btSair: TSpeedButton
         AlignWithMargins = True
         Left = 4
@@ -736,9 +730,6 @@ object frmRelMatch: TfrmRelMatch
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 8
-    ExplicitHeight = 102
     object Label1: TLabel
       Left = 8
       Top = 25
@@ -787,9 +778,6 @@ object frmRelMatch: TfrmRelMatch
     Font.Style = []
     ParentFont = False
     TabOrder = 2
-    ExplicitLeft = -222
-    ExplicitTop = 119
-    ExplicitWidth = 528
     DesignSize = (
       300
       52)
@@ -808,7 +796,6 @@ object frmRelMatch: TfrmRelMatch
       ParentFont = False
       TabOrder = 0
       TextHint = 'Digite o Lote...'
-      ExplicitWidth = 504
     end
   end
 end

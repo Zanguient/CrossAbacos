@@ -1,4 +1,4 @@
-unit uRelMatch;
+unit uRelResponsavelMatch;
 
 interface
 
@@ -8,7 +8,7 @@ uses
   Vcl.ExtCtrls, FireDAC.Comp.Client, Data.DB;
 
 type
-  TfrmRelMatch = class(TForm)
+  TfrmRelResponsavelMatch = class(TForm)
     GridPanel1: TGridPanel;
     Panel1: TPanel;
     btRelatorio: TSpeedButton;
@@ -33,7 +33,7 @@ type
   end;
 
 var
-  frmRelMatch: TfrmRelMatch;
+  frmRelResponsavelMatch: TfrmRelResponsavelMatch;
 
 implementation
 
@@ -44,7 +44,7 @@ uses
 
 {$R *.dfm}
 
-procedure TfrmRelMatch.btRelatorioClick(Sender: TObject);
+procedure TfrmRelResponsavelMatch.btRelatorioClick(Sender: TObject);
 begin
   if btRelatorio.Tag = 0 then begin
     btRelatorio.Tag   := 1;
@@ -56,25 +56,25 @@ begin
   end;
 end;
 
-procedure TfrmRelMatch.btSairClick(Sender: TObject);
+procedure TfrmRelResponsavelMatch.btSairClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TfrmRelMatch.FormKeyDown(Sender: TObject; var Key: Word;
+procedure TfrmRelResponsavelMatch.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_ESCAPE then
     Close;
 end;
 
-procedure TfrmRelMatch.FormShow(Sender: TObject);
+procedure TfrmRelResponsavelMatch.FormShow(Sender: TObject);
 begin
   edDataInicial.Date  := Date;
   edDataFinal.Date    := Date;
 end;
 
-procedure TfrmRelMatch.Visualizar;
+procedure TfrmRelResponsavelMatch.Visualizar;
 Var
   FWC : TFWConnection;
   SQL : TFDQuery;
@@ -120,7 +120,7 @@ begin
       SQL.FetchAll;
 
       DMUtil.frxDBDataset1.DataSet := SQL;
-      DMUtil.ImprimirRelatorio('frListagemMatch.fr3');
+      DMUtil.ImprimirRelatorio('frResponsavelMatch.fr3');
       DisplayMsgFinaliza;
 
     except

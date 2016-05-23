@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42402,6173514931" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
+<TfrxReport Version="5.2.3" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="42396,5981039468" ReportOptions.Description.Text="" ReportOptions.LastChange="42513,7973092014" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
   <Datasets>
     <item DataSet="frxDBDataset1" DataSetName="frxDBDataset1"/>
   </Datasets>
   <Variables>
-    <item Name="Usuario" Value="'Sergio Jonas NetSchulz'"/>
+    <item Name="Usuario" Value="'SERGIO JONAS SCHULZ'"/>
     <item Name="UserLogin" Value="user"/>
     <item Name="Login" Value="'Sergio Jonas NetSchulz'"/>
   </Variables>
@@ -36,7 +36,7 @@
       <TfrxMemoView Name="Memo7" Align="baLeft" Left="75,5906" Top="22,67716535" Width="162,51968503937" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Data Lote"/>
       <TfrxMemoView Name="Memo9" Align="baWidth" Left="238,11028503937" Top="22,67716535" Width="317,48062496063" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="1" ParentFont="False" VAlign="vaCenter" Text="Nome do Usuário"/>
       <TfrxMemoView Name="Memo8" Align="baRight" Left="555,59091" Top="22,67716535" Width="162,51979" Height="18,89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-16" Font.Name="times New Roman" Font.Style="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Data e Hora do match"/>
-      <TfrxMemoView Name="Memo10" Align="baWidth" Left="0" Top="0" Width="718,1107" Height="22,67718" Font.Charset="1" Font.Color="-16777208" Font.Height="-19" Font.Name="times New Roman" Font.Style="1" Frame.Typ="12" HAlign="haCenter" ParentFont="False" Text="Matchs por Lote"/>
+      <TfrxMemoView Name="Memo10" Align="baWidth" Left="0" Top="0" Width="718,1107" Height="22,67718" Font.Charset="1" Font.Color="-16777208" Font.Height="-19" Font.Name="times New Roman" Font.Style="1" Frame.Typ="12" HAlign="haCenter" ParentFont="False" Text="Responsável por Match"/>
     </TfrxHeader>
   </TfrxReportPage>
 </TfrxReport>

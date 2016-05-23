@@ -114,7 +114,7 @@ uses
   uRelListagemdeLotes,
   uRelRatingporFornecedor,
   uRelHistoricodeCustoporSKU,
-  uRelMatch,
+  uRelResponsavelMatch,
   uCadFornecedor,
   uRelRatingDetalhadoporFornecedor,
   uConsultaProduto,
@@ -316,11 +316,11 @@ end;
 procedure TFrmPrincipal.Match1Click(Sender: TObject);
 begin
   try
-    if frmRelMatch = nil then
-      frmRelMatch := TfrmRelMatch.Create(Self);
-    frmRelMatch.ShowModal;
+    if frmRelResponsavelMatch = nil then
+      frmRelResponsavelMatch := TfrmRelResponsavelMatch.Create(Self);
+    frmRelResponsavelMatch.ShowModal;
   finally
-    FreeAndNil(frmRelMatch);
+    FreeAndNil(frmRelResponsavelMatch);
   end;
 end;
 

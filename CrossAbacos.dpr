@@ -48,7 +48,7 @@ uses
   uRelatorios in 'Units\uRelatorios.pas',
   uRelHistoricodeCustoporSKU in 'uRelHistoricodeCustoporSKU.pas' {frmRelHistoricodeCustoporSKU},
   uRelHistoricoporSKU in 'uRelHistoricoporSKU.pas' {frmRelHistoricoporSKU},
-  uRelMatch in 'uRelMatch.pas' {frmRelMatch},
+  uRelResponsavelLote in 'uRelResponsavelLote.pas' {frmRelResponsavelLote},
   uRelListagemdeLotes in 'uRelListagemdeLotes.pas' {frmRelListagemdeLotes},
   uCadFornecedor in 'Cadastros\uCadFornecedor.pas' {frmCadFornecedor},
   uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor},
@@ -64,7 +64,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(TFrmArquivoProdutos, FrmArquivoProdutos);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

@@ -131,7 +131,7 @@ object FrmPrincipal: TFrmPrincipal
           OnClick = HistricodeCustoporSKU1Click
         end
         object Match1: TMenuItem
-          Caption = 'Match'
+          Caption = 'Respons'#225'vel Match'
           OnClick = Match1Click
         end
         object SKUxSubGrupoAbacosxSubGrupoCross1: TMenuItem
