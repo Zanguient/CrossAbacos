@@ -30,7 +30,6 @@ type
     procedure btSairClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edFornecedorChange(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -101,12 +100,6 @@ begin
     Close;
 end;
 
-procedure TfrmRelProdutoPorFornecedor.FormShow(Sender: TObject);
-begin
-  edDataInicial.Date := Now;
-  edDataFinal.Date   := Now;
-end;
-
 procedure TfrmRelProdutoPorFornecedor.SelecionaFornecedor;
 var
   CON : TFWConnection;
@@ -142,39 +135,38 @@ begin
       Consulta.Close;
       Consulta.SQL.Clear;
       Consulta.SQL.Add('SELECT');
+      Consulta.SQL.Add('f.id,');
+      Consulta.SQL.Add('f.nome as fornecedor,');
       Consulta.SQL.Add('p.sku,');
+      Consulta.SQL.Add('pf.cod_prod_fornecedor,');
+      Consulta.SQL.Add('pf.custo,');
+      Consulta.SQL.Add('pf.quantidade,');
+      Consulta.SQL.Add('p.nome,');
       Consulta.SQL.Add('p.marca,');
-      Consulta.SQL.Add('COALESCE(mi.custoanterior,0) AS custoanterior,');
-      Consulta.SQL.Add('COALESCE(mi.custonovo, 0) AS custonovo,');
-      Consulta.SQL.Add('COALESCE(mi.quantidade, 0) AS quantidade,');
-      Consulta.SQL.Add('fa.nome,');
-      Consulta.SQL.Add('fn.nome');
-      Consulta.SQL.Add('FROM match m');
-      Consulta.SQL.Add('INNER JOIN match_itens mi ON (m.id = mi.id_match)');
-      Consulta.SQL.Add('INNER JOIN fornecedor fa ON (mi.id_fornecedoranterior = fa.id)');
-      Consulta.SQL.Add('INNER JOIN fornecedor fn ON (mi.id_fornecedornovo = fn.id)');
-      Consulta.SQL.Add('INNER JOIN produto p ON (mi.id_produto = p.id)');
-      Consulta.SQL.Add('WHERE CAST(m.data_hora AS DATE) BETWEEN :datai AND :dataf');
-      Consulta.SQL.Add('AND mi.atualizado');
+      Consulta.SQL.Add('fa.descricao as familia,');
+      Consulta.SQL.Add('f.prazo_entrega,');
+      Consulta.SQL.Add('pf.status');
+      Consulta.SQL.Add('FROM produto p');
+      Consulta.SQL.Add('INNER JOIN produtofornecedor pf ON (p.id = pf.id_produto)');
+      Consulta.SQL.Add('INNER JOIN fornecedor f ON (pf.id_fornecedor = f.id)');
+      Consulta.SQL.Add('INNER JOIN familia fa ON (p.id_familia = fa.id)');
+      Consulta.SQL.Add('WHERE 1 = 1');
       if StrToIntDef(edFornecedor.Text,0) > 0 then
-        Consulta.SQL.Add('AND ((fa.id = ' + edFornecedor.Text + ') OR (fn.id = ' + edFornecedor.Text + '))');
-      if Trim(edMarca.Text) <> EmptyStr then
-        Consulta.SQL.Add('AND p.marca LIKE ' + QuotedStr('%' + edMarca.Text + '%'));
+        Consulta.SQL.Add('AND f.id = ' + edFornecedor.Text);
+      case rgSaldo.ItemIndex of
+        0 : Consulta.SQL.Add('AND pf.quantidade > 0');
+        1 : Consulta.SQL.Add('AND pf.quantidade = 0');
+      end;
 
-      Consulta.SQL.Add('ORDER BY P.sku');
+      Consulta.SQL.Add('ORDER BY f.id, p.sku');
       Consulta.Connection                     := FWC.FDConnection;
-      Consulta.ParamByName('DATAI').DataType  := ftDate;
-      Consulta.ParamByName('DATAF').DataType  := ftDate;
-
-      Consulta.Params[0].Value                := edDataInicial.Date;
-      Consulta.Params[1].Value                := edDataFinal.Date;
 
       Consulta.Prepare;
       Consulta.Open;
       Consulta.FetchAll;
 
       DMUtil.frxDBDataset1.DataSet := Consulta;
-      DMUtil.ImprimirRelatorio('frAlteracaoCusto.fr3');
+      DMUtil.ImprimirRelatorio('frProdutosPorFornecedor.fr3');
       DisplayMsgFinaliza;
     Except
       on E : Exception do begin

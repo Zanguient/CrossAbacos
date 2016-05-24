@@ -15,7 +15,6 @@ object frmRelProdutoPorFornecedor: TfrmRelProdutoPorFornecedor
   OldCreateOrder = False
   Position = poMainFormCenter
   OnKeyDown = FormKeyDown
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnPrincipal: TPanel
@@ -786,6 +785,7 @@ object frmRelProdutoPorFornecedor: TfrmRelProdutoPorFornecedor
       Height = 138
       Align = alClient
       Caption = '  Tipo de Produtos  '
+      ItemIndex = 2
       Items.Strings = (
         'Com Saldo'
         'Sem Saldo'
