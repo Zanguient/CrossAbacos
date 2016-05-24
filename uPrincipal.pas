@@ -48,6 +48,7 @@ type
     Margem1: TMenuItem;
     AlteraodeCusto1: TMenuItem;
     ResponsvelMatch1: TMenuItem;
+    ProdutosPorFornecedor1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -80,6 +81,7 @@ type
     procedure Famlia1Click(Sender: TObject);
     procedure Margem1Click(Sender: TObject);
     procedure AlteraodeCusto1Click(Sender: TObject);
+    procedure ProdutosPorFornecedor1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -123,6 +125,7 @@ uses
   uArquivoProdutos,
   uCadastroFamilia,
   uCadastroMargem,
+  uRelProdutosPorFornecedor,
   uRelAlteracaoCusto;
 {$R *.dfm}
 
@@ -419,6 +422,17 @@ begin
     FrmArquivoProdutos.ShowModal;
   finally
     FreeAndNil(FrmArquivoProdutos);
+  end;
+end;
+
+procedure TFrmPrincipal.ProdutosPorFornecedor1Click(Sender: TObject);
+begin
+ if not Assigned(frmRelProdutoPorFornecedor) then
+   frmRelProdutoPorFornecedor := TfrmRelProdutoPorFornecedor.Create(nil);
+  try
+    frmRelProdutoPorFornecedor.ShowModal;
+  finally
+    FreeAndNil(frmRelProdutoPorFornecedor);
   end;
 end;
 

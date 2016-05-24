@@ -146,6 +146,10 @@ object FrmPrincipal: TFrmPrincipal
           Caption = 'Altera'#231#227'o de Custo'
           OnClick = AlteraodeCusto1Click
         end
+        object ProdutosPorFornecedor1: TMenuItem
+          Caption = 'Produtos Por Fornecedor'
+          OnClick = ProdutosPorFornecedor1Click
+        end
       end
     end
     object Arquivo1: TMenuItem
