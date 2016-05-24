@@ -3,8 +3,8 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Relat'#243'rio de Altera'#231#227'o do Custo'
-  ClientHeight = 309
-  ClientWidth = 486
+  ClientHeight = 262
+  ClientWidth = 328
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,13 +15,14 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
   OldCreateOrder = False
   Position = poMainFormCenter
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object pnPrincipal: TPanel
     Left = 0
     Top = 0
-    Width = 486
-    Height = 309
+    Width = 328
+    Height = 262
     Align = alClient
     BevelOuter = bvNone
     Font.Charset = DEFAULT_CHARSET
@@ -31,11 +32,13 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
     Font.Style = []
     ParentFont = False
     TabOrder = 0
+    ExplicitWidth = 486
+    ExplicitHeight = 309
     object gbSelecionaFornecedor: TGroupBox
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 480
+      Width = 322
       Height = 52
       Align = alTop
       Caption = '  Selecione o Fornecedor  '
@@ -46,13 +49,14 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      ExplicitWidth = 480
       DesignSize = (
-        480
+        322
         52)
       object edFornecedor: TButtonedEdit
         Left = 8
         Top = 21
-        Width = 145
+        Width = 81
         Height = 27
         Images = DMUtil.ImageList1
         RightButton.ImageIndex = 0
@@ -66,9 +70,9 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
       end
       object edNomeFornecedor: TEdit
         AlignWithMargins = True
-        Left = 159
+        Left = 95
         Top = 21
-        Width = 305
+        Width = 211
         Height = 27
         Anchors = [akLeft, akTop, akRight]
         Enabled = False
@@ -84,8 +88,8 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
     object GridPanel1: TGridPanel
       AlignWithMargins = True
       Left = 3
-      Top = 246
-      Width = 480
+      Top = 199
+      Width = 322
       Height = 60
       Align = alBottom
       BevelOuter = bvLowered
@@ -112,16 +116,19 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
           Value = 100.000000000000000000
         end>
       TabOrder = 1
+      ExplicitTop = 246
+      ExplicitWidth = 480
       object Panel1: TPanel
         Left = 1
         Top = 1
-        Width = 239
+        Width = 160
         Height = 58
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 239
         object btRelatorio: TSpeedButton
           AlignWithMargins = True
-          Left = 120
+          Left = 41
           Top = 4
           Width = 115
           Height = 50
@@ -654,12 +661,14 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
         end
       end
       object Panel2: TPanel
-        Left = 240
+        Left = 161
         Top = 1
-        Width = 239
+        Width = 160
         Height = 58
         Align = alClient
         TabOrder = 1
+        ExplicitLeft = 240
+        ExplicitWidth = 239
         object btSair: TSpeedButton
           AlignWithMargins = True
           Left = 4
@@ -776,6 +785,62 @@ object frmRelAlteracaoCusto: TfrmRelAlteracaoCusto
           OnClick = btSairClick
           ExplicitHeight = 41
         end
+      end
+    end
+    object GroupBox1: TGroupBox
+      AlignWithMargins = True
+      Left = 3
+      Top = 61
+      Width = 322
+      Height = 71
+      Align = alTop
+      Caption = '  Selecione o Periodo  '
+      TabOrder = 2
+      ExplicitLeft = 0
+      ExplicitTop = 58
+      ExplicitWidth = 486
+      object Label1: TLabel
+        Left = 142
+        Top = 31
+        Width = 21
+        Height = 19
+        Caption = 'at'#233
+      end
+      object edDataInicial: TJvDateEdit
+        Left = 8
+        Top = 28
+        Width = 121
+        Height = 27
+        ShowNullDate = False
+        TabOrder = 0
+      end
+      object edDataFinal: TJvDateEdit
+        Left = 184
+        Top = 28
+        Width = 121
+        Height = 27
+        ShowNullDate = False
+        TabOrder = 1
+      end
+    end
+    object GroupBox2: TGroupBox
+      Left = 0
+      Top = 135
+      Width = 328
+      Height = 61
+      Align = alClient
+      Caption = '  Digite a Marca  '
+      TabOrder = 3
+      ExplicitLeft = 96
+      ExplicitTop = 176
+      ExplicitWidth = 185
+      ExplicitHeight = 105
+      object edMarca: TEdit
+        Left = 11
+        Top = 25
+        Width = 297
+        Height = 27
+        TabOrder = 0
       end
     end
   end

@@ -5,10 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, DateUtils,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, Vcl.ImgList;
+  FireDAC.Comp.Client, Vcl.ImgList, Vcl.Mask, JvExMask, JvToolEdit;
 
 type
   TfrmRelAlteracaoCusto = class(TForm)
@@ -21,6 +21,12 @@ type
     Panel2: TPanel;
     btRelatorio: TSpeedButton;
     btSair: TSpeedButton;
+    GroupBox1: TGroupBox;
+    edDataInicial: TJvDateEdit;
+    edDataFinal: TJvDateEdit;
+    Label1: TLabel;
+    GroupBox2: TGroupBox;
+    edMarca: TEdit;
     procedure edFornecedorKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure edFornecedorExit(Sender: TObject);
@@ -29,6 +35,7 @@ type
     procedure btSairClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edFornecedorChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -99,6 +106,12 @@ begin
     Close;
 end;
 
+procedure TfrmRelAlteracaoCusto.FormShow(Sender: TObject);
+begin
+  edDataInicial.Date := Now;
+  edDataFinal.Date   := Now;
+end;
+
 procedure TfrmRelAlteracaoCusto.SelecionaFornecedor;
 var
   CON : TFWConnection;
@@ -134,26 +147,39 @@ begin
       Consulta.Close;
       Consulta.SQL.Clear;
       Consulta.SQL.Add('SELECT');
-      Consulta.SQL.Add('	P.SKU,');
-      Consulta.SQL.Add('	PF.COD_PROD_FORNECEDOR AS CODIGOFORNECEDOR,');
-      Consulta.SQL.Add('	F.NOME AS NOMEFORNECEDOR,');
-      Consulta.SQL.Add('	PF.QUANTIDADE,');
-      Consulta.SQL.Add('	PF.CUSTO');
-      Consulta.SQL.Add('FROM PRODUTOFORNECEDOR PF');
-      Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = PF.ID_PRODUTO)');
-      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = PF.ID_FORNECEDOR)');
-      Consulta.SQL.Add('WHERE F.STATUS');
+      Consulta.SQL.Add('p.sku,');
+      Consulta.SQL.Add('p.marca,');
+      Consulta.SQL.Add('COALESCE(mi.custoanterior,0) AS custoanterior,');
+      Consulta.SQL.Add('COALESCE(mi.custonovo, 0) AS custonovo,');
+      Consulta.SQL.Add('COALESCE(mi.quantidade, 0) AS quantidade,');
+      Consulta.SQL.Add('fa.nome,');
+      Consulta.SQL.Add('fn.nome');
+      Consulta.SQL.Add('FROM match m');
+      Consulta.SQL.Add('INNER JOIN match_itens mi ON (m.id = mi.id_match)');
+      Consulta.SQL.Add('INNER JOIN fornecedor fa ON (mi.id_fornecedoranterior = fa.id)');
+      Consulta.SQL.Add('INNER JOIN fornecedor fn ON (mi.id_fornecedornovo = fn.id)');
+      Consulta.SQL.Add('INNER JOIN produto p ON (mi.id_produto = p.id)');
+      Consulta.SQL.Add('WHERE CAST(m.data_hora AS DATE) BETWEEN :datai AND :dataf');
+      Consulta.SQL.Add('AND mi.atualizado');
       if StrToIntDef(edFornecedor.Text,0) > 0 then
-        Consulta.SQL.Add('AND F.ID = ' + edFornecedor.Text);
+        Consulta.SQL.Add('AND ((fa.id = ' + edFornecedor.Text + ') OR (fn.id = ' + edFornecedor.Text + '))');
+      if Trim(edMarca.Text) <> EmptyStr then
+        Consulta.SQL.Add('AND p.marca LIKE ' + QuotedStr('%' + edMarca.Text + '%'));
 
-      Consulta.SQL.Add('ORDER BY P.SKU, F.ID');
-      Consulta.Connection           := FWC.FDConnection;
+      Consulta.SQL.Add('ORDER BY P.sku');
+      Consulta.Connection                     := FWC.FDConnection;
+      Consulta.ParamByName('DATAI').DataType  := ftDate;
+      Consulta.ParamByName('DATAF').DataType  := ftDate;
+
+      Consulta.Params[0].Value                := edDataInicial.Date;
+      Consulta.Params[1].Value                := edDataFinal.Date;
+
       Consulta.Prepare;
       Consulta.Open;
       Consulta.FetchAll;
 
       DMUtil.frxDBDataset1.DataSet := Consulta;
-      DMUtil.ImprimirRelatorio('Nome.fr3');
+      DMUtil.ImprimirRelatorio('frAlteracaoCusto.fr3');
       DisplayMsgFinaliza;
     Except
       on E : Exception do begin
