@@ -54,7 +54,9 @@ uses
   uRelRatingDetalhadoporFornecedor in 'uRelRatingDetalhadoporFornecedor.pas' {frmRelRatingDetalhadoporFornecedor},
   uConsultaProduto in 'uConsultaProduto.pas' {frmConsultaProdutos},
   uArquivoProdutos in 'uArquivoProdutos.pas' {FrmArquivoProdutos},
-  uRelAlteracaoCusto in 'uRelAlteracaoCusto.pas' {frmRelAlteracaoCusto};
+  uRelAlteracaoCusto in 'uRelAlteracaoCusto.pas' {frmRelAlteracaoCusto},
+  uBeanPrecificacao in 'Beans\uBeanPrecificacao.pas',
+  uBeanPrecificacao_itens in 'Beans\uBeanPrecificacao_itens.pas';
 
 {$R *.res}
 

@@ -91,6 +91,7 @@ type
   TArrayListaProdutos = record
     ID  : Integer;
     SKU : string;
+    CUSTO_EST_FISICO_ANT : Currency;
   end;
 
 type
@@ -133,6 +134,7 @@ type
     MEDIA_ALTERACAO : Currency;
     FAMILIA : String;
     ID_FAMILIA : Integer;
+    CUSTO_EST_FISICO_ANT : Currency;
   end;
 
 const
@@ -385,15 +387,16 @@ begin
           try
             SQL.Connection  := FWC.FDConnection;
             SQL.SQL.Clear;
-            SQL.SQL.Add('SELECT ID, SKU FROM PRODUTO');
+            SQL.SQL.Add('SELECT ID, SKU, COALESCE(CUSTO_ESTOQUE_FISICO,0) FROM PRODUTO');
             SQL.Open;
             SQL.FetchAll;
             if not SQL.IsEmpty then begin
               SQL.First;
               while not SQL.Eof do begin
                 SetLength(ListaProdutos, Length(ListaProdutos) + 1);
-                ListaProdutos[High(ListaProdutos)].ID   := SQL.Fields[0].AsInteger;
-                ListaProdutos[High(ListaProdutos)].SKU  := SQL.Fields[1].AsString;
+                ListaProdutos[High(ListaProdutos)].ID                     := SQL.Fields[0].AsInteger;
+                ListaProdutos[High(ListaProdutos)].SKU                    := SQL.Fields[1].AsString;
+                ListaProdutos[High(ListaProdutos)].CUSTO_EST_FISICO_ANT   := SQL.Fields[2].AsCurrency;
                 SQL.Next;
               end;
             end;
@@ -428,7 +431,8 @@ begin
                 //Identificando Produtos
                 for J := Low(ListaProdutos) to High(ListaProdutos) do begin
                   if AnsiUpperCase(ListaProdutos[J].SKU) = AnsiUpperCase(arProdutos[I].SKU) then begin
-                    arProdutos[I].ID_PRODUTO := ListaProdutos[J].ID;
+                    arProdutos[I].ID_PRODUTO            := ListaProdutos[J].ID;
+                    arProdutos[I].CUSTO_EST_FISICO_ANT  := ListaProdutos[J].CUSTO_EST_FISICO_ANT;
                     Break;
                   end;
                 end;
@@ -491,6 +495,7 @@ begin
                   P.ID_FORNECEDORANTERIOR.Value   := 0;
                   P.ID_FORNECEDORNOVO.Value       := 0;
                   P.ID_ULTIMOLOTE.Value           := 0;
+                  P.CUSTO_EST_FISICO_ANT.Value    := 0.00;
                   P.Insert;
 
                   SetLength(arrInsert, Length(arrInsert) + 1);
@@ -500,6 +505,9 @@ begin
 
                 end else begin
                   P.ID.Value                      := arProdutos[I].ID_PRODUTO;
+                  if (arProdutos[I].CUSTO_ESTOQUE_FISICO <> arProdutos[I].CUSTO_EST_FISICO_ANT) then
+                    P.CUSTO_EST_FISICO_ANT.Value  := arProdutos[I].CUSTO_EST_FISICO_ANT;
+
                   P.Update;
 
                   SetLength(arrUpdate, Length(arrUpdate) + 1);

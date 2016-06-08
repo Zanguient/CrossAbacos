@@ -287,3 +287,33 @@ alter table produto drop if exists familia;
 alter table produto add constraint fk_familia_produto foreign key (id_familia)
       references familia (id) match simple
       on update cascade on delete restrict;
+
+ALTER TABLE produto ADD custo_est_fisico_ant numeric(18,2);
+
+create table if not exists precificacao (
+  id serial,
+  data_hora timestamp null,
+  usuario_id int not null,
+  primary key (id),
+  constraint fk_precificacao_usuario1 foreign key (usuario_id) references usuario (id) on delete restrict on update cascade);
+
+
+create table if not exists precificacao_itens (
+  id serial,
+  custo_ant decimal(18,2) null,
+  custo_atual decimal(18,2) null,
+  precoespecial decimal(18,2) null,
+  precocadastro decimal(18,2) null,
+  margemsugerida decimal(18,2) null,
+  precode decimal(18,2) null,
+  precopor decimal(18,2) null,
+  margempraticar decimal(18,2) null,
+  media decimal(18,2) null,
+  tipocalculo int not null,
+  precificacao_id int not null,
+  primary key (id),
+  constraint fk_precificacao_itens_precificacao1
+    foreign key (precificacao_id)
+    references precificacao (id)
+    on delete cascade
+    on update cascade);

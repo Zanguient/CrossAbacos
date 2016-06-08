@@ -43,6 +43,7 @@ type TPRODUTO = Class(TFWPersistence)
     FCUSTO_ESTOQUE_FISICO: TFieldCurrency;
     FMEDIA_ALTERACAO: TFieldCurrency;
     FQUANTIDADE_ESTOQUE_FISICO: TFieldInteger;
+    FCUSTO_EST_FISICO_ANT: TFieldCurrency;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -81,6 +82,7 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetCUSTO_ESTOQUE_FISICO(const Value: TFieldCurrency);
     procedure SetMEDIA_ALTERACAO(const Value: TFieldCurrency);
     procedure SetQUANTIDADE_ESTOQUE_FISICO(const Value: TFieldInteger);
+    procedure SetCUSTO_EST_FISICO_ANT(const Value: TFieldCurrency);
   protected
     procedure InitInstance; override;
   published
@@ -122,6 +124,7 @@ type TPRODUTO = Class(TFWPersistence)
     property QUANTIDADE_ESTOQUE_FISICO  : TFieldInteger     read FQUANTIDADE_ESTOQUE_FISICO   write SetQUANTIDADE_ESTOQUE_FISICO;
     property MEDIA_ALTERACAO            : TFieldCurrency    read FMEDIA_ALTERACAO             write SetMEDIA_ALTERACAO;
     property ID_FAMILIA                 : TFieldInteger     read FID_FAMILIA                  write SetID_FAMILIA;
+    property CUSTO_EST_FISICO_ANT       : TFieldCurrency read FCUSTO_EST_FISICO_ANT write SetCUSTO_EST_FISICO_ANT;
 
 End;
 implementation
@@ -207,6 +210,11 @@ end;
 procedure TPRODUTO.SetCUSTO_ESTOQUE_FISICO(const Value: TFieldCurrency);
 begin
   FCUSTO_ESTOQUE_FISICO := Value;
+end;
+
+procedure TPRODUTO.SetCUSTO_EST_FISICO_ANT(const Value: TFieldCurrency);
+begin
+  FCUSTO_EST_FISICO_ANT := Value;
 end;
 
 procedure TPRODUTO.SetDIAS_GARANTIA(const Value: TFieldInteger);
