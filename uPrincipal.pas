@@ -49,6 +49,8 @@ type
     AlteraodeCusto1: TMenuItem;
     ResponsvelMatch1: TMenuItem;
     ProdutosPorFornecedor1: TMenuItem;
+    ProdutosBaseFornecedor1: TMenuItem;
+    ProdutosDetalhado1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -82,6 +84,8 @@ type
     procedure Margem1Click(Sender: TObject);
     procedure AlteraodeCusto1Click(Sender: TObject);
     procedure ProdutosPorFornecedor1Click(Sender: TObject);
+    procedure ProdutosBaseFornecedor1Click(Sender: TObject);
+    procedure ProdutosDetalhado1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -126,7 +130,10 @@ uses
   uCadastroFamilia,
   uCadastroMargem,
   uRelProdutosPorFornecedor,
-  uRelAlteracaoCusto;
+  uRelAlteracaoCusto,
+  uArquivoBaseProdutos,
+  uArquivoProdutosDetalhado;
+
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -422,6 +429,28 @@ begin
     FrmArquivoProdutos.ShowModal;
   finally
     FreeAndNil(FrmArquivoProdutos);
+  end;
+end;
+
+procedure TFrmPrincipal.ProdutosBaseFornecedor1Click(Sender: TObject);
+begin
+ if not Assigned(frmArquivoBaseProdutos) then
+   frmArquivoBaseProdutos := TfrmArquivoBaseProdutos.Create(nil);
+  try
+    frmArquivoBaseProdutos.ShowModal;
+  finally
+    FreeAndNil(frmArquivoBaseProdutos);
+  end;
+end;
+
+procedure TFrmPrincipal.ProdutosDetalhado1Click(Sender: TObject);
+begin
+ if not Assigned(FrmArquivoProdutosDetalhado) then
+   FrmArquivoProdutosDetalhado := TFrmArquivoProdutosDetalhado.Create(nil);
+  try
+    FrmArquivoProdutosDetalhado.ShowModal;
+  finally
+    FreeAndNil(FrmArquivoProdutosDetalhado);
   end;
 end;
 
