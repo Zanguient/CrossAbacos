@@ -84,6 +84,8 @@ type
     procedure AlteraodeCusto1Click(Sender: TObject);
     procedure ProdutosPorFornecedor1Click(Sender: TObject);
     procedure GerarPrecificao1Click(Sender: TObject);
+    procedure ProdutosBaseFornecedor1Click(Sender: TObject);
+    procedure ProdutosDetalhado1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -129,7 +131,9 @@ uses
   uCadastroMargem,
   uRelProdutosPorFornecedor,
   uGeraPrecificacao,
-  uRelAlteracaoCusto;
+  uRelAlteracaoCusto,
+  uArquivoBaseProdutos,
+  uArquivoProdutosDetalhado;
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -436,6 +440,28 @@ begin
     FrmArquivoProdutos.ShowModal;
   finally
     FreeAndNil(FrmArquivoProdutos);
+  end;
+end;
+
+procedure TFrmPrincipal.ProdutosBaseFornecedor1Click(Sender: TObject);
+begin
+  if not (Assigned(FrmArquivoBaseProdutos)) then
+    FrmArquivoBaseProdutos := TFrmArquivoBaseProdutos.Create(nil);
+  try
+    FrmArquivoBaseProdutos.ShowModal;
+  finally
+    FreeAndNil(FrmArquivoBaseProdutos);
+  end;
+end;
+
+procedure TFrmPrincipal.ProdutosDetalhado1Click(Sender: TObject);
+begin
+  if not (Assigned(FrmArquivoProdutosDetalhado)) then
+    FrmArquivoProdutosDetalhado := TFrmArquivoProdutosDetalhado.Create(nil);
+  try
+    FrmArquivoProdutosDetalhado.ShowModal;
+  finally
+    FreeAndNil(FrmArquivoProdutosDetalhado);
   end;
 end;
 
