@@ -19,6 +19,7 @@ type
     FPRECOESPECIAL: TFieldCurrency;
     FCUSTO_ANT: TFieldCurrency;
     FPRECOPOR: TFieldCurrency;
+    FID_PRODUTO: TFieldInteger;
     procedure SetCUSTO_ANT(const Value: TFieldCurrency);
     procedure SetCUSTO_ATUAL(const Value: TFieldCurrency);
     procedure SetID(const Value: TFieldInteger);
@@ -31,6 +32,7 @@ type
     procedure SetPRECOESPECIAL(const Value: TFieldCurrency);
     procedure SetPRECOPOR(const Value: TFieldCurrency);
     procedure SetTIPOCALCULO(const Value: TFieldInteger);
+    procedure SetID_PRODUTO(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -46,6 +48,7 @@ type
     property MEDIA : TFieldCurrency read FMEDIA write SetMEDIA;
     property PRECIFICACAO_ID : TFieldInteger read FPRECIFICACAO_ID write SetPRECIFICACAO_ID;
     property TIPOCALCULO : TFieldInteger read FTIPOCALCULO write SetTIPOCALCULO;
+    property ID_PRODUTO : TFieldInteger read FID_PRODUTO write SetID_PRODUTO;
   end;
 implementation
 
@@ -70,6 +73,11 @@ end;
 procedure TPRECIFICACAO_ITENS.SetID(const Value: TFieldInteger);
 begin
   FID := Value;
+end;
+
+procedure TPRECIFICACAO_ITENS.SetID_PRODUTO(const Value: TFieldInteger);
+begin
+  FID_PRODUTO := Value;
 end;
 
 procedure TPRECIFICACAO_ITENS.SetMARGEMPRATICAR(const Value: TFieldCurrency);

@@ -49,6 +49,7 @@ type
     AlteraodeCusto1: TMenuItem;
     ResponsvelMatch1: TMenuItem;
     ProdutosPorFornecedor1: TMenuItem;
+    GerarPrecificao1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -82,6 +83,7 @@ type
     procedure Margem1Click(Sender: TObject);
     procedure AlteraodeCusto1Click(Sender: TObject);
     procedure ProdutosPorFornecedor1Click(Sender: TObject);
+    procedure GerarPrecificao1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -126,6 +128,7 @@ uses
   uCadastroFamilia,
   uCadastroMargem,
   uRelProdutosPorFornecedor,
+  uGeraPrecificacao,
   uRelAlteracaoCusto;
 {$R *.dfm}
 
@@ -201,6 +204,17 @@ begin
     FreeAndNil(frmGeraMatch);
   end;
 
+end;
+
+procedure TFrmPrincipal.GerarPrecificao1Click(Sender: TObject);
+begin
+  if not (Assigned(frmGeraPrecificacao)) then
+    frmGeraPrecificacao := TfrmGeraPrecificacao.Create(nil);
+  try
+    frmGeraPrecificacao.ShowModal;
+  finally
+    FreeAndNil(frmGeraPrecificacao);
+  end;
 end;
 
 procedure TFrmPrincipal.HistricodeAtualizaoporSKU1Click(Sender: TObject);

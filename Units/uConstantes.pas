@@ -33,9 +33,27 @@ type
   TCONFIGURACOESLOCAIS = record
     DirRelatorios : string;
   end;
+
   TCLASSIFICACAO = record
     Codigo : Integer;
     Descricao : String;
+  end;
+
+  TPRECOS = record
+    ID_PRODUTO : integer;
+    SKU : String;
+    CUSTO_ANT : Currency;
+    CUSTO_NOVO : Currency;
+    PRECO_CADASTRO : Currency;
+    PRECO_ESPECIAL : Currency;
+    MARGEM_SUGERIDA : Currency;
+    //0 - Nenhum 1 - Margem 2 - Preço Especial
+    TIPO : Integer;
+    PRECO_SUGESTAO : Currency;
+    PRECODE : Currency;
+    PRECOPOR : Currency;
+    MARGEM_PRATICAR : Currency;
+    MEDIA : Currency;
   end;
 
 Const

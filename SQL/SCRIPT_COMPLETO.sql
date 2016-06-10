@@ -299,21 +299,24 @@ create table if not exists precificacao (
 
 
 create table if not exists precificacao_itens (
-  id serial,
-  custo_ant decimal(18,2) null,
-  custo_atual decimal(18,2) null,
-  precoespecial decimal(18,2) null,
-  precocadastro decimal(18,2) null,
-  margemsugerida decimal(18,2) null,
-  precode decimal(18,2) null,
-  precopor decimal(18,2) null,
-  margempraticar decimal(18,2) null,
-  media decimal(18,2) null,
-  tipocalculo int not null,
-  precificacao_id int not null,
-  primary key (id),
-  constraint fk_precificacao_itens_precificacao1
-    foreign key (precificacao_id)
-    references precificacao (id)
-    on delete cascade
-    on update cascade);
+  id serial NOT NULL,
+  custo_ant numeric(18,2),
+  custo_atual numeric(18,2),
+  precoespecial numeric(18,2),
+  precocadastro numeric(18,2),
+  margemsugerida numeric(18,2),
+  precode numeric(18,2),
+  precopor numeric(18,2),
+  margempraticar numeric(18,2),
+  media numeric(18,2),
+  precificacao_id integer NOT NULL,
+  tipocalculo integer,
+  id_produto integer,
+  CONSTRAINT precificacao_itens_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_precificacao_itens_precificacao1 FOREIGN KEY (precificacao_id)
+      REFERENCES precificacao (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_precificao_itens_prod FOREIGN KEY (id_produto)
+      REFERENCES produto (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
