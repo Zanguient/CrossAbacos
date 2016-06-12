@@ -142,6 +142,8 @@ begin
     edSKU.Tag                     := cds_MargensID_PRODUTO.Value;
     edSKU.Text                    := cds_MargensSKU.Value;
     edNomeProduto.Text            := cds_MargensNOME_PRODUTO.Value;
+    edSolicitadoPor.Text          := USUARIO.NOME;
+    edDataAutorizacao.Date        := Date;
     edMargemAnalista.Clear;
     edPrecoPonta.Clear;
     edPrecoPromocao.Clear;
@@ -167,8 +169,10 @@ begin
     edPercentualVPC.Value         := cds_MargensPERCENTUAL_VPC.Value;
     edPercentualFrete.Value       := cds_MargensPERCENTUAL_FRETE.Value;
     edPercentualOutros.Value      := cds_MargensPERCENTUAL_OUTROS.Value;
-    edAutorizadoPor.Text          := cds_MargensAUTORIZADO_POR.AsString;
+    edSolicitadoPor.Text          := USUARIO.NOME;
+    edDataAutorizacao.Date        := cds_MargensDATA_AUTORIZACAO.Value;
     btGravar.Tag                  := cds_MargensID.Value;
+    edAutorizadoPor.Clear;
   end;
 end;
 
@@ -540,6 +544,13 @@ Var
   M   : TMARGEM;
 begin
 
+  if Length(Trim(edAutorizadoPor.Text)) = 0 then begin
+    DisplayMsg(MSG_WAR, 'Nome do Autorizador não informado, Verifique!');
+    if edAutorizadoPor.CanFocus then
+      edAutorizadoPor.SetFocus;
+    Exit;
+  end;
+
   FWC := TFWConnection.Create;
   M   := TMargem.Create(FWC);
 
@@ -561,7 +572,7 @@ begin
       M.PERCENTUAL_VPC.Value            := edPercentualVPC.Value;
       M.PERCENTUAL_FRETE.Value          := edPercentualFrete.Value;
       M.PERCENTUAL_OUTROS.Value         := edPercentualOutros.Value;
-      M.DATA_AUTORIZACAO.Value          := edDataAutorizacao.Date;
+      M.DATA_AUTORIZACAO.Value          := Date;//Conforme combinado em Reunião, Sempre pegar data do PC
       M.AUTORIZADO_POR.Value            := edAutorizadoPor.Text;
       M.SOLICITADO_POR.Value            := edSolicitadoPor.Text;
 
@@ -792,6 +803,10 @@ begin
   cds_Margens.CreateDataSet;
   CarregaDados;
   AutoSizeDBGrid(gdPesquisa);
+
+  //Não deixar alterar, bravar data do PC
+  edDataAutorizacao.Enabled := False;
+
 end;
 
 procedure TFrmCadastroMargem.gdPesquisaTitleClick(Column: TColumn);

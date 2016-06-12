@@ -157,6 +157,10 @@ begin
                               'Deseja realmente cadastrar um Novo Lote?');
         if ResultMsgModal <> mrYes then
           Exit;
+      end else begin
+        DisplayMsg(MSG_CONF, 'Deseja realmente cadastrar um Novo Lote?');
+        if ResultMsgModal <> mrYes then
+          Exit;
       end;
 
       LI.ID.isNull        := True;
