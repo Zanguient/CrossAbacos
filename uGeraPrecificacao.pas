@@ -95,7 +95,7 @@ begin
   try
     lblMensagem.Caption := 'Processando Etapa 1 de 2.';
     Application.ProcessMessages;
-    P.SelectList('((custo > 0) or (custo_estoque_fisico > 0))');
+    P.SelectList('((custo > 0) or (quantidade_estoque_fisico > 0))');
     if P.Count > 0 then begin
       BarradeProgresso.MaxValue := P.Count;
       for I := 0 to Pred(P.Count) do begin
@@ -122,22 +122,24 @@ begin
 
         M.SelectList('id_produto = ' + TPRODUTO(P.Itens[I]).ID.asString);
         if M.Count > 0 then begin
+          if TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value > 0 then begin
+            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value / 100;
+            PRECOS[High(PRECOS)].TIPO             := 1;
+          end;
           if TMARGEM(M.Itens[0]).PRECO_PONTA.Value > 0 then begin
             PRECOS[High(PRECOS)].PRECO_SUGESTAO   := TMARGEM(M.Itens[0]).PRECO_PONTA.Value;
-            PRECOS[High(PRECOS)].TIPO             := 2;
-          end;
-          if TMARGEM(M.Itens[0]).VAL_PRECO_PROMOCIONAL.Value > Now then begin
-            PRECOS[High(PRECOS)].PRECO_SUGESTAO   := TMARGEM(M.Itens[0]).PRECO_PROMOCIONAL.Value;
             PRECOS[High(PRECOS)].TIPO             := 2;
           end;
           if TMARGEM(M.Itens[0]).VAL_MARGEM_PROMOCIONAL.Value > Now then begin
             PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := TMARGEM(M.Itens[0]).MARGEM_PROMOCIONAL.Value / 100;
             PRECOS[High(PRECOS)].TIPO             := 1;
           end;
-          if TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value > 0 then begin
-            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value / 100;
-            PRECOS[High(PRECOS)].TIPO             := 1;
+          if TMARGEM(M.Itens[0]).VAL_PRECO_PROMOCIONAL.Value > Now then begin
+            PRECOS[High(PRECOS)].PRECO_SUGESTAO   := TMARGEM(M.Itens[0]).PRECO_PROMOCIONAL.Value;
+            PRECOS[High(PRECOS)].TIPO             := 2;
           end;
+          if PRECOS[High(PRECOS)].TIPO = 1 then
+            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (TMARGEM(M.Itens[0]).PERCENTUAL_VPC.Value + TMARGEM(M.Itens[0]).PERCENTUAL_FRETE.Value + TMARGEM(M.Itens[0]).PERCENTUAL_OUTROS.Value) * 100;
         end;
 
         if PRECOS[High(PRECOS)].TIPO = 1 then begin

@@ -58,17 +58,16 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     Width = 587
     Height = 60
     Align = alBottom
+    BevelOuter = bvNone
     Color = clWhite
     TabOrder = 0
     TabStop = True
-    ExplicitTop = 57
-    ExplicitWidth = 263
     object btSair: TSpeedButton
       AlignWithMargins = True
-      Left = 459
-      Top = 4
+      Left = 460
+      Top = 3
       Width = 124
-      Height = 52
+      Height = 54
       Align = alRight
       Caption = '&Sair'
       Font.Charset = DEFAULT_CHARSET
@@ -178,13 +177,15 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
       ParentFont = False
       OnClick = btSairClick
       ExplicitLeft = 624
+      ExplicitTop = 4
+      ExplicitHeight = 52
     end
     object btGerar: TSpeedButton
       AlignWithMargins = True
-      Left = 4
-      Top = 4
+      Left = 3
+      Top = 3
       Width = 124
-      Height = 52
+      Height = 54
       Align = alLeft
       Caption = '&Gerar'
       Font.Charset = DEFAULT_CHARSET
@@ -294,6 +295,8 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
       ParentFont = False
       OnClick = btGerarClick
       ExplicitLeft = 494
+      ExplicitTop = 4
+      ExplicitHeight = 52
     end
   end
 end

@@ -50,6 +50,7 @@ type
     ResponsvelMatch1: TMenuItem;
     ProdutosPorFornecedor1: TMenuItem;
     GerarPrecificao1: TMenuItem;
+    ConsultarMatch1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -86,6 +87,7 @@ type
     procedure GerarPrecificao1Click(Sender: TObject);
     procedure ProdutosBaseFornecedor1Click(Sender: TObject);
     procedure ProdutosDetalhado1Click(Sender: TObject);
+    procedure ConsultarMatch1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -110,6 +112,7 @@ uses
   uConsultaMatch,
   uImportacaoArquivoFornecedor,
   uGeraMatch,
+  uConsultaPrecificacao,
   uInativaProdutoFornecedor,
   uFWConnection, uDMUtil,
   uRelItensdoFornecedor,
@@ -422,6 +425,18 @@ begin
   finally
     FreeAndNil(frmConsultaMatch);
   end;
+end;
+
+procedure TFrmPrincipal.ConsultarMatch1Click(Sender: TObject);
+begin
+  if not Assigned(frmConsultaPrecificacao) then
+    frmConsultaPrecificacao := TfrmConsultaPrecificacao.Create(nil);
+  try
+    frmConsultaPrecificacao.ShowModal;
+  finally
+    FreeAndNil(frmConsultaPrecificacao);
+  end;
+
 end;
 
 procedure TFrmPrincipal.miSairClick(Sender: TObject);

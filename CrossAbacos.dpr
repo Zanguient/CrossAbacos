@@ -59,7 +59,8 @@ uses
   uBeanPrecificacao_itens in 'Beans\uBeanPrecificacao_itens.pas',
   uGeraPrecificacao in 'uGeraPrecificacao.pas' {frmGeraPrecificacao},
   uArquivoBaseProdutos in 'uArquivoBaseProdutos.pas' {FrmArquivoBaseProdutos},
-  uArquivoProdutosDetalhado in 'uArquivoProdutosDetalhado.pas' {FrmArquivoProdutosDetalhado};
+  uArquivoProdutosDetalhado in 'uArquivoProdutosDetalhado.pas' {FrmArquivoProdutosDetalhado},
+  uConsultaPrecificacao in 'uConsultaPrecificacao.pas' {frmConsultaPrecificacao};
 
 {$R *.res}
 
@@ -70,8 +71,6 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
-  Application.CreateForm(TFrmArquivoBaseProdutos, FrmArquivoBaseProdutos);
-  Application.CreateForm(TFrmArquivoProdutosDetalhado, FrmArquivoProdutosDetalhado);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

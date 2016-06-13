@@ -89,6 +89,10 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Gerar Precifica'#231#227'o'
         OnClick = GerarPrecificao1Click
       end
+      object ConsultarMatch1: TMenuItem
+        Caption = 'Consultar Precificacao'
+        OnClick = ConsultarMatch1Click
+      end
     end
     object Relatrios1: TMenuItem
       Caption = 'Relat'#243'rios'
