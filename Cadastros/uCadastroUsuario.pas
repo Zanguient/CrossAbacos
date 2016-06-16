@@ -70,6 +70,7 @@ type
     procedure gdMenusDrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure gdMenusCellClick(Column: TColumn);
+    procedure gdMenusTitleClick(Column: TColumn);
   private
     { Private declarations }
   public
@@ -79,6 +80,7 @@ type
     procedure Cancelar;
     procedure Filtrar;
     procedure AtualizarEdits(Limpar : Boolean);
+    procedure MarcarDesmarcarTodos;
     { Public declarations }
   end;
 
@@ -478,6 +480,12 @@ begin
   end;
 end;
 
+procedure TFrmCadastroUsuario.gdMenusTitleClick(Column: TColumn);
+begin
+  if UpperCase(Column.FieldName) = 'PERMITIR' then
+    MarcarDesmarcarTodos;
+end;
+
 procedure TFrmCadastroUsuario.InvertePaineis;
 begin
   pnVisualizacao.Visible        := not pnVisualizacao.Visible;
@@ -487,6 +495,31 @@ begin
   if pnEdicao.Visible then begin
     if edNome.CanFocus then
       edNome.SetFocus;
+  end;
+end;
+
+procedure TFrmCadastroUsuario.MarcarDesmarcarTodos;
+Var
+  Aux : Boolean;
+begin
+  if not csMenus.IsEmpty then begin
+
+    Aux := not csMenusPERMITIR.Value;
+
+    csMenus.DisableControls;
+
+    try
+      csMenus.First;
+      while not csMenus.Eof do begin
+        csMenus.Edit;
+        csMenusPERMITIR.Value  := Aux;
+        csMenus.Post;
+        csMenus.Next;
+      end;
+    finally
+      csMenus.EnableControls;
+      DisplayMsgFinaliza
+    end;
   end;
 end;
 
