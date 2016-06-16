@@ -650,6 +650,9 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       Height = 164
       Align = alLeft
       TabOrder = 0
+      DesignSize = (
+        284
+        164)
       object btnBuscar: TSpeedButton
         AlignWithMargins = True
         Left = 140
@@ -1345,36 +1348,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
         ParentFont = False
-      end
-      object edDataInicial: TDateTimePicker
-        Left = 4
-        Top = 20
-        Width = 130
-        Height = 27
-        Date = 42379.480050324080000000
-        Time = 42379.480050324080000000
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-      end
-      object edDataFinal: TDateTimePicker
-        Left = 4
-        Top = 68
-        Width = 130
-        Height = 27
-        Date = 42379.480050324080000000
-        Time = 42379.480050324080000000
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
+        OnClick = btnLimparClick
       end
       object edtUsuario: TEdit
         AlignWithMargins = True
@@ -1388,7 +1362,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 2
+        TabOrder = 0
       end
       object edtPrecificacao: TEdit
         AlignWithMargins = True
@@ -1402,6 +1376,36 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+        TabOrder = 1
+      end
+      object edDataInicial: TJvDateEdit
+        Left = 4
+        Top = 20
+        Width = 130
+        Height = 27
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Anchors = [akTop, akRight]
+        ParentFont = False
+        ShowNullDate = False
+        TabOrder = 2
+      end
+      object edDataFinal: TJvDateEdit
+        Left = 4
+        Top = 68
+        Width = 130
+        Height = 27
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Anchors = [akTop, akRight]
+        ParentFont = False
+        ShowNullDate = False
         TabOrder = 3
       end
     end
@@ -1972,7 +1976,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     Font.Height = -16
     Font.Name = 'Tahoma'
     Font.Style = []
-    Options = [dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgColLines, dgRowLines, dgTabs, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     ParentFont = False
     TabOrder = 2
     TitleFont.Charset = DEFAULT_CHARSET
@@ -1980,6 +1984,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     TitleFont.Height = -16
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnTitleClick = gdPrecificacaoItensTitleClick
     Columns = <
       item
         Expanded = False

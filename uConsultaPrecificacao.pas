@@ -9,7 +9,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.ImgList, Vcl.Samples.Gauges, Datasnap.DBClient,
-  Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls;
+  Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls, Vcl.Mask, JvExMask, JvToolEdit;
 
 type
   TfrmConsultaPrecificacao = class(TForm)
@@ -26,8 +26,6 @@ type
     lbl3: TLabel;
     lbl4: TLabel;
     btnLimpar: TSpeedButton;
-    edDataInicial: TDateTimePicker;
-    edDataFinal: TDateTimePicker;
     edtUsuario: TEdit;
     edtPrecificacao: TEdit;
     dgPrecificacao: TDBGrid;
@@ -70,6 +68,8 @@ type
     gbSelecionaFamilia: TGroupBox;
     edNomeFamilia: TEdit;
     edFamiliaTeste: TButtonedEdit;
+    edDataInicial: TJvDateEdit;
+    edDataFinal: TJvDateEdit;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -88,6 +88,8 @@ type
     procedure edFamiliaTesteKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btSairClick(Sender: TObject);
+    procedure btnLimparClick(Sender: TObject);
+    procedure gdPrecificacaoItensTitleClick(Column: TColumn);
   private
     { Private declarations }
     procedure SelecionaFamilia;
@@ -130,7 +132,6 @@ begin
       btnBuscar.Tag := 0;
     end;
   end;
-
 end;
 
 procedure TfrmConsultaPrecificacao.BuscaPrecificacao;
@@ -140,27 +141,36 @@ var
 begin
   FW  := TFWConnection.Create;
   SQL := TFDQuery.Create(nil);
-  cds_Precificacao.EmptyDataSet;
+
   cds_Precificacao.DisableControls;
+  cds_Precificacao.EmptyDataSet;
   try
+    SQL.Close;
     SQL.SQL.Clear;
-    SQL.SQL.Add('SELECT P.ID, P.USUARIO_ID, P.DATA_HORA, U.NOME');
+    SQL.SQL.Add('SELECT');
+    SQL.SQL.Add(' P.ID,');
+    SQL.SQL.Add(' P.USUARIO_ID,');
+    SQL.SQL.Add(' P.DATA_HORA,');
+    SQL.SQL.Add(' U.NOME');
     SQL.SQL.Add('FROM PRECIFICACAO P');
     SQL.SQL.Add('INNER JOIN USUARIO U ON (P.USUARIO_ID = U.ID)');
-    SQL.SQL.Add('WHERE CAST(P.DATA_HORA AS DATE) BETWEEN :DATAI AND :DATAF');
-    if (Trim(SoNumeros(edtUsuario.Text)) <> EmptyStr) then
+
+    if StrToIntDef(edtUsuario.Text, 0) > 0 then
       SQL.SQL.Add('AND U.ID = ' + edtUsuario.Text);
-    if (Trim(SoNumeros(edtPrecificacao.Text)) <> EmptyStr) then
-      SQL.SQL.Add('AND P.ID = ' + edtPrecificacao.Text);
-    SQL.ParamByName('DATAI').DataType   := ftDate;
-    SQL.ParamByName('DATAF').DataType   := ftDate;
+
+    if StrToIntDef(edtPrecificacao.Text, 0) > 0 then
+      SQL.SQL.Add('AND P.ID = ' + edtPrecificacao.Text)
+    else begin
+      SQL.SQL.Add('WHERE CAST(P.DATA_HORA AS DATE) BETWEEN :DATAI AND :DATAF');
+      SQL.ParamByName('DATAI').DataType   := ftDate;
+      SQL.ParamByName('DATAF').DataType   := ftDate;
+      SQL.ParamByName('DATAI').Value      := edDataInicial.Date;
+      SQL.ParamByName('DATAF').Value      := edDataFinal.Date;
+    end;
+
     SQL.Connection                      := FW.FDConnection;
     SQL.Prepare;
-
-    SQL.Close;
-    SQL.Params[0].Value                 := edDataInicial.Date;
-    SQL.Params[1].Value                 := edDataFinal.Date;
-    SQL.Open();
+    SQL.Open;
     if not SQL.Eof then begin
       SQL.First;
       while not SQL.Eof do begin
@@ -264,6 +274,11 @@ begin
       btnFiltrar.Tag := 0;
     end;
   end;
+end;
+
+procedure TfrmConsultaPrecificacao.btnLimparClick(Sender: TObject);
+begin
+  LimparTela;
 end;
 
 procedure TfrmConsultaPrecificacao.btSairClick(Sender: TObject);
@@ -400,10 +415,6 @@ end;
 procedure TfrmConsultaPrecificacao.FormCreate(Sender: TObject);
 begin
   AjustaForm(Self);
-  cds_Precificacao.CreateDataSet;
-  cds_Precificacao.Open;
-  cds_Precificacao_Itens.CreateDataSet;
-  cds_Precificacao_Itens.Open;
 end;
 
 procedure TfrmConsultaPrecificacao.FormKeyDown(Sender: TObject; var Key: Word;
@@ -415,16 +426,25 @@ end;
 
 procedure TfrmConsultaPrecificacao.FormShow(Sender: TObject);
 begin
+  cds_Precificacao.CreateDataSet;
+  cds_Precificacao_Itens.CreateDataSet;
   AutoSizeDBGrid(dgPrecificacao);
   AutoSizeDBGrid(gdPrecificacaoItens);
-  edDataInicial.Date := Now;
-  edDataFinal.Date   := Now;
+
+  edDataInicial.Date := Date;
+  edDataFinal.Date   := Date;
+end;
+
+procedure TfrmConsultaPrecificacao.gdPrecificacaoItensTitleClick(
+  Column: TColumn);
+begin
+  OrdenarGrid(Column);
 end;
 
 procedure TfrmConsultaPrecificacao.LimparTela;
 begin
-  edDataInicial.Date := Now;
-  edDataFinal.Date   := Now;
+  edDataInicial.Date := Date;
+  edDataFinal.Date   := Date;
   edtUsuario.Clear;
   edtPrecificacao.Clear;
   edFamiliaTeste.Clear;
