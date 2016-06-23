@@ -3,7 +3,7 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
   Top = 0
   Caption = 'Tela de Gera'#231#227'o de Precifica'#231#227'o'
   ClientHeight = 140
-  ClientWidth = 593
+  ClientWidth = 361
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,9 +20,9 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
   object BarradeProgresso: TGauge
     AlignWithMargins = True
     Left = 3
-    Top = 24
-    Width = 587
-    Height = 47
+    Top = 30
+    Width = 355
+    Height = 41
     Align = alClient
     ForeColor = clLime
     Font.Charset = DEFAULT_CHARSET
@@ -34,11 +34,14 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     ParentFont = False
     Progress = 0
     ExplicitTop = 224
+    ExplicitWidth = 587
+    ExplicitHeight = 47
   end
   object lblMensagem: TLabel
-    Left = 0
-    Top = 0
-    Width = 593
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 355
     Height = 21
     Align = alTop
     Alignment = taCenter
@@ -49,22 +52,25 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
+    ExplicitLeft = 0
     ExplicitTop = 200
+    ExplicitWidth = 593
   end
   object pnBotoes: TPanel
     AlignWithMargins = True
     Left = 3
     Top = 77
-    Width = 587
+    Width = 355
     Height = 60
     Align = alBottom
     BevelOuter = bvNone
     Color = clWhite
     TabOrder = 0
     TabStop = True
+    ExplicitWidth = 587
     object btSair: TSpeedButton
       AlignWithMargins = True
-      Left = 460
+      Left = 228
       Top = 3
       Width = 124
       Height = 54

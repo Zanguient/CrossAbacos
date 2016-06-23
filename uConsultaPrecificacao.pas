@@ -17,8 +17,6 @@ type
     pnlFiltro: TPanel;
     btnFiltrar: TSpeedButton;
     edtFiltro: TEdit;
-    pnConsultaBtn: TGroupBox;
-    btnConsultar: TSpeedButton;
     pnlFiltroMatch: TPanel;
     btnBuscar: TSpeedButton;
     lbl1: TLabel;
@@ -63,13 +61,14 @@ type
     edRegistroAtual: TEdit;
     gdPrecificacaoItens: TDBGrid;
     ds_Precificacao_Itens: TDataSource;
-    BarradeProgressoConsulta: TGauge;
-    rgFiltroTipo: TRadioGroup;
     gbSelecionaFamilia: TGroupBox;
-    edNomeFamilia: TEdit;
-    edFamiliaTeste: TButtonedEdit;
+    edFamilia: TButtonedEdit;
     edDataInicial: TJvDateEdit;
     edDataFinal: TJvDateEdit;
+    Panel1: TPanel;
+    rgFiltroTipo: TRadioGroup;
+    pnConsultaBtn: TGroupBox;
+    btnConsultar: TSpeedButton;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -80,16 +79,12 @@ type
       var Accept: Boolean);
     procedure btnFiltrarClick(Sender: TObject);
     procedure edFamiliaRightButtonClick(Sender: TObject);
-    procedure edFamiliaKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure edFamiliaTesteRightButtonClick(Sender: TObject);
-    procedure edFamiliaTesteChange(Sender: TObject);
-    procedure edFamiliaTesteExit(Sender: TObject);
-    procedure edFamiliaTesteKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure btSairClick(Sender: TObject);
     procedure btnLimparClick(Sender: TObject);
     procedure gdPrecificacaoItensTitleClick(Column: TColumn);
+    procedure edFamiliaDblClick(Sender: TObject);
+    procedure edFamiliaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     procedure SelecionaFamilia;
@@ -214,11 +209,22 @@ begin
  edRegistroAtual.Text := IntToStr(cds_Precificacao_Itens.RecNo);
 end;
 
+procedure TfrmConsultaPrecificacao.edFamiliaDblClick(Sender: TObject);
+begin
+  edFamilia.Clear;
+  edFamilia.Tag := 0;
+end;
+
 procedure TfrmConsultaPrecificacao.edFamiliaKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
-  if Key = VK_RETURN then
-    SelecionaFamilia;
+  case Key of
+    VK_RETURN : SelecionaFamilia;
+    VK_DELETE : begin
+      edFamilia.Clear;
+      edFamilia.Tag := 0;
+    end;
+  end;
 end;
 
 procedure TfrmConsultaPrecificacao.edFamiliaRightButtonClick(Sender: TObject);
@@ -226,40 +232,19 @@ begin
   SelecionaFamilia;
 end;
 
-procedure TfrmConsultaPrecificacao.edFamiliaTesteChange(Sender: TObject);
-begin
-  edNomeFamilia.Clear;
-end;
-
-procedure TfrmConsultaPrecificacao.edFamiliaTesteExit(Sender: TObject);
-begin
-  if (Trim(edNomeFamilia.Text) = EmptyStr) then
-    edFamiliaTeste.Clear;
-end;
-
-procedure TfrmConsultaPrecificacao.edFamiliaTesteKeyDown(Sender: TObject;
-  var Key: Word; Shift: TShiftState);
-begin
-  if Key = VK_RETURN then
-    SelecionaFamilia;
-end;
-
-procedure TfrmConsultaPrecificacao.edFamiliaTesteRightButtonClick(
-  Sender: TObject);
-begin
-  SelecionaFamilia;
-end;
-
 procedure TfrmConsultaPrecificacao.btnConsultarClick(Sender: TObject);
+Var
+  Nome : String;
 begin
   if btnConsultar.Tag = 0 then begin
     btnConsultar.Tag := 1;
+    Nome := btnConsultar.Caption;
+    btnConsultar.Caption := 'Aguarde!';
     try
-      BarradeProgressoConsulta.Visible := True;
       BuscaItens;
     finally
+      btnConsultar.Caption := Nome;
       btnConsultar.Tag := 0;
-      BarradeProgressoConsulta.Visible := False;
     end;
   end;
 end;
@@ -291,16 +276,21 @@ var
   FW : TFWConnection;
   SQL: TFDQuery;
 begin
+
   if cds_Precificacao.IsEmpty then begin
     DisplayMsg(MSG_WAR, 'Selecione uma Precificação!');
     Exit;
   end;
+
   FW := TFWConnection.Create;
   SQL:= TFDQuery.Create(nil);
+
   cds_Precificacao_Itens.EmptyDataSet;
+  Application.ProcessMessages;
   cds_Precificacao_Itens.DisableControls;
-  SQL.DisableControls;
+
   try
+    SQL.Close;
     SQL.SQL.Clear;
     SQL.SQL.Add('SELECT');
     SQL.SQL.Add('	P.ID,');
@@ -326,32 +316,16 @@ begin
       1 : SQL.SQL.Add('AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA)');
     end;
 
-    if edNomeFamilia.Text <> EmptyStr then
-      SQL.SQL.Add('AND F.ID = ' + QuotedStr(Trim(edFamiliaTeste.Text)));
+    if edFamilia.Tag > 0 then
+      SQL.SQL.Add('AND F.ID = ' + IntToStr(edFamilia.Tag));
 
-    SQL.ParamByName('PRECIFICACAO').DataType   := ftInteger;
-    SQL.Connection                             := FW.FDConnection;
+    SQL.Connection          := FW.FDConnection;
+    SQL.Params[0].DataType  := ftInteger;
     SQL.Prepare;
+    SQL.Params[0].Value     := cds_PrecificacaoID.Value;
+    SQL.Open;
 
-    {0-ID
-  	1-SKU
-  	2-NOME
-  	3-CUSTO_ANT
-  	4-CUSTO_ATUAL
-  	5-TIPOCALCULO
-    6-MARGEMSUGERIDA
-  	7-PRECOESPECIAL
-  	8-PRECOCADASTRO
-  	9-PRECODE
-  	10-PRECOPOR
-  	11-MARGEMPRATICAR
-  	12-MEDIA}
-    SQL.Close;
-    SQL.Params[0].Value                                := cds_PrecificacaoID.Value;
-    SQL.Open();
     if not (SQL.IsEmpty) then begin
-      BarradeProgressoConsulta.MaxValue                := SQL.RecordCount;
-      BarradeProgressoConsulta.Progress                := 0;
       SQL.First;
       while not SQL.Eof do begin
         cds_Precificacao_Itens.Append;
@@ -383,14 +357,13 @@ begin
         cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
         cds_Precificacao_ItensMEDIA.Value              := SQL.Fields[12].Value;
         cds_Precificacao_Itens.Post;
-        BarradeProgressoConsulta.Progress              := SQL.RecNo;
+
         Application.ProcessMessages;
+
         SQL.Next;
       end;
-      cds_Precificacao_Itens.First;
     end;
   finally
-    BarradeProgressoConsulta.Progress := 0;
     cds_Precificacao_Itens.EnableControls;
     edTotalizador.Text     := '';
     edRegistroAtual.Text   := '';
@@ -447,7 +420,8 @@ begin
   edDataFinal.Date   := Date;
   edtUsuario.Clear;
   edtPrecificacao.Clear;
-  edFamiliaTeste.Clear;
+  edFamilia.Clear;
+  edFamilia.Tag      := 0;
   rgFiltroTipo.ItemIndex := 2;
 
   edtFiltro.Clear;
@@ -468,21 +442,23 @@ end;
 
 procedure TfrmConsultaPrecificacao.SelecionaFamilia;
 var
-  CON : TFWConnection;
+  FWC : TFWConnection;
   F   : TFAMILIA;
   teste : String;
 begin
-  CON    := TFWConnection.Create;
-  F      := TFAMILIA.Create(CON);
-  edNomeFamilia.Clear;
+  FWC    := TFWConnection.Create;
+  F      := TFAMILIA.Create(FWC);
+  edFamilia.Clear;
   try
-    edFamiliaTeste.Text := IntToStr(DMUtil.Selecionar(F, edFamiliaTeste.Text));;
-    F.SelectList('id = ' + edFamiliaTeste.Text);
-    if F.Count > 0 then
-      edNomeFamilia.Text := TFAMILIA(F.Itens[0]).DESCRICAO.asString;
+    edFamilia.Tag := DMUtil.Selecionar(F, edFamilia.Text);
+    if edFamilia.Tag > 0 then begin
+      F.SelectList('id = ' + IntToStr(edFamilia.Tag));
+      if F.Count > 0 then
+        edFamilia.Text := TFAMILIA(F.Itens[0]).DESCRICAO.asString;
+    end;
   finally
     FreeAndNil(F);
-    FreeAndNil(CON);
+    FreeAndNil(FWC);
   end;
 end;
 

@@ -22,7 +22,7 @@ type
   private
     { Private declarations }
   public
-    procedure gerarPrecificacao;
+    procedure GerarPrecificacao;
     { Public declarations }
   end;
 
@@ -48,7 +48,7 @@ begin
   if btGerar.Tag = 0 then begin
     btGerar.Tag := 1;
     try
-      gerarPrecificacao;
+      GerarPrecificacao;
     finally
       btGerar.Tag := 0;
     end;
@@ -74,36 +74,44 @@ begin
     Close;
 end;
 
-procedure TfrmGeraPrecificacao.gerarPrecificacao;
+procedure TfrmGeraPrecificacao.GerarPrecificacao;
 var
-  FW      : TFWConnection;
-  PRECOS  : array of TPRECOS;
-  P       : TPRODUTO;
-  F       : TFAMILIA;
-  M       : TMARGEM;
-  PR      : TPRECIFICACAO;
-  PRI     : TPRECIFICACAO_ITENS;
-  I: Integer;
+  FWC    : TFWConnection;
+  PRECOS : array of TPRECOS;
+  P      : TPRODUTO;
+  F      : TFAMILIA;
+  M      : TMARGEM;
+  PR     : TPRECIFICACAO;
+  PRI    : TPRECIFICACAO_ITENS;
+  I      : Integer;
 begin
-  FW   := TFWConnection.Create;
-  P    := TPRODUTO.Create(FW);
-  F    := TFAMILIA.Create(FW);
-  M    := TMARGEM.Create(FW);
-  PR   := TPRECIFICACAO.Create(FW);
-  PRI  := TPRECIFICACAO_ITENS.Create(FW);
+
+  FWC  := TFWConnection.Create;
+  P    := TPRODUTO.Create(FWC);
+  F    := TFAMILIA.Create(FWC);
+  M    := TMARGEM.Create(FWC);
+  PR   := TPRECIFICACAO.Create(FWC);
+  PRI  := TPRECIFICACAO_ITENS.Create(FWC);
+
   SetLength(PRECOS, 0);
+
   try
     lblMensagem.Caption := 'Processando Etapa 1 de 2.';
     Application.ProcessMessages;
+
     P.SelectList('((custo > 0) or (quantidade_estoque_fisico > 0))');
+
     if P.Count > 0 then begin
       BarradeProgresso.MaxValue := P.Count;
       for I := 0 to Pred(P.Count) do begin
+
         BarradeProgresso.Progress := I;
+
         SetLength(PRECOS, Length(PRECOS) + 1);
         PRECOS[High(PRECOS)].TIPO                 := 0;
         PRECOS[High(PRECOS)].ID_PRODUTO           := TPRODUTO(P.Itens[I]).ID.Value;
         PRECOS[High(PRECOS)].SKU                  := TPRODUTO(P.Itens[I]).SKU.Value;
+
         if TPRODUTO(P.Itens[I]).CUSTO_ESTOQUE_FISICO.Value > 0 then begin
           PRECOS[High(PRECOS)].CUSTO_ANT          := TPRODUTO(P.Itens[I]).CUSTO_EST_FISICO_ANT.Value;
           PRECOS[High(PRECOS)].CUSTO_NOVO         := TPRODUTO(P.Itens[I]).CUSTO_ESTOQUE_FISICO.Value;
@@ -111,6 +119,7 @@ begin
           PRECOS[High(PRECOS)].CUSTO_ANT          := TPRODUTO(P.Itens[I]).CUSTOANTERIOR.Value;
           PRECOS[High(PRECOS)].CUSTO_NOVO         := TPRODUTO(P.Itens[I]).CUSTO.Value;
         end;
+
         PRECOS[High(PRECOS)].PRECO_CADASTRO       := TPRODUTO(P.Itens[I]).PRECO_VENDA.Value;
         PRECOS[High(PRECOS)].MEDIA                := TPRODUTO(P.Itens[I]).MEDIA_ALTERACAO.Value;
 
@@ -158,38 +167,44 @@ begin
     lblMensagem.Caption := 'Processando Etapa 2 de 2.';
     Application.ProcessMessages;
     if Length(PRECOS) > 0 then begin
-      FW.StartTransaction;
+
+      BarradeProgresso.MaxValue     := Length(PRECOS);
+      BarradeProgresso.Progress     := 0;
+
+      FWC.StartTransaction;
       try
-        PR.ID.isNull;
-        PR.DATA_HORA.Value                          := Now;
-        PR.USUARIO_ID.Value                         := USUARIO.CODIGO;
+        PR.ID.isNull                  := True;
+        PR.DATA_HORA.Value            := Now;
+        PR.USUARIO_ID.Value           := USUARIO.CODIGO;
         PR.Insert;
-        BarradeProgresso.MaxValue                   := Length(PRECOS);
-        BarradeProgresso.Progress                   := 0;
+
         for I := Low(PRECOS) to High(PRECOS) do begin
-          PRI.ID.isNull                             := True;
-          PRI.PRECIFICACAO_ID.Value                 := PR.ID.Value;
-          PRI.ID_PRODUTO.Value                      := PRECOS[I].ID_PRODUTO;
-          PRI.CUSTO_ANT.Value                       := PRECOS[I].CUSTO_ANT;
-          PRI.CUSTO_ATUAL.Value                     := PRECOS[I].CUSTO_NOVO;
-          PRI.PRECOESPECIAL.Value                   := PRECOS[I].PRECO_ESPECIAL;
-          PRI.PRECOCADASTRO.Value                   := PRECOS[I].PRECO_CADASTRO;
-          PRI.MARGEMSUGERIDA.Value                  := PRECOS[I].MARGEM_SUGERIDA;
-          PRI.PRECODE.Value                         := PRECOS[I].PRECODE;
-          PRI.PRECOPOR.Value                        := PRECOS[I].PRECOPOR;
-          PRI.MARGEMPRATICAR.Value                  := PRECOS[I].MARGEM_PRATICAR;
-          PRI.MEDIA.Value                           := PRECOS[I].MEDIA;
-          PRI.TIPOCALCULO.Value                     := PRECOS[I].TIPO;
+          PRI.ID.isNull               := True;
+          PRI.PRECIFICACAO_ID.Value   := PR.ID.Value;
+          PRI.ID_PRODUTO.Value        := PRECOS[I].ID_PRODUTO;
+          PRI.CUSTO_ANT.Value         := PRECOS[I].CUSTO_ANT;
+          PRI.CUSTO_ATUAL.Value       := PRECOS[I].CUSTO_NOVO;
+          PRI.PRECOESPECIAL.Value     := PRECOS[I].PRECO_ESPECIAL;
+          PRI.PRECOCADASTRO.Value     := PRECOS[I].PRECO_CADASTRO;
+          PRI.MARGEMSUGERIDA.Value    := PRECOS[I].MARGEM_SUGERIDA;
+          PRI.PRECODE.Value           := PRECOS[I].PRECODE;
+          PRI.PRECOPOR.Value          := PRECOS[I].PRECOPOR;
+          PRI.MARGEMPRATICAR.Value    := PRECOS[I].MARGEM_PRATICAR;
+          PRI.MEDIA.Value             := PRECOS[I].MEDIA;
+          PRI.TIPOCALCULO.Value       := PRECOS[I].TIPO;
           PRI.Insert;
 
-          BarradeProgresso.Progress                 := I;
+          BarradeProgresso.Progress   := I;
           Application.ProcessMessages;
         end;
-        FW.Commit;
+
+        FWC.Commit;
+
         DisplayMsg(MSG_OK, 'Dados gerados com sucesso!');
+
       except
         on E : Exception do begin
-          FW.Rollback;
+          FWC.Rollback;
           DisplayMsg(MSG_WAR, 'Dados gerados com problemas!', '', E.Message);
         end;
       end;
@@ -200,7 +215,7 @@ begin
     FreeAndNil(P);
     FreeAndNil(F);
     FreeAndNil(M);
-    FreeAndNil(FW);
+    FreeAndNil(FWC);
     lblMensagem.Caption := '';
     BarradeProgresso.Progress := 0;
   end;
