@@ -78,18 +78,14 @@ procedure TfrmGeraPrecificacao.GerarPrecificacao;
 var
   FWC    : TFWConnection;
   PRECOS : array of TPRECOS;
-  P      : TPRODUTO;
-  F      : TFAMILIA;
-  M      : TMARGEM;
+  SQL    : TFDQuery;
   PR     : TPRECIFICACAO;
   PRI    : TPRECIFICACAO_ITENS;
   I      : Integer;
 begin
 
   FWC  := TFWConnection.Create;
-  P    := TPRODUTO.Create(FWC);
-  F    := TFAMILIA.Create(FWC);
-  M    := TMARGEM.Create(FWC);
+  SQL  := TFDQuery.Create(nil);
   PR   := TPRECIFICACAO.Create(FWC);
   PRI  := TPRECIFICACAO_ITENS.Create(FWC);
 
@@ -99,71 +95,117 @@ begin
     lblMensagem.Caption := 'Processando Etapa 1 de 2.';
     Application.ProcessMessages;
 
-    P.SelectList('((custo > 0) or (quantidade_estoque_fisico > 0))');
+    SQL.Close;
+    SQL.SQL.Clear;
+    SQL.SQL.Add('SELECT');
+    SQL.SQL.Add('	P.ID,');
+    SQL.SQL.Add('	P.SKU,');
+    SQL.SQL.Add('	COALESCE(P.CUSTO_ESTOQUE_FISICO, 0.00) AS CUSTO_ESTOQUE_FISICO,');
+    SQL.SQL.Add('	COALESCE(P.CUSTO_EST_FISICO_ANT, 0.00) AS CUSTO_EST_FISICO_ANT,');
+    SQL.SQL.Add('	COALESCE(P.CUSTOANTERIOR, 0.00) AS CUSTOANTERIOR,');
+    SQL.SQL.Add('	COALESCE(P.CUSTO, 0.00) AS CUSTO,');
+    SQL.SQL.Add('	COALESCE(P.PRECO_VENDA, 0.00) AS PRECO_VENDA,');
+    SQL.SQL.Add('	COALESCE(P.MEDIA_ALTERACAO, 0.00) AS MEDIA_ALTERACAO,');
+    SQL.SQL.Add('	COALESCE(F.MARGEM, 0.00) AS MARGEM_FAMILIA,');
+    SQL.SQL.Add('	COALESCE(M.MARGEM_ANALISTA, 0.00) AS MARGEM_ANALISTA,');
+    SQL.SQL.Add('	COALESCE(M.PRECO_PONTA, 0.00) AS PRECO_PONTA,');
+    SQL.SQL.Add('	COALESCE(PERCENTUAL_VPC, 0.00) AS PERCENTUAL_VPC,');
+    SQL.SQL.Add('	COALESCE(PERCENTUAL_FRETE, 0.00) AS PERCENTUAL_FRETE,');
+    SQL.SQL.Add('	COALESCE(PERCENTUAL_OUTROS, 0.00) AS PERCENTUAL_OUTROS,');
+    SQL.SQL.Add('	CASE WHEN (CAST(M.VAL_MARGEM_PROMOCIONAL AS DATE) >= CURRENT_DATE) THEN COALESCE(M.MARGEM_PROMOCIONAL, 0.00) ELSE 0.00 END AS MARGEM_PROMOCIONAL,');
+    SQL.SQL.Add('	CASE WHEN (CAST(M.VAL_PRECO_PROMOCIONAL AS DATE) >= CURRENT_DATE) THEN COALESCE(M.PRECO_PROMOCIONAL, 0.00) ELSE 0.00 END AS PRECO_PROMOCIONAL');
+    SQL.SQL.Add('FROM PRODUTO P');
+    SQL.SQL.Add('INNER JOIN FAMILIA F ON (P.ID_FAMILIA = F.ID)');
+    SQL.SQL.Add('LEFT JOIN MARGEM M ON (P.ID = M.ID_PRODUTO)');
+    SQL.SQL.Add('WHERE 1 = 1');
+    SQL.SQL.Add('AND ((P.CUSTO > 0) OR (P.QUANTIDADE_ESTOQUE_FISICO > 0))');
+    SQL.SQL.Add('ORDER BY P.ID');
+    SQL.Connection  := FWC.FDConnection;
+    SQL.Prepare;
+    SQL.Open;
+    SQL.FetchAll;
 
-    if P.Count > 0 then begin
-      BarradeProgresso.MaxValue := P.Count;
-      for I := 0 to Pred(P.Count) do begin
-
-        BarradeProgresso.Progress := I;
-
+    if not SQL.IsEmpty then begin
+      BarradeProgresso.MaxValue := SQL.RecordCount;
+      SQL.First;
+      while not SQL.Eof do begin
         SetLength(PRECOS, Length(PRECOS) + 1);
-        PRECOS[High(PRECOS)].TIPO                 := 0;
-        PRECOS[High(PRECOS)].ID_PRODUTO           := TPRODUTO(P.Itens[I]).ID.Value;
-        PRECOS[High(PRECOS)].SKU                  := TPRODUTO(P.Itens[I]).SKU.Value;
+        PRECOS[High(PRECOS)].TIPO               := eNenhum;
+        PRECOS[High(PRECOS)].ID_PRODUTO         := SQL.FieldByName('ID').AsInteger;
+        PRECOS[High(PRECOS)].SKU                := SQL.FieldByName('SKU').AsString;
+        PRECOS[High(PRECOS)].PRECO_CADASTRO     := SQL.FieldByName('PRECO_VENDA').AsCurrency;
+        PRECOS[High(PRECOS)].MEDIA              := SQL.FieldByName('MEDIA_ALTERACAO').AsCurrency;
+        PRECOS[High(PRECOS)].PERCENTUAL_VPC     := SQL.FieldByName('PERCENTUAL_VPC').AsCurrency;
+        PRECOS[High(PRECOS)].PERCENTUAL_FRETE   := SQL.FieldByName('PERCENTUAL_FRETE').AsCurrency;
+        PRECOS[High(PRECOS)].PERCENTUAL_OUTROS  := SQL.FieldByName('PERCENTUAL_OUTROS').AsCurrency;
+        PRECOS[High(PRECOS)].CUSTO_ANT          := 0.00;
+        PRECOS[High(PRECOS)].CUSTO_NOVO         := 0.00;
+        PRECOS[High(PRECOS)].PRECO_ESPECIAL     := 0.00;
+        PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := 0.00;
+        PRECOS[High(PRECOS)].PRECO_SUGESTAO     := 0.00;
+        PRECOS[High(PRECOS)].PRECODE            := 0.00;
+        PRECOS[High(PRECOS)].PRECOPOR           := 0.00;
+        PRECOS[High(PRECOS)].MARGEM_PRATICAR    := 0.00;
 
-        if TPRODUTO(P.Itens[I]).CUSTO_ESTOQUE_FISICO.Value > 0 then begin
-          PRECOS[High(PRECOS)].CUSTO_ANT          := TPRODUTO(P.Itens[I]).CUSTO_EST_FISICO_ANT.Value;
-          PRECOS[High(PRECOS)].CUSTO_NOVO         := TPRODUTO(P.Itens[I]).CUSTO_ESTOQUE_FISICO.Value;
+        if SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].CUSTO_ANT          := SQL.FieldByName('CUSTO_EST_FISICO_ANT').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTO_NOVO         := SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency;
         end else begin
-          PRECOS[High(PRECOS)].CUSTO_ANT          := TPRODUTO(P.Itens[I]).CUSTOANTERIOR.Value;
-          PRECOS[High(PRECOS)].CUSTO_NOVO         := TPRODUTO(P.Itens[I]).CUSTO.Value;
+          PRECOS[High(PRECOS)].CUSTO_ANT          := SQL.FieldByName('CUSTOANTERIOR').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTO_NOVO         := SQL.FieldByName('CUSTO').AsCurrency;
         end;
 
-        PRECOS[High(PRECOS)].PRECO_CADASTRO       := TPRODUTO(P.Itens[I]).PRECO_VENDA.Value;
-        PRECOS[High(PRECOS)].MEDIA                := TPRODUTO(P.Itens[I]).MEDIA_ALTERACAO.Value;
-
-        F.SelectList('id = ' + TPRODUTO(P.Itens[I]).ID_FAMILIA.asString);
-        if F.Count > 0 then begin
-          PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := TFAMILIA(F.Itens[0]).MARGEM.Value / 100;
-          PRECOS[High(PRECOS)].TIPO               := 1;
+        if SQL.FieldByName('MARGEM_FAMILIA').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := SQL.FieldByName('MARGEM_FAMILIA').AsCurrency / 100;
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := (PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS)) * 100;
+          PRECOS[High(PRECOS)].TIPO               := eMargem;
         end;
 
-        M.SelectList('id_produto = ' + TPRODUTO(P.Itens[I]).ID.asString);
-        if M.Count > 0 then begin
-          if TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value > 0 then begin
-            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := TMARGEM(M.Itens[0]).MARGEM_ANALISTA.Value / 100;
-            PRECOS[High(PRECOS)].TIPO             := 1;
-          end;
-          if TMARGEM(M.Itens[0]).PRECO_PONTA.Value > 0 then begin
-            PRECOS[High(PRECOS)].PRECO_SUGESTAO   := TMARGEM(M.Itens[0]).PRECO_PONTA.Value;
-            PRECOS[High(PRECOS)].TIPO             := 2;
-          end;
-          if TMARGEM(M.Itens[0]).VAL_MARGEM_PROMOCIONAL.Value > Now then begin
-            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := TMARGEM(M.Itens[0]).MARGEM_PROMOCIONAL.Value / 100;
-            PRECOS[High(PRECOS)].TIPO             := 1;
-          end;
-          if TMARGEM(M.Itens[0]).VAL_PRECO_PROMOCIONAL.Value > Now then begin
-            PRECOS[High(PRECOS)].PRECO_SUGESTAO   := TMARGEM(M.Itens[0]).PRECO_PROMOCIONAL.Value;
-            PRECOS[High(PRECOS)].TIPO             := 2;
-          end;
-          if PRECOS[High(PRECOS)].TIPO = 1 then
-            PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (TMARGEM(M.Itens[0]).PERCENTUAL_VPC.Value + TMARGEM(M.Itens[0]).PERCENTUAL_FRETE.Value + TMARGEM(M.Itens[0]).PERCENTUAL_OUTROS.Value) * 100;
+        if SQL.FieldByName('MARGEM_ANALISTA').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := SQL.FieldByName('MARGEM_ANALISTA').AsCurrency / 100;
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := (PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS)) * 100;
+          PRECOS[High(PRECOS)].TIPO             := eMargem;
         end;
 
-        if PRECOS[High(PRECOS)].TIPO = 1 then begin
-          if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
-            PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTO_NOVO + (PRECOS[High(PRECOS)].CUSTO_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
-        end else begin
-          if PRECOS[High(PRECOS)].PRECO_SUGESTAO > 0 then
-            PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].PRECO_SUGESTAO;
+        if SQL.FieldByName('PRECO_PONTA').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].PRECO_SUGESTAO   := SQL.FieldByName('PRECO_PONTA').AsCurrency;
+          PRECOS[High(PRECOS)].PRECO_ESPECIAL   := PRECOS[High(PRECOS)].PRECO_SUGESTAO;
+          PRECOS[High(PRECOS)].TIPO             := ePrecoEspecial;
+        end;
+
+        if SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency / 100;
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := (PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS)) * 100;
+          PRECOS[High(PRECOS)].TIPO             := eMargem;
+        end;
+
+        if SQL.FieldByName('PRECO_PROMOCIONAL').AsCurrency > 0.00 then begin
+          PRECOS[High(PRECOS)].PRECO_SUGESTAO   := SQL.FieldByName('PRECO_PROMOCIONAL').AsCurrency;
+          PRECOS[High(PRECOS)].PRECO_ESPECIAL   := PRECOS[High(PRECOS)].PRECO_SUGESTAO;
+          PRECOS[High(PRECOS)].TIPO             := ePrecoEspecial;
+        end;
+
+        case PRECOS[High(PRECOS)].TIPO of
+          eMargem : begin
+            if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
+              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTO_NOVO + (PRECOS[High(PRECOS)].CUSTO_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
+          end;
+          ePrecoEspecial : begin
+            if PRECOS[High(PRECOS)].PRECO_SUGESTAO > 0 then
+              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].PRECO_SUGESTAO;
+          end;
         end;
 
         PRECOS[High(PRECOS)].PRECOPOR             := Trunc(PRECOS[High(PRECOS)].PRECOPOR) + 0.90;
         PRECOS[High(PRECOS)].PRECODE              := PRECOS[High(PRECOS)].PRECOPOR + (PRECOS[High(PRECOS)].PRECOPOR * 0.30);
         PRECOS[High(PRECOS)].MARGEM_PRATICAR      := (PRECOS[High(PRECOS)].PRECOPOR / PRECOS[High(PRECOS)].CUSTO_NOVO) - 1;
+
+        BarradeProgresso.Progress := BarradeProgresso.Progress + 1;
+
+        SQL.Next;
       end;
     end;
+
     lblMensagem.Caption := 'Processando Etapa 2 de 2.';
     Application.ProcessMessages;
     if Length(PRECOS) > 0 then begin
@@ -191,7 +233,7 @@ begin
           PRI.PRECOPOR.Value          := PRECOS[I].PRECOPOR;
           PRI.MARGEMPRATICAR.Value    := PRECOS[I].MARGEM_PRATICAR;
           PRI.MEDIA.Value             := PRECOS[I].MEDIA;
-          PRI.TIPOCALCULO.Value       := PRECOS[I].TIPO;
+          PRI.TIPOCALCULO.Value       := Integer(PRECOS[I].TIPO);
           PRI.Insert;
 
           BarradeProgresso.Progress   := I;
@@ -210,11 +252,9 @@ begin
       end;
     end;
   finally
+    FreeAndNil(SQL);
     FreeAndNil(PR);
     FreeAndNil(PRI);
-    FreeAndNil(P);
-    FreeAndNil(F);
-    FreeAndNil(M);
     FreeAndNil(FWC);
     lblMensagem.Caption := '';
     BarradeProgresso.Progress := 0;

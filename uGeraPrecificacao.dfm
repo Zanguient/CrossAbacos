@@ -67,7 +67,6 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     Color = clWhite
     TabOrder = 0
     TabStop = True
-    ExplicitWidth = 587
     object btSair: TSpeedButton
       AlignWithMargins = True
       Left = 228

@@ -3,6 +3,9 @@ unit uConstantes;
 interface
 
 type
+  TTipoPrecificacao = (eNenhum, eMargem, ePrecoEspecial);
+
+type
   TDADOSLOGIN = record
     Usuario : String;
     LembrarUsuario : Boolean;
@@ -47,13 +50,15 @@ type
     PRECO_CADASTRO : Currency;
     PRECO_ESPECIAL : Currency;
     MARGEM_SUGERIDA : Currency;
-    //0 - Nenhum 1 - Margem 2 - Preço Especial
-    TIPO : Integer;
+    TIPO : TTipoPrecificacao;
     PRECO_SUGESTAO : Currency;
     PRECODE : Currency;
     PRECOPOR : Currency;
     MARGEM_PRATICAR : Currency;
     MEDIA : Currency;
+    PERCENTUAL_VPC : Currency;
+    PERCENTUAL_FRETE : Currency;
+    PERCENTUAL_OUTROS : Currency;
   end;
 
 Const
