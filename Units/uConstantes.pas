@@ -62,19 +62,19 @@ type
   end;
 
 Const
-  DirArqConf: String = 'C:\CrossAbacos\CrossAbacos.ini';
-  DirInstall: String = 'C:\CrossAbacos\';
-  DirArquivosExcel: String = 'C:\CrossAbacos\Arquivos\';
   Alfabeto: String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 Var
-  LOGIN         : TDADOSLOGIN;
-  CONEXAO       : TDADOSCONEXAO;
-  USUARIO       : TDADOSUSUARIO;
-  CONFIG_LOCAL  : TCONFIGURACOESLOCAIS;
-  MENUS         : array of TMENU;
-  CLASSIFICACAO : array of TCLASSIFICACAO;
-  DESIGNREL     : Boolean;
+  LOGIN           : TDADOSLOGIN;
+  CONEXAO         : TDADOSCONEXAO;
+  USUARIO         : TDADOSUSUARIO;
+  CONFIG_LOCAL    : TCONFIGURACOESLOCAIS;
+  MENUS           : array of TMENU;
+  CLASSIFICACAO   : array of TCLASSIFICACAO;
+  DESIGNREL       : Boolean;
+  DirArqConf      : String;
+  DirInstall      : String;
+  DirArquivosExcel: String;
 
 implementation
 

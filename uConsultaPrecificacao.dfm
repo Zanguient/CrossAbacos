@@ -913,7 +913,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         OnDblClick = edFamiliaDblClick
         OnKeyDown = edFamiliaKeyDown
         OnRightButtonClick = edFamiliaRightButtonClick
-        ExplicitWidth = 60
       end
       object Panel1: TPanel
         Left = 2
@@ -923,9 +922,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 90
-        ExplicitWidth = 366
-        ExplicitHeight = 72
         object rgFiltroTipo: TRadioGroup
           AlignWithMargins = True
           Left = 3
@@ -945,9 +941,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
             'Tudo')
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 721
-          ExplicitWidth = 154
-          ExplicitHeight = 164
         end
         object pnConsultaBtn: TGroupBox
           AlignWithMargins = True
@@ -957,8 +950,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
           Height = 102
           Align = alRight
           TabOrder = 1
-          ExplicitLeft = 881
-          ExplicitHeight = 164
           object btnConsultar: TSpeedButton
             AlignWithMargins = True
             Left = 5
@@ -1633,7 +1624,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       Width = 124
       Height = 52
       Align = alLeft
-      Caption = '&Fornecedor'
+      Caption = '&Precifica'#231#227'o'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -1739,6 +1730,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         3106823457A875FBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
       ParentFont = False
+      OnClick = btExportClick
       ExplicitLeft = 133
     end
     object btRelatorio: TSpeedButton

@@ -174,6 +174,10 @@ object FrmPrincipal: TFrmPrincipal
         Caption = 'Produtos Detalhado'
         OnClick = ProdutosDetalhado1Click
       end
+      object Matchs1: TMenuItem
+        Caption = 'Matchs'
+        OnClick = Matchs1Click
+      end
     end
     object Configuraes1: TMenuItem
       Caption = 'Configura'#231#245'es'

@@ -43,6 +43,12 @@ Uses
 
 procedure TDMUtil.DataModuleCreate(Sender: TObject);
 begin
+  DirInstall        := GetCurrentDir;
+  if DirInstall[Length(DirInstall)] <> '\' then
+    DirInstall := DirInstall + '\';
+
+  DirArqConf        := DirInstall + 'CrossAbacos.ini';
+  DirArquivosExcel  := DirInstall + 'Arquivos\';
 
   if not DirectoryExists(DirInstall) then
     CreateDir(DirInstall);

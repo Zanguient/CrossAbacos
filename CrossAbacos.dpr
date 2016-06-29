@@ -60,7 +60,8 @@ uses
   uGeraPrecificacao in 'uGeraPrecificacao.pas' {frmGeraPrecificacao},
   uArquivoBaseProdutos in 'uArquivoBaseProdutos.pas' {FrmArquivoBaseProdutos},
   uArquivoProdutosDetalhado in 'uArquivoProdutosDetalhado.pas' {FrmArquivoProdutosDetalhado},
-  uConsultaPrecificacao in 'uConsultaPrecificacao.pas' {frmConsultaPrecificacao};
+  uConsultaPrecificacao in 'uConsultaPrecificacao.pas' {frmConsultaPrecificacao},
+  uArquivoMatchs in 'uArquivoMatchs.pas' {frmArquivoMatchs};
 
 {$R *.res}
 

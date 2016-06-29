@@ -51,6 +51,7 @@ type
     ProdutosPorFornecedor1: TMenuItem;
     GerarPrecificao1: TMenuItem;
     ConsultarMatch1: TMenuItem;
+    Matchs1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -88,6 +89,7 @@ type
     procedure ProdutosBaseFornecedor1Click(Sender: TObject);
     procedure ProdutosDetalhado1Click(Sender: TObject);
     procedure ConsultarMatch1Click(Sender: TObject);
+    procedure Matchs1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -136,7 +138,9 @@ uses
   uGeraPrecificacao,
   uRelAlteracaoCusto,
   uArquivoBaseProdutos,
-  uArquivoProdutosDetalhado;
+  uArquivoProdutosDetalhado,
+  uArquivoMatchs;
+
 {$R *.dfm}
 
 procedure TFrmPrincipal.DefinirPermissoes;
@@ -348,6 +352,17 @@ begin
     frmRelResponsavelMatch.ShowModal;
   finally
     FreeAndNil(frmRelResponsavelMatch);
+  end;
+end;
+
+procedure TFrmPrincipal.Matchs1Click(Sender: TObject);
+begin
+  try
+    if frmArquivoMatchs = nil then
+      frmArquivoMatchs := TfrmArquivoMatchs.Create(Self);
+    frmArquivoMatchs.ShowModal;
+  finally
+    FreeAndNil(frmArquivoMatchs);
   end;
 end;
 

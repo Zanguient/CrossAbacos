@@ -85,6 +85,7 @@ type
     procedure edFamiliaDblClick(Sender: TObject);
     procedure edFamiliaKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btExportClick(Sender: TObject);
   private
     { Private declarations }
     procedure SelecionaFamilia;
@@ -116,6 +117,18 @@ uses
 {$R *.dfm}
 
 { TfrmConsultaPrecificacao }
+
+procedure TfrmConsultaPrecificacao.btExportClick(Sender: TObject);
+begin
+  if btExport.Tag = 0 then begin
+    btExport.Tag := 1;
+    try
+      ExpXLS(cds_Precificacao_Itens, Caption + '.xlsx');
+    finally
+      btExport.Tag := 0;
+    end;
+  end;
+end;
 
 procedure TfrmConsultaPrecificacao.btnBuscarClick(Sender: TObject);
 begin
