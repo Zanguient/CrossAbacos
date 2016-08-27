@@ -936,8 +936,10 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
           Font.Style = []
           ItemIndex = 2
           Items.Strings = (
+            'Ajustado'
             'M'#233'dia'
-            'Diverg'#234'ncia'
+            'Verificar Maior'
+            'Diverg'#234'ncias'
             'Tudo')
           ParentFont = False
           TabOrder = 0
@@ -1963,6 +1965,18 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       end
       item
         Expanded = False
+        FieldName = 'MARCA'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'FORNECEDOR'
+        Width = 150
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'CUSTO_ANT'
         Visible = True
       end
@@ -2025,6 +2039,11 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
         Expanded = False
         FieldName = 'MEDIA'
         Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'CONFERENCIA'
+        Visible = True
       end>
   end
   object cds_Precificacao: TClientDataSet
@@ -2071,6 +2090,16 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     object cds_Precificacao_ItensPRODUTO: TStringField
       DisplayLabel = 'Produto'
       FieldName = 'PRODUTO'
+      Size = 100
+    end
+    object cds_Precificacao_ItensMARCA: TStringField
+      DisplayLabel = 'Marca'
+      FieldName = 'MARCA'
+      Size = 100
+    end
+    object cds_Precificacao_ItensFORNECEDOR: TStringField
+      DisplayLabel = 'Fornecedor'
+      FieldName = 'FORNECEDOR'
       Size = 100
     end
     object cds_Precificacao_ItensCUSTO_ANT: TCurrencyField
@@ -2134,6 +2163,11 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       FieldName = 'MEDIA'
       DisplayFormat = '#,##0.00%'
       currency = False
+    end
+    object cds_Precificacao_ItensCONFERENCIA: TStringField
+      DisplayLabel = 'Confer'#234'ncia'
+      FieldName = 'CONFERENCIA'
+      Size = 100
     end
   end
   object ds_Precificacao_Itens: TDataSource

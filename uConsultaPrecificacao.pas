@@ -69,6 +69,9 @@ type
     rgFiltroTipo: TRadioGroup;
     pnConsultaBtn: TGroupBox;
     btnConsultar: TSpeedButton;
+    cds_Precificacao_ItensMARCA: TStringField;
+    cds_Precificacao_ItensFORNECEDOR: TStringField;
+    cds_Precificacao_ItensCONFERENCIA: TStringField;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -288,6 +291,7 @@ procedure TfrmConsultaPrecificacao.BuscaItens;
 var
   FW : TFWConnection;
   SQL: TFDQuery;
+  Media : Currency;
 begin
 
   if cds_Precificacao.IsEmpty then begin
@@ -318,15 +322,20 @@ begin
     SQL.SQL.Add('	PI.PRECODE,');
     SQL.SQL.Add('	PI.PRECOPOR,');
     SQL.SQL.Add('	PI.MARGEMPRATICAR,');
-    SQL.SQL.Add('	PI.MEDIA');
+    SQL.SQL.Add('	PI.MEDIA,');
+    SQL.SQL.Add(' P.MARCA,');
+    SQL.SQL.Add(' FO.NOME');
     SQL.SQL.Add('FROM PRECIFICACAO_ITENS PI');
     SQL.SQL.Add('INNER JOIN PRODUTO P ON (PI.ID_PRODUTO = P.ID)');
     SQL.SQL.Add('INNER JOIN FAMILIA F ON (P.ID_FAMILIA = F.ID)');
+    SQL.SQL.Add('INNER JOIN FORNECEDOR FO ON (P.id_fornecedornovo = FO.ID)');
     SQL.SQL.Add('WHERE PI.PRECIFICACAO_ID = :PRECIFICACAO');
 
     case rgFiltroTipo.ItemIndex of
-      0 : SQL.SQL.Add('AND ((PI.PRECOPOR = PI.PRECOCADASTRO) OR (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) <= PI.MEDIA))');
-      1 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA))');
+      0 : SQL.SQL.Add('AND (PI.PRECOPOR = PI.PRECOCADASTRO)');
+      1 : SQL.SQL.Add('AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) <= PI.MEDIA)');
+      2 : SQL.SQL.Add('AND ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA))');
+      3 : SQL.SQL.Add('AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA))');
     end;
 
     if edFamilia.Tag > 0 then
@@ -369,6 +378,19 @@ begin
         cds_Precificacao_ItensPRECODE.Value            := SQL.Fields[9].Value;
         cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
         cds_Precificacao_ItensMEDIA.Value              := SQL.Fields[12].Value;
+        cds_Precificacao_ItensMARCA.Value              := SQL.Fields[13].Value;
+        cds_Precificacao_ItensFORNECEDOR.Value         := SQL.Fields[14].Value;
+        if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Ajustado';
+
+        Media := Abs(cds_Precificacao_ItensPRECOPOR.Value / (cds_Precificacao_ItensPRECOPOR.Value - cds_Precificacao_ItensPRECOCADASTRO.Value));
+
+        if (Media <= cds_Precificacao_ItensMEDIA.Value) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Média';
+        if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
+        if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências';
         cds_Precificacao_Itens.Post;
 
         Application.ProcessMessages;

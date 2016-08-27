@@ -276,6 +276,9 @@ begin
       if L = 1 then begin
         for I := 0 to DataSet.Fields.Count - 1 do begin
           if DataSet.Fields[i].Visible then begin
+            if DataSet.Fields[i] is TStringField then
+              ExcApp.WorkBooks[1].Sheets[1].Columns[I + 1].NumberFormat := '@';
+
             ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Bold  := True;
             ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Color := clBlue;
             ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1]            := DataSet.Fields[I].DisplayName;
@@ -285,8 +288,9 @@ begin
       end;
 
       for I := 0 to DataSet.Fields.Count - 1 do
-        if DataSet.Fields[i].Visible then
+        if DataSet.Fields[i].Visible then begin
           ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1] := DataSet.Fields[i].DisplayText;
+        end;
 
       DataSet.Next;
       L := L + 1;
