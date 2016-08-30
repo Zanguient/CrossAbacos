@@ -225,13 +225,13 @@ begin
             if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ID_ITEM') then
               arProdutos[High(arProdutos)].CODIGO  := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ITEM_NOME') then
-              arProdutos[High(arProdutos)].NOME := StrToIntDef(arrData[I, J], 0)
+              arProdutos[High(arProdutos)].NOME := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_MARCA') then
-              arProdutos[High(arProdutos)].MARCA := StrToCurrDef(arrData[I, J], 0.00)
+              arProdutos[High(arProdutos)].MARCA := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_DEPARTAMENTO') then
-              arProdutos[High(arProdutos)].DEPARTAMENTO := StrToCurrDef(arrData[I, J], 0.00)
+              arProdutos[High(arProdutos)].DEPARTAMENTO := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_SETOR') then
-              arProdutos[High(arProdutos)].SETOR := StrToCurrDef(arrData[I, J], 0.00)
+              arProdutos[High(arProdutos)].SETOR := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_FAMILIA') then
               arProdutos[High(arProdutos)].FAMILIA := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_SUBFAMILIA') then
