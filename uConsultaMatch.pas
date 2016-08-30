@@ -689,7 +689,7 @@ Begin
                 arrData[Linha,7]    := TFORNECEDOR(F.Itens[0]).CNPJ.Value; //Fornecedor
             end;
             arrData[Linha,8]    := ''; //Cod.Fornecedor (Produto)
-            PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and id_fornecedor = ' + cds_MatchItensID_FORNECEDORNOVO.Value + ' and status = True');
+            PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and id_fornecedor = ' + cds_MatchItensID_FORNECEDORNOVO.AsString + ' and status = True');
             if PF.Count > 0 then
               arrData[Linha,8]  := TPRODUTOFORNECEDOR(PF.Itens[0]).COD_PROD_FORNECEDOR.Value; //Cod.Fornecedor (Produto);
             arrData[Linha,9]    := 'S'; //Ped.Automatico

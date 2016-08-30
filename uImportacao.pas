@@ -97,44 +97,17 @@ type
 type
   TArrayProdutos = record
     ID_PRODUTO : Integer;
-    SKU : string;
-    CODIGO_BARRAS : Integer;
+    CODIGO : string;
     NOME : string;
-    CUSTOANTERIOR : Currency;
-    SALDO : Currency;
-    DISPONIVEL : Currency;
-    ICMS : Currency;
-    CF : string;
-    PRODUTO_PAI : String;
-    MARCA : String;
-    CLASSE : String;
-    UNIDADE_MEDIDA : String;
-    GRUPO : String;
-    SUB_GRUPO : String;
-    PRECO_VENDA : Currency;
-    PROMOCAO_IPI : Currency;
-    PESO : Currency;
-    NCM : String;
-    ESTOQUE_MINIMO : Integer;
-    ESTOQUE_MAXIMO : Integer;
-    PRAZO_ENTREGA : Integer;
-    QUANTIDADE_EMBALAGEM : Integer;
-    C : Currency;
-    L : Currency;
-    E : Currency;
-    UN: string;
-    CODIGO_CF : Integer;
-    DIAS_GARANTIA : Integer;
-    ORIGEM_MERCADORIA : String;
-    CUSTO : Currency;
-    ID_FORNECEDORANTERIOR : Integer;
-    ID_FORNECEDORNOVO : Integer;
-    CUSTO_ESTOQUE_FISICO : Currency;
-    QUANTIDADE_ESTOQUE_FISICO : Integer;
-    MEDIA_ALTERACAO : Currency;
-    FAMILIA : String;
+    MARCA : string;
+    DEPARTAMENTO : string;
+    SETOR : string;
+    FAMILIA : string;
+    SUBFAMILIA : string;
+    PRAZO_FABRICACAO : Integer;
     ID_FAMILIA : Integer;
     CUSTO_EST_FISICO_ANT : Currency;
+    CUSTO_ESTOQUE_FISICO : Currency;
   end;
 
 const
@@ -204,36 +177,14 @@ begin
         mnImportaProdutos.Lines.Add('Validando arquivo!');
 
         SetLength(Colunas, 30);
-        Colunas[0]     := 'SKU';
-        Colunas[1]     := 'CODIGO DE BARRAS';
-        Colunas[2]     := 'NOME';
-        Colunas[3]     := 'SALDO';
-        Colunas[4]     := 'DISP';
-        Colunas[5]     := 'ICMS';
-        Colunas[6]     := 'CF';
-        Colunas[7]     := 'PRODUTO PAI';
-        Colunas[8]     := 'MARCA';
-        Colunas[9]     := 'Família';
-        Colunas[10]    := 'Classe';
-        Colunas[11]    := 'Unidade de medida';
-        Colunas[12]    := 'Grupo';
-        Colunas[13]    := 'Sub-grupo';
-        Colunas[14]    := 'Preço de venda';
-        Colunas[15]    := 'Promoção + IPI';
-        Colunas[16]    := 'Peso';
-        Colunas[17]    := 'Clas Fisc';
-        Colunas[18]    := 'Estoque máximo';
-        Colunas[19]    := 'Prazo de entrega';
-        Colunas[20]    := 'Qtde. por embalagem';
-        Colunas[21]    := 'C';
-        Colunas[22]    := 'L';
-        Colunas[23]    := 'E';
-        Colunas[24]    := 'Dias de garantia';
-        Colunas[25]    := 'Origem da mercadoria';
-        Colunas[26]    := 'UN';
-        Colunas[27]    := 'Em';
-        Colunas[28]    := 'Custo';
-        Colunas[29]    := 'MA';
+        Colunas[0]     := 'ID_ITEM';
+        Colunas[1]     := 'ITEM_NOME';
+        Colunas[2]     := 'NM_MARCA';
+        Colunas[3]     := 'NM_DEPARTAMENTO';
+        Colunas[4]     := 'NM_SETOR';
+        Colunas[5]     := 'NM_FAMILIA';
+        Colunas[6]     := 'NM_SUBFAMILIA';
+        Colunas[7]     := 'PRAZO_FABRICACAO';
 
 
         ArqValido := True;
@@ -270,97 +221,23 @@ begin
         for I := 2 to vrow do begin
           SetLength(arProdutos, Length(arProdutos) + 1);
           arProdutos[High(arProdutos)].ID_PRODUTO := 0;
-          arProdutos[High(arProdutos)].ID_FAMILIA := 0;
           for J := 1 to vcol do begin
-            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('SKU') then
-              arProdutos[High(arProdutos)].SKU  := arrData[I, J]
-            else
-              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CODIGO DE BARRAS') then
-                arProdutos[High(arProdutos)].CODIGO_BARRAS := StrToIntDef(arrData[I, J], 0)
-              else
-                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NOME') then
-                  arProdutos[High(arProdutos)].NOME := arrData[I, J]
-                else
-                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('SALDO') then
-                    arProdutos[High(arProdutos)].SALDO := StrToCurrDef(arrData[I, J], 0.00)
-                  else
-                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('DISP') then
-                      arProdutos[High(arProdutos)].DISPONIVEL := StrToCurrDef(arrData[I, J], 0.00)
-                    else
-                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ICMS') then
-                        arProdutos[High(arProdutos)].ICMS := StrToCurrDef(arrData[I, J], 0.00)
-                      else
-                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CF') then
-                          arProdutos[High(arProdutos)].CF := arrData[I, J]
-                        else
-                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('PRODUTO PAI') then
-                            arProdutos[High(arProdutos)].PRODUTO_PAI := arrData[I, J]
-                          else
-                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('MARCA') then
-                              arProdutos[High(arProdutos)].MARCA := arrData[I, J]
-                            else
-                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Família') then
-                                arProdutos[High(arProdutos)].FAMILIA := arrData[I, J]
-                              else
-                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Classe') then
-                                  arProdutos[High(arProdutos)].CLASSE := arrData[I, J]
-                                else
-                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Unidade de medida') then
-                                    arProdutos[High(arProdutos)].UNIDADE_MEDIDA := arrData[I, J]
-                                  else
-                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Grupo') then
-                                      arProdutos[High(arProdutos)].GRUPO := arrData[I, J]
-                                    else
-                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Sub-grupo') then
-                                        arProdutos[High(arProdutos)].SUB_GRUPO := arrData[I, J]
-                                      else
-                                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Preço de venda') then
-                                          arProdutos[High(arProdutos)].PRECO_VENDA := StrToCurrDef(arrData[I, J], 0.00)
-                                        else
-                                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Promoção + IPI') then
-                                            arProdutos[High(arProdutos)].PROMOCAO_IPI := StrToCurrDef(arrData[I, J], 0.00)
-                                          else
-                                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Peso') then
-                                              arProdutos[High(arProdutos)].PESO := StrToCurrDef(arrData[I, J], 0.00)
-                                            else
-                                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Clas Fisc') then
-                                                arProdutos[High(arProdutos)].NCM := arrData[I, J]
-                                              else
-                                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Em') then
-                                                  arProdutos[High(arProdutos)].ESTOQUE_MINIMO := StrToIntDef(arrData[I, J], 0)
-                                                else
-                                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Estoque máximo') then
-                                                    arProdutos[High(arProdutos)].ESTOQUE_MAXIMO := StrToIntDef(arrData[I, J], 0)
-                                                  else
-                                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Prazo de entrega') then
-                                                      arProdutos[High(arProdutos)].PRAZO_ENTREGA := StrToIntDef(arrData[I, J], 0)
-                                                    else
-                                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Qtde. por embalagem') then
-                                                        arProdutos[High(arProdutos)].QUANTIDADE_EMBALAGEM := StrToIntDef(arrData[I, J], 0)
-                                                      else
-                                                        if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('C') then
-                                                          arProdutos[High(arProdutos)].C := StrToCurrDef(arrData[I, J], 0)
-                                                        else
-                                                          if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('L') then
-                                                            arProdutos[High(arProdutos)].L := StrToCurrDef(arrData[I, J], 0)
-                                                          else
-                                                            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('E') then
-                                                              arProdutos[High(arProdutos)].E := StrToCurrDef(arrData[I, J], 0)
-                                                            else
-                                                              if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Dias de garantia') then
-                                                                arProdutos[High(arProdutos)].DIAS_GARANTIA := StrToIntDef(arrData[I, J], 0)
-                                                              else
-                                                                if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Origem da mercadoria') then
-                                                                  arProdutos[High(arProdutos)].ORIGEM_MERCADORIA := arrData[I, J]
-                                                                else
-                                                                  if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('UN') then
-                                                                    arProdutos[High(arProdutos)].UN := arrData[I, J]
-                                                                  else
-                                                                    if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('Custo') then
-                                                                      arProdutos[High(arProdutos)].CUSTO_ESTOQUE_FISICO := StrToCurrDef(arrData[I, J], 0)
-                                                                    else
-                                                                      if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('MA') then
-                                                                        arProdutos[High(arProdutos)].MEDIA_ALTERACAO := StrToCurrDef(arrData[I, J], 0);
+            if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ID_ITEM') then
+              arProdutos[High(arProdutos)].CODIGO  := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ITEM_NOME') then
+              arProdutos[High(arProdutos)].NOME := StrToIntDef(arrData[I, J], 0)
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_MARCA') then
+              arProdutos[High(arProdutos)].MARCA := StrToCurrDef(arrData[I, J], 0.00)
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_DEPARTAMENTO') then
+              arProdutos[High(arProdutos)].DEPARTAMENTO := StrToCurrDef(arrData[I, J], 0.00)
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_SETOR') then
+              arProdutos[High(arProdutos)].SETOR := StrToCurrDef(arrData[I, J], 0.00)
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_FAMILIA') then
+              arProdutos[High(arProdutos)].FAMILIA := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_SUBFAMILIA') then
+              arProdutos[High(arProdutos)].SUBFAMILIA := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('PRAZO_FABRICACAO') then
+              arProdutos[High(arProdutos)].PRAZO_FABRICACAO := arrData[I, J];
           end;
           Application.ProcessMessages;
           pbImportaProdutos.Progress  := I;
@@ -411,8 +288,8 @@ begin
           pbImportaProdutos.MaxValue  := High(arProdutos);
 
           for I := Low(arProdutos) to High(arProdutos) do begin
-            if arProdutos[I].SKU <> EmptyStr then begin
-              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
+            if arProdutos[I].CODIGO <> EmptyStr then begin
+              if (LeftStr(arProdutos[I].CODIGO,4) <> '345.') then begin
                 //Identificando Famílias
                 for J := Low(arFamilias) to High(arFamilias) do begin
                   if AnsiUpperCase(arProdutos[I].FAMILIA) = AnsiUpperCase(arFamilias[J].DESCRICAO) then begin
@@ -430,7 +307,7 @@ begin
 
                 //Identificando Produtos
                 for J := Low(ListaProdutos) to High(ListaProdutos) do begin
-                  if AnsiUpperCase(ListaProdutos[J].SKU) = AnsiUpperCase(arProdutos[I].SKU) then begin
+                  if AnsiUpperCase(ListaProdutos[J].SKU) = AnsiUpperCase(arProdutos[I].CODIGO) then begin
                     arProdutos[I].ID_PRODUTO            := ListaProdutos[J].ID;
                     arProdutos[I].CUSTO_EST_FISICO_ANT  := ListaProdutos[J].CUSTO_EST_FISICO_ANT;
                     Break;
@@ -452,44 +329,20 @@ begin
 
           //Começa a Gravação dos Dados no BD
           for I := Low(arProdutos) to High(arProdutos) do begin
-            if arProdutos[I].SKU <> EmptyStr then begin
-              if (LeftStr(arProdutos[I].SKU,4) <> '345.') then begin
+            if arProdutos[I].CODIGO <> EmptyStr then begin
+              if (LeftStr(arProdutos[I].CODIGO,4) <> '345.') then begin
                 P.ClearFields;
-                P.CODIGO_BARRAS.Value             := arProdutos[I].CODIGO_BARRAS;
+                P.SKU.Value                       := arProdutos[I].CODIGO;
                 P.NOME.Value                      := arProdutos[I].NOME;
-                P.SALDO.Value                     := arProdutos[I].SALDO;
-                P.DISPONIVEL.Value                := arProdutos[I].DISPONIVEL;
-                P.ICMS.Value                      := arProdutos[I].ICMS;
-                P.CF.Value                        := arProdutos[I].CF;
-                P.PRODUTO_PAI.Value               := arProdutos[I].PRODUTO_PAI;
-                P.MARCA.Value                     := arProdutos[I].MARCA;
-                P.CLASSE.Value                    := arProdutos[I].CLASSE;
-                P.UNIDADE_MEDIDA.Value            := arProdutos[I].UNIDADE_MEDIDA;
-                P.GRUPO.Value                     := arProdutos[I].GRUPO;
-                P.SUB_GRUPO.Value                 := arProdutos[I].SUB_GRUPO;
-                P.PRECO_VENDA.Value               := arProdutos[I].PRECO_VENDA;
-                P.PROMOCAO_IPI.Value              := arProdutos[I].PROMOCAO_IPI;
-                P.PESO.Value                      := arProdutos[I].PESO;
-                P.NCM.Value                       := arProdutos[I].NCM;
-                P.ESTOQUE_MINIMO.Value            := arProdutos[I].ESTOQUE_MINIMO;
-                P.ESTOQUE_MAXIMO.Value            := arProdutos[I].ESTOQUE_MAXIMO;
-                P.PRAZO_ENTREGA.Value             := arProdutos[I].PRAZO_ENTREGA;
-                P.QUANTIDADE_EMBALAGEM.Value      := arProdutos[I].QUANTIDADE_EMBALAGEM;
-                P.C.Value                         := arProdutos[I].C;
-                P.L.Value                         := arProdutos[I].L;
-                P.E.Value                         := arProdutos[I].E;
-                P.UN.Value                        := arProdutos[I].UN;
-                P.CODIGO_CF.Value                 := RetornaCodigo_CF(P.CF.Value);
-                P.DIAS_GARANTIA.Value             := arProdutos[I].DIAS_GARANTIA;
-                P.ORIGEM_MERCADORIA.Value         := arProdutos[I].ORIGEM_MERCADORIA;
                 P.CUSTO_ESTOQUE_FISICO.Value      := arProdutos[I].CUSTO_ESTOQUE_FISICO;
-                P.QUANTIDADE_ESTOQUE_FISICO.Value := arProdutos[I].QUANTIDADE_ESTOQUE_FISICO;
-                P.MEDIA_ALTERACAO.Value           := arProdutos[I].MEDIA_ALTERACAO;
                 P.ID_FAMILIA.Value                := arProdutos[I].ID_FAMILIA;
+                P.MARCA.Value                     := arProdutos[I].MARCA;
+                P.CLASSE.Value                    := arProdutos[I].DEPARTAMENTO;
+                P.GRUPO.Value                     := arProdutos[I].SETOR;
 
                 if arProdutos[I].ID_PRODUTO = 0 then begin
                   P.ID.isNotNull                  := True;
-                  P.SKU.Value                     := arProdutos[I].SKU;
+                  P.SKU.Value                     := arProdutos[I].CODIGO;
                   P.CUSTOANTERIOR.Value           := 0.00;
                   P.CUSTO.Value                   := 0.00;
                   P.ID_FORNECEDORANTERIOR.Value   := 0;
@@ -501,7 +354,7 @@ begin
                   SetLength(arrInsert, Length(arrInsert) + 1);
                   arrInsert[High(arrInsert)]      := P.ID.Value;
 
-                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].SKU + ' - inserido com sucesso!');
+                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].CODIGO + ' - inserido com sucesso!');
 
                 end else begin
                   P.ID.Value                      := arProdutos[I].ID_PRODUTO;
@@ -513,7 +366,7 @@ begin
                   SetLength(arrUpdate, Length(arrUpdate) + 1);
                   arrUpdate[High(arrUpdate)]      := P.ID.Value;
 
-                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].SKU + ' - alterado com sucesso!');
+                  mnImportaProdutos.Lines.Add('SKU: ' + arProdutos[I].CODIGO + ' - alterado com sucesso!');
                 end;
               end;
             end;

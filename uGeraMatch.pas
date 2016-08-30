@@ -176,15 +176,17 @@ Begin
 
       Consulta.Close;
       Consulta.SQL.Clear;
-      Consulta.SQL.Add('SELECT');
-      Consulta.SQL.Add('	P.SKU,');
-      Consulta.SQL.Add('	IMPI.QUANTIDADE AS SALDODISPONIVEL,');
-      Consulta.SQL.Add('	A.NOME AS NOMEALMOXARIFADO FROM LOTE L');
+      Consulta.SQL.Add('SELECT DISTINCT');
+      Consulta.SQL.Add('	F.CNPJ,');
+      Consulta.SQL.Add('	PF.COD_PROD_FORNECEDOR,');
+      Consulta.SQL.Add('	PF.QUANTIDADE,');
+      Consulta.SQL.Add('  F.PRAZO_ENTREGA');
+      Consulta.SQL.Add('	FROM LOTE L');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
-      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = IMP.ID_FORNECEDOR)');
-      Consulta.SQL.Add('INNER JOIN ALMOXARIFADO A ON (A.ID = F.ID_ALMOXARIFADO)');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
       Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = IMPI.ID_PRODUTO)');
+      Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (P.ID_FORNECEDORNOVO = F.ID)');
+      Consulta.SQL.Add('INNER JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (F.ID = PF.ID_FORNECEDOR)');
       Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
 
       case rgSaldoDisponivel.ItemIndex of
@@ -192,7 +194,6 @@ Begin
         1 : Consulta.SQL.Add('AND IMPI.QUANTIDADE = 0');//Sem Saldo
       end;
 
-      Consulta.SQL.Add('ORDER BY P.SKU');
       Consulta.Params[0].DataType := ftInteger;
       Consulta.Connection         := FWC.FDConnection;
       Consulta.Prepare;
@@ -217,18 +218,26 @@ Begin
         Sheet.Range['A1','C1'].Font.Color := clBlue;
 
         // TITULO DAS COLUNAS
-        PLANILHA.Cells[1,1] := 'IdentificadorProduto';
-        PLANILHA.Cells[1,2] := 'SaldoDisponivel';
-        PLANILHA.Cells[1,3] := 'Almoxarifado';
-
+        PLANILHA.Cells[1,1] := 'Estabelecimento';
+        PLANILHA.Cells[1,2] := 'CNPJ Fornecedor';
+        PLANILHA.Cells[1,3] := 'Data do Estoque';
+        PLANILHA.Cells[1,4] := 'Identificador do Item';
+        PLANILHA.Cells[1,5] := 'Quantidade';
+        PLANILHA.Cells[1,6] := 'Prazo';
         Consulta.First;
         While not Consulta.Eof do Begin
           PLANILHA.Cells[Linha,1].NumberFormat  := '@';
           PLANILHA.Cells[Linha,2].NumberFormat  := '@';
           PLANILHA.Cells[Linha,3].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,1]               := Consulta.FieldByName('SKU').AsString; //SKU
-          PLANILHA.Cells[linha,2]               := Consulta.FieldByName('SALDODISPONIVEL').AsString; //ESTOQUE
-          PLANILHA.Cells[Linha,3]               := Consulta.FieldByName('NOMEALMOXARIFADO').AsString; //ALMOXARIFADO
+          PLANILHA.Cells[Linha,4].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,5].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,6].NumberFormat  := '@';
+          PLANILHA.Cells[Linha,1]               := 3; //SKU
+          PLANILHA.Cells[linha,2]               := Consulta.FieldByName('CNPJ').AsString; //CNPJ
+          PLANILHA.Cells[Linha,3]               := SoNumeros(FormatDateTime('ddmmyyyy', Now)); //DATA DO ESTOQUE
+          PLANILHA.Cells[Linha,4]               := Consulta.FieldByName('COD_PROD_FORNECEDOR').AsString; //COD_PROD_FORNECEDOR
+          PLANILHA.Cells[linha,5]               := Consulta.FieldByName('QUANTIDADE').AsString; //QUANTIDADE
+          PLANILHA.Cells[Linha,6]               := Consulta.FieldByName('PRAZO_ENTREGA').AsString; //PRAZO_ENTREGA
           Linha := Linha + 1;
           BarradeProgresso.Progress := Consulta.RecNo;
           Consulta.Next;
