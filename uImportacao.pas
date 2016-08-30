@@ -176,7 +176,7 @@ begin
 
         mnImportaProdutos.Lines.Add('Validando arquivo!');
 
-        SetLength(Colunas, 30);
+        SetLength(Colunas, 8);
         Colunas[0]     := 'ID_ITEM';
         Colunas[1]     := 'ITEM_NOME';
         Colunas[2]     := 'NM_MARCA';
