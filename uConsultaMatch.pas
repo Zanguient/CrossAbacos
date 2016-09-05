@@ -112,7 +112,8 @@ uses
   uDMUtil,
   uBeanProduto,
   uBeanProdutoFornecedor,
-  uBeanFornecedor;
+  uBeanFornecedor,
+  uBeanFamilia;
 
 {$R *.dfm}
 
@@ -501,6 +502,7 @@ var
   P       : TPRODUTO;
   PF      : TPRODUTOFORNECEDOR;
   F       : TFORNECEDOR;
+  FA      : TFAMILIA;
   DirArquivo : String;
 Begin
 
@@ -531,7 +533,7 @@ Begin
     P       := TPRODUTO.Create(FWC);
     PF      := TPRODUTOFORNECEDOR.Create(FWC);
     F       := TFORNECEDOR.Create(FWC);
-
+    FA      := TFAMILIA.Create(FWC);
     Try
       try
 
@@ -675,72 +677,72 @@ Begin
 
           P.SelectList('ID = ' + cds_MatchItensID_PRODUTO.AsString);
 
-          if P.Count > 0 then begin
-
-            arrData[Linha,1]    := TPRODUTO(P.Itens[0]).SKU.Value; //Id do item
-            arrData[Linha,2]    := 'Estrela10'; //Departamento
-            arrData[Linha,3]    := 'Estrela10'; //Setor
-            arrData[Linha,4]    := TPRODUTO(P.Itens[0]).ID_FAMILIA.Value; //Familia
-            arrData[Linha,5]    := ''; //Sub Família
-            arrData[Linha,6]    := ''; //Tp. Abc
-            if cds_MatchItensID_FORNECEDORNOVO.Value > 0 then begin
-              F.SelectList('id = ' + cds_MatchItensID_FORNECEDORNOVO.AsString);
-              if F.Count > 0 then
-                arrData[Linha,7]    := TFORNECEDOR(F.Itens[0]).CNPJ.Value; //Fornecedor
-            end;
-            arrData[Linha,8]    := ''; //Cod.Fornecedor (Produto)
+          if (P.Count > 0) then begin
             PF.SelectList('id_produto = ' + TPRODUTO(P.Itens[0]).ID.asString + ' and id_fornecedor = ' + cds_MatchItensID_FORNECEDORNOVO.AsString + ' and status = True');
-            if PF.Count > 0 then
-              arrData[Linha,8]  := TPRODUTOFORNECEDOR(PF.Itens[0]).COD_PROD_FORNECEDOR.Value; //Cod.Fornecedor (Produto);
-            arrData[Linha,9]    := 'S'; //Ped.Automatico
-            arrData[Linha,10]   := ''; //Item Fornecedor
-            arrData[Linha,11]   := ''; //Classe Compra
-            arrData[Linha,12]   := ''; //Categoria Compra
-            arrData[Linha,13]   := ''; //Tabela de preço
-            arrData[Linha,14]   := ''; //Preço unitário
-            arrData[Linha,15]   := ''; //Apaga tabela de preço
-            arrData[Linha,16]   := ''; //Qt. Mín. Forn. Pelo Fornec.
-            arrData[Linha,17]   := ''; //Preço frete
-            arrData[Linha,18]   := ''; //Situação
-            arrData[Linha,19]   := TPRODUTO(P.Itens[0]).NOME.Value; //Nome do item
-            arrData[Linha,20]   := TPRODUTO(P.Itens[0]).PESO.Value; //Peso Unitário
-            arrData[Linha,21]   := TPRODUTO(P.Itens[0]).PESO.Value; //Peso Bruto
-            arrData[Linha,22]   := TPRODUTO(P.Itens[0]).E.Value; //Altura
-            arrData[Linha,23]   := TPRODUTO(P.Itens[0]).L.Value; //Largura
-            arrData[Linha,24]   := TPRODUTO(P.Itens[0]).C.Value; //Comprimento
-            arrData[Linha,25]   := ''; //Qt grade
-            arrData[Linha,26]   := ''; //Prazo Validade
-            arrData[Linha,27]   := ''; //Prazo Mínimo de Recebimento
-            arrData[Linha,28]   := ''; //Prazo Alarme Validade
-            arrData[Linha,29]   := ''; //Prazo Mínimo de Expedição
-            arrData[Linha,30]   := ''; //Controle de Lote
-            arrData[Linha,31]   := ''; //Tipo de Lote
-            arrData[Linha,32]   := ''; //Cod. Agrup
-            arrData[Linha,33]   := ''; //Fabricante
-            arrData[Linha,34]   := ''; //Nome do Fabricante
-            arrData[Linha,35]   := ''; //EAN
-            arrData[Linha,36]   := ''; //Pz.Garantia Fabric. Meses
-            arrData[Linha,37]   := ''; //Modelo Fabricante
-            arrData[Linha,38]   := ''; //Tempo de Reposição
-            arrData[Linha,39]   := ''; //Dt.Lançamento
-            arrData[Linha,40]   := ''; //NBM
-            arrData[Linha,41]   := ''; //Sequencial do NBM
-            arrData[Linha,42]   := ''; //Procedencia
-            arrData[Linha,43]   := ''; //Tipo de Transporte
-            arrData[Linha,44]   := ''; //Observaçao do Item
-            arrData[Linha,45]   := ''; //Percentual de desconto
-            arrData[Linha,46]   := ''; //Indicativo de Montagem
-            arrData[Linha,47]   := ''; //Origem
-            arrData[Linha,48]   := ''; //Código de Origem
-            arrData[Linha,49]   := ''; //Id da Filial de vendas
-            arrData[Linha,50]   := ''; //Ean Preferencial
-            arrData[Linha,51]   := ''; //Marca
-            arrData[Linha,52]   := ''; //Controla Venda
-            arrData[Linha,53]   := ''; //Vendável
-            arrData[Linha,54]   := ''; //Título no Site
-            arrData[Linha,55]   := ''; //Descrição
-            arrData[Linha,56]   := ''; //Tags
-            Linha               := Linha + 1;
+            if (TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value <> 0) and (PF.Count > 0) then begin
+              arrData[Linha,1]    := TPRODUTO(P.Itens[0]).SKU.Value; //Id do item
+              arrData[Linha,2]    := ''; //Departamento
+              arrData[Linha,3]    := ''; //Setor
+              arrData[Linha,4]    := ''; //Familia
+              arrData[Linha,5]    := ''; //Sub Família
+              arrData[Linha,6]    := ''; //Tp. Abc
+              if cds_MatchItensID_FORNECEDORNOVO.Value > 0 then begin
+                F.SelectList('id = ' + cds_MatchItensID_FORNECEDORNOVO.AsString);
+                if F.Count > 0 then
+                  arrData[Linha,7]    := TFORNECEDOR(F.Itens[0]).CNPJ.Value; //Fornecedor
+              end;
+              arrData[Linha,8]    := ''; //Cod.Fornecedor (Produto)
+              arrData[Linha,8]    := TPRODUTOFORNECEDOR(PF.Itens[0]).COD_PROD_FORNECEDOR.Value; //Cod.Fornecedor (Produto);
+              arrData[Linha,9]    := 'S'; //Ped.Automatico
+              arrData[Linha,10]   := 'S'; //Item Fornecedor
+              arrData[Linha,11]   := ''; //Classe Compra
+              arrData[Linha,12]   := ''; //Categoria Compra
+              arrData[Linha,13]   := ''; //Tabela de preço
+              arrData[Linha,14]   := ''; //Preço unitário
+              arrData[Linha,15]   := ''; //Apaga tabela de preço
+              arrData[Linha,16]   := ''; //Qt. Mín. Forn. Pelo Fornec.
+              arrData[Linha,17]   := ''; //Preço frete
+              arrData[Linha,18]   := ''; //Situação
+              arrData[Linha,19]   := ''; //Nome do item
+              arrData[Linha,20]   := ''; //Peso Unitário
+              arrData[Linha,21]   := ''; //Peso Bruto
+              arrData[Linha,22]   := ''; //Altura
+              arrData[Linha,23]   := ''; //Largura
+              arrData[Linha,24]   := ''; //Comprimento
+              arrData[Linha,25]   := ''; //Qt grade
+              arrData[Linha,26]   := ''; //Prazo Validade
+              arrData[Linha,27]   := ''; //Prazo Mínimo de Recebimento
+              arrData[Linha,28]   := ''; //Prazo Alarme Validade
+              arrData[Linha,29]   := ''; //Prazo Mínimo de Expedição
+              arrData[Linha,30]   := ''; //Controle de Lote
+              arrData[Linha,31]   := ''; //Tipo de Lote
+              arrData[Linha,32]   := ''; //Cod. Agrup
+              arrData[Linha,33]   := ''; //Fabricante
+              arrData[Linha,34]   := ''; //Nome do Fabricante
+              arrData[Linha,35]   := ''; //EAN
+              arrData[Linha,36]   := ''; //Pz.Garantia Fabric. Meses
+              arrData[Linha,37]   := ''; //Modelo Fabricante
+              arrData[Linha,38]   := ''; //Tempo de Reposição
+              arrData[Linha,39]   := ''; //Dt.Lançamento
+              arrData[Linha,40]   := ''; //NBM
+              arrData[Linha,41]   := ''; //Sequencial do NBM
+              arrData[Linha,42]   := ''; //Procedencia
+              arrData[Linha,43]   := ''; //Tipo de Transporte
+              arrData[Linha,44]   := ''; //Observaçao do Item
+              arrData[Linha,45]   := ''; //Percentual de desconto
+              arrData[Linha,46]   := ''; //Indicativo de Montagem
+              arrData[Linha,47]   := ''; //Origem
+              arrData[Linha,48]   := ''; //Código de Origem
+              arrData[Linha,49]   := ''; //Id da Filial de vendas
+              arrData[Linha,50]   := ''; //Ean Preferencial
+              arrData[Linha,51]   := ''; //Marca
+              arrData[Linha,52]   := ''; //Controla Venda
+              arrData[Linha,53]   := ''; //Vendável
+              arrData[Linha,54]   := ''; //Título no Site
+              arrData[Linha,55]   := ''; //Descrição
+              arrData[Linha,56]   := ''; //Tags
+              Linha               := Linha + 1;
+            end;
           end;
 
           pbExportaFornecedor.Progress   := cds_MatchItens.RecNo + 1;
@@ -767,6 +769,7 @@ Begin
       FreeAndNil(P);
       FreeAndNil(PF);
       FreeAndNil(F);
+      FreeAndNil(FA);
       FreeAndNil(FWC);
       DisplayMsg(MSG_WAIT, 'Finalizando processo do Excel no Windows!');
       if not VarIsEmpty(PLANILHA) then begin

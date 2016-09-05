@@ -177,21 +177,28 @@ Begin
       Consulta.Close;
       Consulta.SQL.Clear;
       Consulta.SQL.Add('SELECT DISTINCT');
-      Consulta.SQL.Add('	F.CNPJ,');
-      Consulta.SQL.Add('	PF.COD_PROD_FORNECEDOR,');
-      Consulta.SQL.Add('	PF.QUANTIDADE,');
-      Consulta.SQL.Add('  F.PRAZO_ENTREGA');
+      Consulta.SQL.Add('	F.CNPJ AS CNPJNOVO,');
+      Consulta.SQL.Add('	F2.CNPJ AS CNPJANT,');
+      Consulta.SQL.Add('	P.SKU,');
+      Consulta.SQL.Add('	COALESCE(PF.QUANTIDADE,0) AS QUANTIDADE,');
+      Consulta.SQL.Add('  F.PRAZO_ENTREGA,');
+      Consulta.SQL.Add('  P.ID_FORNECEDORNOVO,');
+      Consulta.SQL.Add('  P.ID_FORNECEDORANTERIOR');
       Consulta.SQL.Add('	FROM LOTE L');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
       Consulta.SQL.Add('INNER JOIN PRODUTO P ON (P.ID = IMPI.ID_PRODUTO)');
       Consulta.SQL.Add('INNER JOIN FORNECEDOR F ON (P.ID_FORNECEDORNOVO = F.ID)');
-      Consulta.SQL.Add('INNER JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (F.ID = PF.ID_FORNECEDOR)');
+      Consulta.SQL.Add('INNER JOIN FORNECEDOR F2 ON (P.ID_FORNECEDORANTERIOR = F2.ID)');
+      Consulta.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (F.ID = PF.ID_FORNECEDOR)');
       Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
+      Consulta.SQL.Add('AND ((P.ID_FORNECEDORNOVO <> 0) OR (P.ID_FORNECEDORANTERIOR <> 0))');
 
       case rgSaldoDisponivel.ItemIndex of
-        0 : Consulta.SQL.Add('AND IMPI.QUANTIDADE > 0');//Com Saldo
-        1 : Consulta.SQL.Add('AND IMPI.QUANTIDADE = 0');//Sem Saldo
+        0 : Consulta.SQL.Add('AND PF.QUANTIDADE > 0');//Com Saldo
+        1 : begin
+          Consulta.SQL.Add('AND P.ID_FORNECEDORNOVO = 0');//Sem Saldo
+        end;
       end;
 
       Consulta.Params[0].DataType := ftInteger;
@@ -230,13 +237,16 @@ Begin
           PLANILHA.Cells[Linha,2].NumberFormat  := '@';
           PLANILHA.Cells[Linha,3].NumberFormat  := '@';
           PLANILHA.Cells[Linha,4].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,5].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,6].NumberFormat  := '@';
+//          PLANILHA.Cells[Linha,5].NumberFormat  := '@';
+//          PLANILHA.Cells[Linha,6].NumberFormat  := '@';
           PLANILHA.Cells[Linha,1]               := 3; //SKU
-          PLANILHA.Cells[linha,2]               := Consulta.FieldByName('CNPJ').AsString; //CNPJ
+          if Consulta.FieldByName('ID_FORNECEDORNOVO').Value = 0 then
+            PLANILHA.Cells[linha,2]             := Consulta.FieldByName('CNPJANT').AsString
+          else
+            PLANILHA.Cells[linha,2]             := Consulta.FieldByName('CNPJNOVO').AsString; //CNPJ
           PLANILHA.Cells[Linha,3]               := SoNumeros(FormatDateTime('ddmmyyyy', Now)); //DATA DO ESTOQUE
-          PLANILHA.Cells[Linha,4]               := Consulta.FieldByName('COD_PROD_FORNECEDOR').AsString; //COD_PROD_FORNECEDOR
-          PLANILHA.Cells[linha,5]               := Consulta.FieldByName('QUANTIDADE').AsString; //QUANTIDADE
+          PLANILHA.Cells[Linha,4]               := Consulta.FieldByName('SKU').AsString; //COD_PROD_FORNECEDOR
+          PLANILHA.Cells[linha,5]               := StrToIntDef(Consulta.FieldByName('QUANTIDADE').AsString, 0); //QUANTIDADE
           PLANILHA.Cells[Linha,6]               := Consulta.FieldByName('PRAZO_ENTREGA').AsString; //PRAZO_ENTREGA
           Linha := Linha + 1;
           BarradeProgresso.Progress := Consulta.RecNo;

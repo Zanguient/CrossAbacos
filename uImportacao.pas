@@ -339,6 +339,11 @@ begin
                 P.MARCA.Value                     := arProdutos[I].MARCA;
                 P.CLASSE.Value                    := arProdutos[I].DEPARTAMENTO;
                 P.GRUPO.Value                     := arProdutos[I].SETOR;
+                P.SUB_GRUPO.Value                 := arProdutos[I].SUBFAMILIA;
+                P.NCM.Value                       := '00';
+                P.QUANTIDADE_ESTOQUE_FISICO.Value := 0;
+                P.CUSTO_ESTOQUE_FISICO.Value      := 0;
+                P.MEDIA_ALTERACAO.Value           := 0;
 
                 if arProdutos[I].ID_PRODUTO = 0 then begin
                   P.ID.isNotNull                  := True;
