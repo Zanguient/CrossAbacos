@@ -27,6 +27,7 @@ uses
   procedure AjustaForm(Form : TForm);
   procedure OrdenarGrid(Column: TColumn);
   procedure ExpXLS(DataSet: TDataSet; NomeArq: string);
+  procedure DeletarArquivosPasta(Diretorio : String);
   function ValidaUsuario(Email, Senha : String) : Boolean;
   function MD5(Texto : String): String;
   function Criptografa(Texto : String; Tipo : String) : String;
@@ -299,6 +300,22 @@ begin
     ExcApp.WorkBooks[1].SaveAs(VarNomeArq);
   finally
     DataSet.EnableControls;
+  end;
+end;
+
+procedure DeletarArquivosPasta(Diretorio : String);
+var
+  SR: TSearchRec;
+  I : Integer;
+begin
+  try
+    I := FindFirst(Diretorio + '\*.*', faAnyFile, SR);
+    while I = 0 do begin
+      if ((SR.Attr and faDirectory) <> faDirectory) then
+        DeleteFile(PChar(Diretorio + '\' + SR.Name));
+      I := FindNext(SR);
+    end;
+  except
   end;
 end;
 

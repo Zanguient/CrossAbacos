@@ -133,13 +133,13 @@ end;
 
 procedure TfrmGeraMatch.ExportarEstoque;
 var
-  PLANILHA,
-  Sheet   : Variant;
-  Linha   : Integer;
-  FWC     : TFWConnection;
-  Consulta: TFDQuery;
-  DirArquivo : String;
-  idLote  : Integer;
+  FWC       : TFWConnection;
+  Consulta  : TFDQuery;
+  DirArquivo,
+  Caminho   : String;
+  idLote,
+  I, J      : Integer;
+  Arquivo   : TextFile;
 Begin
 
   idLote := StrToIntDef(Copy(cbLoteImportacao.Items[cbLoteImportacao.ItemIndex], 1, (Pos(' - ', cbLoteImportacao.Items[cbLoteImportacao.ItemIndex]) -1)),-1);
@@ -148,25 +148,15 @@ Begin
     Exit;
   end;
 
-  DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
+  DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date) + '\Estoque';
 
   if not DirectoryExists(DirArquivo) then begin
     if not ForceDirectories(DirArquivo) then begin
       DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
       Exit;
     end;
-  end;
-
-  DirArquivo := DirArquivo + '\Estoque.xls';
-
-  if FileExists(DirArquivo) then begin
-    DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
-                          'Deseja Sobreescrever?');
-    if ResultMsgModal <> mrYes then
-      Exit;
-
-    DeleteFile(DirArquivo);
-  end;
+  end else
+    DeletarArquivosPasta(DirArquivo);
 
   FWC       := TFWConnection.Create;
   Consulta  := TFDQuery.Create(nil);
@@ -177,13 +167,10 @@ Begin
       Consulta.Close;
       Consulta.SQL.Clear;
       Consulta.SQL.Add('SELECT DISTINCT');
-      Consulta.SQL.Add('	F.CNPJ AS CNPJNOVO,');
-      Consulta.SQL.Add('	F2.CNPJ AS CNPJANT,');
+      Consulta.SQL.Add('	CASE WHEN P.ID_FORNECEDORNOVO = 0 THEN F2.CNPJ ELSE F.CNPJ END AS CNPJ,');
       Consulta.SQL.Add('	P.SKU,');
       Consulta.SQL.Add('	COALESCE(PF.QUANTIDADE,0) AS QUANTIDADE,');
-      Consulta.SQL.Add('  F.PRAZO_ENTREGA,');
-      Consulta.SQL.Add('  P.ID_FORNECEDORNOVO,');
-      Consulta.SQL.Add('  P.ID_FORNECEDORANTERIOR');
+      Consulta.SQL.Add('	CASE WHEN P.ID_FORNECEDORNOVO = 0 THEN F2.PRAZO_ENTREGA ELSE F.PRAZO_ENTREGA END AS PRAZO_ENTREGA');
       Consulta.SQL.Add('	FROM LOTE L');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO IMP ON (L.ID = IMP.ID_LOTE)');
       Consulta.SQL.Add('INNER JOIN IMPORTACAO_ITENS IMPI ON (IMP.ID = IMPI.ID_IMPORTACAO)');
@@ -193,14 +180,13 @@ Begin
       Consulta.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (F.ID = PF.ID_FORNECEDOR)');
       Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
       Consulta.SQL.Add('AND ((P.ID_FORNECEDORNOVO <> 0) OR (P.ID_FORNECEDORANTERIOR <> 0))');
-
       case rgSaldoDisponivel.ItemIndex of
         0 : Consulta.SQL.Add('AND PF.QUANTIDADE > 0');//Com Saldo
         1 : begin
           Consulta.SQL.Add('AND P.ID_FORNECEDORNOVO = 0');//Sem Saldo
         end;
       end;
-
+      Consulta.SQL.Add('ORDER BY 1,2');
       Consulta.Params[0].DataType := ftInteger;
       Consulta.Connection         := FWC.FDConnection;
       Consulta.Prepare;
@@ -209,71 +195,49 @@ Begin
       Consulta.FetchAll;
 
       if Not Consulta.IsEmpty then begin
-
-        BarradeProgresso.Progress := 0;
-        BarradeProgresso.MaxValue := Consulta.RecordCount;
-
-        //cds_MatchItens.Filtered := False;
-        Linha :=  2;
-        PLANILHA := CreateOleObject('Excel.Application');
-        PLANILHA.Caption := 'ESTOQUE';
-        PLANILHA.Visible := False;
-        PLANILHA.WorkBooks.add(1);
-        PLANILHA.Workbooks[1].WorkSheets[1].Name := 'ESTOQUE';
-        Sheet := PLANILHA.Workbooks[1].WorkSheets['ESTOQUE'];
-        Sheet.Range['A1','C1'].Font.Bold  := True;
-        Sheet.Range['A1','C1'].Font.Color := clBlue;
-
-        // TITULO DAS COLUNAS
-        PLANILHA.Cells[1,1] := 'Estabelecimento';
-        PLANILHA.Cells[1,2] := 'CNPJ Fornecedor';
-        PLANILHA.Cells[1,3] := 'Data do Estoque';
-        PLANILHA.Cells[1,4] := 'Identificador do Item';
-        PLANILHA.Cells[1,5] := 'Quantidade';
-        PLANILHA.Cells[1,6] := 'Prazo';
         Consulta.First;
         While not Consulta.Eof do Begin
-          PLANILHA.Cells[Linha,1].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,2].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,3].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,4].NumberFormat  := '@';
-//          PLANILHA.Cells[Linha,5].NumberFormat  := '@';
-//          PLANILHA.Cells[Linha,6].NumberFormat  := '@';
-          PLANILHA.Cells[Linha,1]               := 3; //SKU
-          if Consulta.FieldByName('ID_FORNECEDORNOVO').Value = 0 then
-            PLANILHA.Cells[linha,2]             := Consulta.FieldByName('CNPJANT').AsString
-          else
-            PLANILHA.Cells[linha,2]             := Consulta.FieldByName('CNPJNOVO').AsString; //CNPJ
-          PLANILHA.Cells[Linha,3]               := SoNumeros(FormatDateTime('ddmmyyyy', Now)); //DATA DO ESTOQUE
-          PLANILHA.Cells[Linha,4]               := Consulta.FieldByName('SKU').AsString; //COD_PROD_FORNECEDOR
-          PLANILHA.Cells[linha,5]               := StrToIntDef(Consulta.FieldByName('QUANTIDADE').AsString, 0); //QUANTIDADE
-          PLANILHA.Cells[Linha,6]               := Consulta.FieldByName('PRAZO_ENTREGA').AsString; //PRAZO_ENTREGA
-          Linha := Linha + 1;
-          BarradeProgresso.Progress := Consulta.RecNo;
+          Caminho := DirArquivo + '\' + Consulta.FieldByName('CNPJ').AsString + '.csv';
+
+          AssignFile(Arquivo, Caminho);
+
+          if FileExists(Caminho) then
+            Append(Arquivo)
+          else begin
+            Rewrite(Arquivo);
+            Writeln(Arquivo, 'Estabelecimento;CNPJ Fornecedor;Data do Estoque;Identificador do Item;Quantidade;Prazo')
+          end;
+
+          try
+            Writeln(Arquivo, '3' + ';' +
+                              Consulta.FieldByName('CNPJ').AsString + ';' +
+                              SoNumeros(FormatDateTime('ddmmyyyy', Now)) + ';' +
+                              Consulta.FieldByName('SKU').AsString + ';' +
+                              Consulta.FieldByName('QUANTIDADE').AsString + ';' +
+                              Consulta.FieldByName('PRAZO_ENTREGA').AsString);
+          finally
+            CloseFile(Arquivo);
+          end;
+
+          BarradeProgresso.Progress := Consulta.RecNo + 1;
+
           Consulta.Next;
         End;
 
-        PLANILHA.Columns.AutoFit;
+        DisplayMsg(MSG_OK, 'Arquivos de Estoque Gerados com Sucesso!' + sLineBreak + DirArquivo);
 
-        PLANILHA.WorkBooks[1].Sheets[1].SaveAs(DirArquivo, 18);
-
-        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso em:' + sLineBreak + DirArquivo);
       end else
         DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Estoque, Verifique!');
 
     except
       on E : Exception do begin
-        DisplayMsg(MSG_ERR, 'Erro ao Gerar arquivo,' + sLineBreak + DirArquivo);
+        DisplayMsg(MSG_ERR, 'Erro ao Exportar os arquivos de Estoque,' + sLineBreak + DirArquivo);
       end;
     end;
   Finally
     BarradeProgresso.Progress := 0;
     FreeAndNil(Consulta);
     FreeAndNil(FWC);
-    if not VarIsEmpty(PLANILHA) then begin
-      PLANILHA.Quit;
-      PLANILHA := Unassigned;
-    end;
   end;
 end;
 
