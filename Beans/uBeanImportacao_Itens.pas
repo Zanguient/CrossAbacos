@@ -11,12 +11,14 @@ type TIMPORTACAO_ITENS = Class(TFWPersistence)
     FQUANTIDADE: TFieldFloat;
     FID_IMPORTACAO: TFieldInteger;
     FCUSTO: TFieldCurrency;
+    FCUSTOFINAL: TFieldCurrency;
     procedure SetCUSTO(const Value: TFieldCurrency);
     procedure SetID(const Value: TFieldInteger);
     procedure SetID_IMPORTACAO(const Value: TFieldInteger);
     procedure SetID_PRODUTO(const Value: TFieldInteger);
     procedure SetQUANTIDADE(const Value: TFieldFloat);
     procedure SetSTATUS(const Value: TFieldInteger);
+    procedure SetCUSTOFINAL(const Value: TFieldCurrency);
   protected
     procedure InitInstance; override;
   published
@@ -26,6 +28,7 @@ type TIMPORTACAO_ITENS = Class(TFWPersistence)
     property ID_IMPORTACAO : TFieldInteger read FID_IMPORTACAO write SetID_IMPORTACAO;
     property ID_PRODUTO : TFieldInteger read FID_PRODUTO write SetID_PRODUTO;
     property STATUS : TFieldInteger read FSTATUS write SetSTATUS;
+    property CUSTOFINAL : TFieldCurrency read FCUSTOFINAL write SetCUSTOFINAL;
 End;
 
 implementation
@@ -41,6 +44,11 @@ end;
 procedure TIMPORTACAO_ITENS.SetCUSTO(const Value: TFieldCurrency);
 begin
   FCUSTO := Value;
+end;
+
+procedure TIMPORTACAO_ITENS.SetCUSTOFINAL(const Value: TFieldCurrency);
+begin
+  FCUSTOFINAL := Value;
 end;
 
 procedure TIMPORTACAO_ITENS.SetID(const Value: TFieldInteger);

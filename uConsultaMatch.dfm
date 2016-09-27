@@ -2127,6 +2127,9 @@ object frmConsultaMatch: TfrmConsultaMatch
       DisplayLabel = 'Quant.'
       FieldName = 'QUANTIDADE'
     end
+    object cds_MatchItensID_FORNECEDORANT: TIntegerField
+      FieldName = 'ID_FORNECEDORANT'
+    end
     object cds_MatchItensID_FORNECEDORNOVO: TIntegerField
       FieldName = 'ID_FORNECEDORNOVO'
     end

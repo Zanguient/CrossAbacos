@@ -224,14 +224,14 @@ Begin
           Consulta.Next;
         End;
 
-        DisplayMsg(MSG_OK, 'Arquivos de Estoque Gerados com Sucesso!' + sLineBreak + DirArquivo);
+        DisplayMsg(MSG_OK, 'Arquivo de Estoque Gerado com Sucesso!', '', DirArquivo);
 
       end else
         DisplayMsg(MSG_WAR, 'Não há dados para Geração do Arquivo de Estoque, Verifique!');
 
     except
       on E : Exception do begin
-        DisplayMsg(MSG_ERR, 'Erro ao Exportar os arquivos de Estoque,' + sLineBreak + DirArquivo);
+        DisplayMsg(MSG_ERR, 'Erro ao Exportar os arquivos de Estoque,' + sLineBreak + DirArquivo, '', E.Message);
       end;
     end;
   Finally
@@ -278,6 +278,7 @@ Var
   PF            : TPRODUTOFORNECEDOR;
   SQL           : TFDQuery;
   idLote        : Integer;
+  CustoFinal    : Currency;
 begin
 
   FWC           := TFWConnection.Create;
@@ -366,11 +367,13 @@ begin
             MI.CUSTONOVO.Value          := TPRODUTOFORNECEDOR(PF.Itens[0]).CUSTO.Value;
             MI.QUANTIDADE.Value         := TPRODUTOFORNECEDOR(PF.Itens[0]).QUANTIDADE.Value;
             MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
+            CustoFinal                  := TPRODUTOFORNECEDOR(PF.Itens[0]).CUSTOFINAL.Value;
           end else begin
             MI.ID_FORNECEDORNOVO.Value  := 0; //Fora de estoque Virtual
             MI.CUSTONOVO.Value          := 0.00;
             MI.QUANTIDADE.Value         := 0;
             MI.ATUALIZADO.Value         := ((MI.ID_FORNECEDORNOVO.Value <> MI.ID_FORNECEDORANTERIOR.Value) or (MI.CUSTONOVO.Value <> MI.CUSTOANTERIOR.Value));
+            CustoFinal                  := 0.00;
           end;
 
           P.SelectList('ID = ' + MI.ID_PRODUTO.asString);
@@ -378,6 +381,8 @@ begin
             P.ID.Value                    := TPRODUTO(P.Itens[0]).ID.Value;
             P.CUSTOANTERIOR.Value         := TPRODUTO(P.Itens[0]).CUSTOANTERIOR.Value;
             P.CUSTO.Value                 := TPRODUTO(P.Itens[0]).CUSTO.Value;
+            P.CUSTOFINALANTERIOR.Value    := TPRODUTO(P.Itens[0]).CUSTOFINALANTERIOR.Value;
+            P.CUSTOFINAL.Value            := TPRODUTO(P.Itens[0]).CUSTOFINAL.Value;
             P.ID_ULTIMOLOTE.Value         := TPRODUTO(P.Itens[0]).ID_ULTIMOLOTE.Value;
             P.ID_FORNECEDORANTERIOR.Value := TPRODUTO(P.Itens[0]).ID_FORNECEDORANTERIOR.Value;
             P.ID_FORNECEDORNOVO.Value     := TPRODUTO(P.Itens[0]).ID_FORNECEDORNOVO.Value;
@@ -388,8 +393,10 @@ begin
 
             if MI.ATUALIZADO.Value = True then begin //Caso tenha Match/tenha atualização
               P.CUSTOANTERIOR.Value         := P.CUSTO.Value;
+              P.CUSTOFINALANTERIOR.Value    := P.CUSTOFINAL.Value;
               P.ID_FORNECEDORANTERIOR.Value := P.ID_FORNECEDORNOVO.Value;
               P.CUSTO.Value                 := MI.CUSTONOVO.Value;
+              P.CUSTOFINAL.Value            := CustoFinal;
               P.ID_FORNECEDORNOVO.Value     := MI.ID_FORNECEDORNOVO.Value;
             end;
 

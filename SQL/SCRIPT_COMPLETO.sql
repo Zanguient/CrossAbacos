@@ -320,3 +320,12 @@ create table if not exists precificacao_itens (
       REFERENCES produto (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+alter table produtofornecedor add custofinal numeric(18,2);
+update produtofornecedor set custofinal = custo;
+
+alter table importacao_itens add custofinal numeric(18,2);
+update importacao_itens set custofinal = custo;
+
+alter table produto add custofinal numeric(18,2), add custofinalanterior numeric(18,2);
+update produto set custofinal = custo, custofinalanterior = custoanterior;

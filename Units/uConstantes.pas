@@ -45,8 +45,8 @@ type
   TPRECOS = record
     ID_PRODUTO : integer;
     SKU : String;
-    CUSTO_ANT : Currency;
-    CUSTO_NOVO : Currency;
+    CUSTOFINAL_ANT : Currency;
+    CUSTOFINAL_NOVO : Currency;
     PRECO_CADASTRO : Currency;
     PRECO_ESPECIAL : Currency;
     MARGEM_SUGERIDA : Currency;

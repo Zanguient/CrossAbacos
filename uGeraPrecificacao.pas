@@ -102,8 +102,8 @@ begin
     SQL.SQL.Add('	P.SKU,');
     SQL.SQL.Add('	COALESCE(P.CUSTO_ESTOQUE_FISICO, 0.00) AS CUSTO_ESTOQUE_FISICO,');
     SQL.SQL.Add('	COALESCE(P.CUSTO_EST_FISICO_ANT, 0.00) AS CUSTO_EST_FISICO_ANT,');
-    SQL.SQL.Add('	COALESCE(P.CUSTOANTERIOR, 0.00) AS CUSTOANTERIOR,');
-    SQL.SQL.Add('	COALESCE(P.CUSTO, 0.00) AS CUSTO,');
+    SQL.SQL.Add('	COALESCE(P.CUSTOFINALANTERIOR, 0.00) AS CUSTOFINALANTERIOR,');
+    SQL.SQL.Add('	COALESCE(P.CUSTOFINAL, 0.00) AS CUSTOFINAL,');
     SQL.SQL.Add('	COALESCE(P.PRECO_VENDA, 0.00) AS PRECO_VENDA,');
     SQL.SQL.Add('	COALESCE(P.MEDIA_ALTERACAO, 0.00) AS MEDIA_ALTERACAO,');
     SQL.SQL.Add('	COALESCE(F.MARGEM, 0.00) AS MARGEM_FAMILIA,');
@@ -118,7 +118,7 @@ begin
     SQL.SQL.Add('INNER JOIN FAMILIA F ON (P.ID_FAMILIA = F.ID)');
     SQL.SQL.Add('LEFT JOIN MARGEM M ON (P.ID = M.ID_PRODUTO)');
     SQL.SQL.Add('WHERE 1 = 1');
-    SQL.SQL.Add('AND ((P.CUSTO > 0) OR (P.QUANTIDADE_ESTOQUE_FISICO > 0))');
+    SQL.SQL.Add('AND ((P.CUSTOFINAL > 0) OR (P.QUANTIDADE_ESTOQUE_FISICO > 0))');
     SQL.SQL.Add('ORDER BY P.ID');
     SQL.Connection  := FWC.FDConnection;
     SQL.Prepare;
@@ -138,8 +138,8 @@ begin
         PRECOS[High(PRECOS)].PERCENTUAL_VPC     := SQL.FieldByName('PERCENTUAL_VPC').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_FRETE   := SQL.FieldByName('PERCENTUAL_FRETE').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_OUTROS  := SQL.FieldByName('PERCENTUAL_OUTROS').AsCurrency;
-        PRECOS[High(PRECOS)].CUSTO_ANT          := 0.00;
-        PRECOS[High(PRECOS)].CUSTO_NOVO         := 0.00;
+        PRECOS[High(PRECOS)].CUSTOFINAL_ANT          := 0.00;
+        PRECOS[High(PRECOS)].CUSTOFINAL_NOVO         := 0.00;
         PRECOS[High(PRECOS)].PRECO_ESPECIAL     := 0.00;
         PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := 0.00;
         PRECOS[High(PRECOS)].PRECO_SUGESTAO     := 0.00;
@@ -148,11 +148,11 @@ begin
         PRECOS[High(PRECOS)].MARGEM_PRATICAR    := 0.00;
 
         if SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency > 0.00 then begin
-          PRECOS[High(PRECOS)].CUSTO_ANT          := SQL.FieldByName('CUSTO_EST_FISICO_ANT').AsCurrency;
-          PRECOS[High(PRECOS)].CUSTO_NOVO         := SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTOFINAL_ANT          := SQL.FieldByName('CUSTO_EST_FISICO_ANT').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTOFINAL_NOVO         := SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency;
         end else begin
-          PRECOS[High(PRECOS)].CUSTO_ANT          := SQL.FieldByName('CUSTOANTERIOR').AsCurrency;
-          PRECOS[High(PRECOS)].CUSTO_NOVO         := SQL.FieldByName('CUSTO').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTOFINAL_ANT          := SQL.FieldByName('CUSTOFINALANTERIOR').AsCurrency;
+          PRECOS[High(PRECOS)].CUSTOFINAL_NOVO         := SQL.FieldByName('CUSTOFINAL').AsCurrency;
         end;
 
         if SQL.FieldByName('MARGEM_FAMILIA').AsCurrency > 0.00 then begin
@@ -188,7 +188,7 @@ begin
         case PRECOS[High(PRECOS)].TIPO of
           eMargem : begin
             if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
-              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTO_NOVO + (PRECOS[High(PRECOS)].CUSTO_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
+              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTOFINAL_NOVO + (PRECOS[High(PRECOS)].CUSTOFINAL_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
           end;
           ePrecoEspecial : begin
             if PRECOS[High(PRECOS)].PRECO_SUGESTAO > 0 then
@@ -198,7 +198,7 @@ begin
 
         PRECOS[High(PRECOS)].PRECOPOR             := Trunc(PRECOS[High(PRECOS)].PRECOPOR) + 0.90;
         PRECOS[High(PRECOS)].PRECODE              := PRECOS[High(PRECOS)].PRECOPOR + (PRECOS[High(PRECOS)].PRECOPOR * 0.30);
-        PRECOS[High(PRECOS)].MARGEM_PRATICAR      := (PRECOS[High(PRECOS)].PRECOPOR / PRECOS[High(PRECOS)].CUSTO_NOVO) - 1;
+        PRECOS[High(PRECOS)].MARGEM_PRATICAR      := (PRECOS[High(PRECOS)].PRECOPOR / PRECOS[High(PRECOS)].CUSTOFINAL_NOVO) - 1;
 
         BarradeProgresso.Progress := BarradeProgresso.Progress + 1;
 
@@ -224,8 +224,8 @@ begin
           PRI.ID.isNull               := True;
           PRI.PRECIFICACAO_ID.Value   := PR.ID.Value;
           PRI.ID_PRODUTO.Value        := PRECOS[I].ID_PRODUTO;
-          PRI.CUSTO_ANT.Value         := PRECOS[I].CUSTO_ANT;
-          PRI.CUSTO_ATUAL.Value       := PRECOS[I].CUSTO_NOVO;
+          PRI.CUSTO_ANT.Value         := PRECOS[I].CUSTOFINAL_ANT;
+          PRI.CUSTO_ATUAL.Value       := PRECOS[I].CUSTOFINAL_NOVO;
           PRI.PRECOESPECIAL.Value     := PRECOS[I].PRECO_ESPECIAL;
           PRI.PRECOCADASTRO.Value     := PRECOS[I].PRECO_CADASTRO;
           PRI.MARGEMSUGERIDA.Value    := PRECOS[I].MARGEM_SUGERIDA;

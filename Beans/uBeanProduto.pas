@@ -44,6 +44,8 @@ type TPRODUTO = Class(TFWPersistence)
     FMEDIA_ALTERACAO: TFieldCurrency;
     FQUANTIDADE_ESTOQUE_FISICO: TFieldInteger;
     FCUSTO_EST_FISICO_ANT: TFieldCurrency;
+    FCUSTOFINALANTERIOR: TFieldCurrency;
+    FCUSTOFINAL: TFieldCurrency;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -83,6 +85,8 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetMEDIA_ALTERACAO(const Value: TFieldCurrency);
     procedure SetQUANTIDADE_ESTOQUE_FISICO(const Value: TFieldInteger);
     procedure SetCUSTO_EST_FISICO_ANT(const Value: TFieldCurrency);
+    procedure SetCUSTOFINAL(const Value: TFieldCurrency);
+    procedure SetCUSTOFINALANTERIOR(const Value: TFieldCurrency);
   protected
     procedure InitInstance; override;
   published
@@ -124,7 +128,9 @@ type TPRODUTO = Class(TFWPersistence)
     property QUANTIDADE_ESTOQUE_FISICO  : TFieldInteger     read FQUANTIDADE_ESTOQUE_FISICO   write SetQUANTIDADE_ESTOQUE_FISICO;
     property MEDIA_ALTERACAO            : TFieldCurrency    read FMEDIA_ALTERACAO             write SetMEDIA_ALTERACAO;
     property ID_FAMILIA                 : TFieldInteger     read FID_FAMILIA                  write SetID_FAMILIA;
-    property CUSTO_EST_FISICO_ANT       : TFieldCurrency read FCUSTO_EST_FISICO_ANT write SetCUSTO_EST_FISICO_ANT;
+    property CUSTO_EST_FISICO_ANT       : TFieldCurrency    read FCUSTO_EST_FISICO_ANT write SetCUSTO_EST_FISICO_ANT;
+    property CUSTOFINAL                 : TFieldCurrency    read FCUSTOFINAL write SetCUSTOFINAL;
+    property CUSTOFINALANTERIOR         : TFieldCurrency    read FCUSTOFINALANTERIOR write SetCUSTOFINALANTERIOR;
 
 End;
 implementation
@@ -205,6 +211,16 @@ end;
 procedure TPRODUTO.SetCUSTOANTERIOR(const Value: TFieldCurrency);
 begin
   FCUSTOANTERIOR := Value;
+end;
+
+procedure TPRODUTO.SetCUSTOFINAL(const Value: TFieldCurrency);
+begin
+  FCUSTOFINAL := Value;
+end;
+
+procedure TPRODUTO.SetCUSTOFINALANTERIOR(const Value: TFieldCurrency);
+begin
+  FCUSTOFINALANTERIOR := Value;
 end;
 
 procedure TPRODUTO.SetCUSTO_ESTOQUE_FISICO(const Value: TFieldCurrency);

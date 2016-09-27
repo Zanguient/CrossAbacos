@@ -54,6 +54,7 @@ type
     btSalvar: TBitBtn;
     btSair: TBitBtn;
     btExport: TSpeedButton;
+    csProdutosCUSTOFINAL: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -202,15 +203,19 @@ begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosDISPONIVEL.FieldName;
-        end else if arrData[1, I] = 'Custo Final C/ IPI+ST+Desc' then begin
+        end else if arrData[1, I] = 'Custo' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTO.FieldName;
+        end else if arrData[1, I] = 'Custo Final' then begin
+          SetLength(ExcelColluns, Length(ExcelColluns) + 1);
+          ExcelColluns[High(ExcelColluns)].index    := I;
+          ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTOFINAL.FieldName;
         end;
       end;
 
-      if Length(ExcelColluns) < 3 then begin
-        DisplayMsg(MSG_WAR, 'Estrutura do arquivo inválida!', '', 'Colunas: Cód. do Fornecedor, Estoque, Custo Final C/ IPI+ST+Desc');
+      if Length(ExcelColluns) < 4 then begin
+        DisplayMsg(MSG_WAR, 'Estrutura do arquivo inválida!', '', 'Colunas: Cód. do Fornecedor, Estoque, Custo e Custo Final');
         Exit;
       end;
 
@@ -236,9 +241,10 @@ begin
               else begin
                 if csProdutosSKU.Value = '' then
                   btImportar.Tag                    := 1;
-                if (csProdutosCUSTO.Value = 0) or (csProdutosDISPONIVEL.Value = 0) then begin
+                if ((csProdutosCUSTO.Value = 0) or (csProdutosCUSTOFINAL.Value = 0) or (csProdutosDISPONIVEL.Value = 0)) then begin
                   csProdutosDISPONIVEL.Value        := 0;
                   csProdutosCUSTO.Value             := 0;
+                  csProdutosCUSTOFINAL.Value        := 0;
                 end;
                 csProdutos.Post;
               end;
@@ -264,6 +270,7 @@ begin
               csProdutos.Edit;
               csProdutosDISPONIVEL.Value     := 0;
               csProdutosCUSTO.Value          := 0;
+              csProdutosCUSTOFINAL.Value     := 0;
               csProdutos.Post;
             end else if csProdutosDISPONIVEL.Value > TFORNECEDOR(FORN.Itens[0]).ESTOQUEMAXIMO.Value then begin
               csProdutos.Edit;
@@ -329,7 +336,6 @@ var
   IMPORTACAO : TIMPORTACAO;
   ITENS      : TIMPORTACAO_ITENS;
   CON        : TFWConnection;
-  PROD       : TPRODUTO;
   PRODFOR    : TPRODUTOFORNECEDOR;
   I,
   idLote     : Integer;
@@ -345,7 +351,6 @@ begin
   CON                                := TFWConnection.Create;
   IMPORTACAO                         := TIMPORTACAO.Create(CON);
   ITENS                              := TIMPORTACAO_ITENS.Create(CON);
-  PROD                               := TPRODUTO.Create(CON);
   PRODFOR                            := TPRODUTOFORNECEDOR.Create(CON);
   pgProdutos.MaxValue                := csProdutos.RecordCount;
   pgProdutos.Progress                := 0;
@@ -369,6 +374,7 @@ begin
           ITENS.ID_IMPORTACAO.Value    := IMPORTACAO.ID.Value;
           ITENS.ID_PRODUTO.Value       := csProdutosID_PRODUTO.Value;
           ITENS.CUSTO.Value            := csProdutosCUSTO.Value;
+          ITENS.CUSTOFINAL.Value       := csProdutosCUSTOFINAL.Value;
           ITENS.QUANTIDADE.Value       := csProdutosDISPONIVEL.Value;
           ITENS.STATUS.Value           := csProdutosSTATUS.Value;
 
@@ -377,6 +383,7 @@ begin
           PRODFOR.ID.Value             := csProdutosID_PRODUTOFORNECEDOR.Value;
           PRODFOR.ID_ULTIMOLOTE.Value  := idLote;
           PRODFOR.CUSTO.Value          := csProdutosCUSTO.Value;
+          PRODFOR.CUSTOFINAL.Value     := csProdutosCUSTOFINAL.Value;
           PRODFOR.QUANTIDADE.Value     := csProdutosDISPONIVEL.Value;
           PRODFOR.Update;
         end;
@@ -400,7 +407,6 @@ begin
     csProdutos.EnableControls;
     FreeAndNil(IMPORTACAO);
     FreeAndNil(ITENS);
-    FreeAndNil(PROD);
     FreeAndNil(PRODFOR);
     FreeAndNil(CON);
   end;

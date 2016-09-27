@@ -889,6 +889,14 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
         item
           Expanded = False
           FieldName = 'CUSTO'
+          Width = 105
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CUSTOFINAL'
+          Title.Caption = 'Custo Final'
+          Width = 105
           Visible = True
         end>
     end
@@ -921,7 +929,7 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     Left = 201
     Top = 105
     Bitmap = {
-      494C010102000800DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800E80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000000FEFEFE00F3F3F300CACA
@@ -1104,6 +1112,10 @@ object frmImportacaoArquivoFornecedor: TfrmImportacaoArquivoFornecedor
     end
     object csProdutosID_PRODUTOFORNECEDOR: TIntegerField
       FieldName = 'ID_PRODUTOFORNECEDOR'
+    end
+    object csProdutosCUSTOFINAL: TCurrencyField
+      DisplayLabel = 'CustoFinal'
+      FieldName = 'CUSTOFINAL'
     end
   end
   object dsProdutos: TDataSource
