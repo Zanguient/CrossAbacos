@@ -179,6 +179,7 @@ Begin
       Consulta.SQL.Add('INNER JOIN FORNECEDOR F2 ON (P.ID_FORNECEDORANTERIOR = F2.ID)');
       Consulta.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON (P.ID = PF.ID_PRODUTO) AND (F.ID = PF.ID_FORNECEDOR)');
       Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
+      Consulta.SQL.Add('AND P.SKU <> P.BKP_SKU');//A Pedido do Benhur Dia 27/09/2016 pelo Hangouts
       Consulta.SQL.Add('AND ((P.ID_FORNECEDORNOVO <> 0) OR (P.ID_FORNECEDORANTERIOR <> 0))');
       case rgSaldoDisponivel.ItemIndex of
         0 : Consulta.SQL.Add('AND PF.QUANTIDADE > 0');//Com Saldo
@@ -195,6 +196,9 @@ Begin
       Consulta.FetchAll;
 
       if Not Consulta.IsEmpty then begin
+
+        BarradeProgresso.Progress := 0;
+
         Consulta.First;
         While not Consulta.Eof do Begin
           Caminho := DirArquivo + '\' + Consulta.FieldByName('CNPJ').AsString + '.csv';
@@ -219,7 +223,7 @@ Begin
             CloseFile(Arquivo);
           end;
 
-          BarradeProgresso.Progress := Consulta.RecNo + 1;
+          BarradeProgresso.Progress := BarradeProgresso.Progress + 1;
 
           Consulta.Next;
         End;
