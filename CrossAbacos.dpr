@@ -61,7 +61,9 @@ uses
   uArquivoBaseProdutos in 'uArquivoBaseProdutos.pas' {FrmArquivoBaseProdutos},
   uArquivoProdutosDetalhado in 'uArquivoProdutosDetalhado.pas' {FrmArquivoProdutosDetalhado},
   uConsultaPrecificacao in 'uConsultaPrecificacao.pas' {frmConsultaPrecificacao},
-  uArquivoMatchs in 'uArquivoMatchs.pas' {frmArquivoMatchs};
+  uArquivoMatchs in 'uArquivoMatchs.pas' {frmArquivoMatchs},
+  uRelHistoricoCusto in 'uRelHistoricoCusto.pas' {frmRelHistoricoCusto},
+  uRelCustoPorMarca in 'uRelCustoPorMarca.pas' {frmRelCustoPorMarca};
 
 {$R *.res}
 
@@ -72,6 +74,8 @@ begin
   Application.Initialize;
   Application.CreateForm(TDMUtil, DMUtil);
   Application.CreateForm(TFrmLogin, FrmLogin);
+  Application.CreateForm(TfrmRelHistoricoCusto, frmRelHistoricoCusto);
+  Application.CreateForm(TfrmRelCustoPorMarca, frmRelCustoPorMarca);
   if FrmLogin.ShowModal = mrOk then begin
 
     FreeAndNil(FrmLogin);

@@ -329,3 +329,5 @@ update importacao_itens set custofinal = custo;
 
 alter table produto add custofinal numeric(18,2), add custofinalanterior numeric(18,2);
 update produto set custofinal = custo, custofinalanterior = custoanterior;
+
+alter table precificacao_itens alter column margempraticar type double precision;

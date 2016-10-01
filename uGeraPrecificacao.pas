@@ -15,10 +15,13 @@ type
     BarradeProgresso: TGauge;
     btGerar: TSpeedButton;
     lblMensagem: TLabel;
+    pnMedia: TPanel;
+    edMedia: TLabeledEdit;
     procedure btGerarClick(Sender: TObject);
     procedure btSairClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,7 +41,7 @@ uses
   uBeanFamilia,
   uBeanMargem,
   uConstantes,
-  uMensagem;
+  uMensagem, System.IniFiles;
 {$R *.dfm}
 
 { TfrmGeraPrecificacao }
@@ -62,7 +65,16 @@ end;
 
 procedure TfrmGeraPrecificacao.FormClose(Sender: TObject;
   var Action: TCloseAction);
+var
+  arqIni : TiniFile;
 begin
+  arqIni := TIniFile.Create(DirArqConf);
+  try
+    arqIni.WriteString('CONFIGURACOES', 'MEDIA', edMedia.Text);
+  finally
+    FreeAndNil(arqIni);
+  end;
+
   frmGeraPrecificacao := nil;
   Action              := caFree;
 end;
@@ -72,6 +84,18 @@ procedure TfrmGeraPrecificacao.FormKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key = VK_ESCAPE then
     Close;
+end;
+
+procedure TfrmGeraPrecificacao.FormShow(Sender: TObject);
+var
+  arqIni : TiniFile;
+begin
+  arqIni := TIniFile.Create(DirArqConf);
+  try
+    edMedia.Text := arqIni.ReadString('CONFIGURACOES', 'MEDIA', '0');
+  finally
+    FreeAndNil(arqIni);
+  end;
 end;
 
 procedure TfrmGeraPrecificacao.GerarPrecificacao;
@@ -134,7 +158,7 @@ begin
         PRECOS[High(PRECOS)].ID_PRODUTO         := SQL.FieldByName('ID').AsInteger;
         PRECOS[High(PRECOS)].SKU                := SQL.FieldByName('SKU').AsString;
         PRECOS[High(PRECOS)].PRECO_CADASTRO     := SQL.FieldByName('PRECO_VENDA').AsCurrency;
-        PRECOS[High(PRECOS)].MEDIA              := SQL.FieldByName('MEDIA_ALTERACAO').AsCurrency;
+        PRECOS[High(PRECOS)].MEDIA              := StrToCurr(edMedia.Text) / 100;
         PRECOS[High(PRECOS)].PERCENTUAL_VPC     := SQL.FieldByName('PERCENTUAL_VPC').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_FRETE   := SQL.FieldByName('PERCENTUAL_FRETE').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_OUTROS  := SQL.FieldByName('PERCENTUAL_OUTROS').AsCurrency;

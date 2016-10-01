@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Classes, FireDAC.UI.Intf, FireDAC.VCLUI.Wait, forms, Vcl.Controls,
   FireDAC.Stan.Intf, FireDAC.Comp.UI, Vcl.ImgList, uFWPersistence, Vcl.StdCtrls,
-  frxClass, frxDesgn, frxDBSet, frxExportPDF, frxExportXLS;
+  frxClass, frxDesgn, frxDBSet, frxExportPDF, frxExportXLS, fs_ichartrtti,
+  Data.DB, VCLTee.TeeData;
 
 type
   TDMUtil = class(TDataModule)

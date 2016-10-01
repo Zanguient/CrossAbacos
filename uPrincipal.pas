@@ -52,6 +52,9 @@ type
     GerarPrecificao1: TMenuItem;
     ConsultarMatch1: TMenuItem;
     Matchs1: TMenuItem;
+    Precificao1: TMenuItem;
+    HistricodePreoeMargem1: TMenuItem;
+    CustoPreoeMargemporDepartamentoMarca1: TMenuItem;
     procedure Usuario1Click(Sender: TObject);
     procedure miSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -90,6 +93,8 @@ type
     procedure ProdutosDetalhado1Click(Sender: TObject);
     procedure ConsultarMatch1Click(Sender: TObject);
     procedure Matchs1Click(Sender: TObject);
+    procedure HistricodePreoeMargem1Click(Sender: TObject);
+    procedure CustoPreoeMargemporDepartamentoMarca1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -139,7 +144,9 @@ uses
   uRelAlteracaoCusto,
   uArquivoBaseProdutos,
   uArquivoProdutosDetalhado,
-  uArquivoMatchs;
+  uArquivoMatchs,
+  uRelHistoricoCusto,
+  uRelCustoPorMarca;
 
 {$R *.dfm}
 
@@ -247,6 +254,17 @@ begin
     frmRelHistoricodeCustoporSKU.ShowModal;
   finally
     FreeAndNil(frmRelHistoricodeCustoporSKU);
+  end;
+end;
+
+procedure TFrmPrincipal.HistricodePreoeMargem1Click(Sender: TObject);
+begin
+  if not Assigned(frmRelHistoricoCusto) then
+    frmRelHistoricoCusto := TfrmRelHistoricoCusto.Create(nil);
+  try
+    frmRelHistoricoCusto.ShowModal;
+  finally
+    FreeAndNil(frmRelHistoricoCusto);
   end;
 end;
 
@@ -593,6 +611,18 @@ begin
   end else begin
     DisplayMsg(MSG_WAR, 'Menu não Específicado, Verifique!');
     Exit;
+  end;
+end;
+
+procedure TFrmPrincipal.CustoPreoeMargemporDepartamentoMarca1Click(
+  Sender: TObject);
+begin
+  if not Assigned(frmRelCustoPorMarca) then
+    frmRelCustoPorMarca := TfrmRelCustoPorMarca.Create(nil);
+  try
+    frmRelCustoPorMarca.ShowModal;
+  finally
+    FreeAndNil(frmRelCustoPorMarca);
   end;
 end;
 

@@ -108,6 +108,8 @@ type
     ID_FAMILIA : Integer;
     CUSTO_EST_FISICO_ANT : Currency;
     CUSTO_ESTOQUE_FISICO : Currency;
+    QUANT_EST_FISICO_ANT : Currency;
+    QUANT_ESTOQUE_FISICO : Integer;
   end;
 
 const
@@ -185,7 +187,8 @@ begin
         Colunas[5]     := 'NM_FAMILIA';
         Colunas[6]     := 'NM_SUBFAMILIA';
         Colunas[7]     := 'PRAZO_FABRICACAO';
-
+        Colunas[8]     := 'CUSTO_EST_FISICO';
+        Colunas[9]     := 'QUANTIDADE_EST_FISICO';
 
         ArqValido := True;
         for I := Low(Colunas) to High(Colunas) do begin
@@ -237,7 +240,11 @@ begin
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('NM_SUBFAMILIA') then
               arProdutos[High(arProdutos)].SUBFAMILIA := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('PRAZO_FABRICACAO') then
-              arProdutos[High(arProdutos)].PRAZO_FABRICACAO := arrData[I, J];
+              arProdutos[High(arProdutos)].PRAZO_FABRICACAO := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CUSTO_EST_FISICO') then
+              arProdutos[High(arProdutos)].CUSTO_ESTOQUE_FISICO := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('QUANTIDADE_EST_FISICO') then
+              arProdutos[High(arProdutos)].QUANT_ESTOQUE_FISICO := arrData[I, J];
           end;
           Application.ProcessMessages;
           pbImportaProdutos.Progress  := I;
@@ -341,8 +348,7 @@ begin
                 P.GRUPO.Value                     := arProdutos[I].SETOR;
                 P.SUB_GRUPO.Value                 := arProdutos[I].SUBFAMILIA;
                 P.NCM.Value                       := '00';
-                P.QUANTIDADE_ESTOQUE_FISICO.Value := 0;
-                P.CUSTO_ESTOQUE_FISICO.Value      := 0;
+                P.QUANTIDADE_ESTOQUE_FISICO.Value := arProdutos[I].QUANT_ESTOQUE_FISICO;
                 P.MEDIA_ALTERACAO.Value           := 0;
 
                 if arProdutos[I].ID_PRODUTO = 0 then begin
@@ -353,7 +359,7 @@ begin
                   P.ID_FORNECEDORANTERIOR.Value   := 0;
                   P.ID_FORNECEDORNOVO.Value       := 0;
                   P.ID_ULTIMOLOTE.Value           := 0;
-                  P.CUSTO_EST_FISICO_ANT.Value    := 0.00;
+                  P.CUSTO_EST_FISICO_ANT.Value    := arProdutos[I].CUSTO_ESTOQUE_FISICO;
                   P.Insert;
 
                   SetLength(arrInsert, Length(arrInsert) + 1);
@@ -365,6 +371,7 @@ begin
                   P.ID.Value                      := arProdutos[I].ID_PRODUTO;
                   if (arProdutos[I].CUSTO_ESTOQUE_FISICO <> arProdutos[I].CUSTO_EST_FISICO_ANT) then
                     P.CUSTO_EST_FISICO_ANT.Value  := arProdutos[I].CUSTO_EST_FISICO_ANT;
+                  P.CUSTO_ESTOQUE_FISICO.Value    := arProdutos[I].CUSTO_ESTOQUE_FISICO;
 
                   P.Update;
 

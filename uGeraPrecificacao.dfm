@@ -2,7 +2,7 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
   Left = 0
   Top = 0
   Caption = 'Tela de Gera'#231#227'o de Precifica'#231#227'o'
-  ClientHeight = 140
+  ClientHeight = 178
   ClientWidth = 361
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
@@ -15,6 +15,7 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
   Position = poMainFormCenter
   OnClose = FormClose
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object BarradeProgresso: TGauge
@@ -22,7 +23,7 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     Left = 3
     Top = 30
     Width = 355
-    Height = 41
+    Height = 38
     Align = alClient
     ForeColor = clLime
     Font.Charset = DEFAULT_CHARSET
@@ -59,7 +60,7 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
   object pnBotoes: TPanel
     AlignWithMargins = True
     Left = 3
-    Top = 77
+    Top = 115
     Width = 355
     Height = 60
     Align = alBottom
@@ -302,6 +303,26 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
       ExplicitLeft = 494
       ExplicitTop = 4
       ExplicitHeight = 52
+    end
+  end
+  object pnMedia: TPanel
+    Left = 0
+    Top = 71
+    Width = 361
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    object edMedia: TLabeledEdit
+      Left = 9
+      Top = 17
+      Width = 121
+      Height = 21
+      EditLabel.Width = 96
+      EditLabel.Height = 13
+      EditLabel.Caption = 'M'#233'dia de Altera'#231#227'o:'
+      NumbersOnly = True
+      TabOrder = 0
     end
   end
 end

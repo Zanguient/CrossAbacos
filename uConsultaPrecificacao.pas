@@ -377,7 +377,7 @@ begin
         cds_Precificacao_ItensPRECOPOR.Value           := SQL.Fields[10].Value;
         cds_Precificacao_ItensPRECODE.Value            := SQL.Fields[9].Value;
         cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
-        cds_Precificacao_ItensMEDIA.Value              := SQL.Fields[12].Value;
+        cds_Precificacao_ItensMEDIA.Value              := SQL.Fields[12].Value * 100;
         cds_Precificacao_ItensMARCA.Value              := SQL.Fields[13].Value;
         cds_Precificacao_ItensFORNECEDOR.Value         := SQL.Fields[14].Value;
         if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then

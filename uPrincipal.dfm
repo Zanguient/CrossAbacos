@@ -159,6 +159,17 @@ object FrmPrincipal: TFrmPrincipal
           OnClick = ProdutosPorFornecedor1Click
         end
       end
+      object Precificao1: TMenuItem
+        Caption = 'Precifica'#231#227'o'
+        object HistricodePreoeMargem1: TMenuItem
+          Caption = 'Hist'#243'rico de Pre'#231'o e Margem'
+          OnClick = HistricodePreoeMargem1Click
+        end
+        object CustoPreoeMargemporDepartamentoMarca1: TMenuItem
+          Caption = 'Custo, Pre'#231'o e Margem por Departamento/Marca'
+          OnClick = CustoPreoeMargemporDepartamentoMarca1Click
+        end
+      end
     end
     object Arquivo1: TMenuItem
       Caption = 'Arquivo'
