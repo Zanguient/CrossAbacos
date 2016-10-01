@@ -13,7 +13,7 @@ type
     FPRECODE: TFieldCurrency;
     FMARGEMSUGERIDA: TFieldCurrency;
     FCUSTO_ATUAL: TFieldCurrency;
-    FMARGEMPRATICAR: TFieldCurrency;
+    FMARGEMPRATICAR: TFieldFloat;
     FMEDIA: TFieldCurrency;
     FID: TFieldInteger;
     FPRECOESPECIAL: TFieldCurrency;
@@ -23,7 +23,7 @@ type
     procedure SetCUSTO_ANT(const Value: TFieldCurrency);
     procedure SetCUSTO_ATUAL(const Value: TFieldCurrency);
     procedure SetID(const Value: TFieldInteger);
-    procedure SetMARGEMPRATICAR(const Value: TFieldCurrency);
+    procedure SetMARGEMPRATICAR(const Value: TFieldFloat);
     procedure SetMARGEMSUGERIDA(const Value: TFieldCurrency);
     procedure SetMEDIA(const Value: TFieldCurrency);
     procedure SetPRECIFICACAO_ID(const Value: TFieldInteger);
@@ -44,7 +44,7 @@ type
     property MARGEMSUGERIDA : TFieldCurrency read FMARGEMSUGERIDA write SetMARGEMSUGERIDA;
     property PRECODE : TFieldCurrency read FPRECODE write SetPRECODE;
     property PRECOPOR : TFieldCurrency read FPRECOPOR write SetPRECOPOR;
-    property MARGEMPRATICAR : TFieldCurrency read FMARGEMPRATICAR write SetMARGEMPRATICAR;
+    property MARGEMPRATICAR : TFieldFloat read FMARGEMPRATICAR write SetMARGEMPRATICAR;
     property MEDIA : TFieldCurrency read FMEDIA write SetMEDIA;
     property PRECIFICACAO_ID : TFieldInteger read FPRECIFICACAO_ID write SetPRECIFICACAO_ID;
     property TIPOCALCULO : TFieldInteger read FTIPOCALCULO write SetTIPOCALCULO;
@@ -80,7 +80,7 @@ begin
   FID_PRODUTO := Value;
 end;
 
-procedure TPRECIFICACAO_ITENS.SetMARGEMPRATICAR(const Value: TFieldCurrency);
+procedure TPRECIFICACAO_ITENS.SetMARGEMPRATICAR(const Value: TFieldFloat);
 begin
   FMARGEMPRATICAR := Value;
 end;
