@@ -173,14 +173,15 @@ begin
   bloqueioSalvar(1);
   btImportar.Tag                                    := 0;
   try
-    buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
-
-    Excel                                           := CreateOleObject('Excel.Application');
-
-    csProdutos.DisableControls;
-    pgProdutos.Progress                             := 0;
-
     try
+
+      buscaProdutosFornecedor(StrToIntDef(edFornecedor.Text,0));
+
+      Excel                                           := CreateOleObject('Excel.Application');
+
+      csProdutos.DisableControls;
+      pgProdutos.Progress                             := 0;
+
       Excel.Visible                                 := False;
       // Abre o Workbook
       Excel.Workbooks.Open(edArquivo.Text);
@@ -425,29 +426,33 @@ begin
   PROD                                              := TPRODUTO.Create(CON);
   csProdutos.DisableControls;
   try
-    PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text + ' AND STATUS = True');
-    pgProdutos.MaxValue                             := PRODFOR.Count;
-    pgProdutos.Progress                             := 0;
-    for I := 0 to Pred(PRODFOR.Count) do begin
-      csProdutos.Append;
-      csProdutosCODIGO.Value                        := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).COD_PROD_FORNECEDOR.Value;
-      csProdutosID_PRODUTO.Value                    := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID_PRODUTO.Value;
-      csProdutosID_PRODUTOFORNECEDOR.Value          := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID.Value;
-      PROD.SelectList('id = ' + csProdutosID_PRODUTO.asString);
-      if PROD.Count > 0 then begin
-        csProdutosSKU.Value                         := TPRODUTO(PROD.Itens[0]).SKU.Value;
-        csProdutosNOME.Value                        := TPRODUTO(PROD.Itens[0]).NOME.Value;
+    try
+      PRODFOR.SelectList('id_fornecedor = ' + edFornecedor.Text + ' AND STATUS = True');
+      pgProdutos.MaxValue                             := PRODFOR.Count;
+      pgProdutos.Progress                             := 0;
+      for I := 0 to Pred(PRODFOR.Count) do begin
+        csProdutos.Append;
+        csProdutosCODIGO.Value                        := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).COD_PROD_FORNECEDOR.Value;
+        csProdutosID_PRODUTO.Value                    := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID_PRODUTO.Value;
+        csProdutosID_PRODUTOFORNECEDOR.Value          := TPRODUTOFORNECEDOR(PRODFOR.Itens[I]).ID.Value;
+        PROD.SelectList('id = ' + csProdutosID_PRODUTO.asString);
+        if PROD.Count > 0 then begin
+          csProdutosSKU.Value                         := TPRODUTO(PROD.Itens[0]).SKU.Value;
+          csProdutosNOME.Value                        := TPRODUTO(PROD.Itens[0]).NOME.Value;
+        end;
+        csProdutosSTATUS.Value                        := 0;
+        csProdutosCUSTO.Value                         := 0;
+        csProdutosDISPONIVEL.Value                    := 0;
+        csProdutos.Post;
+        pgProdutos.Progress                           := I;
+        Application.ProcessMessages;
       end;
-      csProdutosSTATUS.Value                        := 0;
-      csProdutosCUSTO.Value                         := 0;
-      csProdutosDISPONIVEL.Value                    := 0;
-      csProdutos.Post;
-      pgProdutos.Progress                           := I;
-      Application.ProcessMessages;
+
+      pgProdutos.Progress                             := 0;
+    except
+      on E : Exception do
+        Raise EAbort.Create('Erro no procedimento buscaProdutosFornecedor, ' + E.Message);
     end;
-
-    pgProdutos.Progress                             := 0;
-
   finally
     csProdutos.EnableControls;
     FreeAndNil(PRODFOR);
