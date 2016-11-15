@@ -46,6 +46,7 @@ type TPRODUTO = Class(TFWPersistence)
     FCUSTO_EST_FISICO_ANT: TFieldCurrency;
     FCUSTOFINALANTERIOR: TFieldCurrency;
     FCUSTOFINAL: TFieldCurrency;
+    FIMPORTADO: TFieldInteger;
     procedure SetC(const Value: TFieldFloat);
     procedure SetCF(const Value: TFieldString);
     procedure SetCLASSE(const Value: TFieldString);
@@ -87,6 +88,7 @@ type TPRODUTO = Class(TFWPersistence)
     procedure SetCUSTO_EST_FISICO_ANT(const Value: TFieldCurrency);
     procedure SetCUSTOFINAL(const Value: TFieldCurrency);
     procedure SetCUSTOFINALANTERIOR(const Value: TFieldCurrency);
+    procedure SetIMPORTADO(const Value: TFieldInteger);
   protected
     procedure InitInstance; override;
   published
@@ -131,6 +133,7 @@ type TPRODUTO = Class(TFWPersistence)
     property CUSTO_EST_FISICO_ANT       : TFieldCurrency    read FCUSTO_EST_FISICO_ANT write SetCUSTO_EST_FISICO_ANT;
     property CUSTOFINAL                 : TFieldCurrency    read FCUSTOFINAL write SetCUSTOFINAL;
     property CUSTOFINALANTERIOR         : TFieldCurrency    read FCUSTOFINALANTERIOR write SetCUSTOFINALANTERIOR;
+    property IMPORTADO                  : TFieldInteger     read FIMPORTADO write SetIMPORTADO;
 
 End;
 implementation
@@ -291,6 +294,11 @@ end;
 procedure TPRODUTO.SetID_ULTIMOLOTE(const Value: TFieldInteger);
 begin
   FID_ULTIMOLOTE := Value;
+end;
+
+procedure TPRODUTO.SetIMPORTADO(const Value: TFieldInteger);
+begin
+  FIMPORTADO := Value;
 end;
 
 procedure TPRODUTO.SetL(const Value: TFieldFloat);

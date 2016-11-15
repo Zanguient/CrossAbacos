@@ -110,6 +110,8 @@ type
     CUSTO_ESTOQUE_FISICO : Currency;
     QUANT_EST_FISICO_ANT : Currency;
     QUANT_ESTOQUE_FISICO : Integer;
+    PRECO_VENDA : Currency;
+    IMPORTADO : Integer;
   end;
 
 const
@@ -178,7 +180,7 @@ begin
 
         mnImportaProdutos.Lines.Add('Validando arquivo!');
 
-        SetLength(Colunas, 8);
+        SetLength(Colunas, 12);
         Colunas[0]     := 'ID_ITEM';
         Colunas[1]     := 'ITEM_NOME';
         Colunas[2]     := 'NM_MARCA';
@@ -189,6 +191,8 @@ begin
         Colunas[7]     := 'PRAZO_FABRICACAO';
         Colunas[8]     := 'CUSTO_EST_FISICO';
         Colunas[9]     := 'QUANTIDADE_EST_FISICO';
+        Colunas[10]    := 'PRECO_VENDA';
+        Colunas[11]    := 'IMPORTADO';
 
         ArqValido := True;
         for I := Low(Colunas) to High(Colunas) do begin
@@ -244,7 +248,11 @@ begin
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('CUSTO_EST_FISICO') then
               arProdutos[High(arProdutos)].CUSTO_ESTOQUE_FISICO := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('QUANTIDADE_EST_FISICO') then
-              arProdutos[High(arProdutos)].QUANT_ESTOQUE_FISICO := arrData[I, J];
+              arProdutos[High(arProdutos)].QUANT_ESTOQUE_FISICO := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('PRECO_VENDA') then
+              arProdutos[High(arProdutos)].PRECO_VENDA := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('IMPORTADO') then
+              arProdutos[High(arProdutos)].IMPORTADO := arrData[I, J]
           end;
           Application.ProcessMessages;
           pbImportaProdutos.Progress  := I;
@@ -350,6 +358,8 @@ begin
                 P.NCM.Value                       := '00';
                 P.QUANTIDADE_ESTOQUE_FISICO.Value := arProdutos[I].QUANT_ESTOQUE_FISICO;
                 P.MEDIA_ALTERACAO.Value           := 0;
+                P.PRECO_VENDA.Value               := arProdutos[I].PRECO_VENDA;
+                P.IMPORTADO.Value                 := arProdutos[I].IMPORTADO;
 
                 if arProdutos[I].ID_PRODUTO = 0 then begin
                   P.ID.isNotNull                  := True;

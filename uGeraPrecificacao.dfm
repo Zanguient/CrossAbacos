@@ -313,15 +313,22 @@ object frmGeraPrecificacao: TfrmGeraPrecificacao
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    object edMedia: TLabeledEdit
+    object Label1: TLabel
       Left = 9
-      Top = 17
+      Top = 0
+      Width = 32
+      Height = 13
+      Caption = 'M'#233'dia:'
+    end
+    object edMedia: TJvValidateEdit
+      Left = 9
+      Top = 15
       Width = 121
       Height = 21
-      EditLabel.Width = 96
-      EditLabel.Height = 13
-      EditLabel.Caption = 'M'#233'dia de Altera'#231#227'o:'
-      NumbersOnly = True
+      CriticalPoints.MaxValueIncluded = False
+      CriticalPoints.MinValueIncluded = False
+      DisplayFormat = dfFloat
+      DecimalPlaces = 2
       TabOrder = 0
     end
   end

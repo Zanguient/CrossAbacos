@@ -330,12 +330,13 @@ begin
     SQL.SQL.Add('INNER JOIN FAMILIA F ON (P.ID_FAMILIA = F.ID)');
     SQL.SQL.Add('INNER JOIN FORNECEDOR FO ON (P.id_fornecedornovo = FO.ID)');
     SQL.SQL.Add('WHERE PI.PRECIFICACAO_ID = :PRECIFICACAO');
+    SQL.SQL.Add('AND PI.PRECOPOR > 0');
 
     case rgFiltroTipo.ItemIndex of
       0 : SQL.SQL.Add('AND (PI.PRECOPOR = PI.PRECOCADASTRO)');
-      1 : SQL.SQL.Add('AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) <= PI.MEDIA)');
-      2 : SQL.SQL.Add('AND ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA))');
-      3 : SQL.SQL.Add('AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS(PI.PRECOPOR / (PI.PRECOPOR - PI.PRECOCADASTRO)) > PI.MEDIA))');
+      1 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO > 0) AND ((ABS(((PI.PRECOPOR / PI.PRECOCADASTRO) -1)) <= PI.MEDIA)))');
+      2 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO > 0) AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
+      3 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
     end;
 
     if edFamilia.Tag > 0 then
@@ -383,14 +384,18 @@ begin
         if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then
           cds_Precificacao_ItensCONFERENCIA.Value      := 'Ajustado';
 
-        Media := Abs(cds_Precificacao_ItensPRECOPOR.Value / (cds_Precificacao_ItensPRECOPOR.Value - cds_Precificacao_ItensPRECOCADASTRO.Value));
+        if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then begin
 
-        if (Media <= cds_Precificacao_ItensMEDIA.Value) then
-          cds_Precificacao_ItensCONFERENCIA.Value      := 'Média';
-        if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
-          cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
-        if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
-          cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências';
+          Media := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100);
+
+          if (Media <= cds_Precificacao_ItensMEDIA.Value) then
+            cds_Precificacao_ItensCONFERENCIA.Value      := 'Média';
+          if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+            cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências';
+          if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+            cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
+        end else
+          cds_Precificacao_ItensCONFERENCIA.Value        := 'Divergências';
         cds_Precificacao_Itens.Post;
 
         Application.ProcessMessages;

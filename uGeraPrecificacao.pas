@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.ComCtrls, FireDAC.Comp.Client, Data.DB, System.Win.ComObj,
-  Vcl.Samples.Gauges;
+  Vcl.Samples.Gauges, JvExStdCtrls, JvEdit, JvValidateEdit;
 
 type
   TfrmGeraPrecificacao = class(TForm)
@@ -16,7 +16,8 @@ type
     btGerar: TSpeedButton;
     lblMensagem: TLabel;
     pnMedia: TPanel;
-    edMedia: TLabeledEdit;
+    edMedia: TJvValidateEdit;
+    Label1: TLabel;
     procedure btGerarClick(Sender: TObject);
     procedure btSairClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -124,6 +125,7 @@ begin
     SQL.SQL.Add('SELECT');
     SQL.SQL.Add('	P.ID,');
     SQL.SQL.Add('	P.SKU,');
+    SQL.SQL.Add(' P.IMPORTADO,');
     SQL.SQL.Add('	COALESCE(P.CUSTO_ESTOQUE_FISICO, 0.00) AS CUSTO_ESTOQUE_FISICO,');
     SQL.SQL.Add('	COALESCE(P.CUSTO_EST_FISICO_ANT, 0.00) AS CUSTO_EST_FISICO_ANT,');
     SQL.SQL.Add('	COALESCE(P.CUSTOFINALANTERIOR, 0.00) AS CUSTOFINALANTERIOR,');
@@ -162,8 +164,8 @@ begin
         PRECOS[High(PRECOS)].PERCENTUAL_VPC     := SQL.FieldByName('PERCENTUAL_VPC').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_FRETE   := SQL.FieldByName('PERCENTUAL_FRETE').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_OUTROS  := SQL.FieldByName('PERCENTUAL_OUTROS').AsCurrency;
-        PRECOS[High(PRECOS)].CUSTOFINAL_ANT          := 0.00;
-        PRECOS[High(PRECOS)].CUSTOFINAL_NOVO         := 0.00;
+        PRECOS[High(PRECOS)].CUSTOFINAL_ANT     := 0.00;
+        PRECOS[High(PRECOS)].CUSTOFINAL_NOVO    := 0.00;
         PRECOS[High(PRECOS)].PRECO_ESPECIAL     := 0.00;
         PRECOS[High(PRECOS)].MARGEM_SUGERIDA    := 0.00;
         PRECOS[High(PRECOS)].PRECO_SUGESTAO     := 0.00;
@@ -190,6 +192,11 @@ begin
           PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := (PRECOS[High(PRECOS)].MARGEM_SUGERIDA + (PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS)) * 100;
           PRECOS[High(PRECOS)].TIPO             := eMargem;
         end;
+
+        if SQL.FieldByName('IMPORTADO').AsInteger = 0 then
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + 0.045
+        else
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + 0.038;
 
         if SQL.FieldByName('PRECO_PONTA').AsCurrency > 0.00 then begin
           PRECOS[High(PRECOS)].PRECO_SUGESTAO   := SQL.FieldByName('PRECO_PONTA').AsCurrency;
