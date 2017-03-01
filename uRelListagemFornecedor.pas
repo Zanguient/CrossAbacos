@@ -174,7 +174,7 @@ begin
       SQL2.Prepare;
 
       if edNomeFornecedor.Text = '' then
-        F.SelectList('status','ID')
+        F.SelectList('','ID')
       else
         F.SelectList('ID = ' + edFornecedor.Text,'ID');
 

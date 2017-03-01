@@ -106,6 +106,7 @@ var
   SQL    : TFDQuery;
   PR     : TPRECIFICACAO;
   PRI    : TPRECIFICACAO_ITENS;
+  P      : TPRODUTO;
   I      : Integer;
 begin
 
@@ -113,6 +114,7 @@ begin
   SQL  := TFDQuery.Create(nil);
   PR   := TPRECIFICACAO.Create(FWC);
   PRI  := TPRECIFICACAO_ITENS.Create(FWC);
+  P    := TPRODUTO.Create(FWC);
 
   SetLength(PRECOS, 0);
 
@@ -267,6 +269,10 @@ begin
           PRI.TIPOCALCULO.Value       := Integer(PRECOS[I].TIPO);
           PRI.Insert;
 
+          P.ID.Value                  := PRECOS[I].ID_PRODUTO;
+          P.PRECO_VENDA.Value         := PRECOS[I].PRECOPOR;
+          P.Update;
+
           BarradeProgresso.Progress   := I;
           Application.ProcessMessages;
         end;
@@ -284,6 +290,7 @@ begin
     end;
   finally
     FreeAndNil(SQL);
+    FreeAndNil(P);
     FreeAndNil(PR);
     FreeAndNil(PRI);
     FreeAndNil(FWC);

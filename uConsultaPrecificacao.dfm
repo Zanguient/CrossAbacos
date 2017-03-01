@@ -1881,7 +1881,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       ParentFont = False
       ExplicitLeft = 260
     end
-    object pbExportaFornecedor: TGauge
+    object pbExportaPrecificacao: TGauge
       AlignWithMargins = True
       Left = 134
       Top = 4
@@ -2081,6 +2081,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     Top = 256
     object cds_Precificacao_ItensID_PRODUTO: TIntegerField
       FieldName = 'ID_PRODUTO'
+      Visible = False
     end
     object cds_Precificacao_ItensSKU: TStringField
       DisplayLabel = 'Sku'

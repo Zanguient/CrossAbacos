@@ -181,6 +181,8 @@ Begin
       Consulta.SQL.Add('WHERE IMP.ID_LOTE = :IDLOTE');
       Consulta.SQL.Add('AND P.SKU <> P.BKP_SKU');//A Pedido do Benhur Dia 27/09/2016 pelo Hangouts
       Consulta.SQL.Add('AND ((P.ID_FORNECEDORNOVO <> 0) OR (P.ID_FORNECEDORANTERIOR <> 0))');
+      Consulta.SQL.Add('AND ((P.ID_FORNECEDORNOVO IN (SELECT I.ID_FORNECEDOR FROM IMPORTACAO I WHERE I.ID_LOTE = L.ID)) OR ');
+      Consulta.SQL.Add('((P.ID_FORNECEDORNOVO NOT IN (SELECT I.ID_FORNECEDOR FROM IMPORTACAO I WHERE I.ID_LOTE = L.ID)) AND (P.ID_FORNECEDORANTERIOR IN (SELECT I.ID_FORNECEDOR FROM IMPORTACAO I WHERE I.ID_LOTE = L.ID))))');
       case rgSaldoDisponivel.ItemIndex of
         0 : Consulta.SQL.Add('AND PF.QUANTIDADE > 0');//Com Saldo
         1 : begin

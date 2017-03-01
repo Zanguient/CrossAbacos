@@ -16,7 +16,8 @@ uses
   Datasnap.DBClient,
   Data.DB,
   Vcl.Graphics,
-  System.Win.ComObj;
+  System.Win.ComObj,
+  Vcl.Samples.Gauges;
 
   procedure CarregarConfigLocal;
   procedure CarregaArrayMenus(Menu : TMainMenu);
@@ -26,7 +27,8 @@ uses
   procedure GerarLoteImportacao;
   procedure AjustaForm(Form : TForm);
   procedure OrdenarGrid(Column: TColumn);
-  procedure ExpXLS(DataSet: TDataSet; NomeArq: string);
+  procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
+  procedure ExpCSV(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
   procedure DeletarArquivosPasta(Diretorio : String);
   function ValidaUsuario(Email, Senha : String) : Boolean;
   function MD5(Texto : String): String;
@@ -244,7 +246,53 @@ begin
   end;
 end;
 
-procedure ExpXLS(DataSet: TDataSet; NomeArq: string);
+procedure ExpCSV(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
+var
+  Arquivo   : TextFile;
+  I         : Integer;
+  Linha     : string;
+begin
+  DataSet.DisableControls;
+  AssignFile(Arquivo, NomeArq);
+  Rewrite(Arquivo);
+  try
+    Linha := '';
+    for I := 0 to DataSet.Fields.Count - 1 do begin
+      if DataSet.Fields[I].Visible then
+        Linha := Linha + DataSet.Fields[I].DisplayName + ';';
+    end;
+
+    Linha := Copy(Linha, 1, Length(Linha) - 1);
+
+    Writeln(Arquivo,Linha);
+
+    DataSet.First;
+    while not DataSet.Eof do begin
+      Linha := '';
+      for I := 0 to DataSet.Fields.Count - 1 do begin
+        if DataSet.Fields[I].Visible then begin
+          if (DataSet.Fields[I].DataType in [ftFloat, ftCurrency]) then
+            Linha := Linha + StringReplace(DataSet.Fields[I].AsString, ',', '.', []) + ';'
+          else
+            Linha := Linha + DataSet.Fields[I].AsString + ';';
+        end;
+      end;
+
+      Linha := Copy(Linha, 1, Length(Linha) - 1);
+      Writeln(Arquivo,Linha);
+      DataSet.Next;
+
+      if Assigned(Progress) then begin
+        Progress.Progress := DataSet.RecNo;
+        Application.ProcessMessages;
+      end;
+    end;
+  finally
+    DataSet.EnableControls;
+    CloseFile(Arquivo);
+  end;
+end;
+procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
 var
   ExcApp: OleVariant;
   I,
@@ -295,6 +343,10 @@ begin
 
       DataSet.Next;
       L := L + 1;
+      if Assigned(Progress) then begin
+        Progress.Progress := DataSet.RecNo;
+        Application.ProcessMessages;
+      end;
     end;
     ExcApp.Columns.AutoFit;
     ExcApp.WorkBooks[1].SaveAs(VarNomeArq);

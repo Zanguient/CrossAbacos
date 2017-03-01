@@ -94,6 +94,7 @@ type
     Procedure LimparTela;
     procedure Filtrar;
     procedure ExportarProdutos;
+    procedure ExportarCSV;
     { Private declarations }
   public
     { Public declarations }
@@ -141,7 +142,7 @@ begin
     pbExportaFornecedor.MaxValue     := cds_MatchItens.RecordCount;
     pbExportaFornecedor.Progress     := 0;
     try
-      ExportarProdutos;
+      ExportarCSV;
     finally
       btExport.Tag := 0;
       pbExportaFornecedor.Progress   := 0;
@@ -495,6 +496,121 @@ begin
   edRegistroAtual.Text   := IntToStr(cds_MatchItens.RecNo);
 end;
 
+procedure TfrmConsultaMatch.ExportarCSV;
+var
+  Linha,
+  I       : Integer;
+  FWC     : TFWConnection;
+  SQL     : TFDQuery;
+  DirArquivo : String;
+  Arquivo   : TextFile;
+Begin
+  if rgFiltroAtualizacao.ItemIndex in [1,3] then begin
+    DisplayMsg(MSG_CONF, 'O filtro selecionado retorna fornecedores inativos também.' + #13 + 'Deseja Prosseguir?');
+    if not (ResultMsgModal in [mrYes, mrOk]) then Exit;
+  end;
+
+  if Not cds_MatchItens.IsEmpty then begin
+
+    DirArquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
+
+    if not DirectoryExists(DirArquivo) then begin
+      if not ForceDirectories(DirArquivo) then begin
+        DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + DirArquivo + sLineBreak + 'Verifique!');
+        Exit;
+      end;
+    end;
+
+    DirArquivo := DirArquivo + '\Fornecedor.'+ cds_MatchIDLOTE.AsString +'.csv';
+    if FileExists(DirArquivo) then begin
+      DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + DirArquivo + sLineBreak +
+                            'Deseja Sobreescrever?');
+      if ResultMsgModal <> mrYes then
+        Exit;
+
+      DeleteFile(DirArquivo);
+    end;
+
+    DisplayMsg(MSG_WAIT, 'Buscando informações dos produtos!');
+
+    FWC     := TFWConnection.Create;
+    SQL     := TFDQuery.Create(nil);
+
+    Try
+      try
+        cds_MatchItens.DisableControls;
+
+        AssignFile(Arquivo, DirArquivo);
+
+        Rewrite(Arquivo);
+        Writeln(Arquivo,'Id do item;Departamento;Setor;Família;Sub Família;' +
+                        'Tp. Abc;Fornecedor;Cod.Fornecedor (Produto);Ped.Automatico;Item Fornecedor;' +
+                        'Classe Compra;Categoria Compra;Tabela de preço;Preço unitário;Apaga tabela de preço;' +
+                        'Qt. Mín. Forn. Pelo Fornec.;Preço frete;Situação;Nome do item;Peso Unitário;Peso Bruto;' +
+                        'Altura;Largura;Comprimento;Qt grade;Prazo Validade;Prazo Mínimo de Recebimento;Prazo Alarme Validade;' +
+                        'Prazo Mínimo de Expedição;Controle de Lote;Tipo de Lote;Cod. Agrup;Fabricante;Nome do Fabricante;' +
+                        'EAN;Pz.Garantia Fabric. Meses;Modelo Fabricante;Tempo de Reposição;Dt.Lançamento;NBM;Sequencial do NBM;' +
+                        'Procedencia;Tipo de Transporte;Observaçao do Item;Percentual de desconto;Indicativo de Montagem;Origem;' +
+                        'Código de Origem;Id da Filial de vendas;Ean Preferencial;Marca;Controla Venda;Vendável;Título no Site;Descrição;Tags');
+        SQL.Close;
+        SQL.SQL.Clear;
+        SQL.SQL.Add('SELECT');
+        SQL.SQL.Add('	PF.COD_PROD_FORNECEDOR,');
+        SQL.SQL.Add('	F.CNPJ,');
+        SQL.SQL.Add('	F.PRAZO_ENTREGA');
+        SQL.SQL.Add('FROM PRODUTOFORNECEDOR PF');
+        SQL.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = PF.ID_FORNECEDOR)');
+        SQL.SQL.Add('WHERE 1 = 1');
+        SQL.SQL.Add('AND PF.STATUS = TRUE');
+        SQL.SQL.Add('AND ID_PRODUTO = :IDPRODUTO');
+        SQL.SQL.Add('AND ID_FORNECEDOR = :IDFORNECEDOR');
+        SQL.Connection  := FWC.FDConnection;
+        SQL.Params[0].DataType   := ftInteger;
+        SQL.Params[1].DataType   := ftInteger;
+        SQL.Prepare;
+
+        Linha :=  2;
+        cds_MatchItens.First;
+        while not cds_MatchItens.Eof do begin
+
+          SQL.Close;
+          SQL.Params[0].AsInteger := cds_MatchItensID_PRODUTO.AsInteger;
+
+          if cds_MatchItensID_FORNECEDORNOVO.AsInteger > 0 then
+            SQL.Params[1].AsInteger := cds_MatchItensID_FORNECEDORNOVO.AsInteger
+          else
+            SQL.Params[1].AsInteger := cds_MatchItensID_FORNECEDORANT.AsInteger;
+
+          SQL.Open;
+
+          if (SQL.RecordCount > 0) then begin
+            Writeln(Arquivo, cds_MatchItensSKU.AsString + ';;;;;;' + SQL.Fields[1].AsString + ';' + SQL.Fields[0].AsString +';S;S;;;;;;;;;;;;;;;;;;;;;;;;;;;;' + SQL.Fields[2].AsString + ';;;;;;;;;;;;;;;;;;;');
+          end;
+
+          pbExportaFornecedor.Progress   := cds_MatchItens.RecNo + 1;
+
+          cds_MatchItens.Next;
+        end;
+
+        CloseFile(Arquivo);
+        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', DirArquivo);
+
+      except
+        on E : Exception do begin
+          DisplayMsg(MSG_ERR, 'Erro ao Gerar arquivo,' + sLineBreak + DirArquivo);
+        end;
+      end;
+    Finally
+      FreeAndNil(SQL);
+      FreeAndNil(FWC);
+      cds_MatchItens.EnableControls;
+      DisplayMsgFinaliza;
+    end;
+  end else begin
+    DisplayMsg(MSG_WAR, 'Não há dados para Geração dos Fornecedores, Verifique!');
+  end;
+end;
+
 procedure TfrmConsultaMatch.ExportarProdutos;
 var
   PLANILHA,
@@ -612,7 +728,8 @@ Begin
         SQL.SQL.Clear;
         SQL.SQL.Add('SELECT');
         SQL.SQL.Add('	PF.COD_PROD_FORNECEDOR,');
-        SQL.SQL.Add('	F.CNPJ');
+        SQL.SQL.Add('	F.CNPJ,');
+        SQL.SQL.Add('	F.PRAZO_ENTREGA');
         SQL.SQL.Add('FROM PRODUTOFORNECEDOR PF');
         SQL.SQL.Add('INNER JOIN FORNECEDOR F ON (F.ID = PF.ID_FORNECEDOR)');
         SQL.SQL.Add('WHERE 1 = 1');
@@ -645,7 +762,7 @@ Begin
             arrData[Linha,4]    := ''; //Familia
             arrData[Linha,5]    := ''; //Sub Família
             arrData[Linha,6]    := ''; //Tp. Abc
-            arrData[Linha,7]    := SQL.Fields[1].AsString; //Fornecedor
+            arrData[Linha,7]    := SQL.Fields[1].AsString + '-' + cds_MatchIDLOTE.AsString; //Fornecedor
             arrData[Linha,8]    := ''; //Cod.Fornecedor (Produto)
             arrData[Linha,8]    := SQL.Fields[0].AsString; //Cod.Fornecedor (Produto);
             arrData[Linha,9]    := 'S'; //Ped.Automatico
@@ -677,7 +794,7 @@ Begin
             arrData[Linha,35]   := ''; //EAN
             arrData[Linha,36]   := ''; //Pz.Garantia Fabric. Meses
             arrData[Linha,37]   := ''; //Modelo Fabricante
-            arrData[Linha,38]   := ''; //Tempo de Reposição
+            arrData[Linha,38]   := SQL.Fields[2].AsString; //Tempo de Reposição
             arrData[Linha,39]   := ''; //Dt.Lançamento
             arrData[Linha,40]   := ''; //NBM
             arrData[Linha,41]   := ''; //Sequencial do NBM

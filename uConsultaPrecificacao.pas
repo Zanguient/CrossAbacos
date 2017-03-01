@@ -56,7 +56,7 @@ type
     btRelatorio: TSpeedButton;
     Label1: TLabel;
     Label2: TLabel;
-    pbExportaFornecedor: TGauge;
+    pbExportaPrecificacao: TGauge;
     edTotalizador: TEdit;
     edRegistroAtual: TEdit;
     gdPrecificacaoItens: TDBGrid;
@@ -122,12 +122,47 @@ uses
 { TfrmConsultaPrecificacao }
 
 procedure TfrmConsultaPrecificacao.btExportClick(Sender: TObject);
+var
+  Arquivo : string;
 begin
   if btExport.Tag = 0 then begin
     btExport.Tag := 1;
     try
-      ExpXLS(cds_Precificacao_Itens, Caption + '.xlsx');
+      pbExportaPrecificacao.Visible  := True;
+      pbExportaPrecificacao.Progress := 0;
+      pbExportaPrecificacao.MaxValue := cds_Precificacao_Itens.RecordCount;
+      Arquivo := DirArquivosExcel + FormatDateTime('yyyymmdd', Date);
+
+      if not DirectoryExists(Arquivo) then begin
+        if not ForceDirectories(Arquivo) then begin
+          DisplayMsg(MSG_WAR, 'Não foi possível criar o diretório,' + sLineBreak + Arquivo + sLineBreak + 'Verifique!');
+          Exit;
+        end;
+      end;
+
+      Arquivo := Arquivo + '\Precificacao.'+ cds_PrecificacaoID.AsString +'.csv';
+      if FileExists(Arquivo) then begin
+        DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + Arquivo + sLineBreak +
+                              'Deseja Sobreescrever?');
+        if ResultMsgModal <> mrYes then
+          Exit;
+
+        DeleteFile(Arquivo);
+      end;
+
+      DisplayMsg(MSG_WAIT, 'Exportando Arquivo...');
+      try
+        ExpCSV(cds_Precificacao_Itens, Arquivo, pbExportaPrecificacao);
+        DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', Arquivo);
+      except
+        on E : Exception do begin
+          DisplayMsg(MSG_WAR, 'Erro ao exportar arquivo!', '', E.Message);
+          Exit;
+        end;
+      end;
+
     finally
+      pbExportaPrecificacao.Visible := False;
       btExport.Tag := 0;
     end;
   end;
@@ -334,9 +369,9 @@ begin
 
     case rgFiltroTipo.ItemIndex of
       0 : SQL.SQL.Add('AND (PI.PRECOPOR = PI.PRECOCADASTRO)');
-      1 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO > 0) AND ((ABS(((PI.PRECOPOR / PI.PRECOCADASTRO) -1)) <= PI.MEDIA)))');
-      2 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO > 0) AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
-      3 : SQL.SQL.Add('AND ((PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
+      1 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND ((ABS(((PI.PRECOPOR / PI.PRECOCADASTRO) -1)) <= PI.MEDIA)))');
+      2 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
+      3 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
     end;
 
     if edFamilia.Tag > 0 then
@@ -378,7 +413,7 @@ begin
         cds_Precificacao_ItensPRECOPOR.Value           := SQL.Fields[10].Value;
         cds_Precificacao_ItensPRECODE.Value            := SQL.Fields[9].Value;
         cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
-        cds_Precificacao_ItensMEDIA.Value              := SQL.Fields[12].Value * 100;
+        cds_Precificacao_ItensMEDIA.Value              := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100);
         cds_Precificacao_ItensMARCA.Value              := SQL.Fields[13].Value;
         cds_Precificacao_ItensFORNECEDOR.Value         := SQL.Fields[14].Value;
         if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then
@@ -386,13 +421,13 @@ begin
 
         if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then begin
 
-          Media := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100);
+          Media := SQL.Fields[12].Value;
 
-          if (Media <= cds_Precificacao_ItensMEDIA.Value) then
+          if (cds_Precificacao_ItensMEDIA.Value <= Media) then
             cds_Precificacao_ItensCONFERENCIA.Value      := 'Média';
-          if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+          if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
             cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências';
-          if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media > cds_Precificacao_ItensMEDIA.Value) then
+          if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
             cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
         end else
           cds_Precificacao_ItensCONFERENCIA.Value        := 'Divergências';

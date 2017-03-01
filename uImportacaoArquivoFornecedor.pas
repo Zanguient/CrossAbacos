@@ -204,11 +204,11 @@ begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosDISPONIVEL.FieldName;
-        end else if arrData[1, I] = 'Custo' then begin
+        end else if arrData[1, I] = 'Custo Liquido (SEM IPI) + Desconto' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTO.FieldName;
-        end else if arrData[1, I] = 'Custo Final' then begin
+        end else if arrData[1, I] = 'Custo Final C/ IPI+ST+Desc' then begin
           SetLength(ExcelColluns, Length(ExcelColluns) + 1);
           ExcelColluns[High(ExcelColluns)].index    := I;
           ExcelColluns[High(ExcelColluns)].nome     := csProdutosCUSTOFINAL.FieldName;
@@ -216,7 +216,7 @@ begin
       end;
 
       if Length(ExcelColluns) < 4 then begin
-        DisplayMsg(MSG_WAR, 'Estrutura do arquivo inválida!', '', 'Colunas: Cód. do Fornecedor, Estoque, Custo e Custo Final');
+        DisplayMsg(MSG_WAR, 'Estrutura do arquivo inválida!', '', 'Colunas: Cód. do Fornecedor, Estoque, Custo Liquido (SEM IPI) + Desconto e Custo Final C/ IPI+ST+Desc');
         Exit;
       end;
 
