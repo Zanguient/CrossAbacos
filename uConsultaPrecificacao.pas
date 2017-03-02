@@ -61,17 +61,24 @@ type
     edRegistroAtual: TEdit;
     gdPrecificacaoItens: TDBGrid;
     ds_Precificacao_Itens: TDataSource;
-    gbSelecionaFamilia: TGroupBox;
-    edFamilia: TButtonedEdit;
     edDataInicial: TJvDateEdit;
     edDataFinal: TJvDateEdit;
-    Panel1: TPanel;
-    rgFiltroTipo: TRadioGroup;
-    pnConsultaBtn: TGroupBox;
-    btnConsultar: TSpeedButton;
     cds_Precificacao_ItensMARCA: TStringField;
     cds_Precificacao_ItensFORNECEDOR: TStringField;
     cds_Precificacao_ItensCONFERENCIA: TStringField;
+    GroupBox1: TGroupBox;
+    pnConsultaBtn: TGroupBox;
+    btnConsultar: TSpeedButton;
+    rgFiltroTipo: TRadioGroup;
+    Panel1: TPanel;
+    edFamilia: TButtonedEdit;
+    btnAdicionarFamilia: TBitBtn;
+    btnRemoverFamilia: TBitBtn;
+    cds_Familia: TClientDataSet;
+    cds_FamiliaID: TIntegerField;
+    cds_FamiliaDESCRICAO: TStringField;
+    dgFamilia: TDBGrid;
+    ds_Familia: TDataSource;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -89,6 +96,8 @@ type
     procedure edFamiliaKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btExportClick(Sender: TObject);
+    procedure btnAdicionarFamiliaClick(Sender: TObject);
+    procedure btnRemoverFamiliaClick(Sender: TObject);
   private
     { Private declarations }
     procedure SelecionaFamilia;
@@ -166,6 +175,22 @@ begin
       btExport.Tag := 0;
     end;
   end;
+end;
+
+procedure TfrmConsultaPrecificacao.btnAdicionarFamiliaClick(Sender: TObject);
+begin
+  if edFamilia.Tag <= 0 then begin
+    DisplayMsg(MSG_WAR, 'Selecione uma familia para adicionar!');
+    if edFamilia.CanFocus then edFamilia.SetFocus;
+    Exit;
+  end;
+  cds_Familia.Append;
+  cds_FamiliaID.Value        := edFamilia.Tag;
+  cds_FamiliaDESCRICAO.Value := edFamilia.Text;
+  cds_Familia.Post;
+
+  edFamilia.Clear;
+  edFamilia.Tag := 0;
 end;
 
 procedure TfrmConsultaPrecificacao.btnBuscarClick(Sender: TObject);
@@ -317,6 +342,15 @@ begin
   LimparTela;
 end;
 
+procedure TfrmConsultaPrecificacao.btnRemoverFamiliaClick(Sender: TObject);
+begin
+  if cds_Familia.IsEmpty then begin
+    DisplayMsg(MSG_WAR, 'Não tem nenhuma familia para excluir!');
+    Exit;
+  end;
+  cds_Familia.Delete;
+end;
+
 procedure TfrmConsultaPrecificacao.btSairClick(Sender: TObject);
 begin
   Sair;
@@ -327,6 +361,7 @@ var
   FW : TFWConnection;
   SQL: TFDQuery;
   Media : Currency;
+  Categorias : string;
 begin
 
   if cds_Precificacao.IsEmpty then begin
@@ -374,8 +409,19 @@ begin
       3 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
     end;
 
-    if edFamilia.Tag > 0 then
-      SQL.SQL.Add('AND F.ID = ' + IntToStr(edFamilia.Tag));
+    Categorias := '';
+    cds_Familia.First;
+    while not cds_Familia.Eof do begin
+      if Categorias = EmptyStr then
+        Categorias := cds_FamiliaID.AsString
+      else
+        Categorias := Categorias + ',' + cds_FamiliaID.AsString;
+      cds_Familia.Next;
+    end;
+//    Categorias := Copy(Categorias, 1, Length(Categorias) - 1);
+
+    if Categorias <> EmptyStr then
+      SQL.SQL.Add('AND F.ID IN (' + Categorias + ')');
 
     SQL.Connection          := FW.FDConnection;
     SQL.Params[0].DataType  := ftInteger;
@@ -413,7 +459,11 @@ begin
         cds_Precificacao_ItensPRECOPOR.Value           := SQL.Fields[10].Value;
         cds_Precificacao_ItensPRECODE.Value            := SQL.Fields[9].Value;
         cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
-        cds_Precificacao_ItensMEDIA.Value              := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100);
+        if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then
+          cds_Precificacao_ItensMEDIA.Value            := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100)
+        else
+          cds_Precificacao_ItensMEDIA.Value            := 100;
+
         cds_Precificacao_ItensMARCA.Value              := SQL.Fields[13].Value;
         cds_Precificacao_ItensFORNECEDOR.Value         := SQL.Fields[14].Value;
         if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then
@@ -423,10 +473,12 @@ begin
 
           Media := SQL.Fields[12].Value;
 
-          if (cds_Precificacao_ItensMEDIA.Value <= Media) then
-            cds_Precificacao_ItensCONFERENCIA.Value      := 'Média';
+          if (cds_Precificacao_ItensMEDIA.Value <= Media) and (cds_Precificacao_ItensPRECOPOR.Value <> cds_Precificacao_ItensPRECOCADASTRO.Value) then
+            cds_Precificacao_ItensCONFERENCIA.Value      := 'Média'
+          else
           if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
-            cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências';
+            cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências'
+          else
           if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
             cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
         end else
@@ -476,8 +528,11 @@ procedure TfrmConsultaPrecificacao.FormShow(Sender: TObject);
 begin
   cds_Precificacao.CreateDataSet;
   cds_Precificacao_Itens.CreateDataSet;
+  cds_Familia.CreateDataSet;
+  cds_Familia.Open;
   AutoSizeDBGrid(dgPrecificacao);
   AutoSizeDBGrid(gdPrecificacaoItens);
+  AutoSizeDBGrid(dgFamilia);
 
   edDataInicial.Date := Date;
   edDataFinal.Date   := Date;
