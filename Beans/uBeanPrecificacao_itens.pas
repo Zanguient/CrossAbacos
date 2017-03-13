@@ -11,7 +11,7 @@ type
     FTIPOCALCULO: TFieldInteger;
     FPRECOCADASTRO: TFieldCurrency;
     FPRECODE: TFieldCurrency;
-    FMARGEMSUGERIDA: TFieldCurrency;
+    FMARGEMSUGERIDA: TFieldFloat;
     FCUSTO_ATUAL: TFieldCurrency;
     FMARGEMPRATICAR: TFieldFloat;
     FMEDIA: TFieldFloat;
@@ -24,7 +24,7 @@ type
     procedure SetCUSTO_ATUAL(const Value: TFieldCurrency);
     procedure SetID(const Value: TFieldInteger);
     procedure SetMARGEMPRATICAR(const Value: TFieldFloat);
-    procedure SetMARGEMSUGERIDA(const Value: TFieldCurrency);
+    procedure SetMARGEMSUGERIDA(const Value: TFieldFloat);
     procedure SetMEDIA(const Value: TFieldFloat);
     procedure SetPRECIFICACAO_ID(const Value: TFieldInteger);
     procedure SetPRECOCADASTRO(const Value: TFieldCurrency);
@@ -41,7 +41,7 @@ type
     property CUSTO_ATUAL : TFieldCurrency read FCUSTO_ATUAL write SetCUSTO_ATUAL;
     property PRECOESPECIAL : TFieldCurrency read FPRECOESPECIAL write SetPRECOESPECIAL;
     property PRECOCADASTRO : TFieldCurrency read FPRECOCADASTRO write SetPRECOCADASTRO;
-    property MARGEMSUGERIDA : TFieldCurrency read FMARGEMSUGERIDA write SetMARGEMSUGERIDA;
+    property MARGEMSUGERIDA : TFieldFloat read FMARGEMSUGERIDA write SetMARGEMSUGERIDA;
     property PRECODE : TFieldCurrency read FPRECODE write SetPRECODE;
     property PRECOPOR : TFieldCurrency read FPRECOPOR write SetPRECOPOR;
     property MARGEMPRATICAR : TFieldFloat read FMARGEMPRATICAR write SetMARGEMPRATICAR;
@@ -85,7 +85,7 @@ begin
   FMARGEMPRATICAR := Value;
 end;
 
-procedure TPRECIFICACAO_ITENS.SetMARGEMSUGERIDA(const Value: TFieldCurrency);
+procedure TPRECIFICACAO_ITENS.SetMARGEMSUGERIDA(const Value: TFieldFloat);
 begin
   FMARGEMSUGERIDA := Value;
 end;

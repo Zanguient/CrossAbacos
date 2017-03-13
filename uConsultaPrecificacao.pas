@@ -79,6 +79,7 @@ type
     cds_FamiliaDESCRICAO: TStringField;
     dgFamilia: TDBGrid;
     ds_Familia: TDataSource;
+    cds_Precificacao_ItensDEPARTAMENTO: TStringField;
     procedure btnBuscarClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -149,7 +150,7 @@ begin
         end;
       end;
 
-      Arquivo := Arquivo + '\Precificacao.'+ cds_PrecificacaoID.AsString +'.csv';
+      Arquivo := 'Precificacao_'+ cds_PrecificacaoID.AsString +'.xlsx';
       if FileExists(Arquivo) then begin
         DisplayMsg(MSG_CONF, 'Já existe um arquivo em,' + sLineBreak + Arquivo + sLineBreak +
                               'Deseja Sobreescrever?');
@@ -161,7 +162,7 @@ begin
 
       DisplayMsg(MSG_WAIT, 'Exportando Arquivo...');
       try
-        ExpCSV(cds_Precificacao_Itens, Arquivo, pbExportaPrecificacao);
+        ExpXLS(cds_Precificacao_Itens, Arquivo, pbExportaPrecificacao, False);
         DisplayMsg(MSG_OK, 'Arquivo gerado com Sucesso!', '', Arquivo);
       except
         on E : Exception do begin
@@ -394,7 +395,8 @@ begin
     SQL.SQL.Add('	PI.MARGEMPRATICAR,');
     SQL.SQL.Add('	PI.MEDIA,');
     SQL.SQL.Add(' P.MARCA,');
-    SQL.SQL.Add(' FO.NOME');
+    SQL.SQL.Add(' FO.NOME,');
+    SQL.SQL.Add(' P.CLASSE');
     SQL.SQL.Add('FROM PRECIFICACAO_ITENS PI');
     SQL.SQL.Add('INNER JOIN PRODUTO P ON (PI.ID_PRODUTO = P.ID)');
     SQL.SQL.Add('INNER JOIN FAMILIA F ON (P.ID_FAMILIA = F.ID)');
@@ -438,6 +440,7 @@ begin
         cds_Precificacao_ItensPRODUTO.Value            := SQL.Fields[2].Value;
         cds_Precificacao_ItensCUSTO_ANT.Value          := SQL.Fields[3].Value;
         cds_Precificacao_ItensCUSTO_NOVO.Value         := SQL.Fields[4].Value;
+        cds_Precificacao_ItensDEPARTAMENTO.Value       := SQL.Fields[15].Value;
         cds_Precificacao_ItensVARIACAO.Value           := cds_Precificacao_ItensCUSTO_NOVO.Value - cds_Precificacao_ItensCUSTO_ANT.Value;
         if cds_Precificacao_ItensVARIACAO.Value <> 0 then
           cds_Precificacao_ItensPERVARIACAO.Value      := (cds_Precificacao_ItensVARIACAO.AsCurrency / cds_Precificacao_ItensCUSTO_NOVO.Value) * 100;

@@ -8,7 +8,7 @@ type
   TFAMILIA = class(TFWPersistence)
   private
     FAUTORIZADOPOR: TFieldString;
-    FMARGEM: TFieldCurrency;
+    FMARGEM: TFieldFloat;
     FDATAAUTORIZADO: TFieldDateTime;
     FDESCRICAO: TFieldString;
     FID: TFieldInteger;
@@ -16,13 +16,13 @@ type
     procedure SetDATAAUTORIZADO(const Value: TFieldDateTime);
     procedure SetDESCRICAO(const Value: TFieldString);
     procedure SetID(const Value: TFieldInteger);
-    procedure SetMARGEM(const Value: TFieldCurrency);
+    procedure SetMARGEM(const Value: TFieldFloat);
   protected
     procedure InitInstance; override;
   published
     property ID             : TFieldInteger read FID write SetID;
     property DESCRICAO      : TFieldString read FDESCRICAO write SetDESCRICAO;
-    property MARGEM         : TFieldCurrency read FMARGEM write SetMARGEM;
+    property MARGEM         : TFieldFloat read FMARGEM write SetMARGEM;
     property AUTORIZADOPOR  : TFieldString read FAUTORIZADOPOR write SetAUTORIZADOPOR;
     property DATAAUTORIZADO : TFieldDateTime read FDATAAUTORIZADO write SetDATAAUTORIZADO;
   end;
@@ -72,7 +72,7 @@ begin
   FID := Value;
 end;
 
-procedure TFAMILIA.SetMARGEM(const Value: TFieldCurrency);
+procedure TFAMILIA.SetMARGEM(const Value: TFieldFloat);
 begin
   FMARGEM := Value;
 end;

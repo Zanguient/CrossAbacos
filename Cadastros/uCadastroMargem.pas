@@ -109,6 +109,7 @@ type
     procedure btExportarClick(Sender: TObject);
     procedure btAtualizarClick(Sender: TObject);
     procedure cbFiltroMargensChange(Sender: TObject);
+    procedure btPesquisarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -610,6 +611,12 @@ begin
     InvertePaineis;
   end else
     DisplayMsg(MSG_WAR, 'Produto não Selecionado, Verifique!')
+end;
+
+procedure TFrmCadastroMargem.btPesquisarClick(Sender: TObject);
+begin
+  cds_Margens.Filtered := False;
+  cds_Margens.Filtered := edPesquisa.Text <> EmptyStr;
 end;
 
 procedure TFrmCadastroMargem.Cancelar;

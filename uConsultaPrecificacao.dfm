@@ -1028,9 +1028,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           TabOrder = 1
           OnClick = btnAdicionarFamiliaClick
-          ExplicitLeft = 144
-          ExplicitTop = 1
-          ExplicitHeight = 39
         end
         object btnRemoverFamilia: TBitBtn
           AlignWithMargins = True
@@ -1098,9 +1095,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
             FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
           TabOrder = 2
           OnClick = btnRemoverFamiliaClick
-          ExplicitLeft = 184
-          ExplicitTop = 1
-          ExplicitHeight = 39
         end
       end
       object dgFamilia: TDBGrid
@@ -1697,10 +1691,6 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
           'Tudo')
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = 816
-        ExplicitTop = 3
-        ExplicitWidth = 131
-        ExplicitHeight = 164
       end
     end
   end
@@ -2185,6 +2175,12 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       end
       item
         Expanded = False
+        FieldName = 'DEPARTAMENTO'
+        Width = 200
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'FORNECEDOR'
         Width = 150
         Visible = True
@@ -2311,6 +2307,11 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       DisplayLabel = 'Marca'
       FieldName = 'MARCA'
       Size = 100
+    end
+    object cds_Precificacao_ItensDEPARTAMENTO: TStringField
+      DisplayLabel = 'Departamento'
+      FieldName = 'DEPARTAMENTO'
+      Size = 255
     end
     object cds_Precificacao_ItensFORNECEDOR: TStringField
       DisplayLabel = 'Fornecedor'

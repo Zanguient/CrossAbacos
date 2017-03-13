@@ -27,7 +27,7 @@ uses
   procedure GerarLoteImportacao;
   procedure AjustaForm(Form : TForm);
   procedure OrdenarGrid(Column: TColumn);
-  procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
+  procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil; Visivel : Boolean = True);
   procedure ExpCSV(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
   procedure DeletarArquivosPasta(Diretorio : String);
   function ValidaUsuario(Email, Senha : String) : Boolean;
@@ -251,6 +251,7 @@ var
   Arquivo   : TextFile;
   I         : Integer;
   Linha     : string;
+  Valor     : Double;
 begin
   DataSet.DisableControls;
   AssignFile(Arquivo, NomeArq);
@@ -271,8 +272,10 @@ begin
       Linha := '';
       for I := 0 to DataSet.Fields.Count - 1 do begin
         if DataSet.Fields[I].Visible then begin
-          if (DataSet.Fields[I].DataType in [ftFloat, ftCurrency]) then
-            Linha := Linha + StringReplace(DataSet.Fields[I].AsString, ',', '.', []) + ';'
+          if (DataSet.Fields[I].DataType in [ftFloat, ftCurrency]) then begin
+            Valor := Trunc(DataSet.Fields[I].AsFloat * 100) / 100;
+            Linha := Linha + StringReplace(FloatToStr(Valor), ',', '.', []) + ';';
+          end
           else
             Linha := Linha + DataSet.Fields[I].AsString + ';';
         end;
@@ -292,7 +295,7 @@ begin
     CloseFile(Arquivo);
   end;
 end;
-procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil);
+procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil; Visivel : Boolean = True);
 var
   ExcApp: OleVariant;
   I,
@@ -316,7 +319,7 @@ begin
       DeleteFile(PChar(VarNomeArq));
 
     ExcApp := CreateOleObject('Excel.Application');
-    ExcApp.Visible := True;
+    ExcApp.Visible := Visivel;
     ExcApp.WorkBooks.Add;
     DataSet.First;
     L := 1;
