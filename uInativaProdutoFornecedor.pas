@@ -49,6 +49,7 @@ type
     edFiltro: TEdit;
     pbBusca: TGauge;
     csProdutosMOTIVO: TStringField;
+    csProdutosID_PAI: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure edFornecedorRightButtonClick(Sender: TObject);
     procedure edFornecedorKeyDown(Sender: TObject; var Key: Word;
@@ -435,6 +436,7 @@ begin
     SQL.SQL.Add('	f.nome as fornecedornome,');
     SQL.SQL.Add('	pf.cod_prod_fornecedor,');
     SQL.SQL.Add('	pf.status,');
+    SQL.SQL.Add('	coalesce(p.produto_pai,'''') as produto_pai,');
     SQL.SQL.Add('coalesce(pf.motivo,'''') as motivo');
     SQL.SQL.Add('from produtofornecedor pf');
     SQL.SQL.Add('inner join produto p on pf.id_produto = p.id');
@@ -457,6 +459,7 @@ begin
         csProdutosSTATUS.Value           := SQL.FieldByName('status').Value;
         csProdutosPRODUTOFORNECEDOR.Value:= SQL.FieldByName('id').Value;
         csProdutosMOTIVO.Value           := SQL.FieldByName('motivo').Value;
+        csProdutosID_PAI.Value           := SQL.FieldByName('produto_pai').Value;
         csProdutos.Post;
 
         pbBusca.Progress                 := SQL.RecNo;

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
   Vcl.Grids, Vcl.DBGrids, Data.DB, Datasnap.DBClient, Vcl.ImgList,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, Vcl.Mask, JvExMask, JvToolEdit, JvBaseEdits;
 
 type
   TfrmCadFornecedor = class(TForm)
@@ -57,6 +57,12 @@ type
     edAlmoxarifado: TButtonedEdit;
     Label5: TLabel;
     lbAlmoxarifado: TLabel;
+    Label9: TLabel;
+    edPercentualVPC: TJvCalcEdit;
+    Label10: TLabel;
+    edPercentualFrete: TJvCalcEdit;
+    csPesquisaPERCENTUAL_VPC: TFloatField;
+    csPesquisaPERCENTUAL_FRETE: TFloatField;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
@@ -109,6 +115,8 @@ begin
     lbAlmoxarifado.Caption  := 'Geral';
     cbAtivo.Checked := True;
     btGravar.Tag    := 0;
+    edPercentualVPC.Value := 0;
+    edPercentualFrete.Value := 0;
   end else begin
     edNome.Text                 := csPesquisaNOME.Value;
     cbAtivo.Checked             := csPesquisaSTATUS.Value;
@@ -117,6 +125,8 @@ begin
     edPrazoEntrega.Text         := csPesquisaPRAZO_ENTREGA.AsString;
     edAlmoxarifado.Text         := csPesquisaID_ALMOXARIFADO.AsString;
     lbAlmoxarifado.Caption      := csPesquisaNOMEALMOXARIFADO.AsString;
+    edPercentualVPC.Value       := csPesquisaPERCENTUAL_VPC.Value;
+    edPercentualFrete.Value     := csPesquisaPERCENTUAL_FRETE.Value;
     btGravar.Tag                := csPesquisaCODIGO.Value;
   end;
 
@@ -172,6 +182,8 @@ begin
       F.ESTOQUEMAXIMO.Value   := StrToIntDef(edEstoqueMaximo.Text, 0);
       F.PRAZO_ENTREGA.Value   := StrToIntDef(edPrazoEntrega.Text, 0);
       F.ID_ALMOXARIFADO.Value := StrToIntDef(edAlmoxarifado.Text, 0);
+      F.PERCENTUAL_VPC.Value  := edPercentualVPC.Value;
+      F.PERCENTUAL_FRETE.Value:= edPercentualFrete.Value;
 
       if (Sender as TSpeedButton).Tag > 0 then begin
         F.ID.Value                    := (Sender as TSpeedButton).Tag;
@@ -231,7 +243,9 @@ begin
       SQL.SQL.Add('	F.ESTOQUEMAXIMO AS ESTOQUEMAXIMO,');
       SQL.SQL.Add('	F.PRAZO_ENTREGA AS PRAZO_ENTREGA,');
       SQL.SQL.Add('	F.ID_ALMOXARIFADO,');
-      SQL.SQL.Add('	A.NOME AS NOMEALMOXARIFADO');
+      SQL.SQL.Add('	A.NOME AS NOMEALMOXARIFADO,');
+      SQL.SQL.Add('	F.PERCENTUAL_VPC,');
+      SQL.SQL.Add('	F.PERCENTUAL_FRETE');
       SQL.SQL.Add('FROM FORNECEDOR F');
       SQL.SQL.Add('INNER JOIN ALMOXARIFADO A ON (A.ID = F.ID_ALMOXARIFADO)');
       SQL.SQL.Add('WHERE 1 = 1');
@@ -254,6 +268,8 @@ begin
           csPesquisaPRAZO_ENTREGA.Value     := SQL.FieldByName('PRAZO_ENTREGA').Value;
           csPesquisaID_ALMOXARIFADO.Value   := SQL.FieldByName('ID_ALMOXARIFADO').Value;
           csPesquisaNOMEALMOXARIFADO.Value  := SQL.FieldByName('NOMEALMOXARIFADO').Value;
+          csPesquisaPERCENTUAL_VPC.Value    := SQL.FieldByName('PERCENTUAL_VPC').Value;
+          csPesquisaPERCENTUAL_FRETE.Value  := SQL.FieldByName('PERCENTUAL_FRETE').Value;
           csPesquisa.Post;
           SQL.Next;
         end;

@@ -37,23 +37,6 @@ object FrmCadastroMargem: TFrmCadastroMargem
       Color = clWhite
       ParentBackground = False
       TabOrder = 1
-      object Panel3: TPanel
-        Left = 1
-        Top = 1
-        Width = 923
-        Height = 42
-        Align = alTop
-        Caption = 'Cadastro de Margens'
-        Color = clSkyBlue
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -21
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentBackground = False
-        ParentFont = False
-        TabOrder = 0
-      end
       object GridPanel1: TGridPanel
         Left = 1
         Top = 43
@@ -450,22 +433,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
           DesignSize = (
             461
             430)
-          object Label9: TLabel
-            Left = 6
-            Top = 1
-            Width = 68
-            Height = 19
-            Caption = '(%) VPC:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-          end
           object Label1: TLabel
             Left = 6
-            Top = 209
+            Top = 110
             Width = 112
             Height = 19
             Caption = 'Autorizado Por:'
@@ -476,22 +446,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
           end
-          object Label10: TLabel
-            Left = 6
-            Top = 53
-            Width = 74
-            Height = 19
-            Caption = '(%) Frete:'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-          end
           object Label11: TLabel
             Left = 6
-            Top = 105
+            Top = 6
             Width = 87
             Height = 19
             Caption = '(%) Outros:'
@@ -504,7 +461,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label18: TLabel
             Left = 6
-            Top = 157
+            Top = 58
             Width = 148
             Height = 19
             Caption = 'Data de Autoriza'#231#227'o:'
@@ -517,7 +474,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object Label8: TLabel
             Left = 6
-            Top = 258
+            Top = 159
             Width = 103
             Height = 19
             Caption = 'Solicitado Por:'
@@ -530,7 +487,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
           end
           object edAutorizadoPor: TEdit
             Left = 6
-            Top = 228
+            Top = 129
             Width = 449
             Height = 27
             Anchors = [akLeft, akTop, akRight]
@@ -540,11 +497,11 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 4
+            TabOrder = 2
           end
-          object edPercentualVPC: TJvCalcEdit
-            Left = 5
-            Top = 23
+          object edPercentualOutros: TJvCalcEdit
+            Left = 6
+            Top = 28
             Width = 449
             Height = 27
             DisplayFormat = ',0.00'
@@ -559,43 +516,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
             TabOrder = 0
             DecimalPlacesAlwaysShown = True
           end
-          object edPercentualFrete: TJvCalcEdit
-            Left = 6
-            Top = 75
-            Width = 449
-            Height = 27
-            DisplayFormat = ',0.00'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            FormatOnEditing = True
-            Anchors = [akLeft, akTop, akRight]
-            ParentFont = False
-            TabOrder = 1
-            DecimalPlacesAlwaysShown = True
-          end
-          object edPercentualOutros: TJvCalcEdit
-            Left = 6
-            Top = 127
-            Width = 449
-            Height = 27
-            DisplayFormat = ',0.00'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -16
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            FormatOnEditing = True
-            Anchors = [akLeft, akTop, akRight]
-            ParentFont = False
-            TabOrder = 2
-            DecimalPlacesAlwaysShown = True
-          end
           object edDataAutorizacao: TJvDateEdit
             Left = 6
-            Top = 179
+            Top = 80
             Width = 187
             Height = 27
             Font.Charset = DEFAULT_CHARSET
@@ -605,11 +528,11 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Style = []
             ParentFont = False
             ShowNullDate = False
-            TabOrder = 3
+            TabOrder = 1
           end
           object edSolicitadoPor: TEdit
             Left = 6
-            Top = 280
+            Top = 181
             Width = 449
             Height = 27
             Anchors = [akLeft, akTop, akRight]
@@ -619,9 +542,26 @@ object FrmCadastroMargem: TFrmCadastroMargem
             Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 3
           end
         end
+      end
+      object Panel3: TPanel
+        Left = 1
+        Top = 1
+        Width = 923
+        Height = 42
+        Align = alTop
+        Caption = 'Cadastro de Margens'
+        Color = clSkyBlue
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -21
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentBackground = False
+        ParentFont = False
+        TabOrder = 0
       end
     end
     object pnBotoesEdicao: TPanel
@@ -1294,6 +1234,12 @@ object FrmCadastroMargem: TFrmCadastroMargem
         end
         item
           Expanded = False
+          FieldName = 'ID_PAI'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'NOME_PRODUTO'
           Width = 250
           Visible = True
@@ -1324,6 +1270,11 @@ object FrmCadastroMargem: TFrmCadastroMargem
         end
         item
           Expanded = False
+          FieldName = 'DATA_PRECO_PROMOCIONAL'
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'VAL_PRECO_PROMOCIONAL'
           Width = 150
           Visible = True
@@ -1336,20 +1287,23 @@ object FrmCadastroMargem: TFrmCadastroMargem
         end
         item
           Expanded = False
+          FieldName = 'RESP_PRECO_PROMOCIONAL'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATA_MARGEM_PROMOCIONAL'
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'VAL_MARGEM_PROMOCIONAL'
           Width = 150
           Visible = True
         end
         item
           Expanded = False
-          FieldName = 'PERCENTUAL_VPC'
-          Width = 150
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'PERCENTUAL_FRETE'
-          Width = 150
+          FieldName = 'RESP_MARGEM_PROMOCIONAL'
           Visible = True
         end
         item
@@ -1876,6 +1830,19 @@ object FrmCadastroMargem: TFrmCadastroMargem
             ExplicitTop = -2
             ExplicitHeight = 44
           end
+          object pbExportaDados: TGauge
+            Left = 300
+            Top = 0
+            Width = 52
+            Height = 52
+            Align = alRight
+            BorderStyle = bsNone
+            ForeColor = clLime
+            Kind = gkPie
+            Progress = 0
+            Visible = False
+            ExplicitLeft = 114
+          end
         end
       end
     end
@@ -2039,10 +2006,12 @@ object FrmCadastroMargem: TFrmCadastroMargem
     object cds_MargensID: TIntegerField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'ID'
+      Visible = False
     end
     object cds_MargensID_PRODUTO: TIntegerField
       DisplayLabel = 'ID Produto'
       FieldName = 'ID_PRODUTO'
+      Visible = False
     end
     object cds_MargensSKU: TStringField
       DisplayWidth = 150
@@ -2052,6 +2021,7 @@ object FrmCadastroMargem: TFrmCadastroMargem
     object cds_MargensNOME_PRODUTO: TStringField
       DisplayLabel = 'Nome Produto'
       FieldName = 'NOME_PRODUTO'
+      Visible = False
       Size = 255
     end
     object cds_MargensMARGEM_ANALISTA: TCurrencyField
@@ -2060,19 +2030,9 @@ object FrmCadastroMargem: TFrmCadastroMargem
       DisplayFormat = '#,##0.00'
     end
     object cds_MargensPRECO_PONTA: TCurrencyField
-      DisplayLabel = 'Pre'#231'o Ponta'
+      DisplayLabel = 'Preco Ponta'
       FieldName = 'PRECO_PONTA'
       DisplayFormat = '#,##0.00'
-    end
-    object cds_MargensPRECO_PROMOCIONAL: TCurrencyField
-      DisplayLabel = 'Pre'#231'o Promocional'
-      FieldName = 'PRECO_PROMOCIONAL'
-      DisplayFormat = '#,##0.00'
-    end
-    object cds_MargensVAL_PRECO_PROMOCIONAL: TDateTimeField
-      DisplayLabel = 'Validade Pre'#231'o Promocional'
-      FieldName = 'VAL_PRECO_PROMOCIONAL'
-      DisplayFormat = 'DD/MM/YYYY'
     end
     object cds_MargensMARGEM_PROMOCIONAL: TCurrencyField
       DisplayLabel = 'Margem Promocional'
@@ -2080,39 +2040,69 @@ object FrmCadastroMargem: TFrmCadastroMargem
       DisplayFormat = '#,##0.00'
     end
     object cds_MargensVAL_MARGEM_PROMOCIONAL: TDateTimeField
-      DisplayLabel = 'Validade Margem Promocional'
+      DisplayLabel = 'Val Margem Promocional'
       FieldName = 'VAL_MARGEM_PROMOCIONAL'
       DisplayFormat = 'DD/MM/YYYY'
     end
-    object cds_MargensPERCENTUAL_VPC: TCurrencyField
-      DisplayLabel = '(%) VPC'
-      FieldName = 'PERCENTUAL_VPC'
+    object cds_MargensRESP_MARGEM_PROMOCIONAL: TStringField
+      DisplayLabel = 'Responsavel Margem Promocional'
+      FieldName = 'RESP_MARGEM_PROMOCIONAL'
+      Size = 100
+    end
+    object cds_MargensDATA_MARGEM_PROMOCIONAL: TDateField
+      DisplayLabel = 'Data Informada Margem'
+      FieldName = 'DATA_MARGEM_PROMOCIONAL'
+    end
+    object cds_MargensPRECO_PROMOCIONAL: TCurrencyField
+      DisplayLabel = 'Preco Promocional'
+      FieldName = 'PRECO_PROMOCIONAL'
       DisplayFormat = '#,##0.00'
     end
-    object cds_MargensPERCENTUAL_FRETE: TCurrencyField
-      DisplayLabel = '(%) Frete'
-      FieldName = 'PERCENTUAL_FRETE'
-      DisplayFormat = '#,##0.00'
+    object cds_MargensVAL_PRECO_PROMOCIONAL: TDateTimeField
+      DisplayLabel = 'Val Preco Promocional'
+      FieldName = 'VAL_PRECO_PROMOCIONAL'
+      DisplayFormat = 'DD/MM/YYYY'
+    end
+    object cds_MargensRESP_PRECO_PROMOCIONAL: TStringField
+      DisplayLabel = 'Responsavel Promocao'
+      FieldName = 'RESP_PRECO_PROMOCIONAL'
+      Size = 100
+    end
+    object cds_MargensDATA_PRECO_PROMOCIONAL: TDateField
+      DisplayLabel = 'Data Informada Promocao'
+      FieldName = 'DATA_PRECO_PROMOCIONAL'
     end
     object cds_MargensPERCENTUAL_OUTROS: TCurrencyField
-      DisplayLabel = '(%) Outros'
+      DisplayLabel = 'Percentual Outros'
       FieldName = 'PERCENTUALOUTROS'
       DisplayFormat = '#,##0.00'
+    end
+    object cds_MargensDATA_AUTORIZACAO: TDateTimeField
+      DisplayLabel = 'Data Autorizacao'
+      FieldName = 'DATA_AUTORIZACAO'
+      DisplayFormat = 'DD/MM/YYYY'
     end
     object cds_MargensAUTORIZADO_POR: TStringField
       DisplayLabel = 'Autorizado Por'
       FieldName = 'AUTORIZADO_POR'
       Size = 100
     end
-    object cds_MargensDATA_AUTORIZACAO: TDateTimeField
-      DisplayLabel = 'Data Autoriza'#231#227'o'
-      FieldName = 'DATA_AUTORIZACAO'
-      DisplayFormat = 'DD/MM/YYYY'
-    end
     object cds_MargensSTATUS: TStringField
       DisplayLabel = 'Status'
       DisplayWidth = 150
       FieldName = 'STATUS'
+      Visible = False
+    end
+    object cds_MargensID_PAI: TStringField
+      DisplayLabel = 'SKU Pai'
+      FieldName = 'ID_PAI'
+      Visible = False
+      Size = 100
+    end
+    object cds_MargensSOLICITADO_POR: TStringField
+      DisplayLabel = 'Quem Solicitou'
+      FieldName = 'SOLICITADO_POR'
+      Size = 100
     end
   end
   object OpenDialog1: TOpenDialog

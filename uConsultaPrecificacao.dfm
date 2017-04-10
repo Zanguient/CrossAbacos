@@ -2169,6 +2169,12 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
       end
       item
         Expanded = False
+        FieldName = 'ID_PAI'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'MARCA'
         Width = 100
         Visible = True
@@ -2345,6 +2351,11 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     object cds_Precificacao_ItensPRECOSUGESTAO: TCurrencyField
       DisplayLabel = 'Pre'#231'o Sugest'#227'o'
       FieldName = 'PRECOSUGESTAO'
+    end
+    object cds_Precificacao_ItensID_PAI: TStringField
+      DisplayLabel = 'SKU Pai'
+      FieldName = 'ID_PAI'
+      Size = 100
     end
     object cds_Precificacao_ItensPRECOCADASTRO: TCurrencyField
       DisplayLabel = 'Pre'#231'o Realidade'

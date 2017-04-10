@@ -19,8 +19,6 @@ type
     FSOLICITADO_POR: TFieldString;
     FDATA_PRECO_PROMOCIONAL: TFieldDateTime;
     FID: TFieldInteger;
-    FPERCENTUAL_FRETE: TFieldCurrency;
-    FPERCENTUAL_VPC: TFieldCurrency;
     FAUTORIZADO_POR: TFieldString;
     FVAL_MARGEM_PROMOCIONAL: TFieldDateTime;
     FMARGEM_ANALISTA: TFieldCurrency;
@@ -35,9 +33,7 @@ type
     procedure SetID_PRODUTO(const Value: TFieldInteger);
     procedure SetMARGEM_ANALISTA(const Value: TFieldCurrency);
     procedure SetMARGEM_PROMOCIONAL(const Value: TFieldCurrency);
-    procedure SetPERCENTUAL_FRETE(const Value: TFieldCurrency);
     procedure SetPERCENTUAL_OUTROS(const Value: TFieldCurrency);
-    procedure SetPERCENTUAL_VPC(const Value: TFieldCurrency);
     procedure SetPRECO_PONTA(const Value: TFieldCurrency);
     procedure SetPRECO_PROMOCIONAL(const Value: TFieldCurrency);
     procedure SetRESP_MARGEM_PROMOCIONAL(const Value: TFieldString);
@@ -60,8 +56,6 @@ type
     property VAL_PRECO_PROMOCIONAL    : TFieldDateTime read FVAL_PRECO_PROMOCIONAL write SetVAL_PRECO_PROMOCIONAL;
     property RESP_PRECO_PROMOCIONAL   : TFieldString read FRESP_PRECO_PROMOCIONAL write SetRESP_PRECO_PROMOCIONAL;
     property DATA_PRECO_PROMOCIONAL   : TFieldDateTime read FDATA_PRECO_PROMOCIONAL write SetDATA_PRECO_PROMOCIONAL;
-    property PERCENTUAL_VPC           : TFieldCurrency read FPERCENTUAL_VPC write SetPERCENTUAL_VPC;
-    property PERCENTUAL_FRETE         : TFieldCurrency read FPERCENTUAL_FRETE write SetPERCENTUAL_FRETE;
     property PERCENTUAL_OUTROS        : TFieldCurrency read FPERCENTUAL_OUTROS write SetPERCENTUAL_OUTROS;
     property DATA_AUTORIZACAO         : TFieldDateTime read FDATA_AUTORIZACAO write SetDATA_AUTORIZACAO;
     property AUTORIZADO_POR           : TFieldString read FAUTORIZADO_POR write SetAUTORIZADO_POR;
@@ -88,8 +82,6 @@ begin
   FVAL_PRECO_PROMOCIONAL.isNotNull    := True;
   FRESP_PRECO_PROMOCIONAL.isNotNull   := True;
   FDATA_PRECO_PROMOCIONAL.isNotNull   := True;
-  FPERCENTUAL_VPC.isNotNull           := True;
-  FPERCENTUAL_FRETE.isNotNull         := True;
   FPERCENTUAL_OUTROS.isNotNull        := True;
   FDATA_AUTORIZACAO.isNotNull         := True;
   FAUTORIZADO_POR.isNotNull           := True;
@@ -142,19 +134,9 @@ begin
   FMARGEM_PROMOCIONAL := Value;
 end;
 
-procedure TMARGEM.SetPERCENTUAL_FRETE(const Value: TFieldCurrency);
-begin
-  FPERCENTUAL_FRETE := Value;
-end;
-
 procedure TMARGEM.SetPERCENTUAL_OUTROS(const Value: TFieldCurrency);
 begin
   FPERCENTUAL_OUTROS := Value;
-end;
-
-procedure TMARGEM.SetPERCENTUAL_VPC(const Value: TFieldCurrency);
-begin
-  FPERCENTUAL_VPC := Value;
 end;
 
 procedure TMARGEM.SetPRECO_PONTA(const Value: TFieldCurrency);

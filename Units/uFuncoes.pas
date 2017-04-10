@@ -299,6 +299,7 @@ procedure ExpXLS(DataSet: TDataSet; NomeArq: string; Progress : TGauge = nil; Vi
 var
   ExcApp: OleVariant;
   I,
+  K,
   L : Integer;
   VarNomeArq : String;
 begin
@@ -319,40 +320,50 @@ begin
       DeleteFile(PChar(VarNomeArq));
 
     ExcApp := CreateOleObject('Excel.Application');
-    ExcApp.Visible := Visivel;
-    ExcApp.WorkBooks.Add;
-    DataSet.First;
-    L := 1;
-    DataSet.First;
-    while not DataSet.Eof do begin
-      if L = 1 then begin
-        for I := 0 to DataSet.Fields.Count - 1 do begin
-          if DataSet.Fields[i].Visible then begin
-            if DataSet.Fields[i] is TStringField then
-              ExcApp.WorkBooks[1].Sheets[1].Columns[I + 1].NumberFormat := '@';
+    try
+      ExcApp.Visible := Visivel;
+      ExcApp.WorkBooks.Add;
+      DataSet.First;
+      L := 1;
+      DataSet.First;
+      while not DataSet.Eof do begin
+        if L = 1 then begin
+          K := 1;
+          for I := 0 to DataSet.Fields.Count - 1 do begin
+            if DataSet.Fields[i].Visible then begin
+              if DataSet.Fields[i] is TStringField then
+                ExcApp.WorkBooks[1].Sheets[1].Columns[K].NumberFormat := '@';
 
-            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Bold  := True;
-            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1].Font.Color := clBlue;
-            ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1]            := DataSet.Fields[I].DisplayName;
+              ExcApp.WorkBooks[1].Sheets[1].Cells[L, K].Font.Bold  := True;
+              ExcApp.WorkBooks[1].Sheets[1].Cells[L, K].Font.Color := clBlue;
+              ExcApp.WorkBooks[1].Sheets[1].Cells[L, K]            := DataSet.Fields[I].DisplayName;
+              K := K + 1;
+            end;
           end;
+          L := L + 1;
         end;
+        K := 1;
+        for I := 0 to DataSet.Fields.Count - 1 do
+          if DataSet.Fields[i].Visible then begin
+            ExcApp.WorkBooks[1].Sheets[1].Cells[L, K] := DataSet.Fields[i].DisplayText;
+            K := K + 1;
+          end;
+
+        DataSet.Next;
         L := L + 1;
-      end;
-
-      for I := 0 to DataSet.Fields.Count - 1 do
-        if DataSet.Fields[i].Visible then begin
-          ExcApp.WorkBooks[1].Sheets[1].Cells[L, I + 1] := DataSet.Fields[i].DisplayText;
+        if Assigned(Progress) then begin
+          Progress.Progress := DataSet.RecNo;
+          Application.ProcessMessages;
         end;
-
-      DataSet.Next;
-      L := L + 1;
-      if Assigned(Progress) then begin
-        Progress.Progress := DataSet.RecNo;
-        Application.ProcessMessages;
+      end;
+      ExcApp.Columns.AutoFit;
+      ExcApp.WorkBooks[1].SaveAs(VarNomeArq);
+    finally
+      if not VarIsEmpty(ExcApp) then begin
+        ExcApp.Quit;
+        ExcApp := Unassigned;
       end;
     end;
-    ExcApp.Columns.AutoFit;
-    ExcApp.WorkBooks[1].SaveAs(VarNomeArq);
   finally
     DataSet.EnableControls;
   end;

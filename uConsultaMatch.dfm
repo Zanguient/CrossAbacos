@@ -1970,6 +1970,12 @@ object frmConsultaMatch: TfrmConsultaMatch
       end
       item
         Expanded = False
+        FieldName = 'ID_PAI'
+        Width = 100
+        Visible = True
+      end
+      item
+        Expanded = False
         FieldName = 'MARCA'
         Title.Alignment = taCenter
         Title.Caption = 'Marca'
@@ -2135,6 +2141,11 @@ object frmConsultaMatch: TfrmConsultaMatch
     end
     object cds_MatchItensSTATUS: TBooleanField
       FieldName = 'STATUS'
+    end
+    object cds_MatchItensID_PAI: TStringField
+      DisplayLabel = 'SKU Pai'
+      FieldName = 'ID_PAI'
+      Size = 100
     end
   end
 end

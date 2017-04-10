@@ -331,3 +331,17 @@ alter table produto add custofinal numeric(18,2), add custofinalanterior numeric
 update produto set custofinal = custo, custofinalanterior = custoanterior;
 
 alter table precificacao_itens alter column margempraticar type double precision;
+
+ALTER TABLE margem
+ DROP IF EXISTS percentual_vpc,
+ DROP IF EXISTS percentual_frete;
+
+ALTER TABLE fornecedor
+  ADD percentual_vpc numeric(18,2);
+
+UPDATE fornecedor SET percentual_vpc = 0;
+
+ALTER TABLE fornecedor
+  ADD percentual_frete numeric(18,2);
+
+UPDATE fornecedor SET percentual_frete = 0;

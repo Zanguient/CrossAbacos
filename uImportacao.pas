@@ -112,6 +112,7 @@ type
     QUANT_ESTOQUE_FISICO : Integer;
     PRECO_VENDA : Currency;
     IMPORTADO : Integer;
+    ID_PAI : String;
   end;
 
 const
@@ -180,7 +181,7 @@ begin
 
         mnImportaProdutos.Lines.Add('Validando arquivo!');
 
-        SetLength(Colunas, 12);
+        SetLength(Colunas, 13);
         Colunas[0]     := 'ID_ITEM';
         Colunas[1]     := 'ITEM_NOME';
         Colunas[2]     := 'NM_MARCA';
@@ -193,6 +194,7 @@ begin
         Colunas[9]     := 'QUANTIDADE_EST_FISICO';
         Colunas[10]    := 'PRECO_VENDA';
         Colunas[11]    := 'IMPORTADO';
+        Colunas[12]    := 'ID_PAI';
 
         ArqValido := True;
         for I := Low(Colunas) to High(Colunas) do begin
@@ -253,6 +255,8 @@ begin
               arProdutos[High(arProdutos)].PRECO_VENDA := arrData[I, J]
             else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('IMPORTADO') then
               arProdutos[High(arProdutos)].IMPORTADO := arrData[I, J]
+            else if AnsiUpperCase(arrData[1, J]) = AnsiUpperCase('ID_PAI') then
+              arProdutos[High(arProdutos)].ID_PAI := arrData[I, J]
           end;
           Application.ProcessMessages;
           pbImportaProdutos.Progress  := I;
@@ -360,6 +364,7 @@ begin
                 P.MEDIA_ALTERACAO.Value           := 0;
                 P.PRECO_VENDA.Value               := arProdutos[I].PRECO_VENDA;
                 P.IMPORTADO.Value                 := arProdutos[I].IMPORTADO;
+                P.PRODUTO_PAI.Value               := arProdutos[I].ID_PAI;
 
                 if arProdutos[I].ID_PRODUTO = 0 then begin
                   P.ID.isNotNull                  := True;
@@ -652,6 +657,8 @@ begin
       FORN.NOME.excelTitulo                                                    := 'Nome';
       FORN.ID_ALMOXARIFADO.excelTitulo                                         := 'ID_Almoxerifado';
       FORN.PRAZO_ENTREGA.excelTitulo                                           := 'PrazoEntregaDias';
+      FORN.PERCENTUAL_VPC.excelTitulo                                          := 'Percentual VPC';
+      FORN.PERCENTUAL_FRETE.excelTitulo                                        := 'Percentual Frete';
 
       FORN.buscaIndicesExcel(edBuscaArquivoFornecedor.Text, XLSAplicacao);
 
@@ -663,7 +670,9 @@ begin
                                                                                'ID_Forn, ' + sLineBreak +
                                                                                'Nome,' + sLineBreak +
                                                                                'ID_Almoxerifado' + sLineBreak +
-                                                                               'PrazoEntregaDias');
+                                                                               'PrazoEntregaDias' + sLineBreak +
+                                                                               'Percentual VPC' + sLineBreak +
+                                                                               'Percentual Frete');
           Exit;
         end;
       end;

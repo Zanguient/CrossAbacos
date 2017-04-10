@@ -26,6 +26,7 @@ type
     csConsultaNOMEPRODUTO: TStringField;
     csConsultaMARCA: TStringField;
     csConsultaCATEGORIA: TStringField;
+    csConsultaID_PAI: TStringField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure csConsultaFilterRecord(DataSet: TDataSet; var Accept: Boolean);
@@ -76,7 +77,8 @@ begin
       SQL.SQL.Add('	COALESCE(PF.CUSTO,0) AS CUSTO,');
       SQL.SQL.Add('	F.ID AS FORN,');
       SQL.SQL.Add('	F.NOME,');
-      SQL.SQL.Add(' CAST(L.DATA_HORA AS DATE) AS DATA_HORA');
+      SQL.SQL.Add(' CAST(L.DATA_HORA AS DATE) AS DATA_HORA,');
+      SQL.SQL.Add('	COALESCE(P.PRODUTO_PAI, '''') AS PRODUTO_PAI');
       SQL.SQL.Add('FROM PRODUTO P');
       SQL.SQL.Add('INNER JOIN FAMILIA FM ON (P.ID_FAMILIA = FM.ID)');
       SQL.SQL.Add('LEFT JOIN PRODUTOFORNECEDOR PF ON P.ID = PF.ID_PRODUTO AND P.ID_FORNECEDORNOVO = PF.ID_FORNECEDOR');
@@ -98,6 +100,7 @@ begin
         csConsultaMENORCUSTO.Value       := SQL.Fields[4].Value;
         csConsultaFORNECEDOR.Value       := SQL.Fields[5].AsString + ' - ' + SQL.Fields[6].AsString;
         csConsultaDATAULTIMAATUA.Value   := SQL.Fields[7].Value;
+        csConsultaID_PAI.Value           := SQL.Fields[8].Value;
         csConsulta.Post;
 
         SQL.Next;

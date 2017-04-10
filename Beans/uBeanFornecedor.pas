@@ -17,6 +17,8 @@ type
     FESTOQUEMINIMO: TFieldInteger;
     FSTATUS: TFieldBoolean;
     FESTOQUEMAXIMO: TFieldInteger;
+    FPERCENTUAL_VPC: TFieldFloat;
+    FPERCENTUAL_FRETE: TFieldFloat;
     procedure SetCNPJ(const Value: TFieldString);
     procedure SetID(const Value: TFieldInteger);
     procedure SetID_ALMOXARIFADO(const Value: TFieldInteger);
@@ -25,6 +27,8 @@ type
     procedure SetESTOQUEMAXIMO(const Value: TFieldInteger);
     procedure SetESTOQUEMINIMO(const Value: TFieldInteger);
     procedure SetSTATUS(const Value: TFieldBoolean);
+    procedure SetPERCENTUAL_VPC(const Value: TFieldFloat);
+    procedure SetPERCENTUAL_FRETE(const Value: TFieldFloat);
   protected
     procedure InitInstance; override;
   published
@@ -36,6 +40,8 @@ type
     property STATUS           : TFieldBoolean   read FSTATUS          write SetSTATUS;
     property ESTOQUEMINIMO    : TFieldInteger   read FESTOQUEMINIMO   write SetESTOQUEMINIMO;
     property ESTOQUEMAXIMO    : TFieldInteger   read FESTOQUEMAXIMO   write SetESTOQUEMAXIMO;
+    property PERCENTUAL_VPC   : TFieldFloat read FPERCENTUAL_VPC write SetPERCENTUAL_VPC;
+    property PERCENTUAL_FRETE : TFieldFloat read FPERCENTUAL_FRETE write SetPERCENTUAL_FRETE;
 End;
 
 implementation
@@ -91,6 +97,16 @@ end;
 procedure TFORNECEDOR.SetNOME(const Value: TFieldString);
 begin
   FNOME := Value;
+end;
+
+procedure TFORNECEDOR.SetPERCENTUAL_FRETE(const Value: TFieldFloat);
+begin
+  FPERCENTUAL_FRETE := Value;
+end;
+
+procedure TFORNECEDOR.SetPERCENTUAL_VPC(const Value: TFieldFloat);
+begin
+  FPERCENTUAL_VPC := Value;
 end;
 
 procedure TFORNECEDOR.SetPRAZO_ENTREGA(const Value: TFieldInteger);

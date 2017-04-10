@@ -71,6 +71,7 @@ type
     cds_MatchItensID_FORNECEDORNOVO: TIntegerField;
     cds_MatchItensSTATUS: TBooleanField;
     cds_MatchItensID_FORNECEDORANT: TIntegerField;
+    cds_MatchItensID_PAI: TStringField;
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -356,7 +357,8 @@ begin
         SQL.SQL.Add('	COALESCE(MI.QUANTIDADE,0) AS QUANTIDADE,');
         SQL.SQL.Add('	FA.ID AS ID_FORNECEDORANT,');
         SQL.SQL.Add('	FN.ID AS ID_FORNECEDORNOVO,');
-        SQL.SQL.Add('	COALESCE(PF.STATUS, True) AS STATUS');
+        SQL.SQL.Add('	COALESCE(PF.STATUS, True) AS STATUS,');
+        SQL.SQL.Add('	COALESCE(P.PRODUTO_PAI,'''') AS PRODUTO_PAI');
         SQL.SQL.Add('FROM MATCH M');
         SQL.SQL.Add('INNER JOIN MATCH_ITENS MI ON (M.ID = MI.ID_MATCH)');
         SQL.SQL.Add('INNER JOIN PRODUTO P ON (MI.ID_PRODUTO = P.ID)');
@@ -407,6 +409,7 @@ begin
             cds_MatchItensID_FORNECEDORANT.Value     := SQL.Fields[11].Value;
             cds_MatchItensID_FORNECEDORNOVO.Value    := SQL.Fields[12].Value;
             cds_MatchItensSTATUS.Value               := SQL.Fields[13].Value;
+            cds_MatchItensID_PAI.Value               := SQL.Fields[14].Value;
             cds_MatchItens.Post;
 
             if Length(Trim(ProdnoLote)) = 0 then

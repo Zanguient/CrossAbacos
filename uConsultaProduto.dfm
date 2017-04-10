@@ -99,6 +99,12 @@ object frmConsultaProdutos: TfrmConsultaProdutos
         end
         item
           Expanded = False
+          FieldName = 'ID_PAI'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'NOMEPRODUTO'
           Width = 255
           Visible = True
@@ -170,6 +176,11 @@ object frmConsultaProdutos: TfrmConsultaProdutos
     object csConsultaDATAULTIMAATUA: TDateTimeField
       DisplayLabel = 'Dt '#218'ltima Atualiza'#231#227'o'
       FieldName = 'DATAULTIMAATUA'
+    end
+    object csConsultaID_PAI: TStringField
+      DisplayLabel = 'SKU Pai'
+      FieldName = 'ID_PAI'
+      Size = 100
     end
   end
   object dsConsulta: TDataSource

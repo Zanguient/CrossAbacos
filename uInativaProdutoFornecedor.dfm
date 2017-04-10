@@ -487,6 +487,12 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
         end
         item
           Expanded = False
+          FieldName = 'ID_PAI'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'PRODUTONOME'
           Width = 200
           Visible = True
@@ -683,6 +689,11 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
       FieldName = 'SKU'
       Size = 100
     end
+    object csProdutosID_PAI: TStringField
+      DisplayLabel = 'SKU Pai'
+      FieldName = 'ID_PAI'
+      Size = 100
+    end
     object csProdutosPRODUTONOME: TStringField
       DisplayLabel = 'Produto'
       FieldName = 'PRODUTONOME'
@@ -725,7 +736,7 @@ object frmInativaProdutoFornecedor: TfrmInativaProdutoFornecedor
     Left = 440
     Top = 328
     Bitmap = {
-      494C010102000C00600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000C00640010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
