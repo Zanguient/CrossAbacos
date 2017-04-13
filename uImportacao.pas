@@ -655,7 +655,6 @@ begin
     try
       FORN.CNPJ.excelTitulo                                                    := 'ID_Forn';
       FORN.NOME.excelTitulo                                                    := 'Nome';
-      FORN.ID_ALMOXARIFADO.excelTitulo                                         := 'ID_Almoxerifado';
       FORN.PRAZO_ENTREGA.excelTitulo                                           := 'PrazoEntregaDias';
       FORN.PERCENTUAL_VPC.excelTitulo                                          := 'Percentual VPC';
       FORN.PERCENTUAL_FRETE.excelTitulo                                        := 'Percentual Frete';
@@ -669,7 +668,6 @@ begin
           DisplayMsg(MSG_WAR, 'Estrutura do Arquivo Inválida, Verifique!', '', 'Colunas:' + sLineBreak +
                                                                                'ID_Forn, ' + sLineBreak +
                                                                                'Nome,' + sLineBreak +
-                                                                               'ID_Almoxerifado' + sLineBreak +
                                                                                'PrazoEntregaDias' + sLineBreak +
                                                                                'Percentual VPC' + sLineBreak +
                                                                                'Percentual Frete');
@@ -693,35 +691,30 @@ begin
             pbImportaFornecedor.Progress                      := pbImportaFornecedor.MaxValue;
             Break;
           end else begin
-            ALM.SelectList('codigo_e10 = ' + FORN.ID_ALMOXARIFADO.asSQL);
-            if ALM.Count > 0 then begin
-              FORN.ID_ALMOXARIFADO.Value                      := TALMOXARIFADO(ALM.Itens[0]).ID.Value;
+            FORN.ID_ALMOXARIFADO.Value                      := 0;
 
-              //Add by Sergio on 24.03.16 -> a Pedido do benhur
-              FORN.CNPJ.Value := AjustaTamnhoCNPJ(FORN.CNPJ.Value);
+            //Add by Sergio on 24.03.16 -> a Pedido do benhur
+            FORN.CNPJ.Value := AjustaTamnhoCNPJ(FORN.CNPJ.Value);
 
-              FORN.SelectList('cnpj = ' + FORN.CNPJ.asSQL);
-              if FORN.Count > 0 then begin
-                FORN.ID.Value                                 := TFORNECEDOR(FORN.Itens[0]).ID.Value;
-                FORN.Update;
+            FORN.SelectList('cnpj = ' + FORN.CNPJ.asSQL);
+            if FORN.Count > 0 then begin
+              FORN.ID.Value                                 := TFORNECEDOR(FORN.Itens[0]).ID.Value;
+              FORN.Update;
 
-                SetLength(arrUpdate, Length(arrUpdate) + 1);
-                arrUpdate[High(arrUpdate)]                    := ALM.ID.Value;
+              SetLength(arrUpdate, Length(arrUpdate) + 1);
+              arrUpdate[High(arrUpdate)]                    := FORN.ID.Value;
 
-                mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
-              end else begin
-                FORN.STATUS.Value                             := True;
-                FORN.ESTOQUEMINIMO.Value                      := 1;
-                FORN.ESTOQUEMAXIMO.Value                      := 200;
-                FORN.Insert;
-
-                SetLength(arrInsert, Length(arrInsert) + 1);
-                arrInsert[High(arrInsert)]                                     := FORN.ID.Value;
-
-                mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - inserido com sucesso!');
-              end;
+              mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - alterado com sucesso!');
             end else begin
-              mnImportaFornecedor.Lines.Add('Almoxarifado não encontrado! ' + FORN.ID_ALMOXARIFADO.asString);
+              FORN.STATUS.Value                             := True;
+              FORN.ESTOQUEMINIMO.Value                      := 1;
+              FORN.ESTOQUEMAXIMO.Value                      := 200;
+              FORN.Insert;
+
+              SetLength(arrInsert, Length(arrInsert) + 1);
+              arrInsert[High(arrInsert)]                                     := FORN.ID.Value;
+
+              mnImportaFornecedor.Lines.Add('Código: ' + FORN.CNPJ.asString + ' - inserido com sucesso!');
             end;
           end;
           pbImportaFornecedor.Progress                                         := I;

@@ -96,6 +96,7 @@ type
     cds_MargensDATA_PRECO_PROMOCIONAL: TDateField;
     cds_MargensDATA_MARGEM_PROMOCIONAL: TDateField;
     cds_MargensSOLICITADO_POR: TStringField;
+    lbPercentual: TLabel;
     procedure btFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -139,6 +140,9 @@ uses
 {$R *.dfm}
 
 procedure TFrmCadastroMargem.AtualizarEdits(Limpar: Boolean);
+var
+  FW : TFWConnection;
+  P : TPRODUTO;
 begin
   if Limpar then begin
     edSKU.Tag                     := cds_MargensID_PRODUTO.Value;
@@ -159,6 +163,7 @@ begin
     edMargemAnalista.Clear;
     edPercentualOutros.Clear;
     edAutorizadoPor.Clear;
+    lbPercentual.Caption := '';
     btGravar.Tag  := 0;
   end else begin
     edSKU.Tag                     := cds_MargensID_PRODUTO.Value;
@@ -178,6 +183,20 @@ begin
     edSolicitadoPor.Text          := USUARIO.NOME;
     edDataAutorizacao.Date        := cds_MargensDATA_AUTORIZACAO.Value;
     btGravar.Tag                  := cds_MargensID.Value;
+    FW := TFWConnection.Create;
+    P := TPRODUTO.Create(FW);
+    try
+      P.SelectList('ID = ' + cds_MargensID_PRODUTO.AsString);
+      if P.Count > 0 then begin
+        if TPRODUTO(P.Itens[0]).IMPORTADO.Value = 1 then
+          lbPercentual.Caption := 'Percentual de impostos: 3,8%'
+        else
+          lbPercentual.Caption := 'Percentual de impostos: 4,5%';
+      end;
+    finally
+      FreeAndNil(P);
+      FreeAndNil(FW);
+    end;
     edAutorizadoPor.Clear;
   end;
 end;

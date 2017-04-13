@@ -211,13 +211,13 @@ begin
           PRECOS[High(PRECOS)].TIPO             := ePrecoEspecial;
         end;
 
+        if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
+          PRECOS[High(PRECOS)].MARGEM_SUGERIDA := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + ((PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS) / 100);
+
         if SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency > 0.00 then begin
           PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency / 100;
           PRECOS[High(PRECOS)].TIPO             := eMargem;
         end;
-
-        if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
-          PRECOS[High(PRECOS)].MARGEM_SUGERIDA := PRECOS[High(PRECOS)].MARGEM_SUGERIDA + ((PRECOS[High(PRECOS)].PERCENTUAL_VPC + PRECOS[High(PRECOS)].PERCENTUAL_FRETE + PRECOS[High(PRECOS)].PERCENTUAL_OUTROS) / 100);
 
         case PRECOS[High(PRECOS)].TIPO of
           eMargem : begin

@@ -259,17 +259,17 @@ begin
         SQL.First;
         while not SQL.Eof do begin
           csPesquisa.Append;
-          csPesquisaCODIGO.Value            := SQL.FieldByName('IDFORNECEDOR').Value;
-          csPesquisaNOME.Value              := SQL.FieldByName('NOMEFORNECEDOR').Value;
-          csPesquisaCNPJ.Value              := SQL.FieldByName('CNPJFORNECEDOR').Value;
-          csPesquisaSTATUS.Value            := SQL.FieldByName('STATUSFORNECEDOR').Value;
-          csPesquisaESTOQUEMINIMO.Value     := SQL.FieldByName('ESTOQUEMINIMO').Value;
-          csPesquisaESTOQUEMAXIMO.Value     := SQL.FieldByName('ESTOQUEMAXIMO').Value;
-          csPesquisaPRAZO_ENTREGA.Value     := SQL.FieldByName('PRAZO_ENTREGA').Value;
-          csPesquisaID_ALMOXARIFADO.Value   := SQL.FieldByName('ID_ALMOXARIFADO').Value;
-          csPesquisaNOMEALMOXARIFADO.Value  := SQL.FieldByName('NOMEALMOXARIFADO').Value;
-          csPesquisaPERCENTUAL_VPC.Value    := SQL.FieldByName('PERCENTUAL_VPC').Value;
-          csPesquisaPERCENTUAL_FRETE.Value  := SQL.FieldByName('PERCENTUAL_FRETE').Value;
+          csPesquisaCODIGO.AsInteger            := SQL.FieldByName('IDFORNECEDOR').AsInteger;
+          csPesquisaNOME.AsString               := SQL.FieldByName('NOMEFORNECEDOR').AsString;
+          csPesquisaCNPJ.AsString               := SQL.FieldByName('CNPJFORNECEDOR').AsString;
+          csPesquisaSTATUS.AsBoolean            := SQL.FieldByName('STATUSFORNECEDOR').AsBoolean;
+          csPesquisaESTOQUEMINIMO.AsInteger     := SQL.FieldByName('ESTOQUEMINIMO').AsInteger;
+          csPesquisaESTOQUEMAXIMO.AsInteger     := SQL.FieldByName('ESTOQUEMAXIMO').AsInteger;
+          csPesquisaPRAZO_ENTREGA.AsInteger     := SQL.FieldByName('PRAZO_ENTREGA').AsInteger;
+          csPesquisaID_ALMOXARIFADO.AsInteger   := SQL.FieldByName('ID_ALMOXARIFADO').AsInteger;
+          csPesquisaNOMEALMOXARIFADO.AsString   := SQL.FieldByName('NOMEALMOXARIFADO').AsString;
+          csPesquisaPERCENTUAL_VPC.AsFloat      := SQL.FieldByName('PERCENTUAL_VPC').AsFloat;
+          csPesquisaPERCENTUAL_FRETE.AsFloat    := SQL.FieldByName('PERCENTUAL_FRETE').AsFloat;
           csPesquisa.Post;
           SQL.Next;
         end;
