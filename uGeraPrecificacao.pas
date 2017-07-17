@@ -16,13 +16,10 @@ type
     btGerar: TSpeedButton;
     lblMensagem: TLabel;
     pnMedia: TPanel;
-    edMedia: TJvValidateEdit;
-    Label1: TLabel;
     procedure btGerarClick(Sender: TObject);
     procedure btSairClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -66,16 +63,7 @@ end;
 
 procedure TfrmGeraPrecificacao.FormClose(Sender: TObject;
   var Action: TCloseAction);
-var
-  arqIni : TiniFile;
 begin
-  arqIni := TIniFile.Create(DirArqConf);
-  try
-    arqIni.WriteString('CONFIGURACOES', 'MEDIA', edMedia.Text);
-  finally
-    FreeAndNil(arqIni);
-  end;
-
   frmGeraPrecificacao := nil;
   Action              := caFree;
 end;
@@ -87,18 +75,6 @@ begin
     Close;
 end;
 
-procedure TfrmGeraPrecificacao.FormShow(Sender: TObject);
-var
-  arqIni : TiniFile;
-begin
-  arqIni := TIniFile.Create(DirArqConf);
-  try
-    edMedia.Text := arqIni.ReadString('CONFIGURACOES', 'MEDIA', '0');
-  finally
-    FreeAndNil(arqIni);
-  end;
-end;
-
 procedure TfrmGeraPrecificacao.GerarPrecificacao;
 var
   FWC    : TFWConnection;
@@ -108,6 +84,7 @@ var
   PRI    : TPRECIFICACAO_ITENS;
   P      : TPRODUTO;
   I      : Integer;
+  PPonta : Boolean;
 begin
 
   FWC  := TFWConnection.Create;
@@ -163,7 +140,7 @@ begin
         PRECOS[High(PRECOS)].ID_PRODUTO         := SQL.FieldByName('ID').AsInteger;
         PRECOS[High(PRECOS)].SKU                := SQL.FieldByName('SKU').AsString;
         PRECOS[High(PRECOS)].PRECO_CADASTRO     := SQL.FieldByName('PRECO_VENDA').AsCurrency;
-        PRECOS[High(PRECOS)].MEDIA              := StrToCurr(edMedia.Text) / 100;
+        PRECOS[High(PRECOS)].MEDIA              := 0.005;
         PRECOS[High(PRECOS)].PERCENTUAL_VPC     := SQL.FieldByName('PERCENTUAL_VPC').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_FRETE   := SQL.FieldByName('PERCENTUAL_FRETE').AsCurrency;
         PRECOS[High(PRECOS)].PERCENTUAL_OUTROS  := SQL.FieldByName('PERCENTUAL_OUTROS').AsCurrency;
@@ -175,6 +152,8 @@ begin
         PRECOS[High(PRECOS)].PRECODE            := 0.00;
         PRECOS[High(PRECOS)].PRECOPOR           := 0.00;
         PRECOS[High(PRECOS)].MARGEM_PRATICAR    := 0.00;
+
+        PPonta := False;
 
         if SQL.FieldByName('CUSTO_ESTOQUE_FISICO').AsCurrency > 0.00 then begin
           PRECOS[High(PRECOS)].CUSTOFINAL_ANT          := SQL.FieldByName('CUSTO_EST_FISICO_ANT').AsCurrency;
@@ -217,12 +196,14 @@ begin
         if SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency > 0.00 then begin
           PRECOS[High(PRECOS)].MARGEM_SUGERIDA  := SQL.FieldByName('MARGEM_PROMOCIONAL').AsCurrency / 100;
           PRECOS[High(PRECOS)].TIPO             := eMargem;
+          PPonta := False;
         end;
 
         case PRECOS[High(PRECOS)].TIPO of
           eMargem : begin
             if PRECOS[High(PRECOS)].MARGEM_SUGERIDA > 0 then
-              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTOFINAL_NOVO + (PRECOS[High(PRECOS)].CUSTOFINAL_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
+//              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTOFINAL_NOVO + (PRECOS[High(PRECOS)].CUSTOFINAL_NOVO * PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
+              PRECOS[High(PRECOS)].PRECOPOR         := PRECOS[High(PRECOS)].CUSTOFINAL_NOVO / (1 - PRECOS[High(PRECOS)].MARGEM_SUGERIDA);
           end;
           ePrecoEspecial : begin
             if PRECOS[High(PRECOS)].PRECO_SUGESTAO > 0 then
@@ -230,7 +211,8 @@ begin
           end;
         end;
 
-        PRECOS[High(PRECOS)].PRECOPOR             := Trunc(PRECOS[High(PRECOS)].PRECOPOR) + 0.90;
+        if PRECOS[High(PRECOS)].TIPO = eMargem then
+          PRECOS[High(PRECOS)].PRECOPOR           := Trunc(PRECOS[High(PRECOS)].PRECOPOR) + 0.90;
         PRECOS[High(PRECOS)].PRECODE              := PRECOS[High(PRECOS)].PRECOPOR + (PRECOS[High(PRECOS)].PRECOPOR * 0.30);
         PRECOS[High(PRECOS)].MARGEM_PRATICAR      := (PRECOS[High(PRECOS)].PRECOPOR / PRECOS[High(PRECOS)].CUSTOFINAL_NOVO) - 1;
 

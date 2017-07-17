@@ -407,10 +407,10 @@ begin
     SQL.SQL.Add('AND PI.PRECOPOR > 0');
 
     case rgFiltroTipo.ItemIndex of
-      0 : SQL.SQL.Add('AND (PI.PRECOPOR = PI.PRECOCADASTRO)');
-      1 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND ((ABS(((PI.PRECOPOR / PI.PRECOCADASTRO) -1)) <= PI.MEDIA)))');
-      2 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
-      3 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOPOR / PI.PRECOCADASTRO) -1) > PI.MEDIA)))');
+      0 : SQL.SQL.Add('AND ((PI.PRECOPOR = PI.PRECOCADASTRO) OR (((((PI.PRECOCADASTRO / PI.PRECOPOR) -1)) >= -0.005) AND (((PI.PRECOCADASTRO / PI.PRECOPOR) -1) <= 0.005)))');
+      1 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND (PI.PRECOPOR < PI.PRECOCADASTRO) AND (( (ABS(((PI.PRECOCADASTRO / PI.PRECOPOR) -1)) > 0.005)) AND ((ABS(((PI.PRECOCADASTRO / PI.PRECOPOR) -1)) <= 0.01))))');
+      2 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO > 0) AND ((PI.PRECOPOR < PI.PRECOCADASTRO) AND (ABS((PI.PRECOCADASTRO / PI.PRECOPOR) -1) > 0.010)))');
+      3 : SQL.SQL.Add('AND ((PI.PRECOPOR <> PI.PRECOCADASTRO) AND (PI.PRECOCADASTRO = 0) OR ((PI.PRECOPOR > PI.PRECOCADASTRO) AND (ABS((PI.PRECOCADASTRO / PI.PRECOPOR) -1) < -0.005)))');
     end;
 
     Categorias := '';
@@ -450,45 +450,42 @@ begin
 
         if SQL.Fields[5].AsInteger = 1 then begin
           cds_Precificacao_ItensMARGEMSUGESTAO.Value   := SQL.Fields[6].Value * 100;
-          cds_Precificacao_ItensPRECOSUGESTAO.Value    := cds_Precificacao_ItensCUSTO_NOVO.Value + (cds_Precificacao_ItensCUSTO_NOVO.Value * SQL.Fields[6].Value);
+          cds_Precificacao_ItensPRECOESPECIAL.Value    := 0.00;
+          cds_Precificacao_ItensPRECOSUGESTAO.Value    := cds_Precificacao_ItensCUSTO_NOVO.Value / (1 - SQL.Fields[6].Value);
         end else if SQL.Fields[5].Value = 2 then begin
           cds_Precificacao_ItensPRECOSUGESTAO.Value    := SQL.Fields[7].Value;
-          cds_Precificacao_ItensMARGEMSUGESTAO.Value   := ((cds_Precificacao_ItensPRECOSUGESTAO.Value / cds_Precificacao_ItensCUSTO_NOVO.Value) - 1) * 100;
+          cds_Precificacao_ItensPRECOESPECIAL.Value    := SQL.Fields[7].Value;
+          cds_Precificacao_ItensMARGEMSUGESTAO.Value   := (1 - (cds_Precificacao_ItensCUSTO_NOVO.Value /cds_Precificacao_ItensPRECOSUGESTAO.Value)) * 100;
         end;
 
         cds_Precificacao_ItensPRECOCADASTRO.Value      := SQL.Fields[8].Value;
         cds_Precificacao_ItensMARGEMCADASTRO.Value     := 0.00;
 
         if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then
-          cds_Precificacao_ItensMARGEMCADASTRO.Value   := ((cds_Precificacao_ItensPRECOCADASTRO.Value / cds_Precificacao_ItensCUSTO_NOVO.Value) - 1) * 100;
+          cds_Precificacao_ItensMARGEMCADASTRO.Value   := (1 - (cds_Precificacao_ItensCUSTO_NOVO.Value / cds_Precificacao_ItensPRECOCADASTRO.Value)) * 100;
 
         cds_Precificacao_ItensPRECOPOR.Value           := SQL.Fields[10].Value;
         cds_Precificacao_ItensPRECODE.Value            := SQL.Fields[9].Value;
-        cds_Precificacao_ItensMARGEMPRATICAR.Value     := SQL.Fields[11].Value * 100;
+        cds_Precificacao_ItensMARGEMPRATICAR.Value     := (1 - (cds_Precificacao_ItensCUSTO_NOVO.Value / cds_Precificacao_ItensPRECOPOR.Value)) * 100;
         if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then
-          cds_Precificacao_ItensMEDIA.Value            := Abs(((cds_Precificacao_ItensPRECOPOR.Value / cds_Precificacao_ItensPRECOCADASTRO.Value) - 1) * 100)
+          cds_Precificacao_ItensMEDIA.Value            := Abs(((cds_Precificacao_ItensPRECOCADASTRO.Value / cds_Precificacao_ItensPRECOPOR.Value) - 1) * 100)
         else
           cds_Precificacao_ItensMEDIA.Value            := 100;
 
         cds_Precificacao_ItensMARCA.Value              := SQL.Fields[13].Value;
         cds_Precificacao_ItensFORNECEDOR.Value         := SQL.Fields[14].Value;
-        if cds_Precificacao_ItensPRECOPOR.Value = cds_Precificacao_ItensPRECOCADASTRO.Value then
-          cds_Precificacao_ItensCONFERENCIA.Value      := 'Ajustado';
 
-        if cds_Precificacao_ItensPRECOCADASTRO.Value > 0 then begin
+        if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (cds_Precificacao_ItensMEDIA.Value > 0.005) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergência'
+        else
+        if (cds_Precificacao_ItensMEDIA.Value <= 0.005) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Ajustado'
+        else
+        if (cds_Precificacao_ItensMEDIA.Value <= 0.010) then
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Na Média'
+        else
+          cds_Precificacao_ItensCONFERENCIA.Value      := 'Verifica Maior';
 
-          Media := SQL.Fields[12].Value;
-
-          if (cds_Precificacao_ItensMEDIA.Value <= Media) and (cds_Precificacao_ItensPRECOPOR.Value <> cds_Precificacao_ItensPRECOCADASTRO.Value) then
-            cds_Precificacao_ItensCONFERENCIA.Value      := 'Média'
-          else
-          if (cds_Precificacao_ItensPRECOPOR.Value > cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
-            cds_Precificacao_ItensCONFERENCIA.Value      := 'Divergências'
-          else
-          if (cds_Precificacao_ItensPRECOPOR.Value < cds_Precificacao_ItensPRECOCADASTRO.Value) and (Media < cds_Precificacao_ItensMEDIA.Value) then
-            cds_Precificacao_ItensCONFERENCIA.Value      := 'Verificar Maior';
-        end else
-          cds_Precificacao_ItensCONFERENCIA.Value        := 'Divergências';
         cds_Precificacao_Itens.Post;
 
         Application.ProcessMessages;

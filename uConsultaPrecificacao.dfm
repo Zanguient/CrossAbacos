@@ -2388,7 +2388,7 @@ object frmConsultaPrecificacao: TfrmConsultaPrecificacao
     object cds_Precificacao_ItensMEDIA: TCurrencyField
       DisplayLabel = 'M'#233'dia Altera'#231#227'o'
       FieldName = 'MEDIA'
-      DisplayFormat = '#,##0.00%'
+      DisplayFormat = '#,##0.000%'
       currency = False
     end
     object cds_Precificacao_ItensCONFERENCIA: TStringField
